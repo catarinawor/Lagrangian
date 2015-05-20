@@ -1,0 +1,56 @@
+#Data file for Lagragian operating model
+#syr
+1
+#nyr
+20
+#sage
+1
+#nage
+7
+#smon
+1
+#nmon
+12
+#sarea
+30
+#narea
+60
+#nations
+2
+#border
+48.7
+#ro
+1000
+#h
+0.7
+#6m
+0.3
+#fe
+0
+#q
+1
+#sigR
+0.6
+#mo
+6
+#weight at age
+1.0121 1.3858 1.725 2.0174 2.2609 2.4589 2.6171
+#fecundity at age
+0.072924 0.66935 1.5841 2.0026 2.2595 2.4588 2.6171 
+#vulnerability at age
+0.0041512 0.084884 0.60249 1 1 1 1
+#mininmum position by age
+33.5 33.5 33.5 33.5 33.5 33.5 33.5
+#maximum position by age
+33.5 34 39 41 43 45 45
+#variance in position by age
+3.35 3.35 3.35 3.35 3.35 3.35 3.35
+# Total effort by country and year
+2    2    2    2    2    2    2    2    2     2     2     2     2     2     2     2     2     2     2     2    1    1    1    1    1    1    1    1    1     1     1     1     1     1     1     1     1     1     1     1
+# Total effort by country and month
+0    0    0  0.5    1    1    1    1  0.5   0.1   0.0   0.0
+0    0    0  0.0    0    1    1    1  0.5   0.3   0.2   0.1
+
+
+
+
