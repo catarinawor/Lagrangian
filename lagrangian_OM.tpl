@@ -194,6 +194,7 @@ PARAMETER_SECTION
  
  	3darray NAreaAge(1,ntstp,sarea,narea,sage,nage);
  	3darray CatchAreaAge(1,ntstp,sarea,narea,sage,nage);
+ 	3darray EffNatAge(1,nations,1,ntstp,sage-2,nage)
 
  	matrix obsCatchAreaAge(1,tot_pcat,sage-3,nage);
 
@@ -289,15 +290,6 @@ FUNCTION initialization
 	}
 	
 	
-	//for(int a= sage; a<= nage;a++)
-	//{
-	//	for(int rr =sarea; rr<=narea; rr++)
-	//	{
-	//		propVBarea(1)(rr) = (cnorm(areas(rr)+0.5,PosX(1),varPos)-cnorm(areas(rr)-0.5,PosX(1),varPos))(a-sage+1);
-	//	}
-	//	Effage(1) = Effarea(1)* propVBarea(1);
-	//}
-
 	for(int a= sage; a<= nage;a++)
 	{
 		for(int rr =sarea; rr<=narea; rr++)
@@ -305,12 +297,13 @@ FUNCTION initialization
 			propVBarea(1)(rr) = (cnorm(areas(rr)+0.5,PosX(1),varPos)-cnorm(areas(rr)-0.5,PosX(1),varPos))(a-sage+1);
 			CatchAreaAge(1)(rr)(a) = q*Effarea(1)(rr)*va(a)/(q*Effarea(1)(rr)*va(a)+m)*(1-exp(-(q*Effarea(1)(rr)*va(a)+m)))*NAreaAge(1)(rr)(a);
 
-
+			EffNatAge(indnatarea(rr))(1)(sage-2) = 1;
+			EffNatAge(indnatarea(rr))(1)(sage-1) = indnatarea(rr);
+			EffNatAge(indnatarea(rr))(1)(a) += Effarea(1)(rr)*propVBarea(1)(rr);
 		}
-		Effage(1) = Effarea(1)* propVBarea(1);
+		Effage(1)(a) = Effarea(1)* propVBarea(1);
 	}
 
-	
 
 	//CatchAgeArea
 
@@ -338,8 +331,12 @@ FUNCTION move_grow_die
 			{
 				propVBarea(i)(rr) = (cnorm(areas(rr)+0.5,PosX(i),varPos)-cnorm(areas(rr)-0.5,PosX(i),varPos))(a-sage+1);
 				CatchAreaAge(i)(rr)(a) = q*Effarea(i)(rr)*va(a)/(q*Effarea(i)(rr)*va(a)+m)*(1-exp(-(q*Effarea(i)(rr)*va(a)+m)))*NAreaAge(i-1)(rr)(a);
+				
+				EffNatAge(indnatarea(rr))(i)(sage-2) = i;
+				EffNatAge(indnatarea(rr))(i)(sage-1) = indnatarea(rr);
+				EffNatAge(indnatarea(rr))(i)(a) += Effarea(i)(rr)* propVBarea(i)(rr);
 			}
-			Effage(i) = Effarea(i)*propVBarea(i);
+			Effage(i)(a) = Effarea(i)*propVBarea(i);
 		}
 
 		//cout<<"indmonth(i) is "<<indmonth(i)<<endl;
@@ -401,11 +398,30 @@ FUNCTION clean_catage
 
 FUNCTION output_true
 	
-	ofstream ofs("trueLagr.dat");
+	ofstream ofs("lagrangian_OM.rep");
 
-	ofs<<"# VBarea " << endl << VBarea <<endl;
-	ofs<<"# Effage " << endl << Effage <<endl;
-	ofs<<"# Effarea "<< endl << Effarea <<endl;
+	ofs<<"mo" << endl << mo <<endl;
+	ofs<<"log_tau_c" << endl << log(tau_c) <<endl;
+	ofs<<"maxPos50" << endl << maxPos50 <<endl;
+	ofs<<"maxPossd" << endl << maxPossd <<endl;
+	ofs<<"cvPos" << endl << cvPos <<endl;
+	ofs<<"syr" << endl << syr <<endl;
+	ofs<<"nyr" << endl << nyr <<endl;
+	ofs<<"sage" << endl << sage <<endl;
+	ofs<<"nage" << endl << nage <<endl;
+	ofs<<"smon" << endl << smon <<endl;
+	ofs<<"nmon" << endl << nmon <<endl;
+	ofs<<"sarea" << endl << sarea <<endl;
+	ofs<<"narea" << endl << narea <<endl;
+	ofs<<"nations" << endl << nations <<endl;
+	ofs<<"maxPos" << endl << maxPos <<endl;
+	ofs<<"minPos" << endl << minPos <<endl;
+	ofs<<"varPos" << endl << varPos <<endl;
+	ofs<<"VBarea" << endl << VBarea <<endl;
+	ofs<<"Effage" << endl << Effage <<endl;
+	ofs<<"Effarea"<< endl << Effarea <<endl;
+	ofs<<"EffNatAge"<< endl << EffNatAge<<endl;
+	
 	
 FUNCTION output_pin
 	
@@ -413,9 +429,9 @@ FUNCTION output_pin
 
 	ifs<<"# mo " << endl << mo <<endl;
 	ifs<<"# tau_c " << endl << log(tau_c) <<endl;
-	ifs<<"# maxPos50 "<< endl << 5 <<endl;
-	ifs<<"# maxPossd "<< endl << .8 <<endl;
-	ifs<<"# cvPos "<< endl << cvPos <<endl;	
+	ifs<<"# maxPos50 "<< endl << log(4) <<endl;
+	ifs<<"# maxPossd "<< endl << log(.8) <<endl;
+	ifs<<"# cvPos "<< endl << log(.2) <<endl;	
 
 
 FUNCTION output_dat

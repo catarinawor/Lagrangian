@@ -159,12 +159,12 @@ DATA_SECTION
 
 PARAMETER_SECTION
 
-	init_number mo;
-	init_number log_tau_c(-1);
+	init_bounded_number mo(smon,nmon);
+	init_number log_tau_c(-2);
 	
-	init_number maxPos50;
-	init_number maxPossd;
-	init_number cvPos;
+	init_number log_maxPos50;
+	init_number log_maxPossd;
+	init_number log_cvPos;
 
 
 	objective_function_value f;
@@ -175,7 +175,9 @@ PARAMETER_SECTION
 	number So;
 	number Bo
 	number beta;
-	
+	number maxPos50;
+	number maxPossd;
+	number cvPos;
 
 	vector lxo(sage,nage);
 	vector za(sage,nage);
@@ -198,6 +200,7 @@ PARAMETER_SECTION
  	3darray NAreaAge(1,ntstp,sarea,narea,sage,nage);
  	
  	3darray CatchAreaAge(1,ntstp,sarea,narea,sage,nage);
+ 	3darray EffNatAge(1,nations,1,ntstp,sage-2,nage);
  	matrix predCatchAreaAge(1,tot_pcat,sage-3,nage);
 
 PRELIMINARY_CALCS_SECTION
@@ -227,8 +230,6 @@ FUNCTION dvar_vector cnorm(const double& x, const dvar_vector& mu, const dvar_ve
 	return(rst);
 
 
-  
-
 FUNCTION incidence_functions
 
 	
@@ -244,6 +245,10 @@ FUNCTION incidence_functions
 	beta 	= (kappa-1)/Bo;
 
 	za 		= m+va*fe;
+
+	maxPos50 = exp(log_maxPos50);
+	maxPossd = exp(log_maxPossd);
+	cvPos 	 = exp(log_cvPos);
 
 	maxPos(sage,nage) = 1./(1.+exp(-(age-maxPos50)/maxPossd));
 	maxPos(sage,nage) *= (narea-sarea);
@@ -299,8 +304,12 @@ FUNCTION initialization
 		{
 			propVBarea(1)(rr) = (cnorm(areas(rr)+0.5,PosX(1),varPos)-cnorm(areas(rr)-0.5,PosX(1),varPos))(a-sage+1);
 			CatchAreaAge(1)(rr)(a) = q*Effarea(1)(rr)*va(a)/(q*Effarea(1)(rr)*va(a)+m)*(1-exp(-(q*Effarea(1)(rr)*va(a)+m)))*NAreaAge(1)(rr)(a);
+		
+			EffNatAge(indnatarea(rr))(1)(sage-2) = 1;
+			EffNatAge(indnatarea(rr))(1)(sage-1) = indnatarea(rr);
+			EffNatAge(indnatarea(rr))(1)(a) += Effarea(1)(rr)*propVBarea(1)(rr);
 		}
-		Effage(1) = Effarea(1)* propVBarea(1);
+		Effage(1)(a) = Effarea(1)* propVBarea(1);
 	}
 
 
@@ -327,8 +336,12 @@ FUNCTION move_grow_die
 			{
 				propVBarea(i)(rr) = (cnorm(areas(rr)+0.5,PosX(i),varPos)-cnorm(areas(rr)-0.5,PosX(i),varPos))(a-sage+1);
 				CatchAreaAge(i)(rr)(a) = q*Effarea(i)(rr)*va(a)/(q*Effarea(i)(rr)*va(a)+m)*(1-exp(-(q*Effarea(i)(rr)*va(a)+m)))*NAreaAge(i-1)(rr)(a);
+			
+				EffNatAge(indnatarea(rr))(i)(sage-2) = i;
+				EffNatAge(indnatarea(rr))(i)(sage-1) = indnatarea(rr);
+				EffNatAge(indnatarea(rr))(i)(a) += Effarea(i)(rr)* propVBarea(i)(rr);
 			}
-			Effage(i) = Effarea(i)*propVBarea(i);
+			Effage(i)(a) = Effarea(i)*propVBarea(i);
 		}
 
 		//cout<<"cheguei aqui"<<endl;
@@ -415,9 +428,6 @@ FUNCTION calc_obj_func
 				P(i) = predCatchAreaAge(ii)(sage,nage)+0.1e-15;
 			}
 				
-				//cout<<"dmvlogistic(O,P,nu,tau_c,0.0001) e:"<<dmvlogistic(O,P,nu,tau_c,dMinP)<<endl;
-				//cout<<"P is :"<<P<<endl;
-				//exit(1);
 								
 			nlvec(r)=  dmvlogistic(O,P,nu,tau_c,dMinP);
 		}
@@ -433,12 +443,27 @@ FUNCTION calc_obj_func
 REPORT_SECTION
 	
 	REPORT(mo);
+	REPORT(log_tau_c);
+	REPORT(maxPos50);
+	REPORT(maxPossd);
+	REPORT(cvPos);
+	REPORT(syr);
+	REPORT(nyr);
+	REPORT(sage);
+	REPORT(nage);
+	REPORT(smon);
+	REPORT(nmon);
+	REPORT(sarea);
+	REPORT(narea);
+	REPORT(nations);
 	REPORT(maxPos);
 	REPORT(minPos);
 	REPORT(varPos);
 	REPORT(VBarea);
 	REPORT(Effage);
 	REPORT(Effarea);
+	REPORT(EffNatAge);
+
 
 
 
