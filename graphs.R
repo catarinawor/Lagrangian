@@ -112,15 +112,15 @@ maxeff<-max(ENA$effort)
 meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
 mets<-c("simulated","estimated")
 
-setwd("/Users/catarinawor/Documents/Lagrangian/anime")
+setwd("/Users/catarinawor/Documents/Lagrangian/anime/effort")
 
 library("animation")
 
-#saveLatex(
+saveLatex(
 #if you don't have latex installed you need to install it or use other function such as saveGIF
 
-#for(i in 1:length(ntsp))
-#{
+for(i in 1:length(ntsp))
+{
 	df <-ENA[ENA$time==i,]
 	for(n in 1:est$nations )
 	{
@@ -138,85 +138,67 @@ library("animation")
 	y <- y+ facet_grid(.~nations)
 	y <- y+ geom_line(size=2, aes(colour=method))
 	y <- y + scale_y_continuous(limits=c(0,1))
-	y<- y+ geom_text(data = NULL, x = 7 , y = .9, label = meses[indmonth[i]] )
+	y <- y + labs(title=meses[indmonth[i]])
+	
+
 print(y)
-#}
-#,
-#pdflatex = "/usr/texbin/pdflatex")
+}
+,
+pdflatex = "/usr/texbin/pdflatex",latex.filename = "VBarea.tex")
 
 
 
 
 #====================================================================================================================
+setwd("/Users/catarinawor/Documents/Lagrangian/anime/VBarea")
 
-#plot effort and abundance
-effagesim<-melt(matrix(sim$Effage,ncol=(sim$nage-sim$sage+1),dimnames=list(a=1:((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1)),b=sim$sage:sim$nage)))
-effageest<-melt(matrix(est$Effage,ncol=(est$nage-est$sage+1),dimnames = list(a=1:((est$nyr-est$syr+1)*(est$nmon-est$smon+1)),b=est$sage:est$nage)))
+VBareaSim<-matrix(sim$VBarea, ncol=(sim$narea-sim$sarea+1),dimnames=list(ntsp,sim$sarea:sim$narea))
+VBareaEst<-matrix(est$VBarea, ncol=(est$narea-est$sarea+1),dimnames=list(ntsp,est$sarea:est$narea))
 
-names(effagesim) <- c("time", "age", "effort") 
-names(effageest) <- c("time", "age", "effort") 
-
-    
-effagesim=effagesim[order(effagesim$time),]
-
-vo<- ggplot(effagesim[29:42,], aes(age, effort)) + theme_bw()
-vo <-vo+ geom_line(size=2)
-vo
-
-v <- ggplot(effagesim[22:28,], aes(age, z = effort)) + theme_bw()
-v <- v +  stat_contour(aes(colour=..level..,fill=..level..)) 
-v <- v + stat_contour(geom="polygon", aes(fill=..level..))
-
-v2 <- ggplot(effageest, aes(time, age, z = effort)) + theme_bw()
-v2 <- v2 +  stat_contour(aes(colour=..level..,fill=..level..)) 
-v2 <- v2 + stat_contour(geom="polygon", aes(fill=..level..))
-
-multiplot(v,v2,cols=2)
+VBplotSim<-cbind(melt(VBareaSim),rep("simulated",nrow(melt(VBareaSim))))
+VBplotEst<-cbind(melt(VBareaEst),rep("estimated",nrow(melt(VBareaEst))))
 
 
+names(VBplotSim)<- c("time","area", "VB","method")
+names(VBplotEst)<- c("time","area", "VB","method")
 
-df<-data.frame(time=rep(1:length(indyr[indmonth==12]),3),Abundance=c(SB[indmonth==12],apply(VulB,1,sum)[indmonth==12],apply(Nage,1,sum)[indmonth==12]),type=rep(c("SB","VB","N"),each=ntstp/12))
+lat<-VBareaplot$area
+lon<-rep(-131,length(lat))
+VBareaplot<-rbind(VBplotSim,VBplotEst)
 
-p <- ggplot(df, aes(x=time,y=Abundance,group=type)) + theme_bw()
-p <- p+ geom_line(aes(colour=type),size=2)
-p
+lat<-VBareaplot$area
+lon<-rep(-131,length(lat))
 
+VBareaplot<-cbind(VBareaplot,lat,lon)
 
-
-#plot biomass by area
-
-VBareaplot<-melt(VBarea) 
-names(VBareaplot) <- c("time", "area", "VB")
-p1 <- ggplot(VBareaplot, aes(time, area, z = VB)) + theme_bw()
-p1 <- p1 +  stat_contour(aes(colour=..level..,fill=..level..))+ scale_fill_gradient(low = "olivedrab3", high = "magenta3")
-p1 <- p1 + stat_contour(geom="polygon", aes(fill=..level..,colour=..level..))+ scale_colour_gradient(low = "olivedrab3", high = "magenta3")
-#p1 <- p1 + scale_colour_gradient(low = "olivedrab3", high = "magenta3")
-p1
-
-multiplot(p1,p,cols=1)
+library(ggmap)
 
 
-VBareaplot<-melt(VBarea[325:432,]) 
-names(VBareaplot) <- c("time", "area", "VB")
-p1 <- ggplot(VBareaplot, aes(time, area, z = VB)) + theme_bw()
-p1 <- p1 +  stat_contour(aes(colour=..level..,fill=..level..))+ scale_fill_gradient(low = "olivedrab3", high = "magenta3")
-p1 <- p1 + stat_contour(geom="polygon", aes(fill=..level..,colour=..level..))+ scale_colour_gradient(low = "olivedrab3", high = "magenta3")
+basemap<-get_map(location = c(lon = -125, lat = 45),
+    zoom = 5, maptype = "terrain")
 
-#p1 <- p1 + scale_colour_gradient(low = "olivedrab3", high = "magenta3")
-p1
+saveLatex(
+#if you don't have latex installed you need to install it or use other function such as saveGIF
 
-#======================================================================================================
-#animation stuff
 
-# How would each frame of the animations look like?
+for(i in 1:ntsp)
+{
+ex1<-VBareaplot[VBareaplot$time==i ,]
+		minVB<-min(VBareaplot$VB)
+		maxVB<-max(VBareaplot$VB)
 
-VBareaplot<-melt(VBarea) 
-names(VBareaplot) <- c("time", "area", "VB")
-x<-as.factor(rep(1,ntstp*nareas))
-nation<- rep("Canada",ntstp*nareas)
-nation[VBareaplot$area<nationareas[1]]<-"U.S.A"
-Month<-(as.factor(indmonth))
-lat<-VBareaplot$area+29
-lon<-rep(-133,length(lat))
-VBareaplot<-cbind(indyr,indmonth,lat,lon,VBareaplot,x,nation,Month)
+p2<-  ggmap(basemap,
+    extent = "panel",
+    ylab = "Latitude",
+    xlab = "Longitude")
+p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")
+p2 <- p2 + geom_point(alpha=0.8,aes(size=VB, group=method,colour=method),data=ex1) 
+p2 <- p2 + labs(title=meses[indmonth[i]])
+p2 <- p2 + scale_size_area(limits=c(minVB,maxVB),max_size = 10,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")
+print(p2)   
+
+
+}
+,
+pdflatex = "/usr/texbin/pdflatex")
 
