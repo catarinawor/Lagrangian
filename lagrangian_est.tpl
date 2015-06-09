@@ -66,18 +66,29 @@ DATA_SECTION
 			areas.fill_seqadd(sarea,1);
 
 			nationareas.initialize();
-			for(int n=1; n<=nations-1; n++)
+			
+			for(int a=sarea;a<=narea;a++)
+				{
+					if(areas(a)<border(1))
+					{
+						nationareas(1)++;
+					}
+				}
+			
+
+			for(int n=2; n<=nations-1; n++)
 			{
 				for(int a=sarea;a<=narea;a++)
 				{
-					if(areas(a)<border(n))
+					if(areas(a)>=border(n-1)&areas(a)<border(n))
 					{
 						nationareas(n)++;
 					}
 				}
 			}
 			nationareas(nations)=narea-sarea+1 - sum(nationareas(1,nations-1));
-		
+			
+			cout<<"nationareas is "<<nationareas<<endl;
 
 	END_CALCS
 
@@ -434,8 +445,8 @@ FUNCTION calc_obj_func
 				int ii;
 				ii = sum(pcat(1,n))-pcat(n)+i;
 					
-				O(i) = obsCatchNatAge(ii)(sage,nage)+0.1e-15;
-				P(i) = predCatchNatAge(ii)(sage,nage)+0.1e-15;
+				O(i) = obsCatchNatAge(ii)(sage,nage)+0.1e-15/sum(obsCatchNatAge(ii)(sage,nage)+0.1e-15);
+				P(i) = predCatchNatAge(ii)(sage,nage)+0.1e-15/sum(predCatchNatAge(ii)(sage,nage)+0.1e-15);
 			}
 				
 								

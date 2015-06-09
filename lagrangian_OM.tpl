@@ -91,17 +91,28 @@ DATA_SECTION
 			areas.fill_seqadd(sarea,1);
 
 			nationareas.initialize();
-			for(int n=1; n<=nations-1; n++)
+			
+			for(int a=sarea;a<=narea;a++)
+				{
+					if(areas(a)<border(1))
+					{
+						nationareas(1)++;
+					}
+				}
+			
+			for(int n=2; n<=nations-1; n++)
 			{
 				for(int a=sarea;a<=narea;a++)
 				{
-					if(areas(a)<border(n))
+					if(areas(a)>=border(n-1)&areas(a)<border(n))
 					{
 						nationareas(n)++;
 					}
 				}
 			}
+		
 			nationareas(nations)=narea-sarea+1 - sum(nationareas(1,nations-1));
+			
 		
 			random_number_generator rng(seed);
 			wt.fill_randn(rng);
@@ -129,18 +140,20 @@ DATA_SECTION
        				}
        			}
       		
-       			for(int b = sarea; b <= sarea+nationareas(1) ; b++)
+       			for(int b = sarea; b <= sarea+nationareas(1)-1 ; b++)
        			{
        				indnatarea(b)=1;
        			}
-     
-       			for(int bb = 2;bb<=nations;bb++)
+
+       			for(int n=2;n<=nations;n++)
        			{
-       				for(int dd = sarea+nationareas(bb-1)+1;dd<=sarea+sum(nationareas(1,bb))-1;dd++)
+       				for(int b = sarea+sum(nationareas(1,n-1)); b <= sarea+sum(nationareas(1,n))-1 ; b++)
        				{
-       					indnatarea(dd)=bb;
-       				}	 	
+       					indnatarea(b)=n;
+       				}
+
        			}
+       			indnatarea(narea)=nations;
 
        			
        			pcat.initialize();
@@ -158,9 +171,7 @@ DATA_SECTION
        			}
 
        			tot_pcat=sum(pcat);
-       		
-
-
+    
        			
 	END_CALCS
 
