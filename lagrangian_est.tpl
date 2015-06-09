@@ -162,9 +162,10 @@ PARAMETER_SECTION
 	init_bounded_number mo(smon,nmon);
 	init_number log_tau_c(-2);
 	
+	init_number log_cvPos;
 	init_number log_maxPos50;
 	init_number log_maxPossd;
-	init_number log_cvPos;
+	//init_bounded_vector maxPos(sage,nage,sarea,narea);
 
 
 	objective_function_value f;
@@ -178,6 +179,7 @@ PARAMETER_SECTION
 	number maxPos50;
 	number maxPossd;
 	number cvPos;
+	number tau_c;
 
 	vector lxo(sage,nage);
 	vector za(sage,nage);
@@ -249,6 +251,7 @@ FUNCTION incidence_functions
 	maxPos50 = exp(log_maxPos50);
 	maxPossd = exp(log_maxPossd);
 	cvPos 	 = exp(log_cvPos);
+	tau_c = exp(log_tau_c);
 
 	maxPos(sage,nage) = 1./(1.+exp(-(age-maxPos50)/maxPossd));
 	maxPos(sage,nage) *= (narea-sarea);
@@ -397,13 +400,10 @@ FUNCTION clean_catage
 FUNCTION calc_obj_func
 
 	nlvec.initialize();
-
-
-
 	
-	double tau_c;
+	//double tau_c;
 
-	tau_c = exp(value(log_tau_c));
+	//tau_c = exp(value(log_tau_c));
 
 	// need to exclude 0s from O and P, still not sure on how to do it.
 	// need to clip areas an tstp
@@ -429,7 +429,7 @@ FUNCTION calc_obj_func
 			}
 				
 								
-			nlvec(r)=  dmvlogistic(O,P,nu,tau_c,dMinP);
+			nlvec(r)=  dmvlogistic(O,P,nu,value(tau_c),dMinP);
 		}
 		
 	

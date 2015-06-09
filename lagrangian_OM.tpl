@@ -49,6 +49,7 @@ DATA_SECTION
 	init_vector fa(sage,nage);
 	init_vector va(sage,nage);
 	init_vector minPos(sage,nage);
+	//init_vector maxPos(sage,nage);
 	init_number maxPos50;
 	init_number maxPossd;
 	init_number cvPos;
@@ -179,8 +180,8 @@ PARAMETER_SECTION
 	vector za(sage,nage);
 
 	vector SB(1,ntstp);
-	vector maxPos(sage,nage);
 	vector varPos(sage,nage);
+	vector maxPos(sage,nage);
 
 
 	matrix NationVulB(1,ntstp,1,nations);
@@ -194,7 +195,7 @@ PARAMETER_SECTION
  
  	3darray NAreaAge(1,ntstp,sarea,narea,sage,nage);
  	3darray CatchAreaAge(1,ntstp,sarea,narea,sage,nage);
- 	3darray EffNatAge(1,nations,1,ntstp,sage-2,nage)
+ 	3darray EffNatAge(1,nations,1,ntstp,sage-2,nage);
 
  	matrix obsCatchAreaAge(1,tot_pcat,sage-3,nage);
 
@@ -229,7 +230,8 @@ FUNCTION dvar_vector cnorm(const double& x, const dvar_vector& mu, const dvar_ve
 
 FUNCTION incidence_functions
 
-
+	maxPos.initialize();
+	
 	lxo = exp(-m*age);
 	lxo(nage) /= 1. - exp(-m); 
 
@@ -429,9 +431,10 @@ FUNCTION output_pin
 
 	ifs<<"# mo " << endl << mo <<endl;
 	ifs<<"# tau_c " << endl << log(tau_c) <<endl;
+	ifs<<"# cvPos "<< endl << log(.1) <<endl;	
+	//ifs<<"# maxPos "<< endl << minPos <<endl;
 	ifs<<"# maxPos50 "<< endl << log(4) <<endl;
-	ifs<<"# maxPossd "<< endl << log(.8) <<endl;
-	ifs<<"# cvPos "<< endl << log(.2) <<endl;	
+	ifs<<"# maxPossd "<< endl << log(.5) <<endl;
 
 
 FUNCTION output_dat
