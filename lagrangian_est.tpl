@@ -424,8 +424,8 @@ FUNCTION calc_obj_func
 				int ii;
 				ii = sum(pcat(sarea,r))-pcat(r)+i;
 					
-				O(i) = obsCatchAreaAge(ii)(sage,nage)+0.1e-15;
-				P(i) = predCatchAreaAge(ii)(sage,nage)+0.1e-15;
+				O(i) = obsCatchAreaAge(ii)(sage,nage)+0.1e-15/sum(obsCatchAreaAge(ii)(sage,nage)+0.1e-15);
+				P(i) = predCatchAreaAge(ii)(sage,nage)+0.1e-15/sum(predCatchAreaAge(ii)(sage,nage)+0.1e-15);
 			}
 				
 								
