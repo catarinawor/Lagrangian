@@ -389,7 +389,7 @@ FUNCTION clean_catage
        			obsCatchAreaAge(p)(sage-3) = i;
        			obsCatchAreaAge(p)(sage-2) = indmonth(i);
 				obsCatchAreaAge(p)(sage-1) = r;
-       			pa = value((CatchAreaAge(i)(r)(sage,nage)+0.1e-30)/sum(CatchAreaAge(i)(r)(sage,nage)+0.1e-15));
+       			pa = value((CatchAreaAge(i)(r)(sage,nage)+0.1e-30)/sum(CatchAreaAge(i)(r)(sage,nage)+0.1e-30));
 				obsCatchAreaAge(p)(sage,nage) = rmvlogistic(pa,tau_c,seed+i);
 				
 				 p++;	
