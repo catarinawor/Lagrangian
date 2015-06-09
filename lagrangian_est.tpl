@@ -86,7 +86,7 @@ DATA_SECTION
 	 	vector indyr(1,ntstp);
  		ivector indmonth(1,ntstp);
 		vector indnatarea(sarea,narea);
-		ivector pcat(sarea,narea);
+		ivector pcat(1,nations);
 
 		int tot_pcat;
 		
@@ -119,14 +119,14 @@ DATA_SECTION
 
 
        			pcat.initialize();
-       			for(int r=sarea;r<=narea;r++)
+       			for(int n=1;n<=nations;n++)
        			{
        				for(int i=1;i<=ntstp;i++)
        				{
 
-       					if(TotEffmonth(indnatarea(r))(indmonth(i))>0)
+       					if(TotEffmonth(n)(indmonth(i))>0)
        					{
-       						pcat(r)++;
+       						pcat(n)++;
        					}
        							
        				}
@@ -137,7 +137,7 @@ DATA_SECTION
        			
 	END_CALCS
 
-	init_matrix obsCatchAreaAge(1,tot_pcat,sage-3,nage);
+	init_matrix obsCatchNatAge(1,tot_pcat,sage-3,nage);
 
 
 	init_int eof;
@@ -184,7 +184,7 @@ PARAMETER_SECTION
 	vector lxo(sage,nage);
 	vector za(sage,nage);
 	vector SB(1,ntstp);
-	vector nlvec(sarea,narea);
+	vector nlvec(1,nations);
 	vector maxPos(sage,nage);
 	vector varPos(sage,nage);
 
@@ -202,8 +202,11 @@ PARAMETER_SECTION
  	3darray NAreaAge(1,ntstp,sarea,narea,sage,nage);
  	
  	3darray CatchAreaAge(1,ntstp,sarea,narea,sage,nage);
+ 	3darray CatchNatAge(1,ntstp,1,nations,sage,nage);
  	3darray EffNatAge(1,nations,1,ntstp,sage-2,nage);
- 	matrix predCatchAreaAge(1,tot_pcat,sage-3,nage);
+ 	
+ 	matrix predCatchNatAge(1,tot_pcat,sage-3,nage);
+
 
 PRELIMINARY_CALCS_SECTION
 
@@ -262,6 +265,9 @@ FUNCTION incidence_functions
 
 FUNCTION initialization
 
+	NAreaAge.initialize();
+ 	CatchAreaAge.initialize();
+ 	CatchNatAge.initialize();
 
 	Nage(1,1) = So*Bo/(1+beta*Bo);
 
@@ -307,7 +313,8 @@ FUNCTION initialization
 		{
 			propVBarea(1)(rr) = (cnorm(areas(rr)+0.5,PosX(1),varPos)-cnorm(areas(rr)-0.5,PosX(1),varPos))(a-sage+1);
 			CatchAreaAge(1)(rr)(a) = q*Effarea(1)(rr)*va(a)/(q*Effarea(1)(rr)*va(a)+m)*(1-exp(-(q*Effarea(1)(rr)*va(a)+m)))*NAreaAge(1)(rr)(a);
-		
+			CatchNatAge(1)(indnatarea(rr))(sage,nage) += CatchAreaAge(1)(rr)(a);
+
 			EffNatAge(indnatarea(rr))(1)(sage-2) = 1;
 			EffNatAge(indnatarea(rr))(1)(sage-1) = indnatarea(rr);
 			EffNatAge(indnatarea(rr))(1)(a) += Effarea(1)(rr)*propVBarea(1)(rr);
@@ -339,7 +346,9 @@ FUNCTION move_grow_die
 			{
 				propVBarea(i)(rr) = (cnorm(areas(rr)+0.5,PosX(i),varPos)-cnorm(areas(rr)-0.5,PosX(i),varPos))(a-sage+1);
 				CatchAreaAge(i)(rr)(a) = q*Effarea(i)(rr)*va(a)/(q*Effarea(i)(rr)*va(a)+m)*(1-exp(-(q*Effarea(i)(rr)*va(a)+m)))*NAreaAge(i-1)(rr)(a);
-			
+				CatchNatAge(i)(indnatarea(rr))(sage,nage)+= CatchAreaAge(i)(rr)(a);
+
+
 				EffNatAge(indnatarea(rr))(i)(sage-2) = i;
 				EffNatAge(indnatarea(rr))(i)(sage-1) = indnatarea(rr);
 				EffNatAge(indnatarea(rr))(i)(a) += Effarea(i)(rr)* propVBarea(i)(rr);
@@ -383,18 +392,19 @@ FUNCTION clean_catage
 	p=1;
 	for(int i=1;i<=ntstp;i++)
 	{
-		for(int r=sarea;r<=narea;r++)
+		for(int n=1;n<=nations;n++)
 		{					
-			if(TotEffmonth(indnatarea(r))(indmonth(i))>0)
+			if(TotEffmonth(n)(indmonth(i))>0)
        		{
-       			predCatchAreaAge(p)(sage-3) = i;
-       			predCatchAreaAge(p)(sage-2) = indmonth(i);
-				predCatchAreaAge(p)(sage-1) = r;
-       			predCatchAreaAge(p)(sage,nage) = CatchAreaAge(i)(r)(sage,nage);
-				 p++;	
+       			predCatchNatAge(p)(sage-3) = i;
+       			predCatchNatAge(p)(sage-2) = indmonth(i);
+				predCatchNatAge(p)(sage-1) = n;
+       			predCatchNatAge(p)(sage,nage) = CatchNatAge(i)(n)(sage,nage);
+				 p++;
        		}	
 		}
 	}
+
 
 
 FUNCTION calc_obj_func
@@ -409,27 +419,27 @@ FUNCTION calc_obj_func
 	// need to clip areas an tstp
 
 	
-		for(int r = sarea; r<=narea;r++)
+		for(int n = 1; n<=nations;n++)
 		{
-			dvar_matrix nu(1,pcat(r),sage,nage);
-			dmatrix O(1,pcat(r),sage,nage);
-			dvar_matrix P(1,pcat(r),sage,nage);
+			dvar_matrix nu(1,pcat(n),sage,nage);
+			dmatrix O(1,pcat(n),sage,nage);
+			dvar_matrix P(1,pcat(n),sage,nage);
 			
 			O.initialize();
 			P.initialize();
 			nu.initialize();
 
-			for(int i=1; i<=pcat(r);i++)
+			for(int i=1; i<=pcat(n);i++)
 			{
 				int ii;
-				ii = sum(pcat(sarea,r))-pcat(r)+i;
+				ii = sum(pcat(1,n))-pcat(n)+i;
 					
-				O(i) = obsCatchAreaAge(ii)(sage,nage)+0.1e-15;
-				P(i) = predCatchAreaAge(ii)(sage,nage)+0.1e-15;
+				O(i) = obsCatchNatAge(ii)(sage,nage)+0.1e-15;
+				P(i) = predCatchNatAge(ii)(sage,nage)+0.1e-15;
 			}
 				
 								
-			nlvec(r)=  dmvlogistic(O,P,nu,value(tau_c),dMinP);
+			nlvec(n)=  dmvlogistic(O,P,nu,value(tau_c),dMinP);
 		}
 		
 	

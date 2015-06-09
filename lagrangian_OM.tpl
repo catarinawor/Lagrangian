@@ -112,7 +112,7 @@ DATA_SECTION
 	 	vector indyr(1,ntstp);
  		ivector indmonth(1,ntstp);
 		vector indnatarea(sarea,narea);
-		ivector pcat(sarea,narea);
+		ivector pcat(1,nations);
 
 		int tot_pcat;
 
@@ -144,14 +144,14 @@ DATA_SECTION
 
        			
        			pcat.initialize();
-       			for(int r=sarea;r<=narea;r++)
+       			for(int n=1;n<=nations;n++)
        			{
        				for(int i=1;i<=ntstp;i++)
        				{
 
-       					if(TotEffmonth(indnatarea(r))(indmonth(i))>0)
+       					if(TotEffmonth(n)(indmonth(i))>0)
        					{
-       						pcat(r)++;
+       						pcat(n)++;
        					}
        							
        				}
@@ -195,9 +195,10 @@ PARAMETER_SECTION
  
  	3darray NAreaAge(1,ntstp,sarea,narea,sage,nage);
  	3darray CatchAreaAge(1,ntstp,sarea,narea,sage,nage);
+ 	3darray CatchNatAge(1,ntstp,1,nations,sage,nage);
  	3darray EffNatAge(1,nations,1,ntstp,sage-2,nage);
 
- 	matrix obsCatchAreaAge(1,tot_pcat,sage-3,nage);
+ 	matrix obsCatchNatAge(1,tot_pcat,sage-3,nage);
 
 
 PRELIMINARY_CALCS_SECTION
@@ -253,6 +254,7 @@ FUNCTION initialization
 	
 	NAreaAge.initialize();
  	CatchAreaAge.initialize();
+ 	CatchNatAge.initialize();
 
 	Nage(1,1) = So*Bo/(1+beta*Bo);
 
@@ -298,12 +300,15 @@ FUNCTION initialization
 		{
 			propVBarea(1)(rr) = (cnorm(areas(rr)+0.5,PosX(1),varPos)-cnorm(areas(rr)-0.5,PosX(1),varPos))(a-sage+1);
 			CatchAreaAge(1)(rr)(a) = q*Effarea(1)(rr)*va(a)/(q*Effarea(1)(rr)*va(a)+m)*(1-exp(-(q*Effarea(1)(rr)*va(a)+m)))*NAreaAge(1)(rr)(a);
+			CatchNatAge(1)(indnatarea(rr))(sage,nage)+= CatchAreaAge(1)(rr)(a);
 
 			EffNatAge(indnatarea(rr))(1)(sage-2) = 1;
 			EffNatAge(indnatarea(rr))(1)(sage-1) = indnatarea(rr);
 			EffNatAge(indnatarea(rr))(1)(a) += Effarea(1)(rr)*propVBarea(1)(rr);
+
 		}
 		Effage(1)(a) = Effarea(1)* propVBarea(1);
+
 	}
 
 
@@ -333,7 +338,8 @@ FUNCTION move_grow_die
 			{
 				propVBarea(i)(rr) = (cnorm(areas(rr)+0.5,PosX(i),varPos)-cnorm(areas(rr)-0.5,PosX(i),varPos))(a-sage+1);
 				CatchAreaAge(i)(rr)(a) = q*Effarea(i)(rr)*va(a)/(q*Effarea(i)(rr)*va(a)+m)*(1-exp(-(q*Effarea(i)(rr)*va(a)+m)))*NAreaAge(i-1)(rr)(a);
-				
+				CatchNatAge(i)(indnatarea(rr))(sage,nage)+= CatchAreaAge(i)(rr)(a);
+
 				EffNatAge(indnatarea(rr))(i)(sage-2) = i;
 				EffNatAge(indnatarea(rr))(i)(sage-1) = indnatarea(rr);
 				EffNatAge(indnatarea(rr))(i)(a) += Effarea(i)(rr)* propVBarea(i)(rr);
@@ -377,20 +383,20 @@ FUNCTION clean_catage
 	p=1;
 	for(int i=1;i<=ntstp;i++)
 	{
-		for(int r=sarea;r<=narea;r++)
+		for(int n=1;n<=nations;n++)
 		{
 							
-			if(TotEffmonth(indnatarea(r))(indmonth(i))>0)
+			if(TotEffmonth(n)(indmonth(i))>0)
        		{
        			
        			dvector pa(nage,sage);
        			pa.initialize();
 
-       			obsCatchAreaAge(p)(sage-3) = i;
-       			obsCatchAreaAge(p)(sage-2) = indmonth(i);
-				obsCatchAreaAge(p)(sage-1) = r;
-       			pa = value((CatchAreaAge(i)(r)(sage,nage)+0.1e-30)/sum(CatchAreaAge(i)(r)(sage,nage)+0.1e-15));
-				obsCatchAreaAge(p)(sage,nage) = rmvlogistic(pa,tau_c,seed+i);
+       			obsCatchNatAge(p)(sage-3) = i;
+       			obsCatchNatAge(p)(sage-2) = indmonth(i);
+				obsCatchNatAge(p)(sage-1) = n;
+       			pa = value((CatchNatAge(i)(n)(sage,nage)+0.1e-30)/sum(CatchNatAge(i)(n)(sage,nage)+0.1e-30));
+				obsCatchNatAge(p)(sage,nage) = rmvlogistic(pa,tau_c,seed+i);
 				
 				 p++;	
        		}	
@@ -433,8 +439,8 @@ FUNCTION output_pin
 	ifs<<"# tau_c " << endl << log(tau_c) <<endl;
 	ifs<<"# cvPos "<< endl << log(.1) <<endl;	
 	//ifs<<"# maxPos "<< endl << minPos <<endl;
-	ifs<<"# maxPos50 "<< endl << log(4) <<endl;
-	ifs<<"# maxPossd "<< endl << log(.5) <<endl;
+	ifs<<"# maxPos50 "<< endl << log(6) <<endl;
+	ifs<<"# maxPossd "<< endl << log(1) <<endl;
 
 
 FUNCTION output_dat
@@ -463,7 +469,7 @@ FUNCTION output_dat
 	afs<<"# Total effort by country and year " << endl << TotEffyear <<endl;
 	afs<<"# Total effort by country and month " << endl << TotEffmonth <<endl;
 	afs<<"# dMinP " << endl << 0.00001 <<endl;
-	afs<<"#  tstp month area catage " << endl << obsCatchAreaAge <<endl;
+	afs<<"#  tstp month area catage " << endl << obsCatchNatAge <<endl;
 	afs<<"# eof " << endl << 999 <<endl;
 	
 
