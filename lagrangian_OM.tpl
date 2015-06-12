@@ -49,7 +49,6 @@ DATA_SECTION
 	init_vector fa(sage,nage);
 	init_vector va(sage,nage);
 	init_vector minPos(sage,nage);
-	//init_vector maxPos(sage,nage);
 	init_number maxPos50;
 	init_number maxPossd;
 	init_number cvPos;
@@ -91,20 +90,18 @@ DATA_SECTION
 			areas.fill_seqadd(sarea,1);
 
 			nationareas.initialize();
+
+			dvector natmp(1,nations);
 			
-			for(int a=sarea;a<=narea;a++)
-				{
-					if(areas(a)<border(1))
-					{
-						nationareas(1)++;
-					}
-				}
-			
-			for(int n=2; n<=nations-1; n++)
+
+			natmp(1)=sarea;
+
+			for(int n=1; n<=nations-1; n++)
 			{
+				natmp(n+1)=border(n);
 				for(int a=sarea;a<=narea;a++)
 				{
-					if(areas(a)>=border(n-1)&areas(a)<border(n))
+					if(areas(a)>=natmp(n)&areas(a)<border(n))
 					{
 						nationareas(n)++;
 					}
@@ -112,7 +109,6 @@ DATA_SECTION
 			}
 		
 			nationareas(nations)=narea-sarea+1 - sum(nationareas(1,nations-1));
-			
 		
 			random_number_generator rng(seed);
 			wt.fill_randn(rng);
@@ -140,21 +136,21 @@ DATA_SECTION
        				}
        			}
       		
-       			for(int b = sarea; b <= sarea+nationareas(1)-1 ; b++)
-       			{
-       				indnatarea(b)=1;
-       			}
 
-       			for(int n=2;n<=nations;n++)
+       			ivector natmp1(1,nations+1);
+
+       			natmp1(1) = sarea;
+
+       			for(int n=1;n<=nations;n++)
        			{
-       				for(int b = sarea+sum(nationareas(1,n-1)); b <= sarea+sum(nationareas(1,n))-1 ; b++)
+       				natmp1(n+1)= natmp1(n)+nationareas(n);
+       				for(int b = natmp1(n); b <= natmp1(n+1)-1 ; b++)
        				{
        					indnatarea(b)=n;
        				}
 
        			}
        			indnatarea(narea)=nations;
-
        			
        			pcat.initialize();
        			for(int n=1;n<=nations;n++)
@@ -244,8 +240,8 @@ FUNCTION incidence_functions
 
 	maxPos.initialize();
 	
-	lxo = exp(-m*age);
-	lxo(nage) /= 1. - exp(-m); 
+	lxo = mfexp(-m*age);
+	lxo(nage) /= 1. - mfexp(-m); 
 
 	kappa 	= 4*h/(1-h);
 	phie	= lxo*fa;
@@ -255,7 +251,7 @@ FUNCTION incidence_functions
 
 	za 		= m+va*fe;
 
-	maxPos(sage,nage) = 1./(1.+exp(-(age-maxPos50)/maxPossd));
+	maxPos(sage,nage) = 1./(1.+mfexp(-(age-maxPos50)/maxPossd));
 	maxPos(sage,nage) *= (narea-sarea);
 	maxPos(sage,nage) += sarea;
 
@@ -271,7 +267,7 @@ FUNCTION initialization
 
 	for(int i=sage+1 ; i <= nage ; i++)
 	{
-		Nage(1,i) = Nage(1,i-1) * exp(-za(i-1));
+		Nage(1,i) = Nage(1,i-1) * mfexp(-za(i-1));
 	}
 
 	VulB(1) = elem_prod(elem_prod(Nage(1),va),wa);
@@ -310,8 +306,8 @@ FUNCTION initialization
 		for(int rr =sarea; rr<=narea; rr++)
 		{
 			propVBarea(1)(rr) = (cnorm(areas(rr)+0.5,PosX(1),varPos)-cnorm(areas(rr)-0.5,PosX(1),varPos))(a-sage+1);
-			CatchAreaAge(1)(rr)(a) = q*Effarea(1)(rr)*va(a)/(q*Effarea(1)(rr)*va(a)+m)*(1-exp(-(q*Effarea(1)(rr)*va(a)+m)))*NAreaAge(1)(rr)(a);
-			CatchNatAge(1)(indnatarea(rr))(sage,nage)+= CatchAreaAge(1)(rr)(a);
+			CatchAreaAge(1)(rr)(a) = q*Effarea(1)(rr)*va(a)/(q*Effarea(1)(rr)*va(a)+m)*(1-mfexp(-(q*Effarea(1)(rr)*va(a)+m)))*NAreaAge(1)(rr)(a);
+			CatchNatAge(1)(indnatarea(rr))(a) += CatchAreaAge(1)(rr)(a);
 
 			EffNatAge(indnatarea(rr))(1)(sage-2) = 1;
 			EffNatAge(indnatarea(rr))(1)(sage-1) = indnatarea(rr);
@@ -322,8 +318,6 @@ FUNCTION initialization
 
 	}
 
-
-	//CatchAgeArea
 
 
 
@@ -348,8 +342,8 @@ FUNCTION move_grow_die
 			for(int rr =sarea; rr<=narea; rr++)
 			{
 				propVBarea(i)(rr) = (cnorm(areas(rr)+0.5,PosX(i),varPos)-cnorm(areas(rr)-0.5,PosX(i),varPos))(a-sage+1);
-				CatchAreaAge(i)(rr)(a) = q*Effarea(i)(rr)*va(a)/(q*Effarea(i)(rr)*va(a)+m)*(1-exp(-(q*Effarea(i)(rr)*va(a)+m)))*NAreaAge(i-1)(rr)(a);
-				CatchNatAge(i)(indnatarea(rr))(sage,nage)+= CatchAreaAge(i)(rr)(a);
+				CatchAreaAge(i)(rr)(a) = q*Effarea(i)(rr)*va(a)/(q*Effarea(i)(rr)*va(a)+m)*(1-mfexp(-(q*Effarea(i)(rr)*va(a)+m)))*NAreaAge(i-1)(rr)(a);
+				CatchNatAge(i)(indnatarea(rr))(a)+= CatchAreaAge(i)(rr)(a);
 
 				EffNatAge(indnatarea(rr))(i)(sage-2) = i;
 				EffNatAge(indnatarea(rr))(i)(sage-1) = indnatarea(rr);
@@ -358,16 +352,16 @@ FUNCTION move_grow_die
 			Effage(i)(a) = Effarea(i)*propVBarea(i);
 		}
 
-		//cout<<"indmonth(i) is "<<indmonth(i)<<endl;
+		
 		
 
 		switch (indmonth(i)) {
             case 1:
-            	Nage(i) = elem_prod(Nage(i-1),exp(-(m+q*elem_prod(Effage(i),va))/12));
-            	Nage(i,sage) = So*SB(i-nmon)/(1.+beta*SB(i-nmon))*exp(wt(indyr(i)));
+            	Nage(i) = elem_prod(Nage(i-1),mfexp(-(m+q*elem_prod(Effage(i),va))/12));
+            	Nage(i,sage) = So*SB(i-nmon)/(1.+beta*SB(i-nmon))*mfexp(wt(indyr(i)));
 
             default:
-               Nage(i) = elem_prod(Nage(i-1),exp(-(m+q*elem_prod(Effage(i),va))/12));
+               Nage(i) = elem_prod(Nage(i-1),mfexp(-(m+q*elem_prod(Effage(i),va))/12));
 
         }
 		
@@ -409,7 +403,7 @@ FUNCTION clean_catage
        			pa = value((CatchNatAge(i)(n)(sage,nage)+0.1e-30)/sum(CatchNatAge(i)(n)(sage,nage)+0.1e-30));
 				obsCatchNatAge(p)(sage,nage) = rmvlogistic(pa,tau_c,seed+i);
 				
-				 p++;	
+				p++;	
        		}	
 		}
 	}
@@ -440,7 +434,8 @@ FUNCTION output_true
 	ofs<<"Effage" << endl << Effage <<endl;
 	ofs<<"Effarea"<< endl << Effarea <<endl;
 	ofs<<"EffNatAge"<< endl << EffNatAge<<endl;
-	
+	ofs<<"CatchNatAge"<< endl << CatchNatAge<<endl;
+
 	
 FUNCTION output_pin
 	
@@ -448,10 +443,10 @@ FUNCTION output_pin
 
 	ifs<<"# mo " << endl << mo <<endl;
 	ifs<<"# tau_c " << endl << log(tau_c) <<endl;
-	ifs<<"# cvPos "<< endl << log(.1) <<endl;	
+	ifs<<"# cvPos "<< endl << log(.2) <<endl;	
 	//ifs<<"# maxPos "<< endl << minPos <<endl;
-	ifs<<"# maxPos50 "<< endl << log(6) <<endl;
-	ifs<<"# maxPossd "<< endl << log(1) <<endl;
+	ifs<<"# maxPos50 "<< endl << log(4) <<endl;
+	ifs<<"# maxPossd "<< endl << log(1.5) <<endl;
 
 
 FUNCTION output_dat

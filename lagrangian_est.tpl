@@ -66,29 +66,27 @@ DATA_SECTION
 			areas.fill_seqadd(sarea,1);
 
 			nationareas.initialize();
-			
-			for(int a=sarea;a<=narea;a++)
-				{
-					if(areas(a)<border(1))
-					{
-						nationareas(1)++;
-					}
-				}
+
+			dvector natmp(1,nations);
 			
 
-			for(int n=2; n<=nations-1; n++)
+			natmp(1)=sarea;
+
+			for(int n=1; n<=nations-1; n++)
 			{
+				natmp(n+1)=border(n);
 				for(int a=sarea;a<=narea;a++)
 				{
-					if(areas(a)>=border(n-1)&areas(a)<border(n))
+					if(areas(a)>=natmp(n)&areas(a)<border(n))
 					{
 						nationareas(n)++;
 					}
 				}
 			}
+		
 			nationareas(nations)=narea-sarea+1 - sum(nationareas(1,nations-1));
+		
 			
-			cout<<"nationareas is "<<nationareas<<endl;
 
 	END_CALCS
 
@@ -115,19 +113,20 @@ DATA_SECTION
        				}
        			}
       		
-       			for(int b = sarea; b <= sarea+nationareas(1) ; b++)
-       			{
-       				indnatarea(b)=1;
-       			}
-     
-       			for(int bb = 2;bb<=nations;bb++)
-       			{
-       				for(int dd = sarea+nationareas(bb-1)+1;dd<=sarea+sum(nationareas(1,bb))-1;dd++)
-       				{
-       					indnatarea(dd)=bb;
-       				}	 	
-       			}
+       			ivector natmp1(1,nations+1);
 
+       			natmp1(1) = sarea;
+
+       			for(int n=1;n<=nations;n++)
+       			{
+       				natmp1(n+1)= natmp1(n)+nationareas(n);
+       				for(int b = natmp1(n); b <= natmp1(n+1)-1 ; b++)
+       				{
+       					indnatarea(b)=n;
+       				}
+
+       			}
+       			indnatarea(narea)=nations;
 
        			pcat.initialize();
        			for(int n=1;n<=nations;n++)
@@ -251,8 +250,8 @@ FUNCTION incidence_functions
 	
 	maxPos.initialize();
 
-	lxo = exp(-m*age);
-	lxo(nage) /= 1. - exp(-m); 
+	lxo = mfexp(-m*age);
+	lxo(nage) /= 1. - mfexp(-m); 
 
 	kappa 	= 4*h/(1-h);
 	phie	= lxo*fa;
@@ -262,12 +261,12 @@ FUNCTION incidence_functions
 
 	za 		= m+va*fe;
 
-	maxPos50 = exp(log_maxPos50);
-	maxPossd = exp(log_maxPossd);
-	cvPos 	 = exp(log_cvPos);
-	tau_c = exp(log_tau_c);
+	maxPos50 = mfexp(log_maxPos50);
+	maxPossd = mfexp(log_maxPossd);
+	cvPos 	 = mfexp(log_cvPos);
+	tau_c = mfexp(log_tau_c);
 
-	maxPos(sage,nage) = 1./(1.+exp(-(age-maxPos50)/maxPossd));
+	maxPos(sage,nage) = 1./(1.+mfexp(-(age-maxPos50)/maxPossd));
 	maxPos(sage,nage) *= (narea-sarea);
 	maxPos(sage,nage) += sarea;
 
@@ -284,7 +283,7 @@ FUNCTION initialization
 
 	for(int i=sage+1 ; i <= nage ; i++)
 	{
-		Nage(1,i) = Nage(1,i-1) * exp(-za(i-1));
+		Nage(1,i) = Nage(1,i-1) * mfexp(-za(i-1));
 	}
 
 	VulB(1) = elem_prod(elem_prod(Nage(1),va),wa);
@@ -323,7 +322,7 @@ FUNCTION initialization
 		for(int rr =sarea; rr<=narea; rr++)
 		{
 			propVBarea(1)(rr) = (cnorm(areas(rr)+0.5,PosX(1),varPos)-cnorm(areas(rr)-0.5,PosX(1),varPos))(a-sage+1);
-			CatchAreaAge(1)(rr)(a) = q*Effarea(1)(rr)*va(a)/(q*Effarea(1)(rr)*va(a)+m)*(1-exp(-(q*Effarea(1)(rr)*va(a)+m)))*NAreaAge(1)(rr)(a);
+			CatchAreaAge(1)(rr)(a) = q*Effarea(1)(rr)*va(a)/(q*Effarea(1)(rr)*va(a)+m)*(1-mfexp(-(q*Effarea(1)(rr)*va(a)+m)))*NAreaAge(1)(rr)(a);
 			CatchNatAge(1)(indnatarea(rr))(sage,nage) += CatchAreaAge(1)(rr)(a);
 
 			EffNatAge(indnatarea(rr))(1)(sage-2) = 1;
@@ -356,7 +355,7 @@ FUNCTION move_grow_die
 			for(int rr =sarea; rr<=narea; rr++)
 			{
 				propVBarea(i)(rr) = (cnorm(areas(rr)+0.5,PosX(i),varPos)-cnorm(areas(rr)-0.5,PosX(i),varPos))(a-sage+1);
-				CatchAreaAge(i)(rr)(a) = q*Effarea(i)(rr)*va(a)/(q*Effarea(i)(rr)*va(a)+m)*(1-exp(-(q*Effarea(i)(rr)*va(a)+m)))*NAreaAge(i-1)(rr)(a);
+				CatchAreaAge(i)(rr)(a) = q*Effarea(i)(rr)*va(a)/(q*Effarea(i)(rr)*va(a)+m)*(1-mfexp(-(q*Effarea(i)(rr)*va(a)+m)))*NAreaAge(i-1)(rr)(a);
 				CatchNatAge(i)(indnatarea(rr))(sage,nage)+= CatchAreaAge(i)(rr)(a);
 
 
@@ -372,11 +371,11 @@ FUNCTION move_grow_die
 
 		switch (indmonth(i)) {
             case 1:
-            	Nage(i) = elem_prod(Nage(i-1),exp(-(m+q*elem_prod(Effage(i),va))/12));
+            	Nage(i) = elem_prod(Nage(i-1),mfexp(-(m+q*elem_prod(Effage(i),va))/12));
             	Nage(i,sage) = So*SB(i-nmon)/(1.+beta*SB(i-nmon));
 
             default:
-               Nage(i) = elem_prod(Nage(i-1),exp(-(m+q*elem_prod(Effage(i),va))/12));
+               Nage(i) = elem_prod(Nage(i-1),mfexp(-(m+q*elem_prod(Effage(i),va))/12));
 
         }
 		
@@ -422,13 +421,6 @@ FUNCTION calc_obj_func
 
 	nlvec.initialize();
 	
-	//double tau_c;
-
-	//tau_c = exp(value(log_tau_c));
-
-	// need to exclude 0s from O and P, still not sure on how to do it.
-	// need to clip areas an tstp
-
 	
 		for(int n = 1; n<=nations;n++)
 		{
