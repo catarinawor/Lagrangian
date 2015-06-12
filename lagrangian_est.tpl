@@ -66,18 +66,22 @@ DATA_SECTION
 			areas.fill_seqadd(sarea,1);
 
 			nationareas.initialize();
+
+			dvector natmp(1,nations);
+			
+			natmp(1)=sarea;
+
 			for(int n=1; n<=nations-1; n++)
 			{
+				natmp(n+1)=border(n);
 				for(int a=sarea;a<=narea;a++)
 				{
-					if(areas(a)<border(n))
+					if(areas(a)>=natmp(n)&areas(a)<border(n))
 					{
 						nationareas(n)++;
 					}
 				}
 			}
-			nationareas(nations)=narea-sarea+1 - sum(nationareas(1,nations-1));
-		
 
 	END_CALCS
 
@@ -104,18 +108,22 @@ DATA_SECTION
        				}
        			}
       		
-       			for(int b = sarea; b <= sarea+nationareas(1) ; b++)
+       			ivector natmp1(1,nations+1);
+
+       			natmp1(1) = sarea;
+
+       			for(int n=1;n<=nations;n++)
        			{
-       				indnatarea(b)=1;
-       			}
-     
-       			for(int bb = 2;bb<=nations;bb++)
-       			{
-       				for(int dd = sarea+nationareas(bb-1)+1;dd<=sarea+sum(nationareas(1,bb))-1;dd++)
+       				natmp1(n+1)= natmp1(n)+nationareas(n);
+       				for(int b = natmp1(n); b <= natmp1(n+1)-1 ; b++)
        				{
-       					indnatarea(dd)=bb;
-       				}	 	
+       					indnatarea(b)=n;
+       				}
+
        			}
+       			indnatarea(narea)=nations;
+
+       			cout<< "indnatarea is"<< indnatarea<<endl;
 
 
        			pcat.initialize();
