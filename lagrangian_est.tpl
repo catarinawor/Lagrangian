@@ -323,7 +323,7 @@ FUNCTION initialization
 		{
 			propVBarea(1)(rr) = (cnorm(areas(rr)+0.5,PosX(1),varPos)-cnorm(areas(rr)-0.5,PosX(1),varPos))(a-sage+1);
 			CatchAreaAge(1)(rr)(a) = q*Effarea(1)(rr)*va(a)/(q*Effarea(1)(rr)*va(a)+m)*(1-mfexp(-(q*Effarea(1)(rr)*va(a)+m)))*NAreaAge(1)(rr)(a);
-			CatchNatAge(1)(indnatarea(rr))(sage,nage) += CatchAreaAge(1)(rr)(a);
+			CatchNatAge(1)(indnatarea(rr))(a) += CatchAreaAge(1)(rr)(a);
 
 			EffNatAge(indnatarea(rr))(1)(sage-2) = 1;
 			EffNatAge(indnatarea(rr))(1)(sage-1) = indnatarea(rr);
@@ -356,7 +356,7 @@ FUNCTION move_grow_die
 			{
 				propVBarea(i)(rr) = (cnorm(areas(rr)+0.5,PosX(i),varPos)-cnorm(areas(rr)-0.5,PosX(i),varPos))(a-sage+1);
 				CatchAreaAge(i)(rr)(a) = q*Effarea(i)(rr)*va(a)/(q*Effarea(i)(rr)*va(a)+m)*(1-mfexp(-(q*Effarea(i)(rr)*va(a)+m)))*NAreaAge(i-1)(rr)(a);
-				CatchNatAge(i)(indnatarea(rr))(sage,nage)+= CatchAreaAge(i)(rr)(a);
+				CatchNatAge(i)(indnatarea(rr))(a)+= CatchAreaAge(i)(rr)(a);
 
 
 				EffNatAge(indnatarea(rr))(i)(sage-2) = i;

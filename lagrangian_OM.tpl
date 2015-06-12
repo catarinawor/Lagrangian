@@ -441,7 +441,7 @@ FUNCTION output_pin
 	
 	ofstream ifs("lagrangian_est.pin");
 
-	ifs<<"# mo " << endl << mo <<endl;
+	ifs<<"# mo " << endl << 1.0 <<endl;
 	ifs<<"# tau_c " << endl << log(tau_c) <<endl;
 	ifs<<"# cvPos "<< endl << log(.2) <<endl;	
 	//ifs<<"# maxPos "<< endl << minPos <<endl;
