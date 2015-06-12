@@ -93,24 +93,30 @@ DATA_SECTION
 			nationareas.initialize();
 
 			dvector natmp(1,nations);
+			dvector natmp2(1,nations);
+
 			
 			natmp(1)=sarea;
+			natmp2(nations)=narea;
 
 			for(int n=1; n<=nations-1; n++)
 			{
-				natmp(n+1)=border(n);
+				natmp(n+1)= border(n);
+				natmp2(n) = border(n);
 				for(int a=sarea;a<=narea;a++)
 				{
-					if(areas(a)>=natmp(n)&areas(a)<border(n))
+					if(areas(a)>=natmp(n)&areas(a)<natmp2(n))
 					{
 						nationareas(n)++;
 					}
 				}
 			}
 
-			cout<<"nationareas is "<<nationareas<<endl;
+			nationareas(nations)=narea-sarea+1 - sum(nationareas(1,nations-1));
 
-			exit(1);
+			//cout<<"nationareas is "<<nationareas<<endl;
+
+			
 		
 			random_number_generator rng(seed);
 			wt.fill_randn(rng);
@@ -152,6 +158,10 @@ DATA_SECTION
 
        			}
        			indnatarea(narea)=nations;
+
+       			//cout<<"indnatarea is "<<indnatarea<<endl;
+
+       			//exit(1);
 
        			
        			pcat.initialize();
