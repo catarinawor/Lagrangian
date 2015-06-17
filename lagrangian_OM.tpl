@@ -49,7 +49,6 @@ DATA_SECTION
 	init_vector fa(sage,nage);
 	init_vector va(sage,nage);
 	init_vector minPos(sage,nage);
-	//init_vector maxPos(sage,nage);
 	init_number maxPos50;
 	init_number maxPossd;
 	init_number cvPos;
@@ -57,8 +56,6 @@ DATA_SECTION
 
 	init_matrix TotEffyear(1,nations,syr,nyr);
 	init_matrix TotEffmonth(1,nations,smon,nmon);
-
-	init_vector RelRec(syr,nyr);
 
 	init_int eof;
 	
@@ -115,17 +112,12 @@ DATA_SECTION
 			}
 
 			nationareas(nations)=narea-sarea+1 - sum(nationareas(1,nations-1));
-
-			//cout<<"nationareas is "<<nationareas<<endl;
-
 			
 		
 			random_number_generator rng(seed);
 			wt.fill_randn(rng);
 			wt*=sigR;
 
-			//cout<<"wt is "<<mfexp(wt)<<endl;	
-			//exit(1);
 
 	END_CALCS
 
@@ -164,10 +156,7 @@ DATA_SECTION
        			}
        			indnatarea(narea)=nations;
 
-       			//cout<<"indnatarea is "<<indnatarea<<endl;
-
-       			//exit(1);
-
+       			
        			
        			pcat.initialize();
        			for(int r=sarea;r<=narea;r++)
@@ -373,18 +362,15 @@ FUNCTION move_grow_die
 		switch (indmonth(i)) {
             case 1:           	
             	
-            	Nage(i)(sage) = (So*SB(i-nmon)/(1.+beta*SB(i-nmon)))*RelRec(indyr(i));
+            	Nage(i)(sage) = (So*SB(i-nmon)/(1.+beta*SB(i-nmon)))*mfexp(wt(indyr(i)));
 
 
             	for(int a = sage+1;a<=nage;a++)
             	{
             		Nage(i)(a) = Nage(i-1)(a-1)*exp(-(m+q*Effage(i)(a-1)*va(a-1))/12);
             	}
-            	cout<<"indmonth(i) "<<indmonth(i)<< " and "<<"indyr is "<<indyr(i)<<endl;
-            	cout<<"Nage(i,sage)"<<Nage(i,sage)<<endl;
+            	
             	break;
-
-            	//Nage(i,sage) = (So*SB(i-nmon)/(1.+beta*SB(i-nmon)))*mfexp(wt(indyr(i)));
             	
             default: 
             
@@ -472,12 +458,13 @@ FUNCTION output_pin
 	
 	ofstream ifs("lagrangian_est.pin");
 
-	ifs<<"# mo " << endl << mo <<endl;
+	ifs<<"# mo " << endl << 5 <<endl;
 	ifs<<"# tau_c " << endl << log(tau_c) <<endl;
 	ifs<<"# cvPos "<< endl << log(.1) <<endl;	
 	//ifs<<"# maxPos "<< endl << minPos <<endl;
 	ifs<<"# maxPos50 "<< endl << log(4) <<endl;
 	ifs<<"# maxPossd "<< endl << log(.5) <<endl;
+	ifs<<"# wt "<< endl << wt <<endl;
 
 
 FUNCTION output_dat

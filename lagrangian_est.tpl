@@ -129,9 +129,6 @@ DATA_SECTION
        			}
        			indnatarea(narea)=nations;
 
-       			cout<< "indnatarea is"<< indnatarea<<endl;
-
-
        			pcat.initialize();
        			for(int r=sarea;r<=narea;r++)
        			{
@@ -179,6 +176,7 @@ PARAMETER_SECTION
 	init_number log_cvPos;
 	init_number log_maxPos50;
 	init_number log_maxPossd;
+	init_vector wt(syr,nyr,-1);
 	//init_bounded_vector maxPos(sage,nage,sarea,narea);
 
 
@@ -366,11 +364,17 @@ FUNCTION move_grow_die
 
 		switch (indmonth(i)) {
             case 1:
-            	Nage(i) = elem_prod(Nage(i-1),mfexp(-(m+q*elem_prod(Effage(i),va))/12));
-            	Nage(i,sage) = So*SB(i-nmon)/(1.+beta*SB(i-nmon));
+            	
+            	Nage(i,sage) = (So*SB(i-nmon)/(1.+beta*SB(i-nmon)))*mfexp(wt(indyr(i)));
+            	for(int a = sage+1;a<=nage;a++)
+            	{
+            		Nage(i)(a) = Nage(i-1)(a-1)*mfexp(-(m+q*Effage(i)(a-1)*va(a-1))/12);
+            	}          	
+            	break;
 
             default:
                Nage(i) = elem_prod(Nage(i-1),mfexp(-(m+q*elem_prod(Effage(i),va))/12));
+               break;
 
         }
 		
@@ -443,7 +447,7 @@ FUNCTION calc_obj_func
 	
 
 	
-	f=sum(nlvec)/100000;
+	f=sum(nlvec)/1000;
 
 
 
@@ -467,6 +471,8 @@ REPORT_SECTION
 	REPORT(maxPos);
 	REPORT(minPos);
 	REPORT(varPos);
+	REPORT(SB);
+	REPORT(Nage);
 	REPORT(VBarea);
 	REPORT(Effage);
 	REPORT(Effarea);
