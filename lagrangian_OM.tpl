@@ -58,6 +58,8 @@ DATA_SECTION
 	init_matrix TotEffyear(1,nations,syr,nyr);
 	init_matrix TotEffmonth(1,nations,smon,nmon);
 
+	init_vector RelRec(syr,nyr);
+
 	init_int eof;
 	
 	
@@ -120,7 +122,10 @@ DATA_SECTION
 		
 			random_number_generator rng(seed);
 			wt.fill_randn(rng);
-			wt*=sigR;	
+			wt*=sigR;
+
+			//cout<<"wt is "<<mfexp(wt)<<endl;	
+			//exit(1);
 
 	END_CALCS
 
@@ -318,7 +323,7 @@ FUNCTION initialization
 		for(int rr =sarea; rr<=narea; rr++)
 		{
 			propVBarea(1)(rr) = (cnorm(areas(rr)+0.5,PosX(1),varPos)-cnorm(areas(rr)-0.5,PosX(1),varPos))(a-sage+1);
-			CatchAreaAge(1)(rr)(a) = q*Effarea(1)(rr)*va(a)/(q*Effarea(1)(rr)*va(a)+m)*(1-exp(-(q*Effarea(1)(rr)*va(a)+m)))*NAreaAge(1)(rr)(a);
+			CatchAreaAge(1)(rr)(a) = ((q*Effarea(1)(rr)*va(a))/12)/((q*Effarea(1)(rr)*va(a)+m)/12)*(1-exp(-(q*Effarea(1)(rr)*va(a)+m)/12))*NAreaAge(1)(rr)(a);
 
 			EffNatAge(indnatarea(rr))(1)(sage-2) = 1;
 			EffNatAge(indnatarea(rr))(1)(sage-1) = indnatarea(rr);
@@ -353,7 +358,7 @@ FUNCTION move_grow_die
 			for(int rr =sarea; rr<=narea; rr++)
 			{
 				propVBarea(i)(rr) = (cnorm(areas(rr)+0.5,PosX(i),varPos)-cnorm(areas(rr)-0.5,PosX(i),varPos))(a-sage+1);
-				CatchAreaAge(i)(rr)(a) = q*Effarea(i)(rr)*va(a)/(q*Effarea(i)(rr)*va(a)+m)*(1-exp(-(q*Effarea(i)(rr)*va(a)+m)))*NAreaAge(i-1)(rr)(a);
+				CatchAreaAge(i)(rr)(a) = ((q*Effarea(i)(rr)*va(a))/12)/((q*Effarea(i)(rr)*va(a)+m)/12)*(1-exp(-(q*Effarea(i)(rr)*va(a)+m)/12))*NAreaAge(i-1)(rr)(a);
 				
 				EffNatAge(indnatarea(rr))(i)(sage-2) = i;
 				EffNatAge(indnatarea(rr))(i)(sage-1) = indnatarea(rr);
@@ -366,12 +371,25 @@ FUNCTION move_grow_die
 		
 
 		switch (indmonth(i)) {
-            case 1:
-            	Nage(i) = elem_prod(Nage(i-1),exp(-(m+q*elem_prod(Effage(i),va))/12));
-            	Nage(i,sage) = So*SB(i-nmon)/(1.+beta*SB(i-nmon))*exp(wt(indyr(i)));
+            case 1:           	
+            	
+            	Nage(i)(sage) = (So*SB(i-nmon)/(1.+beta*SB(i-nmon)))*RelRec(indyr(i));
 
-            default:
-               Nage(i) = elem_prod(Nage(i-1),exp(-(m+q*elem_prod(Effage(i),va))/12));
+
+            	for(int a = sage+1;a<=nage;a++)
+            	{
+            		Nage(i)(a) = Nage(i-1)(a-1)*exp(-(m+q*Effage(i)(a-1)*va(a-1))/12);
+            	}
+            	cout<<"indmonth(i) "<<indmonth(i)<< " and "<<"indyr is "<<indyr(i)<<endl;
+            	cout<<"Nage(i,sage)"<<Nage(i,sage)<<endl;
+            	break;
+
+            	//Nage(i,sage) = (So*SB(i-nmon)/(1.+beta*SB(i-nmon)))*mfexp(wt(indyr(i)));
+            	
+            default: 
+            
+            	Nage(i) = elem_prod(Nage(i-1),exp(-(m+q*elem_prod(Effage(i),va))/12));
+            	break;
 
         }
 		
@@ -389,6 +407,8 @@ FUNCTION move_grow_die
 		NationVulB(i,2) = sum(VBarea(i)(sarea+nationareas(1),narea)); 
 		
 	}
+
+
 
 FUNCTION clean_catage
 
@@ -440,6 +460,8 @@ FUNCTION output_true
 	ofs<<"maxPos" << endl << maxPos <<endl;
 	ofs<<"minPos" << endl << minPos <<endl;
 	ofs<<"varPos" << endl << varPos <<endl;
+	ofs<<"SB" << endl << SB <<endl;
+	ofs<<"Nage" << endl << Nage <<endl;
 	ofs<<"VBarea" << endl << VBarea <<endl;
 	ofs<<"Effage" << endl << Effage <<endl;
 	ofs<<"Effarea"<< endl << Effarea <<endl;
@@ -487,7 +509,6 @@ FUNCTION output_dat
 	afs<<"#  tstp month area catage " << endl << obsCatchAreaAge <<endl;
 	afs<<"# eof " << endl << 999 <<endl;
 	
-
 
 REPORT_SECTION
 
