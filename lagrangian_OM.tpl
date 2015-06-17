@@ -107,12 +107,12 @@ DATA_SECTION
 					}
 				}
 			}
-		
+
 			nationareas(nations)=narea-sarea+1 - sum(nationareas(1,nations-1));
 		
 			random_number_generator rng(seed);
 			wt.fill_randn(rng);
-			wt*=sigR;	
+			wt*=sigR;
 
 	END_CALCS
 
@@ -356,12 +356,22 @@ FUNCTION move_grow_die
 		
 
 		switch (indmonth(i)) {
-            case 1:
-            	Nage(i) = elem_prod(Nage(i-1),mfexp(-(m+q*elem_prod(Effage(i),va))/12));
-            	Nage(i,sage) = So*SB(i-nmon)/(1.+beta*SB(i-nmon))*mfexp(wt(indyr(i)));
+            case 1:           	
+            	
+            	Nage(i)(sage) = (So*SB(i-nmon)/(1.+beta*SB(i-nmon)))*mfexp(wt(indyr(i)));
 
-            default:
-               Nage(i) = elem_prod(Nage(i-1),mfexp(-(m+q*elem_prod(Effage(i),va))/12));
+
+            	for(int a = sage+1;a<=nage;a++)
+            	{
+            		Nage(i)(a) = Nage(i-1)(a-1)*exp(-(m+q*Effage(i)(a-1)*va(a-1))/12);
+            	}
+            	
+            	break;
+            	
+            default: 
+            
+            	Nage(i) = elem_prod(Nage(i-1),exp(-(m+q*elem_prod(Effage(i),va))/12));
+            	break;
 
         }
 		
@@ -430,6 +440,8 @@ FUNCTION output_true
 	ofs<<"maxPos" << endl << maxPos <<endl;
 	ofs<<"minPos" << endl << minPos <<endl;
 	ofs<<"varPos" << endl << varPos <<endl;
+	ofs<<"SB" << endl << SB <<endl;
+	ofs<<"Nage" << endl << Nage <<endl;
 	ofs<<"VBarea" << endl << VBarea <<endl;
 	ofs<<"Effage" << endl << Effage <<endl;
 	ofs<<"Effarea"<< endl << Effarea <<endl;
@@ -441,12 +453,13 @@ FUNCTION output_pin
 	
 	ofstream ifs("lagrangian_est.pin");
 
-	ifs<<"# mo " << endl << 1.0 <<endl;
+	ifs<<"# mo " << endl << 5 <<endl;
 	ifs<<"# tau_c " << endl << log(tau_c) <<endl;
-	ifs<<"# cvPos "<< endl << log(.2) <<endl;	
+	ifs<<"# cvPos "<< endl << log(.1) <<endl;	
 	//ifs<<"# maxPos "<< endl << minPos <<endl;
 	ifs<<"# maxPos50 "<< endl << log(4) <<endl;
-	ifs<<"# maxPossd "<< endl << log(1.5) <<endl;
+	ifs<<"# maxPossd "<< endl << log(.5) <<endl;
+	ifs<<"# wt "<< endl << wt <<endl;
 
 
 FUNCTION output_dat
@@ -478,7 +491,6 @@ FUNCTION output_dat
 	afs<<"#  tstp month area catage " << endl << obsCatchNatAge <<endl;
 	afs<<"# eof " << endl << 999 <<endl;
 	
-
 
 REPORT_SECTION
 

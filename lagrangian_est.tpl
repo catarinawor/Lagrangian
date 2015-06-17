@@ -85,8 +85,6 @@ DATA_SECTION
 			}
 		
 			nationareas(nations)=narea-sarea+1 - sum(nationareas(1,nations-1));
-		
-			
 
 	END_CALCS
 
@@ -175,6 +173,7 @@ PARAMETER_SECTION
 	init_number log_cvPos;
 	init_number log_maxPos50;
 	init_number log_maxPossd;
+	init_vector wt(syr,nyr,-1);
 	//init_bounded_vector maxPos(sage,nage,sarea,narea);
 
 
@@ -216,7 +215,6 @@ PARAMETER_SECTION
  	3darray EffNatAge(1,nations,1,ntstp,sage-2,nage);
  	
  	matrix predCatchNatAge(1,tot_pcat,sage-3,nage);
-
 
 PRELIMINARY_CALCS_SECTION
 
@@ -322,7 +320,7 @@ FUNCTION initialization
 		for(int rr =sarea; rr<=narea; rr++)
 		{
 			propVBarea(1)(rr) = (cnorm(areas(rr)+0.5,PosX(1),varPos)-cnorm(areas(rr)-0.5,PosX(1),varPos))(a-sage+1);
-			CatchAreaAge(1)(rr)(a) = q*Effarea(1)(rr)*va(a)/(q*Effarea(1)(rr)*va(a)+m)*(1-mfexp(-(q*Effarea(1)(rr)*va(a)+m)))*NAreaAge(1)(rr)(a);
+			CatchAreaAge(1)(rr)(a) = ((q*Effarea(1)(rr)*va(a))/12)/((q*Effarea(1)(rr)*va(a)+m)/12)*(1-mfexp(-(q*Effarea(1)(rr)*va(a)+m)/12))*NAreaAge(1)(rr)(a);
 			CatchNatAge(1)(indnatarea(rr))(a) += CatchAreaAge(1)(rr)(a);
 
 			EffNatAge(indnatarea(rr))(1)(sage-2) = 1;
@@ -355,7 +353,7 @@ FUNCTION move_grow_die
 			for(int rr =sarea; rr<=narea; rr++)
 			{
 				propVBarea(i)(rr) = (cnorm(areas(rr)+0.5,PosX(i),varPos)-cnorm(areas(rr)-0.5,PosX(i),varPos))(a-sage+1);
-				CatchAreaAge(i)(rr)(a) = q*Effarea(i)(rr)*va(a)/(q*Effarea(i)(rr)*va(a)+m)*(1-mfexp(-(q*Effarea(i)(rr)*va(a)+m)))*NAreaAge(i-1)(rr)(a);
+				CatchAreaAge(i)(rr)(a) = ((q*Effarea(i)(rr)*va(a))/12)/((q*Effarea(i)(rr)*va(a)+m)/12)*(1-mfexp(-(q*Effarea(i)(rr)*va(a)+m)/12))*NAreaAge(i-1)(rr)(a);
 				CatchNatAge(i)(indnatarea(rr))(a)+= CatchAreaAge(i)(rr)(a);
 
 
@@ -371,12 +369,18 @@ FUNCTION move_grow_die
 
 		switch (indmonth(i)) {
             case 1:
-            	Nage(i) = elem_prod(Nage(i-1),mfexp(-(m+q*elem_prod(Effage(i),va))/12));
-            	Nage(i,sage) = So*SB(i-nmon)/(1.+beta*SB(i-nmon));
+            	
+            	Nage(i,sage) = So*SB(i-nmon)/(1.+beta*SB(i-nmon))*mfexp(wt(indyr(i)));
+            	for(int a = sage+1;a<=nage;a++)
+            	{
+            		Nage(i)(a) = Nage(i-1)(a-1)*exp(-(m+q*Effage(i)(a-1)*va(a-1))/12);
+            	}
+            	
+            	break;
 
             default:
                Nage(i) = elem_prod(Nage(i-1),mfexp(-(m+q*elem_prod(Effage(i),va))/12));
-
+               break;
         }
 		
 		VulB(i) = elem_prod(elem_prod(Nage(i),va),wa);
@@ -472,6 +476,8 @@ REPORT_SECTION
 	REPORT(maxPos);
 	REPORT(minPos);
 	REPORT(varPos);
+	REPORT(SB);
+	REPORT(Nage);
 	REPORT(VBarea);
 	REPORT(Effage);
 	REPORT(Effarea);
