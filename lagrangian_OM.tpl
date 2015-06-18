@@ -363,14 +363,14 @@ FUNCTION move_grow_die
 
             	for(int a = sage+1;a<=nage;a++)
             	{
-            		Nage(i)(a) = Nage(i-1)(a-1)*exp(-(m+q*Effage(i)(a-1)*va(a-1))/12);
+            		Nage(i)(a) = Nage(i-1)(a-1)*mfexp(-(m+q*Effage(i)(a-1)*va(a-1))/12);
             	}
             	
             	break;
             	
             default: 
             
-            	Nage(i) = elem_prod(Nage(i-1),exp(-(m+q*elem_prod(Effage(i),va))/12));
+            	Nage(i) = elem_prod(Nage(i-1),mfexp(-(m+q*elem_prod(Effage(i),va))/12));
             	break;
 
         }

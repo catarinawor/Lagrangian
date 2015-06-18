@@ -373,7 +373,7 @@ FUNCTION move_grow_die
             	Nage(i,sage) = So*SB(i-nmon)/(1.+beta*SB(i-nmon))*mfexp(wt(indyr(i)));
             	for(int a = sage+1;a<=nage;a++)
             	{
-            		Nage(i)(a) = Nage(i-1)(a-1)*exp(-(m+q*Effage(i)(a-1)*va(a-1))/12);
+            		Nage(i)(a) = Nage(i-1)(a-1)*mfexp(-(m+q*Effage(i)(a-1)*va(a-1))/12);
             	}
             	
             	break;
