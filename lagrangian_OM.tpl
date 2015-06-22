@@ -273,7 +273,7 @@ FUNCTION initialization
 
 	for(int i=sage+1 ; i <= nage ; i++)
 	{
-		Nage(1,i) = Nage(1,i-1) * exp(-za(i-1));
+		Nage(1,i) = Nage(1,i-1) * exp(-za(i-1)/12);
 	}
 
 	VulB(1) = elem_prod(elem_prod(Nage(1),va),wa);
