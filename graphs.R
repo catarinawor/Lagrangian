@@ -116,35 +116,38 @@ setwd("/Users/catarinawor/Documents/Lagrangian/anime/effort")
 
 library("animation")
 
+ani.options(ani.dev = "pdf", ani.type = "pdf",ani.width=8, ani.height=4)
 saveLatex(
 #if you don't have latex installed you need to install it or use other function such as saveGIF
 
 for(i in 1:length(ntsp))
 {
-	df <-ENA[ENA$time==i,]
-	for(n in 1:est$nations )
-	{
-		for(m in 1:(length(mets)) )
-		{
-			if(min(df[df$nations==n&df$method==mets[m],]$effort)>0)
-			{
-				tmp3 <- df[df$nations==n&df$method==mets[m],]$effort/max(df[df$nations==n&df$method==mets[m],]$effort)
-				df[df$nations==n&df$method==mets[m],]$effort = tmp3
-			}
-		}
-	}
+  df <-ENA[ENA$time==i,]
+  for(n in 1:est$nations )
+  {
+    for(m in 1:(length(mets)) )
+    {
+      if(min(df[df$nations==n&df$method==mets[m],]$effort)>0)
+      {
+        tmp3 <- df[df$nations==n&df$method==mets[m],]$effort/max(df[df$nations==n&df$method==mets[m],]$effort)
+        df[df$nations==n&df$method==mets[m],]$effort = tmp3
+      }
+    }
+  }
     
-	y<- ggplot(df, aes(x=age,y=effort, group=method)) + theme_bw()
-	y <- y+ facet_grid(.~nations)
-	y <- y+ geom_line(size=2, aes(colour=method))
-	y <- y + scale_y_continuous(limits=c(0,1))
-	y <- y + labs(title=meses[indmonth[i]])
-	
+  y<- ggplot(df, aes(x=age,y=effort, group=method)) + theme_bw()
+  y <- y+ facet_grid(.~nations)
+  y <- y+ geom_line(size=2, aes(colour=method))
+  y <- y + scale_y_continuous(limits=c(0,1))
+  y <- y + labs(title=meses[indmonth[i]])
+  
 
 print(y)
 }
 ,
-pdflatex = "/usr/texbin/pdflatex",latex.filename = "VBarea.tex")
+pdflatex = "/usr/texbin/pdflatex",latex.filename = "selnation.tex")
+
+
 
 
 
