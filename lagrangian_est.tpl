@@ -168,7 +168,7 @@ DATA_SECTION
 PARAMETER_SECTION
 
 	init_bounded_number mo(smon,nmon);
-	init_number log_tau_c(-2);
+	init_number log_tau_c(2);
 	
 	init_number log_cvPos;
 	init_number log_maxPos50;
@@ -194,6 +194,7 @@ PARAMETER_SECTION
 	vector za(sage,nage);
 	vector SB(1,ntstp);
 	vector nlvec(1,nations);
+	vector npvec(1,1);
 	vector maxPos(sage,nage);
 	vector varPos(sage,nage);
 
@@ -449,10 +450,10 @@ FUNCTION calc_obj_func
 			nlvec(n)=  dmvlogistic(O,P,nu,value(tau_c),dMinP);
 		}
 		
-	
+	npvec(1) = dnorm(log_tau_c,0.1);
 
 	
-	f=sum(nlvec);
+	f=sum(nlvec)+sum(npvec);
 
 
 

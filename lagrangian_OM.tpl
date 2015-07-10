@@ -33,8 +33,6 @@ DATA_SECTION
 
 	init_vector border(1,nations-1);
 
-	
-
 	//model parameters
 	init_number Ro;
 	init_number h;
@@ -353,8 +351,6 @@ FUNCTION move_grow_die
 		}
 
 		
-		
-
 		switch (indmonth(i)) {
             case 1:           	
             	
@@ -383,7 +379,6 @@ FUNCTION move_grow_die
 			VBarea(i)(r) = VulB(i)* (cnorm(areas(r)+0.5,PosX(i),varPos)-cnorm(areas(r)-0.5,PosX(i),varPos));
 			NAreaAge(i)(r) = elem_prod(Nage(i)(sage,nage),(cnorm(areas(r)+0.5,PosX(i),varPos)-cnorm(areas(r)-0.5,PosX(i),varPos)));
 		}
-
 
 		NationVulB(i,1) = sum(VBarea(i)(sarea,sarea+nationareas(1)-1)); 
 		NationVulB(i,2) = sum(VBarea(i)(sarea+nationareas(1),narea)); 
@@ -453,7 +448,7 @@ FUNCTION output_pin
 	
 	ofstream ifs("lagrangian_est.pin");
 
-	ifs<<"# mo " << endl << 5 <<endl;
+	ifs<<"# mo " << endl << 1 <<endl;
 	ifs<<"# tau_c " << endl << log(tau_c) <<endl;
 	ifs<<"# cvPos "<< endl << log(.1) <<endl;	
 	//ifs<<"# maxPos "<< endl << minPos <<endl;

@@ -21,13 +21,19 @@ NUMBERS := $(shell seq 1 ${LAST})
 
 
  
-all: $(EXEC)
+all: $(OM)
+	./$(OM) -ind $(SIMDAT) $(ARG)
+	 $(EXEC)
 	./$(EXEC) -ind $(DAT) $(ARG)
 
-compi: admb $(EXEC) 
+compiOM: admb $(OM)
 
 
-run: ./$(EXEC) -ind $(DAT) $(ARG)
+compi: admb $(EXEC)
+
+runOM: ./$(OM) -ind $(DAT) $(ARG)
+
+run: ./$(EXEC) -ind $(SIMDAT) $(ARG)
 
 mcmc: $(EXEC) $(EXEC).psv
 	./$(EXEC) -ind $(DAT) -mceval
