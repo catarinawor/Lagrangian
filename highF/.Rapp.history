@@ -1,0 +1,948 @@
+plot(ages,(1/(1+exp(-(ages-maxPos501)/maxPossd1)))*(loF$narea-loF$sarea)+loF$sarea, ylab="area", lwd=2, type="l", col="deeppink2")
+plot(ages,(1/(1+exp(-(ages-maxPos501)/maxPossd1)))*(loF$narea-loF$sarea)+loF$sarea, ylab="area", lwd=2, type="l", col="deeppink2")#
+lines(ages,1/(1+exp(-(ages-maxPos502)/maxPossd2))*(loF$narea-loF$sarea)+loF$sarea, col="darkseagreen",lwd=2)#
+legend("topleft",c("high abundance", "low abundance"), bty="n", col=c("deeppink2","seagreen4"),#
+  lwd=2,pch=NULL,text.col=c("deeppink2","seagreen4"))
+plot(ages,(1/(1+exp(-(ages-maxPos501)/maxPossd1)))*(loF$narea-loF$sarea)+loF$sarea, ylab="area", lwd=2, type="l", col="deeppink2")#
+lines(ages,1/(1+exp(-(ages-maxPos502)/maxPossd2))*(loF$narea-loF$sarea)+loF$sarea, col="olivedrab4",lwd=2)#
+legend("topleft",c("high abundance", "low abundance"), bty="n", col=c("deeppink2","olivedrab4"),#
+  lwd=2,pch=NULL,text.col=c("deeppink2","olivedrab4"))
+plot(ages,(1/(1+exp(-(ages-maxPos501)/maxPossd1)))*(loF$narea-loF$sarea)+loF$sarea, ylab="area", lwd=3, type="l", col="deeppink2")#
+lines(ages,1/(1+exp(-(ages-maxPos502)/maxPossd2))*(loF$narea-loF$sarea)+loF$sarea, col="olivedrab4",lwd=3)#
+legend("topleft",c("high abundance", "low abundance"), bty="n", col=c("deeppink2","olivedrab4"),#
+  lwd=3,pch=NULL,text.col=c("deeppink2","olivedrab4"))
+plot(ages,(1/(1+exp(-(ages-maxPos501)/maxPossd1)))*(loF$narea-loF$sarea)+loF$sarea, ylab="area", lwd=3, type="l", col="deeppink2")#
+lines(ages,1/(1+exp(-(ages-maxPos502)/maxPossd2))*(loF$narea-loF$sarea)+loF$sarea, col="olivedrab4",lwd=3)#
+legend("topleft",c("high abundance", "low abundance"), bty="n", col=c("deeppink2","olivedrab4"),#
+  lwd=3,pch=NULL,text.col=c("deeppink2","olivedrab4"), font=2)
+plot(ages,(1/(1+exp(-(ages-maxPos501)/maxPossd1)))*(loF$narea-loF$sarea)+loF$sarea, ylab="area", lwd=3, type="l", col="deeppink2")#
+lines(ages,1/(1+exp(-(ages-maxPos502)/maxPossd2))*(loF$narea-loF$sarea)+loF$sarea, col="olivedrab4",lwd=3)#
+legend("topleft",c("high abundance", "low abundance"), bty="n", col=c("deeppink2","olivedrab4"),#
+  lwd=3,pch=NULL,text.col=c("deeppink2","olivedrab4"), text.font=2)
+rm(list=ls()); #
+#
+setwd("/Users/catarinawor/Documents/Lagrangian/")#
+source("read.admb.R")#
+#
+#read data from lowF scenario#
+setwd("/Users/catarinawor/Documents/Lagrangian/lowF")#
+loF<-read.rep("lagrangian_OM.rep")#
+#
+#read data from highF scenario#
+setwd("/Users/catarinawor/Documents/Lagrangian/highF")#
+hiF<-read.rep("lagrangian_OM.rep")#
+#
+#========================================================================#
+library(ggplot2)#
+library(reshape2)#
+library(animation)#
+library(ggmap)#
+ntsp <- 1:((loF$nyr-loF$syr+1)*(loF$nmon-loF$smon+1))#
+nage <- loF$nage-loF$sage+1#
+ages <- loF$nage:loF$sage#
+indmonth <- rep(loF$smon:loF$nmon,(loF$nyr-loF$syr+1))#
+indyr <-  rep(loF$syr:loF$nyr,each=(loF$nmon-loF$smon+1))#
+#
+maxPos501<-loF$maxPos501#
+maxPos502<-loF$maxPos502#
+maxPossd1<-loF$maxPossd1#
+maxPossd2<-loF$maxPossd2#
+#
+plot(ages,(1/(1+exp(-(ages-maxPos501)/maxPossd1)))*(loF$narea-loF$sarea)+loF$sarea, ylab="area", lwd=3, type="l", col="deeppink2")#
+lines(ages,1/(1+exp(-(ages-maxPos502)/maxPossd2))*(loF$narea-loF$sarea)+loF$sarea, col="olivedrab4",lwd=3)#
+legend("topleft",c("high abundance", "low abundance"), bty="n", col=c("deeppink2","olivedrab4"),#
+  lwd=3,pch=NULL,text.col=c("deeppink2","olivedrab4"), text.font=2)#
+par(mfrow=c(1,1))#
+plot(ntsp,loF$SB, type="l", ylim=c(0,300))#
+lines(ntsp,hiF$SB,  col="blue")#
+VBarealoF<-matrix(loF$VBarea, ncol=(loF$narea-loF$sarea+1),dimnames=list(ntsp,loF$sarea:loF$narea))#
+VBareahiF<-matrix(hiF$VBarea, ncol=(hiF$narea-hiF$sarea+1),dimnames=list(ntsp,hiF$sarea:hiF$narea))#
+#
+VBplotloF<-cbind(melt(VBarealoF),rep("low F",nrow(melt(VBarealoF))))#
+VBplothiF<-cbind(melt(VBareahiF),rep("high F",nrow(melt(VBareahiF))))#
+#
+names(VBplotloF)<- c("time","area", "VB","Scenario")#
+names(VBplothiF)<- c("time","area", "VB","Scenario")#
+#
+VBareaplot<-rbind(VBplotloF,VBplothiF)#
+lat<-VBareaplot$area#
+lon<-rep(-131,length(lat))#
+nation<-rep(1,nrow(VBareaplot))#
+nation[VBareaplot$lat>48.1]<-2#
+#
+VBareaplot<-cbind(VBareaplot,lat,lon,month=indmonth,yr=indyr)#
+#
+summary(VBareaplot)#
+meanVBloFnat1<-NULL#
+meanVBloFnat2<-NULL#
+#
+meanVBhiFnat1<-NULL#
+meanVBhiFnat2<-NULL#
+#
+for(i in 1:12){#
+#
+  meanVBloFnat1[i]<-mean(VBareaplot$VB[VBareaplot$Scenario=="low F"&VBareaplot$area<48.1&VBareaplot$month==i&VBareaplot$yr>10])#
+  meanVBloFnat2[i]<-mean(VBareaplot$VB[VBareaplot$Scenario=="low F"&VBareaplot$area>48.1&VBareaplot$month==i&VBareaplot$yr>10])#
+  meanVBhiFnat1[i]<-mean(VBareaplot$VB[VBareaplot$Scenario=="high F"&VBareaplot$area<48.1&VBareaplot$month==i&VBareaplot$yr>10])#
+  meanVBhiFnat2[i]<-mean(VBareaplot$VB[VBareaplot$Scenario=="high F"&VBareaplot$area>48.1&VBareaplot$month==i&VBareaplot$yr>10])#
+#
+}#
+#
+meanVBloFnat1p<-meanVBloFnat1/(meanVBloFnat1+meanVBloFnat2)#
+meanVBloFnat2p<-meanVBloFnat2/(meanVBloFnat1+meanVBloFnat2)#
+meanVBhiFnat1p<-meanVBhiFnat1/(meanVBhiFnat1+meanVBhiFnat2)#
+meanVBhiFnat2p<-meanVBhiFnat2/(meanVBhiFnat1+meanVBhiFnat2)#
+VulB<-c(meanVBloFnat1,meanVBloFnat2,meanVBhiFnat1,meanVBhiFnat2,meanVBloFnat1p,meanVBloFnat2p,meanVBhiFnat1p,meanVBhiFnat2p)#
+month<-rep(1:12,8)#
+nation<-rep(c(rep(1,12),rep(2,12),rep(1,12),rep(2,12)),2)#
+scenario<-rep(c(rep("low F",24),rep("high F",24)),2)#
+measure<-c(rep("nominal",48),rep("proportion",48))#
+df<- data.frame(VulB,month,nation,scenario,measure)#
+#
+p <- ggplot(df, aes(x=as.factor(month), y=VulB, fill=as.factor(nation)))#
+p <- p + geom_bar(stat = "identity")#
+p <- p + facet_grid(measure~scenario,scales = "free_y")#
+p <- p + labs(x="month", y="vulnerable biomass",fill="nation")#
+p <- p + theme_bw()#
+p
+names(loF)
+matrix(loF$Effarea, ncol=(loF$narea-loF$sarea+1),dimnames=list(ntsp,loF$sarea:loF$narea))
+VBplotloF<-cbind(melt(VBarealoF),rep("low F",nrow(melt(VBarealoF))))
+VBplothiF<-cbind(melt(VBareahiF),rep("high F",nrow(melt(VBareahiF))))
+EffplotloF<-cbind(melt(EffarealoF),rep("low F",nrow(melt(EffarealoF))))
+VBarealoF<-matrix(loF$VBarea, ncol=(loF$narea-loF$sarea+1),dimnames=list(ntsp,loF$sarea:loF$narea))#
+VBareahiF<-matrix(hiF$VBarea, ncol=(hiF$narea-hiF$sarea+1),dimnames=list(ntsp,hiF$sarea:hiF$narea))#
+#
+EffarealoF<-matrix(loF$Effarea, ncol=(loF$narea-loF$sarea+1),dimnames=list(ntsp,loF$sarea:loF$narea))#
+EffareahiF<-matrix(hiF$Effarea, ncol=(hiF$narea-hiF$sarea+1),dimnames=list(ntsp,hiF$sarea:hiF$narea))#
+VBplotloF<-cbind(melt(VBarealoF),rep("low F",nrow(melt(VBarealoF))))#
+VBplothiF<-cbind(melt(VBareahiF),rep("high F",nrow(melt(VBareahiF))))#
+#
+EffplotloF<-cbind(melt(EffarealoF),rep("low F",nrow(melt(EffarealoF))))#
+EffplothiF<-cbind(melt(EffareahiF),rep("high F",nrow(melt(EffareahiF))))
+EffplotloF
+VBarealoF<-matrix(loF$VBarea, ncol=(loF$narea-loF$sarea+1),dimnames=list(ntsp,loF$sarea:loF$narea))#
+VBareahiF<-matrix(hiF$VBarea, ncol=(hiF$narea-hiF$sarea+1),dimnames=list(ntsp,hiF$sarea:hiF$narea))#
+#
+EffarealoF<-matrix(loF$Effarea, ncol=(loF$narea-loF$sarea+1),dimnames=list(ntsp,loF$sarea:loF$narea))#
+EffareahiF<-matrix(hiF$Effarea, ncol=(hiF$narea-hiF$sarea+1),dimnames=list(ntsp,hiF$sarea:hiF$narea))#
+VBplotloF<-cbind(melt(VBarealoF),rep("low F",nrow(melt(VBarealoF))))#
+VBplothiF<-cbind(melt(VBareahiF),rep("high F",nrow(melt(VBareahiF))))#
+#
+EffplotloF<-cbind(melt(EffarealoF))#
+EffplothiF<-cbind(melt(EffareahiF))#
+#
+names(VBplotloF)<- c("time","area", "VB","Scenario")#
+names(VBplothiF)<- c("time","area", "VB","Scenario")#
+names(EffplotloF)<- c("time","area", "Eff")#
+names(EffplothiF)<- c("time","area", "Eff")
+VBEffareaplot<-rbind(VBplotloF,VBplothiF,EffplotloF$"Eff",EffplothiF$"Eff")
+EffplotloF$"Eff"
+cbind(VBplotloF,EffplotloF$"Eff")
+VBEffareaplot<-rbind(cbind(VBplotloF,EffplotloF$"Eff"),cbind(VBplothiF,EffplothiF$"Eff"))
+lat<-VBareaplot$area
+VBEffareaplot<-rbind(cbind(VBplotloF,EffplotloF$"Eff"),cbind(VBplothiF,EffplothiF$"Eff"))
+VBEffareaplot
+rbind(cbind(VBplotloF,EffplotloF$"Eff"),cbind(VBplothiF,EffplothiF$"Eff"))
+VBarealoF<-matrix(loF$VBarea, ncol=(loF$narea-loF$sarea+1),dimnames=list(ntsp,loF$sarea:loF$narea))#
+VBareahiF<-matrix(hiF$VBarea, ncol=(hiF$narea-hiF$sarea+1),dimnames=list(ntsp,hiF$sarea:hiF$narea))#
+#
+EffarealoF<-matrix(loF$Effarea, ncol=(loF$narea-loF$sarea+1),dimnames=list(ntsp,loF$sarea:loF$narea))#
+EffareahiF<-matrix(hiF$Effarea, ncol=(hiF$narea-hiF$sarea+1),dimnames=list(ntsp,hiF$sarea:hiF$narea))#
+#
+EffplotloF<-cbind(melt(EffarealoF))#
+EffplothiF<-cbind(melt(EffareahiF))#
+#
+VBEffplotloF<-cbind(melt(VBarealoF),rep("low F",nrow(melt(VBarealoF))),EffplotloF$"Eff")#
+VBEffplothiF<-cbind(melt(VBareahiF),rep("high F",nrow(melt(VBareahiF))),EffplothiF$"Eff")
+VBarealoF<-matrix(loF$VBarea, ncol=(loF$narea-loF$sarea+1),dimnames=list(ntsp,loF$sarea:loF$narea))
+VBareahiF<-matrix(hiF$VBarea, ncol=(hiF$narea-hiF$sarea+1),dimnames=list(ntsp,hiF$sarea:hiF$narea))
+EffarealoF<-matrix(loF$Effarea, ncol=(loF$narea-loF$sarea+1),dimnames=list(ntsp,loF$sarea:loF$narea))
+EffareahiF<-matrix(hiF$Effarea, ncol=(hiF$narea-hiF$sarea+1),dimnames=list(ntsp,hiF$sarea:hiF$narea))
+EffplotloF<-cbind(melt(EffarealoF))
+EffplothiF<-cbind(melt(EffareahiF))
+VBEffplotloF<-cbind(melt(VBarealoF),rep("low F",nrow(melt(VBarealoF))),EffplotloF$"Eff")
+names(EffplotloF)
+VBEffplotloF<-cbind(melt(VBarealoF),rep("low F",nrow(melt(VBarealoF))),EffplotloF$"value")
+VBEffplothiF<-cbind(melt(VBareahiF),rep("high F",nrow(melt(VBareahiF))),EffplothiF$"value")
+names(VBplotloF)<- c("time","area", "VB","Scenario","Eff")
+VBEffplotloF
+names(VBEffplotloF)
+EffplotloF$"value"
+names(VBEffplotloF)<- c("time","area", "VB","Scenario","Eff")
+names(VBEffplothiF)<- c("time","area", "VB","Scenario","Eff")
+names(VBEffplotloF)
+VBEffareaplot<-rbind(cbind(VBplotloF,EffplotloF$"Eff"),cbind(VBplothiF,EffplothiF$"Eff"))
+VBEffareaplot<-rbind(VBEffplotloF,VBEffplothiF)
+VBEffareaplot<-rbind(VBEffplotloF,VBEffplothiF)
+lat<-VBEffareaplot$area
+lon<-rep(-131,length(lat))
+nation<-rep(1,nrow(VBEffareaplot))
+nation[VBEffareaplot$lat>48.1]<-2
+VBareaplot<-cbind(VBEffareaplot,lat,lon,month=indmonth,yr=indyr)
+VBEffareaplot<-cbind(VBEffareaplot,lat,lon,month=indmonth,yr=indyr)
+summary(VBEffareaplot)
+i=6#
+#
+      ex1<-VBEffareaplot[VBEffareaplot$time==i ,]#
+      minVB<-min(VBEffareaplot$VB)#
+      maxVB<-max(VBEffareaplot$VB)#
+      minEff<-min(VBEffareaplot$Eff)#
+      maxEff<-max(VBEffareaplot$Eff)#
+      p2<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=VB, group=Scenario,colour=Scenario),data=ex1) #
+      p2 <- p2 + facet_wrap(~Scenario)#
+      p2 <- p2 + labs(title=paste(meses[indmonth[i]],", year: ",yr[indmonth[i]]))#
+      p2 <- p2 + scale_size_area(limits=c(minVB,maxVB),max_size = 10,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")#
+      p2 <- p2 + scale_size_area(limits=c(minEff,maxEff),max_size = 10,  name = "Effort")#
+      print(p2)
+i=6
+ex1<-VBEffareaplot[VBEffareaplot$time==i ,]
+minVB<-min(VBEffareaplot$VB)
+maxVB<-max(VBEffareaplot$VB)
+minEff<-min(VBEffareaplot$Eff)
+maxEff<-max(VBEffareaplot$Eff)
+p2<-  ggmap(basemap,
+extent = "panel",
+ylab = "Latitude",
+xlab = "Longitude")
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")#
+#
+basemap<-get_map(location = c(lon = -125, lat = 45),#
+    zoom = 5, maptype = "terrain")
+i=6
+ex1<-VBEffareaplot[VBEffareaplot$time==i ,]
+minVB<-min(VBEffareaplot$VB)
+maxVB<-max(VBEffareaplot$VB)
+minEff<-min(VBEffareaplot$Eff)
+maxEff<-max(VBEffareaplot$Eff)
+p2<-  ggmap(basemap,
+extent = "panel",
+ylab = "Latitude",
+xlab = "Longitude")
+p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")
+p2 <- p2 + geom_point(alpha=0.8,aes(size=VB, group=Scenario,colour=Scenario),data=ex1)
+p2 <- p2 + facet_wrap(~Scenario)
+p2 <- p2 + labs(title=paste(meses[indmonth[i]],", year: ",yr[indmonth[i]]))
+p2 <- p2 + scale_size_area(limits=c(minVB,maxVB),max_size = 10,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")
+p2 <- p2 + scale_size_area(limits=c(minEff,maxEff),max_size = 10,  name = "Effort")
+names(loF)
+summary(VBEffareaplot)
+anos<- VBEffareaplot$yr
+i=6
+ex1<-VBEffareaplot[VBEffareaplot$time==i ,]
+minVB<-min(VBEffareaplot$VB)
+maxVB<-max(VBEffareaplot$VB)
+minEff<-min(VBEffareaplot$Eff)
+maxEff<-max(VBEffareaplot$Eff)
+p2<-  ggmap(basemap,
+extent = "panel",
+ylab = "Latitude",
+xlab = "Longitude")
+p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")
+p2 <- p2 + geom_point(alpha=0.8,aes(size=VB, group=Scenario,colour=Scenario),data=ex1)
+p2 <- p2 + facet_wrap(~Scenario)
+p2 <- p2 + labs(title=paste(meses[indmonth[i]],", year: ",anos[indmonth[i]]))
+p2 <- p2 + scale_size_area(limits=c(minVB,maxVB),max_size = 10,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")
+p2 <- p2 + scale_size_area(limits=c(minEff,maxEff),max_size = 10,  name = "Effort")
+p2<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=VB, group=Scenario,colour=Scenario),data=ex1) #
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=Eff, group=Scenario),data=ex1) #
+      p2 <- p2 + facet_wrap(~Scenario)#
+      p2 <- p2 + labs(title=paste(meses[indmonth[i]],", year: ",anos[indmonth[i]]))#
+      p2 <- p2 + scale_size_area(limits=c(minVB,maxVB),max_size = 10,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")#
+      #p2 <- p2 + scale_size_area(limits=c(minEff,maxEff),max_size = 10,  name = "Effort")#
+      print(p2)
+p2 <- p2 + geom_point(alpha=0.8,aes(size=VB, group=Scenario,colour=Scenario),data=ex1)
+rubies  <- data.frame(carat = c(3, 4, 5), price= c(5000, 5000, 5000))#
+#
+ggplot(diamonds, aes(carat, price)) + #
+  geom_point() + #
+  geom_point(data = rubies, colour = "red")
+rubies  <- data.frame(carat = c(3, 4, 5), price= c(5000, 5000, 5000))#
+#
+ggplot(diamonds, aes(carat, price)) + #
+  geom_point() + #
+  geom_point(data = rubies, colour = "red")
+rubies  <- data.frame( carat = c(3, 4, 5), price= c(5000, 5000, 5000))#
+#
+p <- ggplot(diamonds, aes(x = carat, y = price)) + geom_point()#
+p <- p + geom_point(aes(x = rubies$carat, y = rubies$price))#
+p
+p <- ggplot(diamonds, aes(x = carat, y = price)) + geom_point()
+p
+p <- p + geom_point(aes(x = rubies$carat, y = rubies$price))
+p
+p <-  geom_point(aes(x = rubies$carat, y = rubies$price))
+p
+p <-  geom_point(aes(x = carat, y = price),data=rubies)
+p
+rubies
+rubies  <- data.frame(carat = c(3, 4, 5), price= c(5000, 5000, 5000))#
+#
+ggplot(diamonds, aes(carat, price)) + #
+  geom_point() + #
+  geom_point(data = rubies, colour = "red")
+p2<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=VB, group=Scenario,colour=Scenario),data=ex1) #
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=Eff)
+)
+p2
+ex1<-VBEffareaplot[VBEffareaplot$time==i ,]
+ex1
+p2<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=VB, group=Scenario,colour=Scenario),data=ex1) #
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=Eff))#
+#
+      p2
+p2<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=VB, group=Scenario,colour=Scenario),data=ex1) #
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=Eff),data=ex1)#
+#
+      p2
+p2<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=VB, group=Scenario,colour=Scenario),data=ex1) #
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=Eff, group=Scenario,colour=Scenario),data=ex1)#
+#
+      p2
+p2<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=VB, group=Scenario),data=ex1) #
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=Eff, group=Scenario),data=ex1)#
+#
+      p2
+p2<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=VB, group=Scenario),data=ex1) #
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=Eff, group=Scenario),data=ex1)#
+#
+      p2 <- p2 + facet_wrap(~Scenario)#
+      p2
+p2<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      #p2 <- p2 + geom_point(alpha=0.8,aes(size=VB, group=Scenario),data=ex1) #
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=Eff, group=Scenario),data=ex1)#
+#
+      p2
+p2<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      #p2 <- p2 + geom_point(alpha=0.8,aes(size=VB, group=Scenario),data=ex1) #
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=Eff, group=Scenario),data=ex1, shape=21)#
+#
+      p2
+p2<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      #p2 <- p2 + geom_point(alpha=0.8,aes(size=VB, group=Scenario),data=ex1) #
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=Eff, group=Scenario),data=ex1, shape=2)#
+#
+      p2
+p2<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      #p2 <- p2 + geom_point(alpha=0.8,aes(size=VB, group=Scenario),data=ex1) #
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=Eff, group=Scenario),data=ex1, shape=1)#
+#
+      p2 <- p2 + facet_wrap(~Scenario)#
+      p2
+VBarealoF<-matrix(loF$VBarea, ncol=(loF$narea-loF$sarea+1),dimnames=list(ntsp,loF$sarea:loF$narea))#
+VBareahiF<-matrix(hiF$VBarea, ncol=(hiF$narea-hiF$sarea+1),dimnames=list(ntsp,hiF$sarea:hiF$narea))#
+#
+EffarealoF<-matrix(loF$Effarea, ncol=(loF$narea-loF$sarea+1),dimnames=list(ntsp,loF$sarea:loF$narea))#
+EffareahiF<-matrix(hiF$Effarea, ncol=(hiF$narea-hiF$sarea+1),dimnames=list(ntsp,hiF$sarea:hiF$narea))#
+#
+EffplotloF<-cbind(melt(EffarealoF),rep("low F",nrow(melt(EffarealoF))))#
+EffplothiF<-cbind(melt(EffareahiF),rep("high F",nrow(melt(EffareahiF))))#
+#
+VBplotloF<-cbind(melt(VBarealoF),rep("low F",nrow(melt(VBarealoF))))#
+VBplothiF<-cbind(melt(VBareahiF),rep("high F",nrow(melt(VBareahiF))))#
+#
+names(VBplotloF)<- c("time","area", "VB","Scenario")#
+names(VBplothiF)<- c("time","area", "VB","Scenario")#
+#
+names(EffplotloF)<- c("time","area", "Eff","Scenario")#
+names(EffplothiF)<- c("time","area", "Eff","Scenario")
+VBareaplot<-rbind(VBplotloF,VBplothiF)
+Effareaplot<-rbind(EffplotloF,EffplothiF)
+lat<-VBareaplot$area
+lon<-rep(-131,length(lat))
+nation<-rep(1,nrow(VBareaplot))
+nation[VBareaplot$lat>48.1]<-2
+VBareaplot<-cbind(VBareaplot,lat,lon,month=indmonth,yr=indyr)
+Effareaplot<-cbind(Effareaplot,lat,lon,month=indmonth,yr=indyr)
+summary(VBareaplot)
+summary(Effareaplot)
+i=6
+ex1<-VBareaplot[VBareaplot$time==i ,]
+ex2<-Effareaplot[Effareaplot$time==i ,]
+ex1
+ex2
+minVB<-min(VBareaplot$VB)
+maxVB<-max(VBareaplot$VB)
+minEff<-min(Effareaplot$Eff)
+maxEff<-max(Effareaplot$Eff)
+p2<-  ggmap(basemap,
+extent = "panel",
+ylab = "Latitude",
+xlab = "Longitude")
+p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")
+p2<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=VB, group=Scenario),data=ex1) #
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=Eff, group=Scenario),data=ex2, shape=1)#
+#
+      p2
+p2<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=VB, group=Scenario),data=ex1) #
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=Eff, group=Scenario),data=ex2, shape=1)#
+#
+      p2 <- p2 + facet_wrap(~Scenario)
+p2
+p2<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=VB, group=Scenario),data=ex1) #
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=Eff, group=Scenario, col="red"),data=ex2, shape=1)#
+#
+      p2
+p2<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=VB, group=Scenario),data=ex1) #
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=Eff, group=Scenario, col="red"),data=ex2, shape=1)#
+#
+      p2 <- p2 + facet_wrap(~Scenario)#
+      p2
+i=6#
+#
+      ex1<-VBareaplot[VBareaplot$time==i ,]#
+      ex2<-Effareaplot[Effareaplot$time==i ,]#
+      minVB<-min(VBareaplot$VB)#
+      maxVB<-max(VBareaplot$VB)#
+      minEff<-min(Effareaplot$Eff)#
+      maxEff<-max(Effareaplot$Eff)#
+      p2<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=VB, group=Scenario),data=ex1) #
+      p2 <- p2 + scale_size_area(limits=c(minVB,maxVB),max_size = 10,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")#
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=Eff, group=Scenario, col=),data=ex2, shape=1)#
+      p2 <- p2 + scale_size_area(limits=c(minEff,maxEff),max_size = 10,  name = "Effort")#
+      p2 <- p2 + facet_wrap(~Scenario)#
+      p2
+p2<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=VB, group=Scenario),data=ex1) #
+      p2 <- p2 + scale_size_area(limits=c(minVB,maxVB),max_size = 10,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")
+p3 <- geom_point(alpha=0.8,aes(size=Eff, group=Scenario, col=),data=ex2, shape=1)#
+      p3 <- p3 + scale_size_area(limits=c(minEff,maxEff),max_size = 10,  name = "Effort")
+ex2
+p3 <- geom_point(alpha=0.8,aes(size=Eff, group=Scenario, col=),data=ex2, shape=1)
+p3 <- p3 + scale_size_area(limits=c(minEff,maxEff),max_size = 10,  name = "Effort")
+minEff
+maxEff
+p3 <- p3 + scale_size_area(limits=c(minEff,maxEff), max_size = 10,  name = "Effort")
+p3 <- geom_point(alpha=0.8,aes(size=Eff, group=Scenario),data=ex2, shape=1)
+p3 <- p3 + scale_size_area(limits=c(minEff,maxEff), max_size = 10,  name = "Effort")
+p3 <- geom_point(alpha=0.8,aes(size=Eff, group=Scenario),data=ex2, shape=1)
+p3
+p3 <- geom_point(alpha=0.8,aes(size=Eff, group=Scenario),data=ex2, shape=1)
+p3
+p3 <- p3 + scale_size_area(limits=c(minEff,maxEff), max_size = 10,  name = "Effort")
+p3 <- ggplot(aes(size=Eff, group=Scenario),data=ex2)
+p3 <- p3 +geom_point(alpha=0.8, shape=1)
+p3 <- p3 + scale_size_area(limits=c(minEff,maxEff), max_size = 10,  name = "Effort")
+p3
+ex2
+p3 <- ggplot(aes(size=Eff, group=Scenario),data=ex2)#
+      p3 <- p3 +geom_point(alpha=0.8, shape=1)
+p3
+p3<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p3 <- p3 +geom_point(alpha=0.8, shape=1)#
+      p3 <- p3 + scale_size_area(limits=c(minEff,maxEff), max_size = 10,  name = "Effort")
+p3
+p3<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p3 <- p3 +geom_point(alpha=0.8,aes(size=Eff, group=Scenario),data=ex1,shape=1)#
+      p3 <- p3 + scale_size_area(limits=c(minEff,maxEff), max_size = 10,  name = "Effort")#
+       p3
+p3<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p3 <- p3 +geom_point(alpha=0.8,aes(size=Eff, group=Scenario),data=ex2,shape=1)#
+      p3 <- p3 + scale_size_area(limits=c(minEff,maxEff), max_size = 10,  name = "Effort")#
+       p3
+p3+p2
+p2<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=VB, group=Scenario),data=ex1) #
+      p2 <- p2 + scale_size_area(limits=c(minVB,maxVB),max_size = 10,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")
+p2
+p3+p2
+p2<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=VB, group=Scenario),data=ex1,limits=c(minVB,maxVB),max_size = 10,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass") #
+      p2
+p2<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=VB, group=Scenario),data=ex1,limits=c(minVB,maxVB),max_size = 10,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass") #
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=Eff, group=Scenario),data=ex2,shape=1,limits=c(minEff,maxEff), max_size = 10,  name = "Effort")#
+      p2 <- p2 + facet_wrap(~Scenario)#
+      p2
+p2<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=VB, group=Scenario),data=ex1,limits=c(minVB,maxVB),max_size = 10,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass") #
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=Eff, group=Scenario),data=ex2,shape=1,limits=c(minEff,maxEff), max_size = 10,  name = "Effort")#
+      p2 <- p2 + facet_wrap(~Scenario)#
+      p2 <- p2 + labs(title=paste(meses[indmonth[i]],", year: ",anos[indmonth[i]]))#
+      p2 <- p2 + scale_size_area(limits=c(minVB,maxVB),data=ex1,max_size = 10,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")#
+      p2 <- p2 + scale_size_area(limits=c(minEff,maxEff),max_size = 10,  name = "Effort",data=ex2)#
+      print(p2)
+p2<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=Eff, group=Scenario),data=ex2,shape=1)#
+      p2 <- p2 + facet_wrap(~Scenario)#
+      p2 <- p2 + labs(title=paste(meses[indmonth[i]],", year: ",anos[indmonth[i]]))#
+      p2 <- p2 + scale_size_area(limits=c(minEff,maxEff),max_size = 10,  name = "Effort",data=ex2)#
+      print(p2)
+p2<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=Eff, group=Scenario),data=ex2,shape=1)#
+      p2 <- p2 + facet_wrap(~Scenario)#
+      p2 <- p2 + labs(title=paste(meses[indmonth[i]],", year: ",anos[indmonth[i]]))#
+      p2 <- p2 + scale_size_area(limits=c(minEff,maxEff),max_size = 10,  name = "Effort")#
+      print(p2)
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {#
+  require(grid)#
+#
+  # Make a list from the ... arguments and plotlist#
+  plots <- c(list(...), plotlist)#
+#
+  numPlots = length(plots)#
+#
+  # If layout is NULL, then use 'cols' to determine layout#
+  if (is.null(layout)) {#
+    # Make the panel#
+    # ncol: Number of columns of plots#
+    # nrow: Number of rows needed, calculated from # of cols#
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),#
+                    ncol = cols, nrow = ceiling(numPlots/cols))#
+  }#
+#
+ if (numPlots==1) {#
+    print(plots[[1]])#
+#
+  } else {#
+    # Set up the page#
+    grid.newpage()#
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))#
+#
+    # Make each plot, in the correct location#
+    for (i in 1:numPlots) {#
+      # Get the i,j matrix positions of the regions that contain this subplot#
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))#
+#
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,#
+                                      layout.pos.col = matchidx$col))#
+    }#
+  }#
+}
+ex1<-VBareaplot[VBareaplot$time==i ,]#
+      ex2<-Effareaplot[Effareaplot$time==i ,]#
+      minVB<-min(VBareaplot$VB)#
+      maxVB<-max(VBareaplot$VB)#
+      minEff<-min(Effareaplot$Eff)#
+      maxEff<-max(Effareaplot$Eff)#
+      p3<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p3 <- p3 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      p3 <- p3 + geom_point(alpha=0.8,aes(size=VB, group=Scenario,colour=Scenario),data=ex1) #
+      p3 <- p3 + facet_wrap(~Scenario)#
+      p3 <- p3 + labs(title=paste(meses[indmonth[i]],", year: ",yr[indmonth[i]]))#
+      p3 <- p3 + scale_size_area(limits=c(minVB,maxVB),max_size = 10,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")#
+      print(p3) #
+#
+      p2<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=Eff, group=Scenario),data=ex2,shape=1)#
+      p2 <- p2 + facet_wrap(~Scenario)#
+      p2 <- p2 + labs(title=paste(meses[indmonth[i]],", year: ",anos[indmonth[i]]))#
+      p2 <- p2 + scale_size_area(limits=c(minEff,maxEff),max_size = 10,  name = "Effort")#
+      print(p2) #
+#
+      multiplot(p3,p2)
+i=6#
+#
+      ex1<-VBareaplot[VBareaplot$time==i ,]#
+      ex2<-Effareaplot[Effareaplot$time==i ,]#
+      minVB<-min(VBareaplot$VB)#
+      maxVB<-max(VBareaplot$VB)#
+      minEff<-min(Effareaplot$Eff)#
+      maxEff<-max(Effareaplot$Eff)#
+      p3<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p3 <- p3 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      p3 <- p3 + geom_point(alpha=0.8,aes(size=VB, group=Scenario,colour=Scenario),data=ex1) #
+      p3 <- p3 + facet_wrap(~Scenario)#
+      p3 <- p3 + labs(title=paste(meses[indmonth[i]],", year: ",anos[indmonth[i]]))#
+      p3 <- p3 + scale_size_area(limits=c(minVB,maxVB),max_size = 10,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")#
+      p2<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=Eff, group=Scenario),data=ex2,shape=1)#
+      p2 <- p2 + facet_wrap(~Scenario)#
+      p2 <- p2 + scale_size_area(limits=c(minEff,maxEff),max_size = 10,  name = "Effort")#
+      multiplot(p3,p2)
+p3<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p3 <- p3 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      p3 <- p3 + geom_point(alpha=0.8,aes(size=VB, group=Scenario),data=ex1) #
+      p3 <- p3 + facet_wrap(~Scenario)#
+      p3 <- p3 + labs(title=paste(meses[indmonth[i]],", year: ",anos[indmonth[i]]))#
+      p3 <- p3 + scale_size_area(limits=c(minVB,maxVB),max_size = 10,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")#
+      p2<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      p2 <- p2 + geom_point(alpha=0.8,aes(size=Eff, group=Scenario),data=ex2,shape=1)#
+      p2 <- p2 + facet_wrap(~Scenario)     #
+      p2 <- p2 + scale_size_area(limits=c(minEff,maxEff),max_size = 10,  name = "Effort")#
+      multiplot(p3,p2)
+VBarealoF<-matrix(loF$VBarea, ncol=(loF$narea-loF$sarea+1),dimnames=list(ntsp,loF$sarea:loF$narea))#
+VBareahiF<-matrix(hiF$VBarea, ncol=(hiF$narea-hiF$sarea+1),dimnames=list(ntsp,hiF$sarea:hiF$narea))#
+#
+EffarealoF<-matrix(loF$Effarea, ncol=(loF$narea-loF$sarea+1),dimnames=list(ntsp,loF$sarea:loF$narea))#
+EffareahiF<-matrix(hiF$Effarea, ncol=(hiF$narea-hiF$sarea+1),dimnames=list(ntsp,hiF$sarea:hiF$narea))#
+#
+EffplotloF<-cbind(melt(EffarealoF),rep("low F",nrow(melt(EffarealoF))))#
+EffplothiF<-cbind(melt(EffareahiF),rep("high F",nrow(melt(EffareahiF))))#
+#
+VBplotloF<-cbind(melt(VBarealoF),rep("low F",nrow(melt(VBarealoF))))#
+VBplothiF<-cbind(melt(VBareahiF),rep("high F",nrow(melt(VBareahiF))))#
+#
+names(VBplotloF)<- c("time","area", "value","Scenario")#
+names(VBplothiF)<- c("time","area", "value","Scenario")#
+#
+names(EffplotloF)<- c("time","area", "value","Scenario")#
+names(EffplothiF)<- c("time","area", "value","Scenario")#
+#
+VBeffareaplot<-rbind(VBplotloF,VBplothiF,EffplotloF,EffplothiF)#
+lat<-VBeffareaplot$area#
+lon<-rep(-131,length(lat))#
+nation<-rep(1,nrow(VBareaplot))#
+nation[VBareaplot$lat>48.1]<-2#
+variable<-c(rep("Biomass",length(lat)/2),rep("Effort",length(lat)/2))#
+#
+VBEffareaplot<-cbind(VBEffareaplot,lat,lon,month=indmonth,yr=indyr,variable)#
+#Effareaplot<-cbind(Effareaplot,lat,lon,month=indmonth,yr=indyr,variable)
+EffplotloF<-cbind(melt(EffarealoF),rep("low F",nrow(melt(EffarealoF))))
+EffplothiF<-cbind(melt(EffareahiF),rep("high F",nrow(melt(EffareahiF))))
+VBplotloF<-cbind(melt(VBarealoF),rep("low F",nrow(melt(VBarealoF))))
+VBplothiF<-cbind(melt(VBareahiF),rep("high F",nrow(melt(VBareahiF))))
+names(VBplotloF)<- c("time","area", "value","Scenario")
+names(VBplothiF)<- c("time","area", "value","Scenario")
+names(EffplotloF)<- c("time","area", "value","Scenario")
+names(EffplothiF)<- c("time","area", "value","Scenario")
+VBeffareaplot<-rbind(VBplotloF,VBplothiF,EffplotloF,EffplothiF)
+lat<-VBeffareaplot$area
+lon<-rep(-131,length(lat))
+nation<-rep(1,nrow(VBareaplot))
+nation[VBareaplot$lat>48.1]<-2
+variable<-c(rep("Biomass",length(lat)/2),rep("Effort",length(lat)/2))
+VBEffareaplot<-cbind(VBEffareaplot,lat,lon,month=indmonth,yr=indyr,variable)
+summary(VBareaplot)
+summary(Effareaplot)
+summary(VBEffareaplot)
+VBarealoF<-matrix(loF$VBarea, ncol=(loF$narea-loF$sarea+1),dimnames=list(ntsp,loF$sarea:loF$narea))
+VBareahiF<-matrix(hiF$VBarea, ncol=(hiF$narea-hiF$sarea+1),dimnames=list(ntsp,hiF$sarea:hiF$narea))
+EffarealoF<-matrix(loF$Effarea, ncol=(loF$narea-loF$sarea+1),dimnames=list(ntsp,loF$sarea:loF$narea))
+EffareahiF<-matrix(hiF$Effarea, ncol=(hiF$narea-hiF$sarea+1),dimnames=list(ntsp,hiF$sarea:hiF$narea))
+EffplotloF<-cbind(melt(EffarealoF),rep("low F",nrow(melt(EffarealoF))))#
+EffplothiF<-cbind(melt(EffareahiF),rep("high F",nrow(melt(EffareahiF))))#
+#
+VBplotloF<-cbind(melt(VBarealoF),rep("low F",nrow(melt(VBarealoF))))#
+VBplothiF<-cbind(melt(VBareahiF),rep("high F",nrow(melt(VBareahiF))))
+names(VBplotloF)<- c("time","area", "value","Scenario")
+names(VBplothiF)<- c("time","area", "value","Scenario")
+names(EffplotloF)<- c("time","area", "value","Scenario")
+names(EffplothiF)<- c("time","area", "value","Scenario")
+VBEffareaplot<-rbind(VBplotloF,VBplothiF,EffplotloF,EffplothiF)
+lat<-VBeffareaplot$area
+lat<-VBEffareaplot$area
+lon<-rep(-131,length(lat))
+nation<-rep(1,nrow(VBEffareaplot))
+nation[VBEffareaplot$lat>48.1]<-2
+variable<-c(rep("Biomass",length(lat)/2),rep("Effort",length(lat)/2))
+VBEffareaplot<-cbind(VBEffareaplot,lat,lon,month=indmonth,yr=indyr,variable)
+summary(VBEffareaplot)
+p3<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p3 <- p3 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      p3 <- p3 + geom_point(alpha=0.8,aes(size=value, group=Scenario),data=ex1) #
+      p3 <- p3 + facet_wrap(~Scenario+Variable)#
+      p3 <- p3 + labs(title=paste(meses[indmonth[i]],", year: ",anos[indmonth[i]]))#
+      p3
+i=6#
+#
+      ex1<-VBEffareaplot[VBEffareaplot$time==i ,]#
+      minVB<-min(VBEffareaplot$value[VBEffareaplot$variable=="Biomass"])#
+      maxVB<-max(VBEffareaplot$value[VBEffareaplot$variable=="Biomass"])#
+      minEff<-min(VBEffareaplot$value[VBEffareaplot$variable=="Effort"])#
+      maxEff<-max(VBEffareaplot$value[VBEffareaplot$variable=="Effort"])#
+      p3<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p3 <- p3 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      p3 <- p3 + geom_point(alpha=0.8,aes(size=value, group=Scenario),data=ex1) #
+      p3 <- p3 + facet_wrap(~Scenario+Variable)#
+      p3 <- p3 + labs(title=paste(meses[indmonth[i]],", year: ",anos[indmonth[i]]))#
+      p3
+p3<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p3 <- p3 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      p3 <- p3 + geom_point(alpha=0.8,aes(size=value, group=Scenario),data=ex1) #
+      p3 <- p3 + facet_wrap(~Scenario+variable)#
+      p3 <- p3 + labs(title=paste(meses[indmonth[i]],", year: ",anos[indmonth[i]]))#
+      p3
+p3<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p3 <- p3 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      p3 <- p3 + geom_point(alpha=0.8,aes(size=value, group=Scenario),data=ex1) #
+      p3 <- p3 + facet_wrap(variable~Scenario)#
+      p3 <- p3 + labs(title=paste(meses[indmonth[i]],", year: ",anos[indmonth[i]]))
+p3
+p3<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p3 <- p3 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      p3 <- p3 + geom_point(alpha=0.8,aes(size=value, group=Scenario),data=ex1) #
+      p3 <- p3 + facet_wrap(variable~Scenario)#
+      p3 <- p3 + labs(title=paste(meses[indmonth[i]],", year: ",anos[indmonth[i]]))#
+      ex2 <- subset(ex1, variable == "Effort")#
+      p3 + geom_point(data = ex2,shape=1)#
+      p3
+p3<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p3 <- p3 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      p3 <- p3 + geom_point(alpha=0.8,aes(size=value, group=Scenario),data=ex1) #
+      p3 <- p3 + facet_wrap(variable~Scenario)#
+      p3 <- p3 + labs(title=paste(meses[indmonth[i]],", year: ",anos[indmonth[i]]))#
+      p3 <- p3 + scale_size_area(limits=c(minVB,maxVB),max_size = 10,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")#
+      ex2 <- subset(ex1, variable == "Effort")#
+      p3 + geom_point(data = ex2,shape=1)#
+      p3
+p3<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p3 <- p3 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      p3 <- p3 + geom_point(alpha=0.8,aes(size=value, group=Scenario),data=ex1) #
+      p3 <- p3 + facet_wrap(variable~Scenario)#
+      p3 <- p3 + labs(title=paste(meses[indmonth[i]],", year: ",anos[indmonth[i]]))#
+      p3 <- p3 + scale_size_area(limits=c(minVB,maxVB),max_size = 10,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")#
+      ex2 <- subset(ex1, variable == "Effort")#
+      p3 + geom_point(data = ex2,shape=1)#
+      p3 <- p3 + scale_size_area(limits=c(minEff,maxEff),max_size = 10,data=ex2)#
+      p3
+p3<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p3 <- p3 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      p3 <- p3 + geom_point(alpha=0.8,aes(size=value, group=Scenario),data=ex1) #
+      p3 <- p3 + facet_wrap(variable~Scenario)#
+      p3 <- p3 + labs(title=paste(meses[indmonth[i]],", year: ",anos[indmonth[i]]))#
+      p3 <- p3 + scale_size_area(limits=c(minVB,maxVB),max_size = 10,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")#
+      ex2 <- subset(ex1, variable == "Effort")#
+      p3 + geom_point(data = ex2,shape=1,limits=c(minEff,maxEff),max_size = 10)#
+      #p3 <- p3 + scale_size_area(limits=c(miEff,maxEff),max_size = 10,data=ex2)#
+      p3
+p3<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p3 <- p3 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      p3 <- p3 + geom_point(alpha=0.8,aes(size=value, group=variable,shape=variable),data=ex1) #
+      p3
+p3<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p3 <- p3 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      ex2 <- subset(ex1, variable == "Biomass")#
+      p3 <- p3 + geom_point(alpha=0.8,aes(size=value, group=variable,shape=variable),data=ex2) #
+      p3 <- p3 + facet_wrap(variable~Scenario)#
+      p3 <- p3 + labs(title=paste(meses[indmonth[i]],", year: ",anos[indmonth[i]]))#
+      p3 <- p3 + scale_size_area(limits=c(minVB,maxVB),max_size = 10,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")#
+      ex3 <- subset(ex1, variable == "Effort")#
+      p3 + geom_point(data = ex3,shape=1,limits=c(minEff,maxEff),max_size = 10)#
+      #p3 <- p3 + scale_size_area(limits=c(miEff,maxEff),max_size = 10,data=ex2)#
+      p3
+p3<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p3 <- p3 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      ex2 <- subset(ex1, variable == "Biomass")#
+      p3 <- p3 + geom_point(alpha=0.8,aes(size=value, group=variable,shape=variable),data=ex2) #
+      p3 <- p3 + facet_wrap(variable~Scenario)#
+      p3 <- p3 + labs(title=paste(meses[indmonth[i]],", year: ",anos[indmonth[i]]))#
+      p3 <- p3 + scale_size_area(limits=c(minVB,maxVB),max_size = 10,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")#
+      #ex3 <- subset(ex1, variable == "Effort")#
+      #p3 + geom_point(data = ex3,shape=1,limits=c(minEff,maxEff),max_size = 10)#
+      #p3 <- p3 + scale_size_area(limits=c(miEff,maxEff),max_size = 10,data=ex2)#
+      p3
+p3<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p3 <- p3 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      ex2 <- subset(ex1, variable == "Biomass")#
+      p3 <- p3 + geom_point(alpha=0.8,aes(size=value, group=variable,shape=variable),data=ex2) #
+      #p3 <- p3 + facet_wrap(variable~Scenario)#
+      p3 <- p3 + labs(title=paste(meses[indmonth[i]],", year: ",anos[indmonth[i]]))#
+      p3 <- p3 + scale_size_area(limits=c(minVB,maxVB),max_size = 10,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")#
+      #ex3 <- subset(ex1, variable == "Effort")#
+      #p3 + geom_point(data = ex3,shape=1,limits=c(minEff,maxEff),max_size = 10)#
+      #p3 <- p3 + scale_size_area(limits=c(miEff,maxEff),max_size = 10,data=ex2)#
+      p3
+p3<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p3 <- p3 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      ex2 <- subset(ex1, variable == "Biomass")#
+      p3 <- p3 + geom_point(alpha=0.8,aes(size=value, group=variable,shape=variable),data=ex2) #
+      #p3 <- p3 + facet_wrap(variable~Scenario)#
+      p3 <- p3 + labs(title=paste(meses[indmonth[i]],", year: ",anos[indmonth[i]]))#
+      p3 <- p3 + scale_size_area(limits=c(minVB,maxVB),max_size = 10,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")#
+      #ex3 <- subset(ex1, variable == "Effort")#
+      p3 + geom_point(data = ex3,shape=1,limits=c(minEff,maxEff),max_size = 10)#
+      #p3 <- p3 + scale_size_area(limits=c(miEff,maxEff),max_size = 10,data=ex2)#
+      p3
+p3<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p3 <- p3 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      ex2 <- subset(ex1, variable == "Biomass")#
+      p3 <- p3 + geom_point(alpha=0.8,aes(size=value, group=variable,shape=variable),data=ex2) #
+      #p3 <- p3 + facet_wrap(variable~Scenario)#
+      p3 <- p3 + labs(title=paste(meses[indmonth[i]],", year: ",anos[indmonth[i]]))#
+      p3 <- p3 + scale_size_area(limits=c(minVB,maxVB),max_size = 10,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")#
+      ex3 <- subset(ex1, variable == "Effort")#
+      p3 + geom_point(data = ex3,shape=1,limits=c(minEff,maxEff),max_size = 10)#
+      #p3 <- p3 + scale_size_area(limits=c(miEff,maxEff),max_size = 10,data=ex2)#
+      p3
+p3<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")#
+      p3 <- p3 + geom_line(y=48.5, linetype=2, colour="grey60")#
+      p3 <- p3 + geom_point(alpha=0.8,aes(size=value, group=variable,shape=variable),data=ex1) #
+      p3 <- p3 + facet_wrap(variable~Scenario)#
+      p3 <- p3 + labs(title=paste(meses[indmonth[i]],", year: ",anos[indmonth[i]]))#
+      p3 <- p3 + scale_size_area(limits=c(minVB,maxVB),max_size = 10,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")#
+      p3

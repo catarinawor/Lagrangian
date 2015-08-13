@@ -88,8 +88,6 @@ DATA_SECTION
 
 	END_CALCS
 
-	
-
 	 	vector indyr(1,ntstp);
  		ivector indmonth(1,ntstp);
 		vector indnatarea(sarea,narea);
@@ -168,7 +166,7 @@ DATA_SECTION
 PARAMETER_SECTION
 
 	init_bounded_number mo(smon,nmon);
-	init_number log_tau_c(2);
+	init_number log_tau_c(-2);
 	
 	init_number log_cvPos;
 	init_number log_maxPos50;
@@ -425,6 +423,7 @@ FUNCTION clean_catage
 FUNCTION calc_obj_func
 
 	nlvec.initialize();
+	npvec.initialize();
 	
 	
 		for(int n = 1; n<=nations;n++)
@@ -450,7 +449,7 @@ FUNCTION calc_obj_func
 			nlvec(n)=  dmvlogistic(O,P,nu,value(tau_c),dMinP);
 		}
 		
-	npvec(1) = dnorm(log_tau_c,0.1);
+	//npvec(1) = dnorm(log_tau_c,0.1);
 
 	
 	f=sum(nlvec)+sum(npvec);

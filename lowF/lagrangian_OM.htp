@@ -1,0 +1,131 @@
+#if !defined(_lagrangian_OM_)
+#  define _lagrangian_OM_
+
+class model_data : public ad_comm{
+  int seed;
+  data_int syr;
+  data_int nyr;
+  data_int sage;
+  data_int nage;
+  data_int smon;
+  data_int nmon;
+  data_int sarea;
+  data_int narea;
+  data_int nations;
+  data_vector border;
+  data_number Ro;
+  data_number h;
+  data_number m;
+  data_number fe;
+  data_number q;
+  data_number sigR;
+  data_number tau_c;
+  data_number mo;
+  data_number err;
+  data_vector wa;
+  data_vector fa;
+  data_vector va;
+  data_vector minPos;
+  data_number maxPos501;
+  data_number maxPos502;
+  data_number maxPossd1;
+  data_number maxPossd2;
+  data_number cvPos;
+  data_matrix TotEffyear;
+  data_matrix TotEffmonth;
+  data_int eof;
+  int ntstp;
+  dvector age;
+  dvector areas;
+  ivector nationareas;
+  dvector wt;
+  dvector indyr;
+  ivector indmonth;
+  dvector indnatarea;
+  ivector pcat;
+  int tot_pcat;
+  ~model_data();
+  model_data(int argc,char * argv[]);
+  friend class model_parameters;
+};
+
+class model_parameters : public model_data ,
+  public function_minimizer
+{
+public:
+  ~model_parameters();
+  void preliminary_calculations(void);
+  void set_runtime(void);
+  virtual void * mycast(void) {return (void*)this;}
+  static int mc_phase(void)
+  {
+    return initial_params::mc_phase;
+  }
+  static int mceval_phase(void)
+  {
+    return initial_params::mceval_phase;
+  }
+  static int sd_phase(void)
+  {
+    return initial_params::sd_phase;
+  }
+  static int current_phase(void)
+  {
+    return initial_params::current_phase;
+  }
+  static int last_phase(void)
+  {
+    return (initial_params::current_phase
+      >=initial_params::max_number_phases);
+  }
+  static prevariable current_feval(void)
+  {
+    return *objective_function_value::pobjfun;
+  }
+private:
+  ivector integer_control_flags;
+  dvector double_control_flags;
+  param_number prior_function_value;
+  param_number likelihood_function_value;
+  objective_function_value no_f;
+  param_number kappa;
+  param_number phie;
+  param_number So;
+  param_number Bo;
+  param_number beta;
+  param_number tBo;
+  param_vector lxo;
+  param_vector za;
+  param_vector SB;
+  param_vector varPos;
+  param_vector maxPos;
+  param_matrix NationVulB;
+  param_matrix Nage;
+  param_matrix VulB;
+  param_matrix PosX;
+  param_matrix Effage;
+  param_matrix VBarea;
+  param_matrix Effarea;
+  param_3array NAreaAge;
+  param_3array CatchAreaAge;
+  param_3array CatchNatAge;
+  param_3array EffNatAge;
+  param_matrix obsCatchNatAge;
+public:
+  virtual void userfunction(void);
+  virtual void report(void);
+  virtual void final_calcs(void);
+  model_parameters(int sz,int argc, char * argv[]);
+  virtual void initializationfunction(void){}
+ dvar_vector cnorm(const double& x, const dvar_vector& mu, const dvar_vector& sd);
+  void incidence_functions(void);
+  void initialization(void);
+  void move_grow_die(void);
+  void clean_catage(void);
+ dvar_vector calcmaxpos(const dvariable& tb);
+  void output_true(void);
+  void output_pin(void);
+  void output_dat(void);
+
+};
+#endif
