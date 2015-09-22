@@ -4,7 +4,6 @@
 # Jun 1st 2015
 #=========================================================================
 
-
 rm(list=ls()); 
 #if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")
 setwd("/Users/catarinawor/Documents/Lagrangian/")
@@ -123,6 +122,7 @@ saveLatex(
 
 for(i in 1:length(ntsp))
 {
+  i=6
   df <-ENA[ENA$time==i,]
   for(n in 1:est$nations )
   {

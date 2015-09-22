@@ -283,9 +283,7 @@ FUNCTION initialization
 	{
 		VBarea(1,r) = VulB(1)* (cnorm(areas(r)+0.5,PosX(1),varPos)-cnorm(areas(r)-0.5,PosX(1),varPos));
 		NAreaAge(1)(r) = elem_prod(Nage(1)(sage,nage),(cnorm(areas(r)+0.5,PosX(1),varPos)-cnorm(areas(r)-0.5,PosX(1),varPos)));
-	}
-
-	VBarea(1,narea) = VulB(1)* (1.0-cnorm(areas(narea)-0.5,PosX(1),varPos));
+	}s
 
 	
 	NationVulB(1,1) = sum(VBarea(1)(sarea,sarea+nationareas(1)-1)); 
@@ -371,15 +369,11 @@ FUNCTION move_grow_die
 		VBarea(i,sarea) = VulB(i)* (cnorm(areas(sarea)+0.5,PosX(i),varPos));
 
 
-		for(int r = sarea+1;r <= narea-1;r++)
+		for(int r = sarea+1;r <= narea;r++)
 		{
 			VBarea(i)(r) = VulB(i)* (cnorm(areas(r)+0.5,PosX(i),varPos)-cnorm(areas(r)-0.5,PosX(i),varPos));
 			NAreaAge(i)(r) = elem_prod(Nage(i)(sage,nage),(cnorm(areas(r)+0.5,PosX(i),varPos)-cnorm(areas(r)-0.5,PosX(i),varPos)));
 		}	
-			
-		
-
-		VBarea(i,narea) = VulB(i)* (1.0-cnorm(areas(narea)-0.5,PosX(i),varPos));
 
 
 		NationVulB(i,1) = sum(VBarea(i)(sarea,sarea+nationareas(1)-1)); 
