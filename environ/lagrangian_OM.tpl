@@ -119,7 +119,7 @@ DATA_SECTION
 			random_number_generator rng2(seed);
 			envir.fill_randn(rng2);
 
-			maxpos50E(syr)=maxPos50+envir(syr);
+			maxpos50E(syr)=maxPos50-envir(syr);
 			for(int i=syr+1; i<=nyr; i++)
 			{
 				maxpos50E(i) = maxPos50+(maxpos50E(i-1)*rho+sqrt(1-rho*rho)*envir(i));
@@ -470,7 +470,8 @@ FUNCTION dvar_vector calcmaxpos(const int& iyr)
 
 	
 	dvariable tmp;
-	tmp = value(maxpos50E(iyr));
+	tmp = maxpos50E(iyr);
+	
 
 	maxPos(sage,nage) = 1./(1.+mfexp(-(age-tmp)/maxPossd));
 	maxPos(sage,nage) *= (narea-sarea);

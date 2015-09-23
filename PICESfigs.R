@@ -18,6 +18,7 @@ loF<-read.rep("lagrangian_OM.rep")
 setwd("/Users/catarinawor/Documents/Lagrangian/highF")
 hiF<-read.rep("lagrangian_OM.rep")
 
+
 #========================================================================
 library(ggplot2)
 library(reshape2)
@@ -126,6 +127,192 @@ plot(ages,(1/(1+exp(-(ages-maxPos501)/maxPossd1)))*(loF$narea-loF$sarea)+loF$sar
 lines(ages,1/(1+exp(-(ages-maxPos502)/maxPossd2))*(loF$narea-loF$sarea)+loF$sarea, col="chartreuse3",lwd=4)
 legend("topleft",c("high abundance", "low abundance"), bty="n", col=c("black","chartreuse3"),
   lwd=3,pch=NULL,text.col=c("black","chartreuse3"), text.font=2, cex=1.3)
+
+dev.off()
+
+
+
+VBarealoF<-matrix(loF$VBarea, ncol=(loF$narea-loF$sarea+1),dimnames=list(ntsp,loF$sarea:loF$narea))
+VBareahiF<-matrix(hiF$VBarea, ncol=(hiF$narea-hiF$sarea+1),dimnames=list(ntsp,hiF$sarea:hiF$narea))
+
+VBplotloF<-cbind(melt(VBarealoF),rep("low F",nrow(melt(VBarealoF))))
+VBplothiF<-cbind(melt(VBareahiF),rep("high F",nrow(melt(VBareahiF))))
+
+names(VBplotloF)<- c("time","area", "VB","Scenario")
+names(VBplothiF)<- c("time","area", "VB","Scenario")
+
+VBareaplot<-rbind(VBplotloF,VBplothiF)
+lat<-VBareaplot$area
+lon<-rep(-131,length(lat))
+nation<-rep(1,nrow(VBareaplot))
+nation[VBareaplot$lat>48.1]<-2
+
+VBareaplot<-cbind(VBareaplot,lat,lon,month=indmonth,yr=indyr)
+
+
+
+
+
+
+meanVBloFnat1<-NULL
+meanVBloFnat2<-NULL
+
+meanVBhiFnat1<-NULL
+meanVBhiFnat2<-NULL
+
+for(i in 1:12){
+
+  meanVBloFnat1[i]<-mean(VBareaplot$VB[VBareaplot$Scenario=="low F"&VBareaplot$area<48.1&VBareaplot$month==i&VBareaplot$yr>10])
+  meanVBloFnat2[i]<-mean(VBareaplot$VB[VBareaplot$Scenario=="low F"&VBareaplot$area>48.1&VBareaplot$month==i&VBareaplot$yr>10])
+  meanVBhiFnat1[i]<-mean(VBareaplot$VB[VBareaplot$Scenario=="high F"&VBareaplot$area<48.1&VBareaplot$month==i&VBareaplot$yr>10])
+  meanVBhiFnat2[i]<-mean(VBareaplot$VB[VBareaplot$Scenario=="high F"&VBareaplot$area>48.1&VBareaplot$month==i&VBareaplot$yr>10])
+
+}
+
+meanVBloFnat1p<-meanVBloFnat1/(meanVBloFnat1+meanVBloFnat2)
+meanVBloFnat2p<-meanVBloFnat2/(meanVBloFnat1+meanVBloFnat2)
+meanVBhiFnat1p<-meanVBhiFnat1/(meanVBhiFnat1+meanVBhiFnat2)
+meanVBhiFnat2p<-meanVBhiFnat2/(meanVBhiFnat1+meanVBhiFnat2)
+
+
+VulB<-c(meanVBloFnat1,meanVBloFnat2,meanVBhiFnat1,meanVBhiFnat2,meanVBloFnat1p,meanVBloFnat2p,meanVBhiFnat1p,meanVBhiFnat2p)
+month<-rep(1:12,8)
+nation<-rep(c(rep(1,12),rep(2,12),rep(1,12),rep(2,12)),2)
+scenario<-rep(c(rep("low F",24),rep("high F",24)),2)
+measure<-c(rep("nominal",48),rep("proportion",48))
+
+
+df<- data.frame(VulB,month,nation,scenario,measure)
+
+p <- ggplot(df, aes(x=as.factor(month), y=VulB, fill=as.factor(nation)))
+p <- p + geom_bar(stat = "identity")
+p <- p + facet_grid(measure~scenario,scales = "free_y")
+p <- p + labs(x="month", y="vulnerable biomass",fill="nation")
+p <- p + theme_bw()
+p 
+
+
+
+names(loF)
+
+VBarealoF<-matrix(loF$VBarea, ncol=(loF$narea-loF$sarea+1),dimnames=list(ntsp,loF$sarea:loF$narea))
+VBareahiF<-matrix(hiF$VBarea, ncol=(hiF$narea-hiF$sarea+1),dimnames=list(ntsp,hiF$sarea:hiF$narea))
+
+EffarealoF<-matrix(loF$Effarea, ncol=(loF$narea-loF$sarea+1),dimnames=list(ntsp,loF$sarea:loF$narea))
+EffareahiF<-matrix(hiF$Effarea, ncol=(hiF$narea-hiF$sarea+1),dimnames=list(ntsp,hiF$sarea:hiF$narea))
+
+EffplotloF<-cbind(melt(EffarealoF),rep("low F",nrow(melt(EffarealoF))))
+EffplothiF<-cbind(melt(EffareahiF),rep("high F",nrow(melt(EffareahiF))))
+
+VBplotloF<-cbind(melt(VBarealoF),rep("low F",nrow(melt(VBarealoF))))
+VBplothiF<-cbind(melt(VBareahiF),rep("high F",nrow(melt(VBareahiF))))
+
+names(VBplotloF)<- c("time","area", "value","Scenario")
+names(VBplothiF)<- c("time","area", "value","Scenario")
+
+names(EffplotloF)<- c("time","area", "value","Scenario")
+names(EffplothiF)<- c("time","area", "value","Scenario")
+
+VBEffareaplot<-rbind(VBplotloF,VBplothiF,EffplotloF,EffplothiF)
+
+
+lat<-VBEffareaplot$area
+lon<-rep(-131,length(lat))
+nation<-rep(1,nrow(VBEffareaplot))
+nation[VBEffareaplot$lat>48.1]<-2
+variable<-c(rep("Biomass",length(lat)/2),rep("Effort",length(lat)/2))
+
+VBEffareaplot<-cbind(VBEffareaplot,lat,lon,month=indmonth,yr=indyr,variable)
+#Effareaplot<-cbind(Effareaplot,lat,lon,month=indmonth,yr=indyr,variable)
+
+sdvalue<-c(
+      VBEffareaplot$value[VBEffareaplot$variable=="Biomass"],
+      (VBEffareaplot$value[VBEffareaplot$variable=="Effort"]/mean(VBEffareaplot$value[VBEffareaplot$variable=="Effort"]))
+      *mean(VBEffareaplot$value[VBEffareaplot$variable=="Biomass"]))
+      
+VBEffareaplot<-cbind(VBEffareaplot,sdvalue)
+
+setwd("/Users/catarinawor/Documents/hake/PICES_conference/presentation/Fscn_anime")
+
+anos<- VBEffareaplot$yr
+
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+
+basemap<-get_map(location = c(lon = -125, lat = 45),
+    zoom = 5, maptype = "terrain")
+
+
+#saveLatex( # not using save latex anymore due to poor resolution
+#if you don't have latex installed you need to install it or use other function such as saveGIF
+  for(i in 121:max(ntsp))
+  {
+    
+
+      ex1<-VBEffareaplot[VBEffareaplot$time==i ,]
+
+      
+
+      p3<-  ggmap(basemap,
+          extent = "panel",
+          ylab = "Latitude",
+          xlab = "Longitude")
+      p3 <- p3 + geom_line(y=48.5, linetype=2, colour="grey60")
+      p3 <- p3 + geom_point(alpha=0.8,aes(size=sdvalue, shape=variable, color=variable),data=ex1) 
+      p3 <- p3 + scale_shape_manual(values=c(16,21)) + scale_fill_discrete(na.value=NA, guide="none")
+      p3 <- p3 + scale_color_manual(values=c("red", "black")) + scale_size_area(guide = "none")
+      p3 <- p3 + labs(title=paste(meses[indmonth[i]],", year: ",anos[indmonth[i]]))     
+      p3 <- p3 + facet_wrap(~Scenario)
+      
+      print(p3)
+
+      ggsave(filename =paste0("Rplot",i-120,".png"))     
+
+  }
+  #,
+  #pdflatex = "/usr/texbin/pdflatex")
+
+
+
+
+
+#======================================================================== 
+# Graphs for environmental influence scenario case scenario
+#======================================================================== 
+#read data from environmental scenario
+setwd("/Users/catarinawor/Documents/Lagrangian/environ")
+evr<-read.rep("lagrangian_OM.rep")
+
+summary(evr)
+
+names(evr)
+
+ntsp <- 1:((evr$nyr-evr$syr+1)*(evr$nmon-evr$smon+1))
+ages <- evr$nage:evr$sage
+indmonth <- rep(evr$smon:evr$nmon,(evr$nyr-evr$syr+1))
+indyr <-  rep(evr$syr:evr$nyr,each=(evr$nmon-evr$smon+1))
+
+
+Emaxpos<-evr[["maxpos50E"]]
+
+mxMAt<-matrix(NA, ncol=length(ages), nrow=length(Emaxpos))
+
+for(i in 1:length(Emaxpos)){
+  mxMAt[i,]<- (1/(1+exp(-(ages-Emaxpos[i])/evr$maxPossd)))*(evr$narea-evr$sarea)+evr$sarea
+}
+
+mxMAt<-mxMAt[order(Emaxpos),]
+cores<-rainbow(length(Emaxpos), alpha = .7,end=4/6)
+
+setwd("/Users/catarinawor/Documents/hake/PICES_conference/presentation")
+
+pdf("movAtAge_clim.pdf",width = 7, height = 6)
+
+plot(ages,mxMAt[1,], col= cores[1], lwd=3, type="l", ylab="AREA", xlab="AGE",font=2, font.lab=2,cex=1.5,cex.axis=1.5,cex.lab=1.5)
+for(i in 1:length(Emaxpos)){
+  lines(ages,mxMAt[i,], col= cores[i], lwd=3, type="l")
+}
+legend("topleft",c("warm","cold"), bty="n", col=c(cores[1],cores[length(cores)]),
+  lwd=3,pch=NULL, text.font=2, cex=1.3)
 
 dev.off()
 
