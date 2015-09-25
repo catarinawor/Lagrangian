@@ -48,10 +48,8 @@ DATA_SECTION
 	init_vector fa(sage,nage);
 	init_vector va(sage,nage);
 	init_vector minPos(sage,nage);
-	init_number maxPos501;
-	init_number maxPos502;
-	init_number maxPossd1;
-	init_number maxPossd2;
+	init_number maxPos50;
+	init_number maxPossd;
 	init_number cvPos;
 	
 
@@ -67,6 +65,7 @@ DATA_SECTION
 		{
 			cout<<"Error reading data.\n Fix it."<<endl;
 			cout<< "eof is: "<<eof<<endl;
+			cout<< "minPos is: "<<minPos<<endl;
 			ad_exit(1);
 		}
 
@@ -283,7 +282,7 @@ FUNCTION initialization
 	{
 		VBarea(1,r) = VulB(1)* (cnorm(areas(r)+0.5,PosX(1),varPos)-cnorm(areas(r)-0.5,PosX(1),varPos));
 		NAreaAge(1)(r) = elem_prod(Nage(1)(sage,nage),(cnorm(areas(r)+0.5,PosX(1),varPos)-cnorm(areas(r)-0.5,PosX(1),varPos)));
-	}s
+	}
 
 	
 	NationVulB(1,1) = sum(VBarea(1)(sarea,sarea+nationareas(1)-1)); 
@@ -450,34 +449,13 @@ FUNCTION clean_catage
 	
 FUNCTION dvar_vector calcmaxpos(const dvariable& tb)
 	
-	int pp = tb > 0.5*tBo?1:2;
+	
 
-	//cout<<"tb "<<tb<<endl;
-	//cout<<"0.7tBo "<<0.7*tBo<<endl;
-	//cout<<"pp "<<pp<<endl;
+	maxPos(sage,nage) = 1./(1.+mfexp(-(age-maxPos50)/maxPossd));
+	maxPos(sage,nage) *= (narea-sarea);
+	maxPos(sage,nage) += sarea;
 
-	switch (pp) {
-        
-        case 1:           	
-
-			maxPos(sage,nage) = 1./(1.+mfexp(-(age-maxPos501)/maxPossd1));
-			maxPos(sage,nage) *= (narea-sarea);
-			maxPos(sage,nage) += sarea;
-
-			cout<<"high B"<<endl;
-
-    	break;
-    
-    	case 2: 
-
-    		maxPos(sage,nage) = 1./(1.+mfexp(-(age-maxPos502)/maxPossd2));
-			maxPos(sage,nage) *= (narea-sarea);
-			maxPos(sage,nage) += sarea; 
-			cout<<"low B"<<endl;
-
-		break;
-	}
-
+			
 	return(maxPos);
 
 
@@ -490,10 +468,8 @@ FUNCTION output_true
 
 	ofs<<"mo" << endl << mo <<endl;
 	ofs<<"log_tau_c" << endl << log(tau_c) <<endl;
-	ofs<<"maxPos501" << endl << maxPos501 <<endl;
-	ofs<<"maxPos502" << endl << maxPos502 <<endl;
-	ofs<<"maxPossd1" << endl << maxPossd1 <<endl;
-	ofs<<"maxPossd2" << endl << maxPossd2 <<endl;
+	ofs<<"maxPos50" << endl << maxPos50 <<endl;
+	ofs<<"maxPossd" << endl << maxPossd <<endl;
 	ofs<<"cvPos" << endl << cvPos <<endl;
 	ofs<<"syr" << endl << syr <<endl;
 	ofs<<"nyr" << endl << nyr <<endl;
