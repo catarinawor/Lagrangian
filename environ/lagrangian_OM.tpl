@@ -514,6 +514,7 @@ FUNCTION output_true
 	ofs<<"EffNatAge"<< endl << EffNatAge<<endl;
 	ofs<<"CatchNatAge"<< endl << CatchNatAge<<endl;
 	ofs<<"maxpos50E"<< endl << maxpos50E<<endl;
+	ofs<<"envir"<< endl << envir<<endl;
 
 	
 FUNCTION output_pin

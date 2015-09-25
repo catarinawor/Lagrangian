@@ -61,6 +61,7 @@ model_data::model_data(int argc,char * argv[]) : ad_comm(argc,argv)
 		if( eof != 999 )
 		{
 			cout<<"Error reading data.\n Fix it."<<endl;
+			cout<< "maxPos501 is: "<<maxPos501<<endl;
 			cout<< "eof is: "<<eof<<endl;
 			ad_exit(1);
 		}

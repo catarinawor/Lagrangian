@@ -66,6 +66,7 @@ DATA_SECTION
 		if( eof != 999 )
 		{
 			cout<<"Error reading data.\n Fix it."<<endl;
+			cout<< "maxPos501 is: "<<maxPos501<<endl;
 			cout<< "eof is: "<<eof<<endl;
 			ad_exit(1);
 		}

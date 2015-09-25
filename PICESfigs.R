@@ -18,7 +18,6 @@ loF<-read.rep("lagrangian_OM.rep")
 setwd("/Users/catarinawor/Documents/Lagrangian/highF")
 hiF<-read.rep("lagrangian_OM.rep")
 
-
 #========================================================================
 library(ggplot2)
 library(reshape2)
@@ -36,7 +35,6 @@ ages <- baseF$nage:baseF$sage
 indmonth <- rep(baseF$smon:baseF$nmon,(baseF$nyr-baseF$syr+1))
 indyr <-  rep(baseF$syr:baseF$nyr,each=(baseF$nmon-baseF$smon+1))
 meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
-
 
 
 VBareabaseF<-matrix(baseF$VBarea, ncol=(baseF$narea-baseF$sarea+1),dimnames=list(ntsp,baseF$sarea:baseF$narea))
@@ -75,7 +73,7 @@ setwd("/Users/catarinawor/Documents/hake/PICES_conference/presentation/Fbase_ani
 
 #saveLatex( #not using savelatex anymore due to poor resolution
 #if you don't have latex installed you need to install it or use other function such as saveGIF
-  for(i in 121:max(ntsp)){
+  for(i in 601:720){
      
       ex1<-VBEffareaplotbase[VBEffareaplotbase$time==i ,]
       graphics.off()
@@ -88,11 +86,11 @@ setwd("/Users/catarinawor/Documents/hake/PICES_conference/presentation/Fbase_ani
       p2 <- p2 + geom_point(alpha=0.8,aes(size=sdvalue*10, shape=variable, color=variable),data=ex1) 
       p2 <- p2 + scale_shape_manual(values=c(16,21)) + scale_fill_discrete(na.value=NA, guide="none")
       p2 <- p2 + scale_color_manual(values=c("red", "black")) + scale_size_area(guide = "none")
-      p2 <- p2 + labs(title=paste(meses[indmonth[i]],", year: ",yr[indmonth[i]]))
+      p2 <- p2 + labs(title=meses[indmonth[i]],x="Longitude",y="Latitude") 
       
       print(p2) 
 
-      ggsave(filename =paste0("Rplot",i-120,".png"))
+      ggsave(filename =paste0("Rplot",i-600,".png"))
 
       #png(filename = paste0("maracuja",i,".png"),width = 960, height = 960, units = "px", pointsize = 12)
 
@@ -151,9 +149,6 @@ VBareaplot<-cbind(VBareaplot,lat,lon,month=indmonth,yr=indyr)
 
 
 
-
-
-
 meanVBloFnat1<-NULL
 meanVBloFnat2<-NULL
 
@@ -184,12 +179,15 @@ measure<-c(rep("nominal",48),rep("proportion",48))
 
 df<- data.frame(VulB,month,nation,scenario,measure)
 
+
+
 p <- ggplot(df, aes(x=as.factor(month), y=VulB, fill=as.factor(nation)))
 p <- p + geom_bar(stat = "identity")
 p <- p + facet_grid(measure~scenario,scales = "free_y")
 p <- p + labs(x="month", y="vulnerable biomass",fill="nation")
 p <- p + theme_bw()
-p 
+print(p)
+ggsave(filename ="availEffect.png") 
 
 
 
@@ -244,7 +242,7 @@ basemap<-get_map(location = c(lon = -125, lat = 45),
 
 #saveLatex( # not using save latex anymore due to poor resolution
 #if you don't have latex installed you need to install it or use other function such as saveGIF
-  for(i in 121:max(ntsp))
+  for(i in 601:720)
   {
     
 
@@ -260,12 +258,12 @@ basemap<-get_map(location = c(lon = -125, lat = 45),
       p3 <- p3 + geom_point(alpha=0.8,aes(size=sdvalue, shape=variable, color=variable),data=ex1) 
       p3 <- p3 + scale_shape_manual(values=c(16,21)) + scale_fill_discrete(na.value=NA, guide="none")
       p3 <- p3 + scale_color_manual(values=c("red", "black")) + scale_size_area(guide = "none")
-      p3 <- p3 + labs(title=paste(meses[indmonth[i]],", year: ",anos[indmonth[i]]))     
+      p3 <- p3 + labs(title=meses[indmonth[i]],x="Longitude",y="Latitude")     
       p3 <- p3 + facet_wrap(~Scenario)
       
       print(p3)
 
-      ggsave(filename =paste0("Rplot",i-120,".png"))     
+      ggsave(filename =paste0("Rplot",i-600,".png"))     
 
   }
   #,
@@ -281,8 +279,6 @@ basemap<-get_map(location = c(lon = -125, lat = 45),
 #read data from environmental scenario
 setwd("/Users/catarinawor/Documents/Lagrangian/environ")
 evr<-read.rep("lagrangian_OM.rep")
-
-summary(evr)
 
 names(evr)
 
@@ -316,6 +312,95 @@ legend("topleft",c("warm","cold"), bty="n", col=c(cores[1],cores[length(cores)])
 
 dev.off()
 
+#==============================================
+
+#Animation with warmest and coldest year on simulation record. 
+
+VBareaevr0<-matrix(evr$VBarea, ncol=length(evr$sarea:evr$narea),dimnames=list(ntsp,evr$sarea:evr$narea))
+VBareaevr<-VBareaevr0[600:nrow(VBareaevr0),]
+
+VBareaMax<-VBareaevr[which(indyr==which.max(Emaxpos[50:length(Emaxpos)])),]
+VBareaMin<-VBareaevr[which(indyr==which.min(Emaxpos[50:length(Emaxpos)])),]
+
+VBplotMax<-cbind(melt(VBareaMax),rep("high",nrow(melt(VBareaMax))))
+VBplotMin<-cbind(melt(VBareaMin),rep("low",nrow(melt(VBareaMin))))
+
+Effareaevr<-matrix(evr$Effarea, ncol=length(evr$sarea:evr$narea),dimnames=list(ntsp,evr$sarea:evr$narea))
+
+EffareaMax<-Effareaevr[which(indyr==which.max(Emaxpos[50:length(Emaxpos)])),]
+EffareaMin<-Effareaevr[which(indyr==which.min(Emaxpos[50:length(Emaxpos)])),]
+
+EffplotMax<-cbind(melt(EffareaMax),rep("high",nrow(melt(EffareaMax))))
+EffplotMin<-cbind(melt(EffareaMin),rep("low",nrow(melt(EffareaMin))))
+
+names(VBplotMax)<- c("time","area", "value","Scenario")
+names(VBplotMin)<- c("time","area", "value","Scenario")
+
+names(EffplotMax)<- c("time","area", "value","Scenario")
+names(EffplotMin)<- c("time","area", "value","Scenario")
+
+VBEffareaplotEVR<-rbind(VBplotMax,VBplotMin,EffplotMax,EffplotMin)
+
+lat<-VBEffareaplotEVR$area
+lon<-rep(-131,length(lat))
+nation<-rep(1,nrow(VBEffareaplotEVR))
+nation[VBEffareaplotEVR$lat>48.1]<-2
+variable<-c(rep("Biomass",length(lat)/2),rep("Effort",length(lat)/2))
+
+VBEffareaplotEVR<-cbind(VBEffareaplotEVR,lat,lon,month=1:12,variable)
+
+sdvalue<-c(
+      VBEffareaplotEVR$value[VBEffareaplotEVR$variable=="Biomass"],
+      (VBEffareaplotEVR$value[VBEffareaplotEVR$variable=="Effort"]/mean(VBEffareaplotEVR$value[VBEffareaplotEVR$variable=="Effort"]))
+      *mean(VBEffareaplotEVR$value[VBEffareaplotEVR$variable=="Biomass"]))
+      
+VBEffareaplotEVR<-cbind(VBEffareaplotEVR,sdvalue)
+
+setwd("/Users/catarinawor/Documents/hake/PICES_conference/presentation/evr_anime")
+
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+
+basemap<-get_map(location = c(lon = -125, lat = 45),
+    zoom = 5, maptype = "terrain")
 
 
+#saveLatex( # not using save latex anymore due to poor resolution
+#if you don't have latex installed you need to install it or use other function such as saveGIF
+  for(i in 1:12){
+    
+      ex1<-VBEffareaplotEVR[VBEffareaplotEVR$month==i ,]
 
+      
+
+      p3<-  ggmap(basemap,
+          extent = "panel",
+          ylab = "Latitude",
+          xlab = "Longitude")
+      p3 <- p3 + geom_line(y=48.5, linetype=2, colour="grey60")
+      p3 <- p3 + geom_point(alpha=0.8,aes(size=sdvalue*20, shape=variable, color=variable),data=ex1) 
+      p3 <- p3 + scale_shape_manual(values=c(16,21)) + scale_fill_discrete(na.value=NA, guide="none")
+      p3 <- p3 + scale_color_manual(values=c("red", "black")) + scale_size_area(guide = "none")
+      p3 <- p3 + labs(title=meses[indmonth[i]],x="Longitude",y="Latitude")     
+      p3 <- p3 + facet_wrap(~Scenario)
+      
+      print(p3)
+
+      ggsave(filename =paste0("Rplot",i,".png"))     
+
+  }
+  #,
+  #pdflatex = "/usr/texbin/pdflatex")
+
+plot(evr$SB)
+VBEffareaplotEVR[VBEffareaplotEVR$Scenario=="low",]
+
+envir<-evr$envir[50:100]
+cols <- c("blue", "red")[(envir > 0) + 1]  
+
+## Pass the colors in to barplot()
+
+setwd("/Users/catarinawor/Documents/hake/PICES_conference/presentation")
+
+pdf("envIndex.pdf",width = 7, height = 7)   
+barplot(envir, col = cols,border=NA,ylim=c(-2,2))
+dev.off()
