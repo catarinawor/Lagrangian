@@ -190,6 +190,8 @@ PARAMETER_SECTION
 	number So;
 	number Bo
 	number beta;
+
+	number m_tsp;
 	
 	number maxPos50;
 	number maxPossd;
@@ -264,7 +266,8 @@ FUNCTION incidence_functions
 	Bo 		= kappa/So*Ro;
 	beta 	= (kappa-1)/Bo;
 
-	za 		= m+va*fe;
+	m_tsp 	= m/nmon;
+	za 		= m_tsp+va*fe;
 
 	maxPos50 = mfexp(log_maxPos50);
 	maxPossd = mfexp(log_maxPossd);
@@ -328,7 +331,7 @@ FUNCTION initialization
 		for(int rr =sarea; rr<=narea; rr++)
 		{
 			propVBarea(rr) = (cnorm(areas(rr)+0.5,PosX(1),varPos)-cnorm(areas(rr)-0.5,PosX(1),varPos))(a-sage+1);
-			CatchAreaAge(1)(rr)(a) = q*Effarea(1)(rr)*va(a)/(q*Effarea(1)(rr)*va(a)+m)*(1-mfexp(-(q*Effarea(1)(rr)*va(a)+m)))*NAreaAge(1)(rr)(a);
+			CatchAreaAge(1)(rr)(a) = q*Effarea(1)(rr)*va(a)/(q*Effarea(1)(rr)*va(a)+m_tsp)*(1-mfexp(-(q*Effarea(1)(rr)*va(a)+m_tsp)))*NAreaAge(1)(rr)(a);
 			CatchNatAge(1)(indnatarea(rr))(a) += CatchAreaAge(1)(rr)(a);
 
 			EffNatAge(indnatarea(rr))(1)(sage-2) = 1;
@@ -356,14 +359,14 @@ FUNCTION move_grow_die
 
             	for(int a = sage+1;a<=nage;a++)
             	{
-            		Nage(i)(a) = Nage(i-1)(a-1)*mfexp(-(m+q*Effage(i-1)(a-1)*va(a-1))/12);
+            		Nage(i)(a) = Nage(i-1)(a-1)*mfexp(-(m_tsp+q*Effage(i-1)(a-1)*va(a-1)));
             	}
             	
             	break;
             	
             default: 
             
-            	Nage(i) = elem_prod(Nage(i-1),mfexp(-(m+q*elem_prod(Effage(i-1),va))/12));
+            	Nage(i) = elem_prod(Nage(i-1),mfexp(-(m_tsp+q*elem_prod(Effage(i-1),va))));
             	break;
         }
 		
@@ -423,7 +426,7 @@ FUNCTION move_grow_die
 		{
 			for(int a = sage; a<=nage;a++)
 			{
-				CatchAreaAge(i)(r)(a) = q*Effarea(i)(r)*va(a)/(q*Effarea(i)(r)*va(a)+m)*(1-mfexp(-(q*Effarea(i)(r)*va(a)+m)))*NAreaAge(i)(r)(a);
+				CatchAreaAge(i)(r)(a) = q*Effarea(i)(r)*va(a)/(q*Effarea(i)(r)*va(a)+m_tsp)*(1-mfexp(-(q*Effarea(i)(r)*va(a)+m_tsp)))*NAreaAge(i)(r)(a);
 				CatchNatAge(i)(indnatarea(r))(a)+= CatchAreaAge(i)(r)(a);
 			}
 
