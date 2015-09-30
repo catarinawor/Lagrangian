@@ -63,6 +63,8 @@ DATA_SECTION
 	init_matrix TotEffyear(1,nations,syr,nyr);
 	init_matrix TotEffmonth(1,nations,smon,nmon);
 
+	init_vector effPwr(sarea,narea);
+
 	init_int eof;
 	
 	
@@ -312,7 +314,7 @@ FUNCTION initialization
 	
 	for(int rr= sarea; rr<=narea; rr++)
 	{
-		tmp1(rr)= VBarea(1)(rr)/ (NationVulB(1)(indnatarea(rr)) + 0.0001);
+		tmp1(rr)= pow((VBarea(1)(rr)/ (NationVulB(1)(indnatarea(rr)) + 0.0001))+1.0e-20,effPwr(rr));
 		tmp2(rr) = tmp1(rr)*TotEffyear(indnatarea(rr))(indyr(1));
 		Effarea(1)(rr) = tmp2(rr)*TotEffmonth(indnatarea(rr))(indmonth(1));
 	}
@@ -395,7 +397,7 @@ FUNCTION move_grow_die
 
 		for(int rr= sarea; rr<=narea; rr++)
 		{
-			tmp1(rr)= VBarea(i)(rr)/ (NationVulB(i)(indnatarea(rr)) + 1);
+			tmp1(rr)= pow((VBarea(i)(rr)/(NationVulB(i)(indnatarea(rr)) + 0.0001))+1.0e-20,effPwr(rr));
 			
 			tmp2(rr) = tmp1(rr)*TotEffyear(indnatarea(rr))(indyr(i));
 			Effarea(i)(rr) = tmp2(rr)*TotEffmonth(indnatarea(rr))(indmonth(i));
@@ -498,6 +500,7 @@ FUNCTION output_true
 	ofs<<"CatchNatAge"<< endl << CatchNatAge<<endl;
 
 
+
 	
 FUNCTION output_pin
 	
@@ -541,6 +544,7 @@ FUNCTION output_dat
 	afs<<"# Total effort by country and month " << endl << TotEffmonth <<endl;
 	afs<<"# dMinP " << endl << 0.00001 <<endl;
 	afs<<"#  tstp month area catage " << endl << obsCatchNatAge <<endl;
+	afs<<"effPwr"<< endl << effPwr <<endl;
 	afs<<"# eof " << endl << 999 <<endl;
 	
 
