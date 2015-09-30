@@ -10,14 +10,15 @@
 
 EXEC=lagrangian_est
 DAT=lagrangian_est.dat
+CTL=
+ARG=
+MCFLAG=-mcmc 10000 -mcsave 100 -nosdmcmc
+NR=4
 OM=lagrangian_OM
 SIMDAT=lagrangian_OM.dat
-LAST := 2
+LAST := 1
 NUMBERS := $(shell seq 1 ${LAST})
 
-RDATA='source(file.path('.','simRun.r'))'
-
-RFILES := $(wildcard $(RDIR)/*.R)
 
  
 all: $(OM)
@@ -27,21 +28,23 @@ all: $(OM)
 
 compiOM: admb $(OM)
 
+
 compi: admb $(EXEC)
 
-runOM: ./$(OM) 
+runOM: ./$(OM) -ind $(DAT) $(ARG)
 
-run: ./$(EXEC) 
+run: ./$(EXEC) -ind $(SIMDAT) $(ARG)
 
-readRdat: -@echo $(RDATA) | R --vanilla --slave
+mcmc: $(EXEC) $(EXEC).psv
+	./$(EXEC) -ind $(DAT) -mceval
 
-#simeval: $(foreach var,$(NUMBERS),./$(OM);\
-#	./$(EXEC) -ind $(DAT) $(ARG); \
-#	$(RDATA) | R --vanilla --slave)
 
-doall: runOM run readRdat
+mceval: $(EXEC)
+	cp $(CTL).psv $(EXEC).psv
+	./$(EXEC) -ind $(DAT) -mceval
 
-simeval: $(foreach var,$(NUMBERS),doall)
+simeval: $(foreach var,$(NUMBERS),./$(OM);\
+	./$(EXEC) -ind $(DAT) $(ARG);)
 	
         
 clean: 

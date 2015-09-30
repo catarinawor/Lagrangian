@@ -1,0 +1,7 @@
+*.exe
+*.cpp
+*.rep
+*.std
+*.log 
+environ/environTS.R
+environ/PDO.csv

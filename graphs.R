@@ -4,7 +4,6 @@
 # Jun 1st 2015
 #=========================================================================
 
-
 rm(list=ls()); 
 #if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")
 setwd("/Users/catarinawor/Documents/Lagrangian/")
@@ -67,6 +66,7 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 library(ggplot2)
 library(reshape2)
 
+
 ntsp=1:((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))
 ages=sim$nage-sim$sage+1
 indmonth= rep(sim$smon:sim$nmon,(sim$nyr-sim$syr+1))
@@ -116,36 +116,81 @@ setwd("/Users/catarinawor/Documents/Lagrangian/anime/effort")
 
 library("animation")
 
+ani.options(ani.dev = "pdf", ani.type = "pdf",ani.width=8, ani.height=4)
 saveLatex(
 #if you don't have latex installed you need to install it or use other function such as saveGIF
 
 for(i in 1:length(ntsp))
 {
-	df <-ENA[ENA$time==i,]
-	for(n in 1:est$nations )
-	{
-		for(m in 1:(length(mets)) )
-		{
-			if(min(df[df$nations==n&df$method==mets[m],]$effort)>0)
-			{
-				tmp3 <- df[df$nations==n&df$method==mets[m],]$effort/max(df[df$nations==n&df$method==mets[m],]$effort)
-				df[df$nations==n&df$method==mets[m],]$effort = tmp3
-			}
-		}
-	}
+  i=6
+  df <-ENA[ENA$time==i,]
+  for(n in 1:est$nations )
+  {
+    for(m in 1:(length(mets)) )
+    {
+      if(min(df[df$nations==n&df$method==mets[m],]$effort)>0)
+      {
+        tmp3 <- df[df$nations==n&df$method==mets[m],]$effort/max(df[df$nations==n&df$method==mets[m],]$effort)
+        df[df$nations==n&df$method==mets[m],]$effort = tmp3
+      }
+    }
+  }
     
-	y<- ggplot(df, aes(x=age,y=effort, group=method)) + theme_bw()
-	y <- y+ facet_grid(.~nations)
-	y <- y+ geom_line(size=2, aes(colour=method))
-	y <- y + scale_y_continuous(limits=c(0,1))
-	y <- y + labs(title=meses[indmonth[i]])
-	
+  y<- ggplot(df, aes(x=age,y=effort, group=method)) + theme_bw()
+  y <- y+ facet_grid(.~nations)
+  y <- y+ geom_line(size=2, aes(colour=method))
+  y <- y + scale_y_continuous(limits=c(0,1))
+  y <- y + labs(title=meses[indmonth[i]])
+  
 
 print(y)
 }
 ,
-pdflatex = "/usr/texbin/pdflatex",latex.filename = "VBarea.tex")
+pdflatex = "/usr/texbin/pdflatex",latex.filename = "selnation.tex")
 
+
+sumNatEff<-apply(EffNatAgeEst[,-(1:2)],1,sum)
+mon<- rep(1:12,est$nyr)
+yr<- rep(1:est$nyr,each=12)
+totNatEff<- cbind(EffNatAgeEst[,(1:2)],mon,yr,sumNatEff)
+head(totNatEff)
+
+
+
+
+p <- ggplot(totNatEff, aes(x=mon,y=sumNatEff,fill=as.factor(nation))) + theme_bw()
+p <- p + geom_bar(stat="identity", position="dodge")
+p <- p+facet_wrap(~yr,ncol=4)
+p
+
+EffNatAgeEst<-as.data.frame(EffNatAgeEst)
+ 
+
+
+for(i in 1:length(ntsp))
+{
+  df <-ENA[ENA$time==i,]
+  for(n in 1:est$nations )
+  {
+    for(m in 1:(length(mets)) )
+    {
+      if(min(df[df$nations==n&df$method==mets[m],]$effort)>0)
+      {
+        tmp3 <- df[df$nations==n&df$method==mets[m],]$effort/max(df[df$nations==n&df$method==mets[m],]$effort)
+        df[df$nations==n&df$method==mets[m],]$effort = tmp3
+      }
+    }
+  }
+    
+  y<- ggplot(df, aes(x=age,y=effort, group=method)) + theme_bw()
+  y <- y + facet_grid(.~nations)
+  y <- y + geom_line(size=2, aes(colour=method))
+  y <- y + scale_y_continuous(limits=c(0,1))
+  y <- y + labs(title=meses[indmonth[i]])
+  
+
+print(y)
+}
 
 
 
