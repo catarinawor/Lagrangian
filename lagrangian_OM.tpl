@@ -20,9 +20,13 @@ DATA_SECTION
 		ofs<<seed<<endl; //the new value of the seed
 	END_CALCS
 
+	//======================
 	// model dimensions
+	//======================
+
 	init_int syr;
 	init_int nyr;
+	init_int rep_yr;
 	init_int sage;
 	init_int nage;
 	init_int smon;
@@ -33,24 +37,27 @@ DATA_SECTION
 
 	init_vector border(1,nations-1);
 
+	//======================
 	//model parameters
+	//======================
+
 	init_number Ro;
 	init_number h;
 	init_number m;
 	init_number fe;
 	init_number q;
-	init_number sigR;
-	init_number tau_c;
-	init_number mo;
-	init_number err;
+	init_number sigR;		//=================================
+	init_number tau_c; 		//parameters in estimaotion model 
+	init_number mo; 		//
+	init_number err;		//=================================
 
 	init_vector wa(sage,nage);
 	init_vector fa(sage,nage);
 	init_vector va(sage,nage);
 	init_vector minPos(sage,nage);
-	init_number maxPos50;
-	init_number maxPossd;
-	init_number cvPos;
+	init_number maxPos50;			//================================		
+	init_number maxPossd;			//parameters in estimaotion model 
+	init_number cvPos; 				//================================	
 	
 
 	init_matrix TotEffyear(1,nations,syr,nyr);
@@ -65,17 +72,17 @@ DATA_SECTION
 		{
 			cout<<"Error reading data.\n Fix it."<<endl;
 			cout<< "eof is: "<<eof<<endl;
-			cout<< "minPos is: "<<minPos<<endl;
 			ad_exit(1);
 		}
 
 	END_CALCS
 	
 
-	// accessory quantities
-
+	//===================================
+	// accessory quantities and counters
+	//===================================
+	
 	int ntstp;
-
 
    	vector age(sage,nage);
    	vector areas(sarea,narea);
@@ -93,7 +100,6 @@ DATA_SECTION
 
 			dvector natmp(1,nations);
 			
-
 			natmp(1)=sarea;
 
 			for(int n=1; n<=nations-1; n++)
@@ -116,12 +122,14 @@ DATA_SECTION
 
 	END_CALCS
 
-	 	vector indyr(1,ntstp);
+	 	ivector indyr(1,ntstp);
  		ivector indmonth(1,ntstp);
-		vector indnatarea(sarea,narea);
+		ivector indnatarea(sarea,narea);
 		ivector pcat(1,nations);
 
 		int tot_pcat;
+
+		matrix TotEffyear_rep(1,nations,rep_yr+1,nyr);
 
        LOC_CALCS		
        			int aa =0;
@@ -155,7 +163,12 @@ DATA_SECTION
        			pcat.initialize();
        			for(int n=1;n<=nations;n++)
        			{
-       				for(int i=1;i<=ntstp;i++)
+       				for(int ii=rep_yr+1;ii<=nyr;ii++)
+       				{
+       					TotEffyear_rep(n)(ii)= TotEffyear(n)(ii);
+       				}
+
+       				for(int i=rep_yr*nmon+1;i<=ntstp;i++)
        				{
 
        					if(TotEffmonth(n)(indmonth(i))>0)
@@ -166,8 +179,7 @@ DATA_SECTION
        				}
        			}
 
-       			tot_pcat=sum(pcat);
-    
+       			tot_pcat=sum(pcat);    
        			
 	END_CALCS
 
@@ -182,15 +194,13 @@ PARAMETER_SECTION
 	number So;
 	number Bo
 	number beta;
-	number tBo;
-
+	
 	vector lxo(sage,nage);
 	vector za(sage,nage);
-
 	vector SB(1,ntstp);
-	vector varPos(sage,nage);
+	
 	vector maxPos(sage,nage);
-
+	vector varPos(sage,nage);
 
 	matrix NationVulB(1,ntstp,1,nations);
 	matrix Nage(1,ntstp,sage,nage);
@@ -198,6 +208,7 @@ PARAMETER_SECTION
  	matrix PosX(1,ntstp,sage,nage);
  	matrix Effage(1,ntstp,sage,nage);
  	matrix VBarea(1,ntstp,sarea,narea);
+ 	
  	//matrix propVBarea(1,ntstp,sarea,narea);
  	matrix Effarea(1,ntstp,sarea,narea);
  
@@ -208,13 +219,13 @@ PARAMETER_SECTION
 
  	matrix obsCatchNatAge(1,tot_pcat,sage-3,nage);
 
-
 PRELIMINARY_CALCS_SECTION
 
 	incidence_functions();
 	initialization();
 	move_grow_die();
 	clean_catage();
+	
 	output_true();
 	output_dat();
 	output_pin();
@@ -251,14 +262,14 @@ FUNCTION incidence_functions
 	beta 	= (kappa-1)/Bo;
 
 	za 		= m+va*fe;
-
 	
-
 FUNCTION initialization
+	
+	dvariable tBo;
 	
 	NAreaAge.initialize();
  	CatchAreaAge.initialize();
- 	CatchNatAge.initialize();
+ 	CatchNatAge.initialize(); 
 
 	Nage(1,1) = So*Bo/(1+beta*Bo);
 
@@ -269,8 +280,9 @@ FUNCTION initialization
 
 	VulB(1) = elem_prod(elem_prod(Nage(1),va),wa);
 	SB(1) = elem_prod(Nage(1),fa)*wa/2;
-	tBo = Nage(1)*wa;
 
+	maxPos.initialize();
+	tBo = Nage(1)*wa;
 	calcmaxpos(tBo);
 	varPos = maxPos*cvPos;
 
@@ -323,17 +335,12 @@ FUNCTION initialization
 
 	}
 
-
-
-
 FUNCTION move_grow_die
 
 	dvariable tB;
 
 	for(int i=2;i<=ntstp;i++)
 	{
-		//if(i>12)exit(1);
-
 		
 		switch (indmonth(i)) {
             case 1:           	
@@ -358,8 +365,9 @@ FUNCTION move_grow_die
 		SB(i) = elem_prod(Nage(i),fa)*wa/2;
 		
 		maxPos.initialize();
-		tB = Nage(i)*wa;
+		tB = Nage(i)*wa;		
 		calcmaxpos(tB);
+
 		//cout<<"maxPos "<<maxPos<<endl;
 		varPos = maxPos*cvPos;
 
@@ -420,12 +428,11 @@ FUNCTION move_grow_die
 	}
 
 FUNCTION clean_catage
-
 	
 	int p;
        
 	p=1;
-	for(int i=1;i<=ntstp;i++)
+	for(int i=rep_yr*nmon+1;i<=ntstp;i++)
 	{
 		for(int n=1;n<=nations;n++)
 		{
@@ -449,17 +456,10 @@ FUNCTION clean_catage
 	
 FUNCTION dvar_vector calcmaxpos(const dvariable& tb)
 	
-	
-
 	maxPos(sage,nage) = 1./(1.+mfexp(-(age-maxPos50)/maxPossd));
 	maxPos(sage,nage) *= (narea-sarea);
-	maxPos(sage,nage) += sarea;
-
-			
+	maxPos(sage,nage) += sarea;			
 	return(maxPos);
-
-
-	
 
 
 FUNCTION output_true
@@ -471,6 +471,7 @@ FUNCTION output_true
 	ofs<<"maxPos50" << endl << maxPos50 <<endl;
 	ofs<<"maxPossd" << endl << maxPossd <<endl;
 	ofs<<"cvPos" << endl << cvPos <<endl;
+	ofs<<"seed"<< endl << seed <<endl;
 	ofs<<"syr" << endl << syr <<endl;
 	ofs<<"nyr" << endl << nyr <<endl;
 	ofs<<"sage" << endl << sage <<endl;
@@ -492,12 +493,13 @@ FUNCTION output_true
 	ofs<<"EffNatAge"<< endl << EffNatAge<<endl;
 	ofs<<"CatchNatAge"<< endl << CatchNatAge<<endl;
 
+
 	
 FUNCTION output_pin
 	
 	ofstream ifs("lagrangian_est.pin");
 
-	ifs<<"# mo " << endl << 1 <<endl;
+	ifs<<"# mo " << endl << 2 <<endl;
 	ifs<<"# tau_c " << endl << log(.2) <<endl;
 	ifs<<"# cvPos "<< endl << log(.1) <<endl;	
 	//ifs<<"# maxPos "<< endl << minPos <<endl;
@@ -511,7 +513,7 @@ FUNCTION output_pin
 FUNCTION output_dat
 
 	ofstream afs("lagrangian_est.dat");
-	afs<<"# syr " << endl << syr <<endl;
+	afs<<"# syr " << endl << rep_yr+1 <<endl;
 	afs<<"# nyr " << endl << nyr <<endl;
 	afs<<"# sage " << endl << sage <<endl;
 	afs<<"# nage " << endl << nage <<endl;
@@ -531,7 +533,7 @@ FUNCTION output_dat
 	afs<<"# fecundity at age " << endl << fa <<endl;
 	afs<<"# vulnerability at age " << endl << va <<endl;
 	afs<<"# minPos "<< endl << minPos <<endl;
-	afs<<"# Total effort by country and year " << endl << TotEffyear <<endl;
+	afs<<"# Total effort by country and year " << endl << TotEffyear_rep <<endl;
 	afs<<"# Total effort by country and month " << endl << TotEffmonth <<endl;
 	afs<<"# dMinP " << endl << 0.00001 <<endl;
 	afs<<"#  tstp month area catage " << endl << obsCatchNatAge <<endl;
