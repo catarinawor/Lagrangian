@@ -12,34 +12,33 @@ EXEC=lagrangian_est
 DAT=lagrangian_est.dat
 OM=lagrangian_OM
 SIMDAT=lagrangian_OM.dat
-LAST := 2
+LAST := 3
 NUMBERS := $(shell seq 1 ${LAST})
 
-RDATA='source(file.path('.','simRun.r'))'
-
-RFILES := $(wildcard $(RDIR)/*.R)
+RDATA ='source(file.path("../","Lagrangian","simRun.r"))'
 
  
-all: $(OM)
-	./$(OM) -ind $(SIMDAT) $(ARG)
-	 $(EXEC)
+all: 
+	compiOM rom compi run
+
+compiOM: $(OM)
+	admb $(OM)
+
+compi: $(EXEC)
+	admb $(EXEC)
+
+rom: $(OM)
+	-./$(OM) -ind $(SIMDAT) $(ARG)
+
+
+run: $(EXEC)
 	./$(EXEC) -ind $(DAT) $(ARG)
 
-compiOM: admb $(OM)
+readRdat: 
+	-@echo $(RDATA) | R --vanilla --slave
 
-compi: admb $(EXEC)
 
-runOM: ./$(OM) 
-
-run: ./$(EXEC) 
-
-readRdat: -@echo $(RDATA) | R --vanilla --slave
-
-#simeval: $(foreach var,$(NUMBERS),./$(OM);\
-#	./$(EXEC) -ind $(DAT) $(ARG); \
-#	$(RDATA) | R --vanilla --slave)
-
-doall: runOM run readRdat
+doall: rom run readRdat
 
 simeval: $(foreach var,$(NUMBERS),doall)
 	

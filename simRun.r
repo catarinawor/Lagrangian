@@ -20,21 +20,32 @@ readOutput <- function(dir)
 	return( C );
 }
 
-argsim = paste("./lagrangian_OM") 
-argest = paste("./lagrangian_est") 
 
-for(i in 1:2){
-
-	system(argsim)
- 	system(argest)
 	seed<-scan("seed.txt")	
 	file.name <- paste("simest",seed,".Rdata",sep="")
 	sims<-readOutput("/Users/catarinawor/Documents/Lagrangian/")
 	setwd("/Users/catarinawor/Documents/Lagrangian/SimResult")
 	save(sims,file=file.name)
-}
 
-	
+
+
+
+
+#argsim = paste("./lagrangian_OM") 
+#argest = paste("./lagrangian_est") 
+#
+#for(i in 1:2){
+#
+#	system(argsim)
+# 	system(argest)
+#	seed<-scan("seed.txt")	
+#	file.name <- paste("simest",seed,".Rdata",sep="")
+#	sims<-readOutput("/Users/catarinawor/Documents/Lagrangian/")
+#	setwd("/Users/catarinawor/Documents/Lagrangian/SimResult")
+#	save(sims,file=file.name)
+#}
+#
+#	
 
 
 
