@@ -12,7 +12,9 @@ EXEC=lagrangian_est
 DAT=lagrangian_est.dat
 OM=lagrangian_OM
 SIMDAT=lagrangian_OM.dat
-LAST := 3
+SEED = seed.txt
+LAST := 10
+
 NUMBERS := $(shell seq 1 ${LAST})
 
 RDATA ='source(file.path("../","Lagrangian","simRun.r"))'
@@ -27,21 +29,30 @@ compiOM: $(OM)
 compi: $(EXEC)
 	admb $(EXEC)
 
-rom: $(OM)
+rom: $(OM) $(SIMDAT) $(ARG) $(SEED)
 	-./$(OM) -ind $(SIMDAT) $(ARG)
 
 
-run: $(EXEC)
+run: $(EXEC) $(DAT) $(ARG)
 	./$(EXEC) -ind $(DAT) $(ARG)
 
 readRdat: 
 	-@echo $(RDATA) | R --vanilla --slave
 
 
-doall: rom run readRdat
+doall: rom run readRdat 
 
-simeval: $(foreach var,$(NUMBERS),doall)
-	
+
+
+simeval: $(foreach var,$(NUMBERS), $(MAKE) doall ;)
+
+qwert: 
+	for F in $(NUMBERS) ; do \
+    echo $$doall ; done
+
+
+FORCE: 
+
         
 clean: 
 	-rm -f  admodel.* variance eigv.rpt fmin.log $(EXEC) variance *.b01 *.p01 *.r01 *.eva *.bar *.log *.htp *.cor  

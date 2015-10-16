@@ -27,6 +27,10 @@ library(ggmap)
 #======================================================================== 
 # Graphs for base case scenario
 #======================================================================== 
+#Has the biomass stabilized -non error only
+names(baseF)
+plot(baseF$SB)
+
 
 #remodel data base for plotting
 ntsp <- 1:((baseF$nyr-baseF$syr+1)*(baseF$nmon-baseF$smon+1))
@@ -38,7 +42,7 @@ meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "No
 
 
 VBareabaseF<-matrix(baseF$VBarea, ncol=(baseF$narea-baseF$sarea+1),dimnames=list(ntsp,baseF$sarea:baseF$narea))
-EffareabaseF<-matrix(baseF$Effarea, ncol=(baseF$narea-loF$sarea+1),dimnames=list(ntsp,baseF$sarea:baseF$narea))
+EffareabaseF<-matrix(baseF$Effarea, ncol=(baseF$narea-baseF$sarea+1),dimnames=list(ntsp,baseF$sarea:baseF$narea))
 
 VBplotbaseF<-melt(VBareabaseF)
 EffplotbaseF<-melt(EffareabaseF)
@@ -73,7 +77,7 @@ setwd("/Users/catarinawor/Documents/hake/PICES_conference/presentation/Fbase_ani
 
 #saveLatex( #not using savelatex anymore due to poor resolution
 #if you don't have latex installed you need to install it or use other function such as saveGIF
-  for(i in 601:720){
+  for(i in 601:624){
      
       ex1<-VBEffareaplotbase[VBEffareaplotbase$time==i ,]
       graphics.off()
@@ -85,7 +89,8 @@ setwd("/Users/catarinawor/Documents/hake/PICES_conference/presentation/Fbase_ani
       p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")
       p2 <- p2 + geom_point(alpha=0.8,aes(size=sdvalue*10, shape=variable, color=variable),data=ex1) 
       p2 <- p2 + scale_shape_manual(values=c(16,21)) + scale_fill_discrete(na.value=NA, guide="none")
-      p2 <- p2 + scale_color_manual(values=c("red", "black")) + scale_size_area(guide = "none")
+      p2 <- p2 + scale_color_manual(values=c("red", "black")) + scale_size_area(guide = "none") 
+      #p2 <- p2 + continuous_scale(,scale_name="size")
       p2 <- p2 + labs(title=meses[indmonth[i]],x="Longitude",y="Latitude") 
       
       print(p2) 
@@ -199,11 +204,11 @@ VBareahiF<-matrix(hiF$VBarea, ncol=(hiF$narea-hiF$sarea+1),dimnames=list(ntsp,hi
 EffarealoF<-matrix(loF$Effarea, ncol=(loF$narea-loF$sarea+1),dimnames=list(ntsp,loF$sarea:loF$narea))
 EffareahiF<-matrix(hiF$Effarea, ncol=(hiF$narea-hiF$sarea+1),dimnames=list(ntsp,hiF$sarea:hiF$narea))
 
-EffplotloF<-cbind(melt(EffarealoF),rep("low F",nrow(melt(EffarealoF))))
-EffplothiF<-cbind(melt(EffareahiF),rep("high F",nrow(melt(EffareahiF))))
+EffplotloF<-cbind(melt(EffarealoF),rep("High Biomass",nrow(melt(EffarealoF))))
+EffplothiF<-cbind(melt(EffareahiF),rep("Low Biomass",nrow(melt(EffareahiF))))
 
-VBplotloF<-cbind(melt(VBarealoF),rep("low F",nrow(melt(VBarealoF))))
-VBplothiF<-cbind(melt(VBareahiF),rep("high F",nrow(melt(VBareahiF))))
+VBplotloF<-cbind(melt(VBarealoF),rep("High Biomass",nrow(melt(VBarealoF))))
+VBplothiF<-cbind(melt(VBareahiF),rep("High Biomass",nrow(melt(VBareahiF))))
 
 names(VBplotloF)<- c("time","area", "value","Scenario")
 names(VBplothiF)<- c("time","area", "value","Scenario")
@@ -242,7 +247,7 @@ basemap<-get_map(location = c(lon = -125, lat = 45),
 
 #saveLatex( # not using save latex anymore due to poor resolution
 #if you don't have latex installed you need to install it or use other function such as saveGIF
-  for(i in 601:720)
+  for(i in 601:624)
   {
     
 
@@ -274,7 +279,7 @@ basemap<-get_map(location = c(lon = -125, lat = 45),
 
 
 #======================================================================== 
-# Graphs for environmental influence scenario case scenario
+# Graphs for environmental influence scenario 
 #======================================================================== 
 #read data from environmental scenario
 setwd("/Users/catarinawor/Documents/Lagrangian/environ")
@@ -317,21 +322,23 @@ dev.off()
 #Animation with warmest and coldest year on simulation record. 
 
 VBareaevr0<-matrix(evr$VBarea, ncol=length(evr$sarea:evr$narea),dimnames=list(ntsp,evr$sarea:evr$narea))
-VBareaevr<-VBareaevr0[600:nrow(VBareaevr0),]
+VBareaevr<-cbind(VBareaevr0[601:nrow(VBareaevr0),])
+head(VBareaevr)
 
-VBareaMax<-VBareaevr[which(indyr==which.max(Emaxpos[50:length(Emaxpos)])),]
-VBareaMin<-VBareaevr[which(indyr==which.min(Emaxpos[50:length(Emaxpos)])),]
+VBareaMax<-VBareaevr[which(indyr[601:length(indyr)]==which.max(Emaxpos[50:length(Emaxpos)])+50),]
+VBareaMin<-VBareaevr[which(indyr[601:length(indyr)]==which.min(Emaxpos[50:length(Emaxpos)])+50),]
 
-VBplotMax<-cbind(melt(VBareaMax),rep("high",nrow(melt(VBareaMax))))
-VBplotMin<-cbind(melt(VBareaMin),rep("low",nrow(melt(VBareaMin))))
+
+VBplotMax<-cbind(melt(VBareaMax),rep("Cold",nrow(melt(VBareaMax))))
+VBplotMin<-cbind(melt(VBareaMin),rep("Warm",nrow(melt(VBareaMin))))
 
 Effareaevr<-matrix(evr$Effarea, ncol=length(evr$sarea:evr$narea),dimnames=list(ntsp,evr$sarea:evr$narea))
 
-EffareaMax<-Effareaevr[which(indyr==which.max(Emaxpos[50:length(Emaxpos)])),]
-EffareaMin<-Effareaevr[which(indyr==which.min(Emaxpos[50:length(Emaxpos)])),]
+EffareaMax<-Effareaevr[which(indyr[601:length(indyr)]==which.max(Emaxpos[50:length(Emaxpos)])+50),]
+EffareaMin<-Effareaevr[which(indyr[601:length(indyr)]==which.min(Emaxpos[50:length(Emaxpos)])+50),]
 
-EffplotMax<-cbind(melt(EffareaMax),rep("high",nrow(melt(EffareaMax))))
-EffplotMin<-cbind(melt(EffareaMin),rep("low",nrow(melt(EffareaMin))))
+EffplotMax<-cbind(melt(EffareaMax),rep("Cold",nrow(melt(EffareaMax))))
+EffplotMin<-cbind(melt(EffareaMin),rep("Warm",nrow(melt(EffareaMin))))
 
 names(VBplotMax)<- c("time","area", "value","Scenario")
 names(VBplotMin)<- c("time","area", "value","Scenario")
@@ -404,3 +411,58 @@ setwd("/Users/catarinawor/Documents/hake/PICES_conference/presentation")
 pdf("envIndex.pdf",width = 7, height = 7)   
 barplot(envir, col = cols,border=NA,ylim=c(-2,2))
 dev.off()
+
+#====================================================================
+#availability plot
+#done with exaggerated temperature gradients
+
+system("./lagrangian_OM -ind warm.dat")
+setwd("/Users/catarinawor/Documents/Lagrangian")
+warm<-read.rep("lagrangian_OM.rep")
+
+system("./lagrangian_OM -ind cold.dat")
+setwd("/Users/catarinawor/Documents/Lagrangian")
+cold<-read.rep("lagrangian_OM.rep")
+
+names(warm)
+dim(warm$VBarea)
+
+warmVBarea<-warm$VBarea[1189:1200,]
+coldVBarea<-cold$VBarea[1189:1200,]
+
+bdr<-48
+Nat1<-warm$sarea:bdr
+Nat2<-(bdr+1):warm$narea
+
+
+VBareawarmNat1<-apply(warmVBarea[,Nat1-30],1,sum)
+VBareawarmNat2<-apply(warmVBarea[,Nat2-30],1,sum)
+
+VBareawarmNat1p<-VBareawarmNat1/(VBareawarmNat1+VBareawarmNat2)
+VBareawarmNat2p<-VBareawarmNat2/(VBareawarmNat1+VBareawarmNat2)
+
+
+VBareacoldNat1<-apply(coldVBarea[,Nat1-30],1,sum)
+VBareacoldNat2<-apply(coldVBarea[,Nat2-30],1,sum)
+
+VBareacoldNat1p<-VBareacoldNat1/(VBareacoldNat1+VBareacoldNat2)
+VBareacoldNat2p<-VBareacoldNat2/(VBareacoldNat1+VBareacoldNat2)
+
+VBNation<-c(VBareawarmNat1,VBareawarmNat2,VBareacoldNat1,VBareacoldNat2,VBareawarmNat1p,VBareawarmNat2p,VBareacoldNat1p,VBareacoldNat2p)
+nation<-rep(c(rep(1,warm$nmon),rep(2,warm$nmon)),4)
+scenario<-rep(c(rep("Warm",nrow(warmVBarea)*2), rep("Cold",nrow(coldVBarea)*2)),2)
+month<-rep(1:12,8)
+measure<-c(rep("Nominal",length(month)/2),rep("Proportion",length(month)/2))
+
+## need to calculate measure still
+
+df<- data.frame(VBNation,month,nation,scenario,measure)
+
+p <- ggplot(df, aes(x=as.factor(month), y=VBNation, fill=as.factor(nation)))
+p <- p + geom_bar(stat = "identity")
+p <- p + facet_grid(measure~scenario,scales = "free_y")
+p <- p + labs(x="month", y="vulnerable biomass",fill="nation")
+p <- p + theme_bw()
+print(p)
+setwd("/Users/catarinawor/Documents/hake/PICES_conference/presentation")
+ggsave(filename ="availEffectEvr.png") 

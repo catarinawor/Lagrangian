@@ -11,14 +11,35 @@ source("read.admb.R")
 
 
 
+##readOutput <- function(dir)
+##{
+##	setwd(dir)
+##	sim = read.rep("lagrangian_OM.rep")
+##	est = read.rep("lagrangian_est.rep")
+##	C <- c(sim,est)
+##	return( C );
+##}
+##
+##
+##	seed<-scan("seed.txt")	
+##	file.name <- paste("simest",seed,".Rdata",sep="")
+##	sims<-readOutput("/Users/catarinawor/Documents/Lagrangian/")
+##	setwd("/Users/catarinawor/Documents/Lagrangian/SimResult")
+##	save(sims,file=file.name)
+
+
+
+
 readOutput <- function(dir)
 {
 	setwd(dir)
 	sim = read.rep("lagrangian_OM.rep")
 	est = read.rep("lagrangian_est.rep")
-	C <- c(sim,est)
+	par = read.fit("lagrangian_est")
+	C <- list(sim,est,par)
 	return( C );
 }
+
 
 
 	seed<-scan("seed.txt")	
@@ -26,6 +47,23 @@ readOutput <- function(dir)
 	sims<-readOutput("/Users/catarinawor/Documents/Lagrangian/")
 	setwd("/Users/catarinawor/Documents/Lagrangian/SimResult")
 	save(sims,file=file.name)
+
+
+
+
+##argsim = paste("./lagrangian_OM") 
+##argest = paste("./lagrangian_est") 
+###
+##for(i in 1:5){
+##	setwd("/Users/catarinawor/Documents/Lagrangian")
+##	system(argsim)
+##	system(argest)
+##	seed<-scan("seed.txt")	
+##	file.name <- paste("simest",seed,".Rdata",sep="")
+##	sims<-readOutput("/Users/catarinawor/Documents/Lagrangian/")
+##	setwd("/Users/catarinawor/Documents/Lagrangian/SimResult")
+##	save(sims,file=file.name)
+##}
 
 
 

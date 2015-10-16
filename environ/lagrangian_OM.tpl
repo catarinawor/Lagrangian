@@ -57,6 +57,8 @@ DATA_SECTION
 	init_matrix TotEffyear(1,nations,syr,nyr);
 	init_matrix TotEffmonth(1,nations,smon,nmon);
 
+	init_vector effPwr(sarea,narea);
+
 	init_int eof;
 	
 	
@@ -267,7 +269,7 @@ FUNCTION incidence_functions
 
 	m_tsp 	=m/nmon;
 
-	za 		= m_tsp+va*fe;
+	za 		= m+va*fe;
 
 	
 
@@ -315,7 +317,7 @@ FUNCTION initialization
 	
 	for(int rr= sarea; rr<=narea; rr++)
 	{
-		tmp1(rr)= VBarea(1)(rr)/ (NationVulB(1)(indnatarea(rr)) + 0.0001);
+		tmp1(rr)= (VBarea(1)(rr)/ (sum(VulB(1)) + 0.0001))* effPwr(rr);
 		tmp2(rr) = tmp1(rr)*TotEffyear(indnatarea(rr))(indyr(1));
 		Effarea(1)(rr) = tmp2(rr)*TotEffmonth(indnatarea(rr))(indmonth(1));
 	}

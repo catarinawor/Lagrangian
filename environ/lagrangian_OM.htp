@@ -32,6 +32,7 @@ class model_data : public ad_comm{
   data_number cvPos;
   data_matrix TotEffyear;
   data_matrix TotEffmonth;
+  data_vector effPwr;
   data_int eof;
   int ntstp;
   dvector age;
@@ -95,6 +96,7 @@ private:
   param_number Bo;
   param_number beta;
   param_number tBo;
+  param_number m_tsp;
   param_vector lxo;
   param_vector za;
   param_vector SB;

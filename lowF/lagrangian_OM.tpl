@@ -58,6 +58,8 @@ DATA_SECTION
 	init_matrix TotEffyear(1,nations,syr,nyr);
 	init_matrix TotEffmonth(1,nations,smon,nmon);
 
+	init_vector effPwr(sarea,narea);
+
 	init_int eof;
 	
 	
@@ -66,10 +68,11 @@ DATA_SECTION
 		if( eof != 999 )
 		{
 			cout<<"Error reading data.\n Fix it."<<endl;
-			cout<< "maxPos501 is: "<<maxPos501<<endl;
 			cout<< "eof is: "<<eof<<endl;
 			ad_exit(1);
+
 		}
+
 
 	END_CALCS
 	
@@ -255,7 +258,7 @@ FUNCTION incidence_functions
 	beta 	= (kappa-1)/Bo;
 
 	m_tsp 	= m/12;
-	za 		= m_tsp+va*fe;
+	za 		= m+va*fe;
 
 	
 
@@ -303,7 +306,9 @@ FUNCTION initialization
 	
 	for(int rr= sarea; rr<=narea; rr++)
 	{
-		tmp1(rr)= VBarea(1)(rr)/ (NationVulB(1)(indnatarea(rr)) + 0.0001);
+		//tmp1(rr)= pow((VBarea(1)(rr)/ (NationVulB(1)(indnatarea(rr)) + 0.0001))+ 1.0e-20,effPwr(rr));
+		tmp1(rr)= (VBarea(1)(rr)/ (sum(VulB(1)) + 0.0001))* effPwr(rr);
+	
 		tmp2(rr) = tmp1(rr)*TotEffyear(indnatarea(rr))(indyr(1));
 		Effarea(1)(rr) = tmp2(rr)*TotEffmonth(indnatarea(rr))(indmonth(1));
 	}
@@ -394,8 +399,9 @@ FUNCTION move_grow_die
 
 		for(int rr= sarea; rr<=narea; rr++)
 		{
-			tmp1(rr)= VBarea(i)(rr)/ (NationVulB(i)(indnatarea(rr)) + 1);
-			
+			//tmp1(rr)= VBarea(i)(rr)/ (NationVulB(i)(indnatarea(rr)) + 1);
+			//tmp1(rr)= pow((VBarea(1)(rr)/ (NationVulB(1)(indnatarea(rr)) + 0.0001))+ 1.0e-20,effPwr(rr));
+			tmp1(rr)= (VBarea(i)(rr)/ (sum(VulB(i)) + 0.0001))* effPwr(rr);
 			tmp2(rr) = tmp1(rr)*TotEffyear(indnatarea(rr))(indyr(i));
 			Effarea(i)(rr) = tmp2(rr)*TotEffmonth(indnatarea(rr))(indmonth(i));
 		}

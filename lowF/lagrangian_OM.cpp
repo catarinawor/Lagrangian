@@ -56,6 +56,7 @@ model_data::model_data(int argc,char * argv[]) : ad_comm(argc,argv)
   cvPos.allocate("cvPos");
   TotEffyear.allocate(1,nations,syr,nyr,"TotEffyear");
   TotEffmonth.allocate(1,nations,smon,nmon,"TotEffmonth");
+  effPwr.allocate(sarea,narea,"effPwr");
   eof.allocate("eof");
 		
 		if( eof != 999 )
@@ -166,6 +167,10 @@ model_parameters::model_parameters(int sz,int argc,char * argv[]) :
   tBo.allocate("tBo");
   #ifndef NO_AD_INITIALIZE
   tBo.initialize();
+  #endif
+  m_tsp.allocate("m_tsp");
+  #ifndef NO_AD_INITIALIZE
+  m_tsp.initialize();
   #endif
   lxo.allocate(sage,nage,"lxo");
   #ifndef NO_AD_INITIALIZE
@@ -282,6 +287,7 @@ void model_parameters::incidence_functions(void)
 	So 		= kappa/phie;
 	Bo 		= kappa/So*Ro;
 	beta 	= (kappa-1)/Bo;
+	m_tsp 	= m/12;
 	za 		= m+va*fe;
 }
 
@@ -315,7 +321,8 @@ void model_parameters::initialization(void)
 	dvar_vector tmp3(sarea,narea);
 	for(int rr= sarea; rr<=narea; rr++)
 	{
-		tmp1(rr)= VBarea(1)(rr)/ (NationVulB(1)(indnatarea(rr)) + 0.0001);
+		//tmp1(rr)= pow((VBarea(1)(rr)/ (NationVulB(1)(indnatarea(rr)) + 0.0001))+ 1.0e-20,effPwr(rr));
+		tmp1(rr)= (VBarea(1)(rr)/ (sum(VulB(1)) + 0.0001))* effPwr(rr);
 		tmp2(rr) = tmp1(rr)*TotEffyear(indnatarea(rr))(indyr(1));
 		Effarea(1)(rr) = tmp2(rr)*TotEffmonth(indnatarea(rr))(indmonth(1));
 	}
@@ -325,7 +332,7 @@ void model_parameters::initialization(void)
 		for(int rr =sarea; rr<=narea; rr++)
 		{
 			propVBarea(rr) = (cnorm(areas(rr)+0.5,PosX(1),varPos)-cnorm(areas(rr)-0.5,PosX(1),varPos))(a-sage+1);
-			CatchAreaAge(1)(rr)(a) = q*Effarea(1)(rr)*va(a)/(q*Effarea(1)(rr)*va(a)+m)*(1-mfexp(-(q*Effarea(1)(rr)*va(a)+m)))*NAreaAge(1)(rr)(a);
+			CatchAreaAge(1)(rr)(a) = q*Effarea(1)(rr)*va(a)/(q*Effarea(1)(rr)*va(a)+m_tsp)*(1-mfexp(-(q*Effarea(1)(rr)*va(a)+m_tsp)))*NAreaAge(1)(rr)(a);
 			CatchNatAge(1)(indnatarea(rr))(a) += CatchAreaAge(1)(rr)(a);
 			EffNatAge(indnatarea(rr))(1)(sage-2) = 1;
 			EffNatAge(indnatarea(rr))(1)(sage-1) = indnatarea(rr);
@@ -348,11 +355,11 @@ void model_parameters::move_grow_die(void)
             	Nage(i)(sage) = (So*SB(i-nmon)/(1.+beta*SB(i-nmon)))*mfexp(wt(indyr(i))*err);
             	for(int a = sage+1;a<=nage;a++)
             	{
-            		Nage(i)(a) = Nage(i-1)(a-1)*mfexp(-(m+q*Effage(i-1)(a-1)*va(a-1))/12);
+            		Nage(i)(a) = Nage(i-1)(a-1)*mfexp(-(m_tsp+q*Effage(i-1)(a-1)*va(a-1)));
             	}
             	break;
             default: 
-            	Nage(i) = elem_prod(Nage(i-1),mfexp(-(m+q*elem_prod(Effage(i-1),va))/12));
+            	Nage(i) = elem_prod(Nage(i-1),mfexp(-(m_tsp+q*elem_prod(Effage(i-1),va))));
             	break;
         }
 		VulB(i) = elem_prod(elem_prod(Nage(i),va),wa);
@@ -376,7 +383,9 @@ void model_parameters::move_grow_die(void)
 		dvar_vector tmp2(sarea,narea);
 		for(int rr= sarea; rr<=narea; rr++)
 		{
-			tmp1(rr)= VBarea(i)(rr)/ (NationVulB(i)(indnatarea(rr)) + 1);
+			//tmp1(rr)= VBarea(i)(rr)/ (NationVulB(i)(indnatarea(rr)) + 1);
+			//tmp1(rr)= pow((VBarea(1)(rr)/ (NationVulB(1)(indnatarea(rr)) + 0.0001))+ 1.0e-20,effPwr(rr));
+			tmp1(rr)= (VBarea(i)(rr)/ (sum(VulB(i)) + 0.0001))* effPwr(rr);
 			tmp2(rr) = tmp1(rr)*TotEffyear(indnatarea(rr))(indyr(i));
 			Effarea(i)(rr) = tmp2(rr)*TotEffmonth(indnatarea(rr))(indmonth(i));
 		}
@@ -398,7 +407,7 @@ void model_parameters::move_grow_die(void)
 		{
 			for(int a = sage; a<=nage;a++)
 			{
-				CatchAreaAge(i)(r)(a) = q*Effarea(i)(r)*va(a)/(q*Effarea(i)(r)*va(a)+m)*(1-mfexp(-(q*Effarea(i)(r)*va(a)+m)))*NAreaAge(i)(r)(a);
+				CatchAreaAge(i)(r)(a) = q*Effarea(i)(r)*va(a)/(q*Effarea(i)(r)*va(a)+m_tsp)*(1-mfexp(-(q*Effarea(i)(r)*va(a)+m_tsp)))*NAreaAge(i)(r)(a);
 				CatchNatAge(i)(indnatarea(r))(a)+= CatchAreaAge(i)(r)(a);
 			}
 		}

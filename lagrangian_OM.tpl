@@ -15,7 +15,7 @@ DATA_SECTION
 	LOC_CALCS
 		ifstream ifs( "seed.txt" ); // if this file is available
 		ifs>>seed; //read in the seed
-		seed += 10; // add 10 to the seed
+		seed += 1; // add 10 to the seed
 		ofstream ofs( "seed.txt" ); //put out to seed.txt
 		ofs<<seed<<endl; //the new value of the seed
 	END_CALCS
@@ -267,7 +267,7 @@ FUNCTION incidence_functions
 
 
 	m_tsp = m/nmon;
-	za 	= m_tsp+va*fe;
+	za 	= m+va*fe;
 	
 FUNCTION initialization
 	
@@ -314,7 +314,7 @@ FUNCTION initialization
 	
 	for(int rr= sarea; rr<=narea; rr++)
 	{
-		tmp1(rr)= pow((VBarea(1)(rr)/ (NationVulB(1)(indnatarea(rr)) + 0.0001))+ 1.0e-20,effPwr(rr));
+		tmp1(rr)= (VBarea(1)(rr)/ (sum(VulB(1)) + 0.0001))* effPwr(rr);
 		tmp2(rr) = tmp1(rr)*TotEffyear(indnatarea(rr))(indyr(1));
 		Effarea(1)(rr) = tmp2(rr)*TotEffmonth(indnatarea(rr))(indmonth(1));
 	}
@@ -397,8 +397,9 @@ FUNCTION move_grow_die
 
 		for(int rr= sarea; rr<=narea; rr++)
 		{
-			tmp1(rr)= pow((VBarea(i)(rr)/(NationVulB(i)(indnatarea(rr)) + 0.001))+ 1.0e-20,effPwr(rr));
-			
+			//tmp1(rr)= pow((VBarea(i)(rr)/(NationVulB(i)(indnatarea(rr)) + 0.001))+ 1.0e-20,effPwr(rr));
+			//tmp1(rr)= VBarea(i)(rr)/(NationVulB(i)(indnatarea(rr)) + 0.0001);
+			tmp1(rr)= (VBarea(i)(rr)/ (sum(VulB(i)) + 0.0001))* effPwr(rr);
 			tmp2(rr) = tmp1(rr)*TotEffyear(indnatarea(rr))(indyr(i));
 			Effarea(i)(rr) = tmp2(rr)*TotEffmonth(indnatarea(rr))(indmonth(i));
 		}
@@ -452,7 +453,7 @@ FUNCTION clean_catage
        			obsCatchNatAge(p)(sage-3) = i;
        			obsCatchNatAge(p)(sage-2) = indmonth(i);
 				obsCatchNatAge(p)(sage-1) = n;
-       			pa = value((CatchNatAge(i)(n)(sage,nage)+0.1e-30)/sum(CatchNatAge(i)(n)(sage,nage)+0.1e-30));
+       			pa = value((CatchNatAge(i)(n)(sage,nage)+0.1e-15)/sum(CatchNatAge(i)(n)(sage,nage)+0.1e-15));
 				obsCatchNatAge(p)(sage,nage) = rmvlogistic(pa,tau_c,seed+i);
 				
 				p++;	
@@ -473,7 +474,7 @@ FUNCTION output_true
 	ofstream ofs("lagrangian_OM.rep");
 
 	ofs<<"mo" << endl << mo <<endl;
-	ofs<<"log_tau_c" << endl << log(tau_c) <<endl;
+	ofs<<"tau_c" << endl << tau_c<<endl;
 	ofs<<"maxPos50" << endl << maxPos50 <<endl;
 	ofs<<"maxPossd" << endl << maxPossd <<endl;
 	ofs<<"cvPos" << endl << cvPos <<endl;
@@ -498,6 +499,9 @@ FUNCTION output_true
 	ofs<<"Effarea"<< endl << Effarea <<endl;
 	ofs<<"EffNatAge"<< endl << EffNatAge<<endl;
 	ofs<<"CatchNatAge"<< endl << CatchNatAge<<endl;
+	ofs<<"PosX"<< endl << PosX<<endl;
+	ofs<<"varPos"<< endl << varPos<<endl;
+
 
 
 
@@ -506,14 +510,14 @@ FUNCTION output_pin
 	
 	ofstream ifs("lagrangian_est.pin");
 
-	ifs<<"# mo " << endl << 2 <<endl;
-	ifs<<"# tau_c " << endl << log(.2) <<endl;
+	ifs<<"# log_mo " << endl << log(4) <<endl;
+	//ifs<<"# tau_c " << endl << log(.2) <<endl;
 	ifs<<"# cvPos "<< endl << log(.1) <<endl;	
 	//ifs<<"# maxPos "<< endl << minPos <<endl;
 	ifs<<"# maxPos501 "<< endl << log(4) <<endl;
-	ifs<<"# maxPos502 "<< endl << log(4) <<endl;
+	//ifs<<"# maxPos502 "<< endl << log(4) <<endl;
 	ifs<<"# maxPossd1 "<< endl << log(.5) <<endl;
-	ifs<<"# maxPossd2 "<< endl << log(4) <<endl;
+	//ifs<<"# maxPossd2 "<< endl << log(4) <<endl;
 	ifs<<"# wt "<< endl << wt <<endl;
 
 
@@ -542,9 +546,9 @@ FUNCTION output_dat
 	afs<<"# minPos "<< endl << minPos <<endl;
 	afs<<"# Total effort by country and year " << endl << TotEffyear_rep <<endl;
 	afs<<"# Total effort by country and month " << endl << TotEffmonth <<endl;
-	afs<<"# dMinP " << endl << 0.00001 <<endl;
-	afs<<"# tstp month area catage " << endl << obsCatchNatAge <<endl;
 	afs<<"# effPwr"<< endl << effPwr <<endl;
+	afs<<"# dMinP " << endl << 0.1e-15 <<endl;
+	afs<<"# tstp month area catage " << endl << obsCatchNatAge <<endl;	
 	afs<<"# eof " << endl << 999 <<endl;
 	
 
