@@ -491,6 +491,7 @@ FUNCTION output_true
 	ofs<<"maxPos" << endl << maxPos <<endl;
 	ofs<<"minPos" << endl << minPos <<endl;
 	ofs<<"varPos" << endl << varPos <<endl;
+	ofs<<"PosX" << endl << PosX <<endl;	
 	ofs<<"SB" << endl << SB <<endl;
 	ofs<<"VulB" << endl << VulB <<endl;
 	ofs<<"Nage" << endl << Nage <<endl;
@@ -499,9 +500,6 @@ FUNCTION output_true
 	ofs<<"Effarea"<< endl << Effarea <<endl;
 	ofs<<"EffNatAge"<< endl << EffNatAge<<endl;
 	ofs<<"CatchNatAge"<< endl << CatchNatAge<<endl;
-	ofs<<"PosX"<< endl << PosX<<endl;
-	ofs<<"varPos"<< endl << varPos<<endl;
-
 
 
 

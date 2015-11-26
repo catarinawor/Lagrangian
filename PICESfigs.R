@@ -6,7 +6,7 @@
 
 rm(list=ls()); 
 
-setwd("/Users/catarinawor/Documents/Lagrangian/")
+setwd("/Users/catarinawor/Documents/Lagrangian")
 source("read.admb.R")
 baseF<-read.rep("lagrangian_OM.rep")
 
@@ -32,7 +32,36 @@ names(baseF)
 plot(baseF$SB)
 
 
-#remodel data base for plotting
+PosXplot<-baseF$PosX[(nrow(baseF$PosX)-11):nrow(baseF$PosX),c(1,3,5,7,9,11,13,15,17,19)]
+
+x<-baseF$sarea:baseF$narea
+agep<-(baseF$sage:baseF$nage)[c(1,3,5,7,9,11,13,15,17,19)]
+
+
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+cores<-rainbow(length(agep))
+#setwd("/Users/catarinawor/Documents/hake/Proposal/Proposal_rev_mtng")
+#pdf("fish_mov.pdf", width=6, height=4)
+par(mfrow=c(3,4), mar=c(4.1,4.1,4.1,0.3),c(4, 1, 1, 1) )
+for(mth in 1:12){
+  for( i in 1:(length(PosXplot[mth,]))){
+    plot(x,dnorm(x,PosXplot[mth,i],baseF$varPos[i]),type="l", lwd=2, col=cores[i],main=meses[mth],xlab="",ylim=c(0,.2), ylab=" ", cex.main=3,cex.lab=2)
+      abline(v=48.9)
+    if(mth==1){
+      legend("topright", legend=agep,  col = cores, border = "n", lwd=2, bty="n")
+    }
+    ##if(m==5){
+    ##  polygon(c(x[30:100],x[100]), c(dnorm(x[30:100],PosX[mth,4],varPos[4]),0),col="blue")
+    ##}
+    par(new=T)
+
+}
+par(new=F)
+}
+mtext(expression("Latitude "(degree)), side = 1, line = -1, outer=T, cex=1.5, font=2)
+
+#======================================================
+#remodel data base for plotting maps
 ntsp <- 1:((baseF$nyr-baseF$syr+1)*(baseF$nmon-baseF$smon+1))
 nage <- baseF$nage-baseF$sage+1
 ages <- baseF$nage:baseF$sage
@@ -416,12 +445,12 @@ dev.off()
 #availability plot
 #done with exaggerated temperature gradients
 
-system("./lagrangian_OM -ind warm.dat")
 setwd("/Users/catarinawor/Documents/Lagrangian")
+system("./lagrangian_OM -ind warm.dat")
 warm<-read.rep("lagrangian_OM.rep")
 
-system("./lagrangian_OM -ind cold.dat")
 setwd("/Users/catarinawor/Documents/Lagrangian")
+system("./lagrangian_OM -ind cold.dat")
 cold<-read.rep("lagrangian_OM.rep")
 
 names(warm)
@@ -429,6 +458,10 @@ dim(warm$VBarea)
 
 warmVBarea<-warm$VBarea[1189:1200,]
 coldVBarea<-cold$VBarea[1189:1200,]
+
+warmEffarea<-warm$Effarea[1189:1200,]
+coldEffarea<-cold$Effarea[1189:1200,]
+
 
 bdr<-48
 Nat1<-warm$sarea:bdr
@@ -438,12 +471,68 @@ Nat2<-(bdr+1):warm$narea
 VBareawarmNat1<-apply(warmVBarea[,Nat1-30],1,sum)
 VBareawarmNat2<-apply(warmVBarea[,Nat2-30],1,sum)
 
-VBareawarmNat1p<-VBareawarmNat1/(VBareawarmNat1+VBareawarmNat2)
-VBareawarmNat2p<-VBareawarmNat2/(VBareawarmNat1+VBareawarmNat2)
-
+EffareawarmNat1<-apply(warmEffarea[,Nat1-30],1,sum)
+EffareawarmNat2<-apply(warmEffarea[,Nat2-30],1,sum)
 
 VBareacoldNat1<-apply(coldVBarea[,Nat1-30],1,sum)
 VBareacoldNat2<-apply(coldVBarea[,Nat2-30],1,sum)
+
+EffareacoldNat1<-apply(coldEffarea[,Nat1-30],1,sum)
+EffareacoldNat2<-apply(coldEffarea[,Nat2-30],1,sum)
+
+
+sdvalue<-c(VBareawarmNat1,VBareawarmNat2,VBareacoldNat1,VBareacoldNat2,
+  (EffareawarmNat1/mean(EffareawarmNat1))*mean(VBareawarmNat1),
+  (EffareawarmNat2/mean(EffareawarmNat2))*mean(VBareawarmNat2),
+  (EffareacoldNat1/mean(EffareacoldNat1))*mean(VBareacoldNat1),
+  (EffareacoldNat2/mean(EffareacoldNat2))*mean(VBareacoldNat2))
+    
+
+
+DatNation<-c(VBareawarmNat1,VBareawarmNat2,VBareacoldNat1,VBareacoldNat2,EffareawarmNat1,EffareawarmNat2,EffareacoldNat1,EffareacoldNat2)
+
+
+
+nation<-rep(c(rep(1,warm$nmon),rep(2,warm$nmon)),4)
+scenario<-rep(c(rep("Warm",nrow(warmVBarea)*2), rep("Cold",nrow(coldVBarea)*2)),2)
+month<-rep(1:12,8)
+variable<-c(rep("Biomass",length(month)/2),rep("Effort",length(month)/2))
+
+df1<-data.frame(DatNation,sdvalue,nation,scenario,month,variable)
+###animation
+
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+
+basemap<-get_map(location = c(lon = -125, lat = 45),
+    zoom = 5, maptype = "terrain",source = "stamen")
+
+?get_map
+
+for(i in 1:12){
+         
+      ex1<-df1[df1$month==i ,]
+
+      p4<-  ggmap(basemap,
+          extent = "panel",
+          ylab = "Latitude",
+          xlab = "Longitude")
+      p4 <- p4 + geom_line(y=48.5, linetype=2, colour="grey60")
+      p4 <- p4 + geom_point(alpha=0.8,aes(size=sdvalue*20, shape=variable, color=variable),data=ex1) 
+      p4 <- p4 + scale_shape_manual(values=c(16,21)) + scale_fill_discrete(na.value=NA, guide="none")
+      p4 <- p4 + scale_color_manual(values=c("red", "black")) + scale_size_area(guide = "none")
+      p4 <- p4 + labs(title=meses[indmonth[i]],x="Longitude",y="Latitude")     
+      p4 <- p4 + facet_wrap(~Scenario)
+      
+      print(p4)
+
+      ggsave(filename =paste0("Rplot",i,".png"))     
+
+  }
+
+## need to calculate measure still
+
+VBareawarmNat1p<-VBareawarmNat1/(VBareawarmNat1+VBareawarmNat2)
+VBareawarmNat2p<-VBareawarmNat2/(VBareawarmNat1+VBareawarmNat2)
 
 VBareacoldNat1p<-VBareacoldNat1/(VBareacoldNat1+VBareacoldNat2)
 VBareacoldNat2p<-VBareacoldNat2/(VBareacoldNat1+VBareacoldNat2)
@@ -453,8 +542,6 @@ nation<-rep(c(rep(1,warm$nmon),rep(2,warm$nmon)),4)
 scenario<-rep(c(rep("Warm",nrow(warmVBarea)*2), rep("Cold",nrow(coldVBarea)*2)),2)
 month<-rep(1:12,8)
 measure<-c(rep("Nominal",length(month)/2),rep("Proportion",length(month)/2))
-
-## need to calculate measure still
 
 df<- data.frame(VBNation,month,nation,scenario,measure)
 
