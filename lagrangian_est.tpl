@@ -75,16 +75,16 @@ DATA_SECTION
 
 			nationareas.initialize();
 
-			dvector natmp(1,nations);
+			dvector natmp1(1,nations);
 			
-			natmp(1)=sarea;
+			natmp1(1)=sarea;
 
 			for(int n=1; n<=nations-1; n++)
 			{
-				natmp(n+1)=border(n);
+				natmp1(n+1)=border(n);
 				for(int a=sarea;a<=narea;a++)
 				{
-					if(areas(a)>=natmp(n)&areas(a)<border(n))
+					if(areas(a)>=natmp1(n)&areas(a)<border(n))
 					{
 						nationareas(n)++;
 					}
@@ -99,6 +99,7 @@ DATA_SECTION
  		ivector indmonth(1,ntstp);
 		ivector indnatarea(sarea,narea);
 		ivector pcat(1,nations);
+		vector natmp(1,nations+1);
 
 		int tot_pcat;
 		
@@ -115,20 +116,16 @@ DATA_SECTION
        					indmonth(aa) = ii;
        				}
        			}
-      		
-       			ivector natmp1(1,nations+1);
 
-       			natmp1(1) = sarea;
+       			natmp(1) = sarea;
 
        			for(int n=1;n<=nations;n++)
        			{
-       				natmp1(n+1)= natmp1(n)+nationareas(n);
-       				for(int b = natmp1(n); b <= natmp1(n+1)-1 ; b++)
-       				{
-       					indnatarea(b)=n;
-       				}
+       				natmp(n+1)= natmp(n)+nationareas(n);
+       				indnatarea(natmp(n),natmp(n+1)-1)=n;
 
        			}
+       			natmp(nations+1) = narea;
        			indnatarea(narea)=nations;
 
        			pcat.initialize();
@@ -136,12 +133,10 @@ DATA_SECTION
        			{
        				for(int i=1;i<=ntstp;i++)
        				{
-
        					if(TotEffmonth(n)(indmonth(i))>0.0)
        					{
        						pcat(n)++;
-       					}
-       							
+       					}				
        				}
        			}
 
@@ -313,10 +308,11 @@ FUNCTION initialization
 		NAreaAge(1)(r) = elem_prod(Nage(1)(sage,nage),(cnorm(areas(r)+0.5,PosX(1),varPos)-cnorm(areas(r)-0.5,PosX(1),varPos)));
 	}
 	
-	NationVulB(1,1) = sum(VBarea(1)(sarea,sarea+nationareas(1)-1)); 
-	NationVulB(1,2) = sum(VBarea(1)(sarea+nationareas(1),narea)); 
+	for(int n=1; n<=nations;n++){
+       	NationVulB(1,n) = sum(VBarea(1)(natmp(n),natmp(n+1)));		 
+	}
 	
-
+	
 	dvar_vector tmp1(sarea,narea);
 	dvar_vector tmp2(sarea,narea);
 	dvar_vector tmp3(sarea,narea);
@@ -396,9 +392,10 @@ FUNCTION move_grow_die
 			NAreaAge(i)(r) = elem_prod(Nage(i)(sage,nage),(cnorm(areas(r)+0.5,PosX(i),varPos)-cnorm(areas(r)-0.5,PosX(i),varPos)));
 		}	
 
-
-		NationVulB(i,1) = sum(VBarea(i)(sarea,sarea+nationareas(1)-1)); 
-		NationVulB(i,2) = sum(VBarea(i)(sarea+nationareas(1),narea)); 
+		
+		for(int n=1; n<=nations;n++){
+       		NationVulB(i,n) = sum(VBarea(i)(natmp(n),natmp(n+1)));		 
+		}
 
 		dvar_vector tmp1(sarea,narea);
 		dvar_vector tmp2(sarea,narea);
@@ -423,7 +420,6 @@ FUNCTION move_grow_die
 				EffNatAge(indnatarea(rr))(i)(sage-2) = i;
 				EffNatAge(indnatarea(rr))(i)(sage-1) = indnatarea(rr);
 				EffNatAge(indnatarea(rr))(i)(a) += Effarea(i)(rr)* propVBarea(rr);
-
 
 			}
 			//cout<<"propVBarea "<<propVBarea<<endl;

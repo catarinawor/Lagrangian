@@ -1,7 +1,7 @@
 #=========================================================================
-#graphing simulation -estiation routine for lagrangian model
+# graphing lagrangian model structure and sim-est
 # Author: Catarina Wor
-# Jun 1st 2015
+# Jun 1st 2015 - updated in November 26th 2015
 #=========================================================================
 
 rm(list=ls()); 
@@ -9,17 +9,23 @@ rm(list=ls());
 setwd("/Users/catarinawor/Documents/Lagrangian/")
 source("read.admb.R")
 
-sim = read.rep("lagrangian_OM.rep")
-est = read.rep("lagrangian_est.rep")
+sim <- read.rep("lagrangian_OM.rep")
+est <- read.rep("lagrangian_est.rep")
 
 nomes <- names(sim)
 
-true_pars <- c(sim$"mo", exp(sim$"log_tau_c"),sim$"maxPos50",sim$"maxPossd",sim$"cvPos")  
-est_pars <- c(est$"mo",exp(est$"log_tau_c"),est$"maxPos50",est$"maxPossd",est$"cvPos")
+true_pars <- c(sim$"mo", sim$"maxPos50",sim$"maxPossd",sim$"cvPos")  
+est_pars  <- c(est$"mo", est$"maxPos50",est$"maxPossd",est$"cvPos")
 
 #parameter plot
 par(mfrow=c(1,1))
-barplot(t(matrix(c(true_pars,est_pars),ncol=2)),names.arg = c("mo","tau_c","maxPos50","maxPossd","cvPos"),beside=T)
+barplot(t(matrix(c(true_pars,est_pars),ncol=2)),names.arg = c("mo","maxPos50","maxPossd","cvPos"),beside=T)
+
+
+#=======================================================================
+
+
+
 
 
 
