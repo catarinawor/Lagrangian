@@ -38,27 +38,32 @@ DATA_SECTION
 	init_vector border(1,nations-1);
 
 	//======================
-	//model parameters
+	//model parameters -- fixed
 	//======================
-
 	init_number Ro;
 	init_number h;
 	init_number m;
 	init_number fe;
 	init_number q;
-	init_number sigR;		//=================================
-	init_number tau_c; 		//parameters in estimaotion model 
-	init_number mo; 		//
-	init_number err;		//=================================
+	init_number sigR;		
+	
+	init_number tau_c; 		
+	init_number err;
+	//=================================
+	//parameters in estimation model 
+	//
+	//=================================
+	init_number mo; 		
+	init_number maxPos50;					
+	init_number maxPossd;			
+	init_number cvPos; 
 
 	init_vector wa(sage,nage);
 	init_vector fa(sage,nage);
 	init_vector va(sage,nage);
 	init_vector minPos(sage,nage);
-	init_number maxPos50;			//================================		
-	init_number maxPossd;			//parameters in estimaotion model 
-	init_number cvPos; 				//================================	
-	
+
+						
 
 	init_matrix TotEffyear(1,nations,syr,nyr);
 	init_matrix TotEffmonth(1,nations,smon,nmon);
@@ -159,7 +164,7 @@ DATA_SECTION
        			}
 
        			natmp(nations+1) = narea;
-       			indnatarea(narea)=nations;
+       			indnatarea(narea) = nations;
 
        			pcat.initialize();
        			for(int n=1;n<=nations;n++)
@@ -172,11 +177,10 @@ DATA_SECTION
        				for(int i=rep_yr*nmon+1;i<=ntstp;i++)
        				{
 
-       					if(TotEffmonth(n)(indmonth(i))>0)
+       					if(TotEffmonth(n)(indmonth(i))>0.0)
        					{
        						pcat(n)++;
-       					}
-       							
+       					} 							
        				}
        			}
 
@@ -266,7 +270,7 @@ FUNCTION incidence_functions
 
 
 	m_tsp = m/nmon;
-	za 	= m+va*fe;
+	za 	= m_tsp+va*fe;
 	
 FUNCTION initialization
 	
@@ -351,7 +355,7 @@ FUNCTION move_grow_die
 		switch (indmonth(i)) {
             case 1:           	
             	
-            	Nage(i)(sage) = (So*SB(i-nmon)/(1.+beta*SB(i-nmon)))*mfexp(wt(indyr(i))*err);
+            	Nage(i)(sage) = (So*SB(i-nmon)/(1.+beta*SB(i-nmon)))*mfexp((wt(indyr(i)))*err);
 
 
             	for(int a = sage+1;a<=nage;a++)
@@ -423,7 +427,7 @@ FUNCTION move_grow_die
 			Effage(i)(a) = Effarea(i)*propVBarea;
 		}
 
-		for(int r = sarea+1;r <= narea-1;r++)
+		for(int r = sarea;r <= narea;r++)
 		{
 			for(int a = sage; a<=nage;a++)
 			{
@@ -501,6 +505,10 @@ FUNCTION output_true
 	ofs<<"Effarea"<< endl << Effarea <<endl;
 	ofs<<"EffNatAge"<< endl << EffNatAge<<endl;
 	ofs<<"CatchNatAge"<< endl << CatchNatAge<<endl;
+	ofs<<"CatchAreaAge"<< endl << CatchAreaAge<<endl;
+	ofs<<"indyr"<< endl << indyr<<endl;
+	ofs<<"indmonth"<< endl << indmonth<<endl;
+	ofs<<"indnatarea"<< endl << indnatarea<<endl;
 
 
 
@@ -509,15 +517,17 @@ FUNCTION output_pin
 	
 	ofstream ifs("lagrangian_est.pin");
 
-	ifs<<"# log_mo " << endl << log(4) <<endl;
+	ifs<<"# log_mo " << endl << log(1) <<endl;
 	//ifs<<"# tau_c " << endl << log(.2) <<endl;
-	ifs<<"# cvPos "<< endl << log(.1) <<endl;	
+	ifs<<"# cvPos "<< endl << log(.2) <<endl;	
 	//ifs<<"# maxPos "<< endl << minPos <<endl;
-	ifs<<"# maxPos501 "<< endl << log(6) <<endl;
+	ifs<<"# maxPos501 "<< endl << log(5) <<endl;
 	//ifs<<"# maxPos502 "<< endl << log(4) <<endl;
-	ifs<<"# maxPossd1 "<< endl << log(1.0) <<endl;
+	ifs<<"# maxPossd1 "<< endl << log(2.0) <<endl;
 	//ifs<<"# maxPossd2 "<< endl << log(4) <<endl;
-	ifs<<"# wt "<< endl << wt <<endl;
+	ifs<<"# wt "<< endl << wt(rep_yr+1,nyr)*err <<endl;
+
+	
 
 
 FUNCTION output_dat

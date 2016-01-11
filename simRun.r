@@ -33,10 +33,11 @@ source("read.admb.R")
 readOutput <- function(dir)
 {
 	setwd(dir)
-	sim = read.rep("lagrangian_OM.rep")
-	est = read.rep("lagrangian_est.rep")
-	par = read.fit("lagrangian_est")
-	C <- list(sim,est,par)
+	sim <- read.rep("lagrangian_OM.rep")
+	est <- read.rep("lagrangian_est.rep")
+	par <- read.fit("lagrangian_est")
+	seed<- scan("seed.txt")
+	C <- list(sim,est,par,seed)
 	return( C );
 }
 
@@ -45,8 +46,9 @@ readOutput <- function(dir)
 	seed<-scan("seed.txt")	
 	file.name <- paste("simest",seed,".Rdata",sep="")
 	sims<-readOutput("/Users/catarinawor/Documents/Lagrangian/")
-	setwd("/Users/catarinawor/Documents/Lagrangian/SimResult")
+	setwd("/Users/catarinawor/Documents/Lagrangian/SimResult_tau04")
 	save(sims,file=file.name)
+
 
 
 

@@ -14,60 +14,257 @@ est <- read.rep("lagrangian_est.rep")
 
 nomes <- names(sim)
 
-true_pars <- c(sim$"mo", sim$"maxPos50",sim$"maxPossd",sim$"cvPos")  
-est_pars  <- c(est$"mo", est$"maxPos50",est$"maxPossd",est$"cvPos")
+true_pars <- c(sim$"mo",sim$"cvPos",sim$"maxPos50",sim$"maxPossd")  
+est_pars  <- c(est$"mo",est$"cvPos",est$"maxPos50",est$"maxPossd")
 
 #parameter plot
 par(mfrow=c(1,1))
-barplot(t(matrix(c(true_pars,est_pars),ncol=2)),names.arg = c("mo","maxPos50","maxPossd","cvPos"),beside=T)
+barplot(t(matrix(c(true_pars,est_pars),ncol=2)),names.arg = c("mo","cvPos","maxPos50","maxPossd"),beside=T)
 
+#catch plot
+indAyr<-rep(1:3,1200)[2161:3600]
+
+#Catch of each nation 
+CN1sim<-apply(sim$"CatchNatAge"[2161:3600,],1,sum)[indAyr==1]
+CN1est<-apply(est$"CatchNatAge",1,sum)[indAyr==1]
+CN2sim<-apply(sim$"CatchNatAge"[2161:3600,],1,sum)[indAyr==2]
+CN2est<-apply(est$"CatchNatAge",1,sum)[indAyr==2]
+CN3sim<-apply(sim$"CatchNatAge"[2161:3600,],1,sum)[indAyr==3]
+CN3est<-apply(est$"CatchNatAge",1,sum)[indAyr==3]
+
+
+plot(rep(1:12,40),CN1sim, type="l")
+lines(rep(1:12,40),CN1est,col="red")
+
+CN1pbias<-((CN1est-CN1sim)/CN1sim)*100
+CN2pbias<-((CN2est-CN2sim)/CN2sim)*100
+CN3pbias<-((CN3est-CN3sim)/CN3sim)*100
+
+
+par(mfrow=c(3,1))
+boxplot(matrix(CN1pbias, ncol=12,byrow=T), ylim=c(-100,400))
+abline(h=0, col = "red")
+boxplot(matrix(CN2pbias, ncol=12,byrow=T),ylim=c(-100,400))
+abline(h=0, col = "red")
+boxplot(matrix(CN3pbias, ncol=12,byrow=T),ylim=c(-100,400))
+abline(h=0, col = "red")
+
+par(mfrow=c(3,1))
+boxplot(matrix(CN1pbias, ncol=12,byrow=T), ylim=c(-20,20))
+abline(h=0, col = "red")
+boxplot(matrix(CN2pbias, ncol=12,byrow=T),ylim=c(-20,20))
+abline(h=0, col = "red")
+boxplot(matrix(CN3pbias, ncol=12,byrow=T),ylim=c(-20,20))
+abline(h=0, col = "red")
+
+plot(CN1pbias,CN1sim)
+plot(CN1pbias,CN1est)
+plot(CN1est,CN1sim,ylim=range(CN1sim),xlim=range(CN1sim))
+
+CN1est[which.max(CN1pbias)]
+CN1sim[which.max(CN1pbias)]
+#=======================================================================
+#Simulation evaluation graphs
+
+#parameter estimates
+.SIMDIRS   <- "/Users/catarinawor/Documents/Lagrangian/SimResult"
+.SIMNAME   <- list.files(.SIMDIRS,pattern="\\.Rdata", full.name=TRUE)
+
+estn<-matrix(NA,nrow=length(.SIMNAME),ncol=4)
+pbias<-matrix(NA,nrow=length(.SIMNAME),ncol=4)
+
+#========================================================================
+# Description of the list sims
+# [[1]] -> sim- read.rep("lagrangian_OM.rep") 
+# [[2]] -> est -read.rep("lagrangian_est.rep")
+# [[3]] -> par - read.fit("lagrangian_est")
+# [[4]] -> seed
+#========================================================================
+
+indAyr<-rep(1:3,1200)[2161:3600]
+
+for( i in 1:length(.SIMNAME)){
+  load(.SIMNAME[i])
+
+  #parameters
+  estn[i,]<-exp(sims[[3]]$est)
+  pbias[i,]<-((estn[i,]-true_pars)/true_pars)*100
+
+  
+
+}
+
+setwd("/Users/catarinawor/Documents/hake/Thesis/figs")
+pdf("3terr_scn_tau0.2.pdf")
+boxplot(pbias,names= c("mo","cvPos","maxPos50","maxPossd"),)
+abline(h=0)
+dev.off()
+
+#with Tau =0.4
+.SIMDIRS   <- "/Users/catarinawor/Documents/Lagrangian/SimResult_tau04"
+.SIMNAME   <- list.files(.SIMDIRS,pattern="\\.Rdata", full.name=TRUE)
+
+estn<-matrix(NA,nrow=length(.SIMNAME),ncol=4)
+pbias<-matrix(NA,nrow=length(.SIMNAME),ncol=4)
+
+CN1pb_median<-matrix(NA,nrow=length(.SIMNAME),ncol=12)
+CN1pb_sd<-matrix(NA,nrow=length(.SIMNAME),ncol=12)
+CN2pb_median<-matrix(NA,nrow=length(.SIMNAME),ncol=12)
+CN2pb_sd<-matrix(NA,nrow=length(.SIMNAME),ncol=12)
+CN3pb_median<-matrix(NA,nrow=length(.SIMNAME),ncol=12)
+CN3pb_sd<-matrix(NA,nrow=length(.SIMNAME),ncol=12)
+
+
+
+
+
+
+for( i in 1:length(.SIMNAME)){
+  load(.SIMNAME[i])
+
+  #parameters
+  estn[i,]<-exp(sims[[3]]$est)
+  pbias[i,]<-((estn[i,]-true_pars)/true_pars)*100
+
+
+  #catch
+  #Catch of each nation 
+  CN1sim<-apply(sims[[1]]$"CatchNatAge"[2161:3600,],1,sum)[indAyr==1]
+  CN1est<-apply(sims[[2]]$"CatchNatAge",1,sum)[indAyr==1]
+  CN2sim<-apply(sims[[1]]$"CatchNatAge"[2161:3600,],1,sum)[indAyr==2]
+  CN2est<-apply(sims[[2]]$"CatchNatAge",1,sum)[indAyr==2]
+  CN3sim<-apply(sims[[1]]$"CatchNatAge"[2161:3600,],1,sum)[indAyr==3]
+  CN3est<-apply(sims[[2]]$"CatchNatAge",1,sum)[indAyr==3]
+
+  CN1pbias<-((CN1est-CN1sim)/CN1sim)*100
+  CN2pbias<-((CN2est-CN2sim)/CN2sim)*100
+  CN3pbias<-((CN3est-CN3sim)/CN3sim)*100
+
+  CN1pb_median[i,]<-apply(matrix(CN1pbias, ncol=12,byrow=T),2,median)
+  CN2pb_median[i,]<-apply(matrix(CN2pbias, ncol=12,byrow=T),2,median)
+  CN3pb_median[i,]<-apply(matrix(CN3pbias, ncol=12,byrow=T),2,median)
+
+  CN1pb_sd[i,]<-sqrt(apply(matrix(CN1pbias, ncol=12,byrow=T),2,var))
+  CN2pb_sd[i,]<-sqrt(apply(matrix(CN2pbias, ncol=12,byrow=T),2,var))
+  CN3pb_sd[i,]<-sqrt(apply(matrix(CN3pbias, ncol=12,byrow=T),2,var))
+
+
+}
+
+#parameter estimate plot
+#setwd("/Users/catarinawor/Documents/hake/Thesis/figs")
+setwd("/Users/catarinawor/Documents/hake/JTC_talk")
+pdf("3terr_scn_tau0.4.pdf")
+boxplot(pbias,names= c("mo","cvPos","maxPos50","maxPossd"),ylim=c(-10,10))
+abline(h=0)
+dev.off()
+
+
+#catch plots
+par(mfcol=c(3,2))
+boxplot(CN1pb_median)
+abline(h=0, col="red")
+boxplot(CN2pb_median)
+abline(h=0, col="red")
+boxplot(CN3pb_median)
+abline(h=0, col="red")
+
+boxplot(CN1pb_sd,ylim=c(0,1500))
+boxplot(CN2pb_sd,ylim=c(0,1500))
+boxplot(CN3pb_sd,ylim=c(0,1500))
+
+#========================================================================
+# Description of the list sims
+# [[1]] -> sim- read.rep("lagrangian_OM.rep") 
+# [[2]] -> est -read.rep("lagrangian_est.rep")
+# [[3]] -> par - read.fit("lagrangian_est")
+# [[4]] -> seed
+#========================================================================
+
+
+ls() 
+length(sims)
+names(sims[[2]])
+
+sims[[1]]$"nyr"
+dim(sims[[1]]$"CatchNatAge")
+
+
+sims[[1]]$"CatchNatAge"[,1]
+
+ind<- rep(1:3,1200)
+par(mfrow=c(3,1))
+plot(rep(1:12,100),apply(sims[[1]]$"CatchNatAge",1,sum)[ind==1], type="l")
+lines(rep(1:12,100),apply(sims[[2]]$"CatchNatAge",1,sum)[ind==1],col="red")
+plot(rep(1:12,100),apply(sims[[1]]$"CatchNatAge",1,sum)[ind==2], type="l")
+lines(rep(1:12,100),apply(sims[[2]]$"CatchNatAge",1,sum)[ind==2],col="red")
+plot(rep(1:12,100),apply(sims[[1]]$"CatchNatAge",1,sum)[ind==3], type="l")
+lines(rep(1:12,100),apply(sims[[2]]$"CatchNatAge",1,sum)[ind==3],col="red")
+
+catvar<-(apply(sims[[2]]$"CatchNatAge",1,sum)[ind==1]-apply(sims[[1]]$"CatchNatAge",1,sum)[ind==1])/apply(sims[[1]]$"CatchNatAge",1,sum)[ind==1]
+
+boxplot(catvar, ylim=c(-1,50))
+
+names(sims[[2]])
+
+plot(apply(sims[[1]]$"CatchNatAge",1,sum)[1201:2400])
+plot(apply(sims[[1]]$"CatchNatAge",1,sum)[2401:3600])
+
+
+plot(estn)
+
+mydat<-data.frame(parameter=rep(c("mo","cvPos","maxPos50","maxPossd"),each=100),estimate=c(estn))
+
+plot(mydat)
+points(true_pars[c(2,3,4,1)],col="red",pch=16)
 
 #=======================================================================
 
+library(ggplot2)
+library(reshape2)
+library(animation)
+library(ggmap)
+
+#======================================================================== 
+# Graphs for base case scenario
+#======================================================================== 
+#Has the biomass stabilized -non error only
 
 
+
+
+PosXplot<-sim$PosX[(nrow(sim$PosX)-11):nrow(sim$PosX),c(1,3,5,7,9,11,13,15,17,19)]
+
+x<-baseF$sarea:baseF$narea
+agep<-(baseF$sage:baseF$nage)[c(1,3,5,7,9,11,13,15,17,19)]
+
+
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+cores<-rainbow(length(agep))
+#setwd("/Users/catarinawor/Documents/hake/Proposal/Proposal_rev_mtng")
+#pdf("fish_mov.pdf", width=6, height=4)
+par(mfrow=c(3,4), mar=c(4.1,4.1,4.1,0.3),c(4, 1, 1, 1) )
+for(mth in 1:12){
+  for( i in 1:(length(PosXplot[mth,]))){
+    plot(x,dnorm(x,PosXplot[mth,i],baseF$varPos[i]),type="l", lwd=2, col=cores[i],main=meses[mth],xlab="",ylim=c(0,.2), ylab=" ", cex.main=3,cex.lab=2)
+      abline(v=48.9)
+    if(mth==1){
+      legend("topright", legend=agep,  col = cores, border = "n", lwd=2, bty="n")
+    }
+    ##if(m==5){
+    ##  polygon(c(x[30:100],x[100]), c(dnorm(x[30:100],PosX[mth,4],varPos[4]),0),col="blue")
+    ##}
+    par(new=T)
+
+}
+par(new=F)
+}
+mtext(expression("Latitude "(degree)), side = 1, line = -1, outer=T, cex=1.5, font=2)
 
 
 
 #========================================================================
-#multiplot function from http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_%28ggplot2%29/
-multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
-  require(grid)
-
-  # Make a list from the ... arguments and plotlist
-  plots <- c(list(...), plotlist)
-
-  numPlots = length(plots)
-
-  # If layout is NULL, then use 'cols' to determine layout
-  if (is.null(layout)) {
-    # Make the panel
-    # ncol: Number of columns of plots
-    # nrow: Number of rows needed, calculated from # of cols
-    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
-                    ncol = cols, nrow = ceiling(numPlots/cols))
-  }
-
- if (numPlots==1) {
-    print(plots[[1]])
-
-  } else {
-    # Set up the page
-    grid.newpage()
-    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
-
-    # Make each plot, in the correct location
-    for (i in 1:numPlots) {
-      # Get the i,j matrix positions of the regions that contain this subplot
-      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
-
-      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
-                                      layout.pos.col = matchidx$col))
-    }
-  }
-}
-#======================================================================================================
-
+#maps and animation plots
 #========================================================================
 library(ggplot2)
 library(reshape2)

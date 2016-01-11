@@ -26,7 +26,7 @@ DATA_SECTION
 	init_vector border(1,nations-1);
 
 	//======================
-	//model parameters
+	//model parameters -- fixed
 	//======================
 
 	init_number Ro;
@@ -41,7 +41,6 @@ DATA_SECTION
 	init_vector fa(sage,nage);
 	init_vector va(sage,nage);
 	init_vector minPos(sage,nage);
-	
 	
 
 	init_matrix TotEffyear(1,nations,syr,nyr);
@@ -82,6 +81,7 @@ DATA_SECTION
 			for(int n=1; n<=nations-1; n++)
 			{
 				natmp1(n+1)=border(n);
+
 				for(int a=sarea;a<=narea;a++)
 				{
 					if(areas(a)>=natmp1(n)&areas(a)<border(n))
@@ -126,7 +126,7 @@ DATA_SECTION
 
        			}
        			natmp(nations+1) = narea;
-       			indnatarea(narea)=nations;
+       			indnatarea(narea) = nations;
 
        			pcat.initialize();
        			for(int n=1;n<=nations;n++)
@@ -175,7 +175,7 @@ PARAMETER_SECTION
 	init_number log_cvPos;
 	init_number log_maxPos50;
 	init_number log_maxPossd;
-	init_vector log_wt(syr,nyr,-1);
+	init_vector wt(syr,nyr,-1);
 
 	objective_function_value f;
 
@@ -196,7 +196,7 @@ PARAMETER_SECTION
 	number maxPossd;
 	number cvPos;
 
-	vector wt(syr,nyr);
+	//vector wt(syr,nyr);
 
 	vector lxo(sage,nage);
 	vector za(sage,nage);
@@ -273,7 +273,7 @@ FUNCTION incidence_functions
 	cvPos 	 = mfexp(log_cvPos);
 	mo 	= mfexp(log_mo);
 	
-	wt(syr,nyr) = mfexp(log_wt(syr,nyr));
+	
 
 FUNCTION initialization
 	
@@ -321,8 +321,7 @@ FUNCTION initialization
 	for(int rr= sarea; rr<=narea; rr++)
 	{
 		//tmp1(rr)= pow((VBarea(1)(rr)/ (NationVulB(1)(indnatarea(rr)) + 0.0001))+1.0e-20,effPwr(rr));
-		tmp1(rr)= VBarea(1)(rr)/ (NationVulB(1)(indnatarea(rr)) + 0.0001);
-		
+		tmp1(rr)= (VBarea(1)(rr)/ (sum(VulB(1)) + 0.0001))* effPwr(rr);
 		tmp2(rr) = tmp1(rr)*TotEffyear(indnatarea(rr))(indyr(1));
 		Effarea(1)(rr) = tmp2(rr)*TotEffmonth(indnatarea(rr))(indmonth(1));
 	}
@@ -403,7 +402,7 @@ FUNCTION move_grow_die
 		for(int rr= sarea; rr<=narea; rr++)
 		{
 			//tmp1(rr)= pow((VBarea(i)(rr)/ (NationVulB(i)(indnatarea(rr)) + 0.0001))+ 1.0e-20,effPwr(rr));
-			tmp1(rr)= VBarea(i)(rr)/ (NationVulB(i)(indnatarea(rr)) + 0.0001);
+			tmp1(rr)= (VBarea(i)(rr)/ (sum(VulB(i)) + 0.0001))* effPwr(rr);
 				
 			tmp2(rr) = tmp1(rr)*TotEffyear(indnatarea(rr))(indyr(i));
 			Effarea(i)(rr) = tmp2(rr)*TotEffmonth(indnatarea(rr))(indmonth(i));
@@ -427,7 +426,7 @@ FUNCTION move_grow_die
 			Effage(i)(a) = Effarea(i)*propVBarea;
 		}
 
-		for(int r = sarea+1;r <= narea-1;r++)
+		for(int r = sarea;r <= narea;r++)
 		{
 			for(int a = sage; a<=nage;a++)
 			{
@@ -504,7 +503,7 @@ FUNCTION calc_obj_func
 
 	
 	//f=sum(nlvec)+sum(npvec);
-	f=sum(nlvec)/10000;
+	f=sum(nlvec)/100;
 
 FUNCTION dvar_vector calcmaxpos(const dvariable& tb)
 
@@ -540,6 +539,11 @@ REPORT_SECTION
 	REPORT(Effage);
 	REPORT(Effarea);
 	REPORT(EffNatAge);
+	REPORT(CatchNatAge);
+	REPORT(CatchAreaAge);
+	REPORT(indyr);
+	REPORT(indmonth);
+	REPORT(indnatarea);
 
 
 

@@ -13,7 +13,7 @@ DAT=lagrangian_est.dat
 OM=lagrangian_OM
 SIMDAT=lagrangian_OM.dat
 SEED = seed.txt
-LAST := 10
+LAST := 100
 
 NUMBERS := $(shell seq 1 ${LAST})
 
