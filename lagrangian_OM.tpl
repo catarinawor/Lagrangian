@@ -514,18 +514,61 @@ FUNCTION output_true
 
 	
 FUNCTION output_pin
+
+	//Generate initial values at random
+
+	//mo
+	
+	random_number_generator rngmo(seed);
+	random_number_generator rngcvPos(seed);
+	random_number_generator rngmaxPos50(seed);
+	random_number_generator rngmaxPossd(seed);
+	
+	double tmp_mo;
+	double tmp_cvPos;
+	double tmp_maxPos50;
+	double tmp_maxPossd;
+	
+	dvector guess_cvPos(1,6);
+	dvector guess_maxPos50(1,10);
+	dvector guess_maxPossd(1,8);
+
+	
+	guess_cvPos.fill_seqadd(0.05,0.05);
+	guess_maxPos50.fill_seqadd(3,0.5);
+	guess_maxPossd.fill_seqadd(0.5,0.5);
+
+
+	tmp_mo 		= ceil(randu(rngmo)*(mo+3));
+	tmp_cvPos	= ceil(randu(rngcvPos)*5);
+	tmp_maxPos50= ceil(randu(rngcvPos)*9);
+	tmp_maxPossd= ceil(randu(rngcvPos)*7);
+
+	//tmp_mo 		= rand() % 6 + 1;
+	//tmp_cvPos	= rand() % 6 + 1;
+	//tmp_maxPos50= rand() % 10 + 1;
+	//tmp_maxPossd= rand() % 8 + 1;
+
+	
+
+	//cout<<tmp_mo<<endl;
+	//cout<<guess_cvPos(tmp_cvPos)<<endl;
+	//cout<<guess_maxPos50(tmp_maxPos50)<<endl;
+	//cout<<guess_maxPossd(tmp_maxPossd)<<endl;
+
+
 	
 	ofstream ifs("lagrangian_est.pin");
 
-	ifs<<"# log_mo " << endl << log(1) <<endl;
+	ifs<<"#log_mo \n "  << log(tmp_mo) <<endl;
 	//ifs<<"# tau_c " << endl << log(.2) <<endl;
-	ifs<<"# cvPos "<< endl << log(.2) <<endl;	
-	//ifs<<"# maxPos "<< endl << minPos <<endl;
-	ifs<<"# maxPos501 "<< endl << log(5) <<endl;
-	//ifs<<"# maxPos502 "<< endl << log(4) <<endl;
-	ifs<<"# maxPossd1 "<< endl << log(2.0) <<endl;
-	//ifs<<"# maxPossd2 "<< endl << log(4) <<endl;
-	ifs<<"# wt "<< endl << wt(rep_yr+1,nyr)*err <<endl;
+	ifs<<"#cvPos \n" << log(guess_cvPos(tmp_cvPos)) <<endl;	
+	//ifs<<"#maxPos "<< endl << minPos <<endl;
+	ifs<<"# maxPos50 \n" << log(guess_maxPos50(tmp_maxPos50)) <<endl;
+	//ifs<<"#maxPos502 "<< endl << log(4) <<endl;
+	ifs<<"# maxPossd \n"<< log(guess_maxPossd(tmp_maxPossd)) <<endl;
+	//ifs<<"#maxPossd2 "<< endl << log(4) <<endl;
+	ifs<<"#wt \n" << wt(rep_yr+1,nyr)*err <<endl;
 
 	
 

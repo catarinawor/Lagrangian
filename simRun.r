@@ -11,21 +11,22 @@ source("read.admb.R")
 
 
 
-##readOutput <- function(dir)
-##{
-##	setwd(dir)
-##	sim = read.rep("lagrangian_OM.rep")
-##	est = read.rep("lagrangian_est.rep")
-##	C <- c(sim,est)
-##	return( C );
-##}
-##
-##
-##	seed<-scan("seed.txt")	
-##	file.name <- paste("simest",seed,".Rdata",sep="")
-##	sims<-readOutput("/Users/catarinawor/Documents/Lagrangian/")
-##	setwd("/Users/catarinawor/Documents/Lagrangian/SimResult")
-##	save(sims,file=file.name)
+read.pin <- function(fn)
+{
+	# The following reads is catarina's effort to read in the pin file
+	# Created By Steven Martell
+	options(warn=-1)  #Suppress the NA message in the coercion to double
+	lines<- readLines(fn)
+	
+	myline<-seq(2, length(lines), by=2)
+
+	A=list()
+	for(i in 1:length(myline)){
+		A[[i]] <- as.vector(read.table(text=lines[myline[i]], header=FALSE))
+	}
+ 
+	return(A)
+}
 
 
 
@@ -36,8 +37,9 @@ readOutput <- function(dir)
 	sim <- read.rep("lagrangian_OM.rep")
 	est <- read.rep("lagrangian_est.rep")
 	par <- read.fit("lagrangian_est")
+	guess <- read.pin("lagrangian_est.pin")
 	seed<- scan("seed.txt")
-	C <- list(sim,est,par,seed)
+	C <- list(sim,est,par,seed,guess)
 	return( C );
 }
 
@@ -46,10 +48,8 @@ readOutput <- function(dir)
 	seed<-scan("seed.txt")	
 	file.name <- paste("simest",seed,".Rdata",sep="")
 	sims<-readOutput("/Users/catarinawor/Documents/Lagrangian/")
-	setwd("/Users/catarinawor/Documents/Lagrangian/SimResult_tau04")
+	setwd("/Users/catarinawor/Documents/Lagrangian/SimResult")
 	save(sims,file=file.name)
-
-
 
 
 

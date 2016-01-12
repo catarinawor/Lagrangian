@@ -63,6 +63,43 @@ plot(CN1est,CN1sim,ylim=range(CN1sim),xlim=range(CN1sim))
 
 CN1est[which.max(CN1pbias)]
 CN1sim[which.max(CN1pbias)]
+
+#migration at age
+
+
+
+ages <- sim$nage:sim$sage
+
+maxPos50<-sim$maxPos50
+maxPossd<-sim$maxPossd
+
+ys<-round(approx(ages,(1/(1+exp(-(ages-maxPos50)/maxPossd)))*(sim$narea-sim$sarea)+sim$sarea, n=1000)$y,1)
+xs<-approx(ages,(1/(1+exp(-(ages-maxPos50)/maxPossd)))*(sim$narea-sim$sarea)+sim$sarea, n=1000)$x
+
+xs[which(ys==42)]
+
+xs[which(ys==49)]
+
+
+setwd("/Users/catarinawor/Documents/hake/JTC_talk")
+
+pdf("movAtAge.pdf",width = 7, height = 7)
+par(mfrow=c(1,1),xpd=FALSE)
+plot(ages,(1/(1+exp(-(ages-maxPos50)/maxPossd)))*(sim$narea-sim$sarea)+sim$sarea, ylab="AREA",xlab="AGE",
+  lwd=4, type="l", col="black", font=2, font.lab=2,cex=1.5,cex.axis=1.5,cex.lab=1.5)
+segments(xs[which(ys==42)], 42, x1 =xs[which(ys==42)] , y1 = 33, col="darkred", lwd=2)
+segments(xs[which(ys==42)], 42, x1 =0 , y1 = 42, col="darkred", lwd=2)
+segments(xs[which(ys==49)], 49, x1 =xs[which(ys==49)] , y1 = 33, col="blue", lwd=2)
+segments(xs[which(ys==49)], 49, x1 =0 , y1 = 49, col="blue", lwd=2)
+text(2, 41.5,"CA",col="darkred", font=2)
+text(2, 42.5,"OR",col="darkred", font=2)
+text(2, 48.5,"U.S.A.", col="blue", font=2)
+text(2, 49.5,"Canada", col="blue", font=2)
+
+dev.off()
+
+
+
 #=======================================================================
 #Simulation evaluation graphs
 
@@ -154,7 +191,7 @@ for( i in 1:length(.SIMNAME)){
 #parameter estimate plot
 #setwd("/Users/catarinawor/Documents/hake/Thesis/figs")
 setwd("/Users/catarinawor/Documents/hake/JTC_talk")
-pdf("3terr_scn_tau0.4.pdf")
+pdf("3terr_scn_tau04.pdf")
 boxplot(pbias,names= c("mo","cvPos","maxPos50","maxPossd"),ylim=c(-10,10))
 abline(h=0)
 dev.off()
@@ -169,9 +206,9 @@ abline(h=0, col="red")
 boxplot(CN3pb_median)
 abline(h=0, col="red")
 
-boxplot(CN1pb_sd,ylim=c(0,1500))
-boxplot(CN2pb_sd,ylim=c(0,1500))
-boxplot(CN3pb_sd,ylim=c(0,1500))
+boxplot(CN1pb_sd,ylim=c(0,1000))
+boxplot(CN2pb_sd,ylim=c(0,1000))
+boxplot(CN3pb_sd,ylim=c(0,1000))
 
 #========================================================================
 # Description of the list sims
