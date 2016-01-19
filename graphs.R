@@ -277,11 +277,38 @@ x<-baseF$sarea:baseF$narea
 agep<-(baseF$sage:baseF$nage)[c(1,3,5,7,9,11,13,15,17,19)]
 
 
+
+
+
+
+
 meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
-cores<-rainbow(length(agep))
+cores<-gray.colors(length(agep)+1)
+setwd("/Users/catarinawor/Documents/hake/Thesis/figs/chap2")
+pdf("fish_mov.pdf", width=8, height=6)
+par(mfrow=c(3,4), oma = c(5,4,3,0) + 0.1, mar = c(2,2,3,1) + 0.1 )
+
+for(mth in 1:12){
+  for( i in 1:(length(PosXplot[mth,]))){
+    plot(x,dnorm(x,PosXplot[mth,i],sim$varPos[i]),type="l", lwd=2, col=cores[i],main=meses[mth],xlab="",ylim=c(0,.2), ylab=" ", cex.main=2,cex.lab=2)
+      abline(v=48.9)
+    if(mth==1){
+      legend("topright", legend=agep,  col = cores, border = "n", lwd=2, bty="n")
+    }
+    ##if(m==5){
+    ##  polygon(c(x[30:100],x[100]), c(dnorm(x[30:100],PosX[mth,4],varPos[4]),0),col="blue")
+    ##}
+    par(new=T)
+  }
+par(new=F)
+}
+title(xlab = expression("Latitude "(degree)),
+       outer = TRUE, line = 3,cex.main=3,cex.lab=3,font.main=2,)
+ dev.off()
+
 #setwd("/Users/catarinawor/Documents/hake/Proposal/Proposal_rev_mtng")
 #pdf("fish_mov.pdf", width=6, height=4)
-par(mfrow=c(3,4), mar=c(4.1,4.1,4.1,0.3),c(4, 1, 1, 1) )
+par(mfrow=c(3,4), mar=c(4.1,4.1,4.1,0.3), marc(4, 1, 1, 1) )
 for(mth in 1:12){
   for( i in 1:(length(PosXplot[mth,]))){
     plot(x,dnorm(x,PosXplot[mth,i],baseF$varPos[i]),type="l", lwd=2, col=cores[i],main=meses[mth],xlab="",ylim=c(0,.2), ylab=" ", cex.main=3,cex.lab=2)
