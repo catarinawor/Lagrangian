@@ -96,7 +96,7 @@ text(2, 42.5,"OR",col="darkred", font=2)
 text(2, 48.5,"U.S.A.", col="blue", font=2)
 text(2, 49.5,"Canada", col="blue", font=2)
 
-dev.off()
+#dev.off()
 
 
 
@@ -131,9 +131,10 @@ for( i in 1:length(.SIMNAME)){
 
 }
 
-setwd("/Users/catarinawor/Documents/hake/Thesis/figs")
-pdf("3terr_scn_tau0.2.pdf")
-boxplot(pbias,names= c("mo","cvPos","maxPos50","maxPossd"),)
+#setwd("/Users/catarinawor/Documents/hake/Thesis/figs")
+setwd("/Users/catarinawor/Documents/hake/JTC_talk")
+pdf("5terr_scn_tau1.pdf")
+boxplot(pbias,names= c("mo","cvPos","maxPos50","maxPossd"),ylim=c(-10,10))
 abline(h=0)
 dev.off()
 
