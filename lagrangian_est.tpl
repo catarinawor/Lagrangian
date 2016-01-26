@@ -160,8 +160,8 @@ DATA_SECTION
 
 	END_CALCS
 
-	vector tau_c(1,nations);
-	
+	//vector tau_c(1,nations);
+	number tau_c;
 
 
 PARAMETER_SECTION
@@ -487,15 +487,20 @@ FUNCTION calc_obj_func
 				ii = sum(pcat(1,n))-pcat(n)+i;
 				//cout<<"ii"<<ii<<endl;
 					
-				O(i) = (obsCatchNatAge(ii)(sage,nage)+0.1e-15)/sum(obsCatchNatAge(ii)(sage,nage)+0.1e-15);
-				P(i) = (predCatchNatAge(ii)(sage,nage)+0.1e-15)/sum(predCatchNatAge(ii)(sage,nage)+0.1e-15);
+				//O(i) = (obsCatchNatAge(ii)(sage,nage)+0.1e-30)/sum(obsCatchNatAge(ii)(sage,nage)+0.1e-5);
+				//P(i) = (predCatchNatAge(ii)(sage,nage)+0.1e-30)/sum(predCatchNatAge(ii)(sage,nage)+0.1e-5);
+				O(i) = (obsCatchNatAge(ii)(sage,nage)+0.1e-30)/sum(obsCatchNatAge(ii)(sage,nage)+0.1e-5);
+				P(i) = (predCatchNatAge(ii)(sage,nage)+0.1e-30)/sum(predCatchNatAge(ii)(sage,nage)+0.1e-5);
+				
 				//cout<<"O("<<i<<")"<<O(i)<<endl;
 				//cout<<"P("<<i<<")"<<P(i)<<endl;
-			}
+			}			
 
 			//cout<<"dmvlogistic(O,P,nu,tau_c(n),dMinP) is "<< dmvlogistic(O,P,nu,tau_c,dMinP)<<endl;
 			//exit(1);									
-			nlvec(n) =  dmvlogistic(O,P,nu,tau_c(n),dMinP);
+			//nlvec(n) =  dmvlogistic(O,P,nu,tau_c(n),dMinP);
+			nlvec(n) =  dmvlogistic(O,P,nu,tau_c,dMinP);
+
 		}
 		
 		cout<<"tau_c is"<<tau_c<<endl;

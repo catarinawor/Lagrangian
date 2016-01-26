@@ -81,7 +81,7 @@ xs[which(ys==42)]
 xs[which(ys==49)]
 
 
-setwd("/Users/catarinawor/Documents/hake/JTC_talk")
+#setwd("/Users/catarinawor/Documents/hake/JTC_talk")
 
 pdf("movAtAge.pdf",width = 7, height = 7)
 par(mfrow=c(1,1),xpd=FALSE)
@@ -98,17 +98,87 @@ text(2, 49.5,"Canada", col="blue", font=2)
 
 #dev.off()
 
+.SIMDIRS   <- c("/Users/catarinawor/Documents/Lagrangian/SimResult_tau04")
+
+.SIMNAME<-list(length(.SIMDIRS))
+
+.SIMNAME[[1]]   <- list.files(.SIMDIRS[1],pattern="\\.Rdata", full.name=TRUE)
+
+
+
+
+tmp_estn<-matrix(NA,nrow=length(.SIMNAME[[1]]),ncol=4)
+tmp_pbias<-matrix(NA,nrow=length(.SIMNAME[[1]]),ncol=4)
+
+load(.SIMNAME[[1]][1])
+
+sims[[3]]
+
+  for( j in 1:length(.SIMNAME[[i]])){
+    load(.SIMNAME[[i]][j])
+
+    #parameters
+    tmp_estn[j,]<-exp(sims[[3]]$est)
+    tmp_pbias[j,]<-((tmp_estn[j,]-true_pars)/true_pars)*100
+
+  }
+
+
+
+
+
 
 
 #=======================================================================
 #Simulation evaluation graphs
 
 #parameter estimates
-.SIMDIRS   <- "/Users/catarinawor/Documents/Lagrangian/SimResult"
-.SIMNAME   <- list.files(.SIMDIRS,pattern="\\.Rdata", full.name=TRUE)
+.SIMDIRS   <- c("/Users/catarinawor/Documents/Lagrangian/SimResult",
+  "/Users/catarinawor/Documents/Lagrangian/SimResult_tau04",
+  "/Users/catarinawor/Documents/Lagrangian/SimResult_5areas",
+  "/Users/catarinawor/Documents/Lagrangian/SimResult_tau04_5areas")
 
-estn<-matrix(NA,nrow=length(.SIMNAME),ncol=4)
-pbias<-matrix(NA,nrow=length(.SIMNAME),ncol=4)
+.SIMNAME<-list(length(.SIMDIRS))
+
+estn<-list(length(.SIMDIRS))
+pbias<-list(length(.SIMDIRS))
+maxgrad<-list(length(.SIMDIRS))
+initvals<-list(length(.SIMDIRS))
+initvals_bad<-list(length(.SIMDIRS))
+
+
+
+for( i in 1:length(.SIMDIRS)){
+  .SIMNAME[[i]]   <- list.files(.SIMDIRS[i],pattern="\\.Rdata", full.name=TRUE)
+  
+  tmp_estn<-matrix(NA,nrow=length(.SIMNAME[[i]]),ncol=4)
+  tmp_pbias<-matrix(NA,nrow=length(.SIMNAME[[i]]),ncol=4)
+  tmp_maxgrad<-vector(length=length(.SIMNAME[[i]]))
+  tmp_initvals<-matrix(NA,nrow=length(.SIMNAME[[i]]),ncol=4)
+  
+
+  for( j in 1:length(.SIMNAME[[i]])){
+    load(.SIMNAME[[i]][j])
+
+    #parameters
+    tmp_estn[j,]<-exp(sims[[3]]$est)
+    tmp_pbias[j,]<-((tmp_estn[j,]-true_pars)/true_pars)*100
+    tmp_maxgrad[j]<-sims[[3]]$maxgrad
+    tmp_initvals[j,]<-exp(unlist(sims[[5]][1:4]))
+   }
+
+  tmp_estn<- tmp_estn[tmp_maxgrad<=1.0000e-04,]
+  tmp_pbias<- tmp_pbias[tmp_maxgrad<=1.0000e-04,]
+  
+  estn[[i]]<-tmp_estn
+  pbias[[i]]<-tmp_pbias
+  maxgrad[[i]]<-tmp_maxgrad
+  initvals[[i]]<-tmp_initvals[tmp_maxgrad<=1.0000e-04,]
+  initvals_bad[[i]]<-tmp_initvals[tmp_maxgrad>1.0000e-04,]
+
+
+}
+
 
 #========================================================================
 # Description of the list sims
@@ -116,34 +186,83 @@ pbias<-matrix(NA,nrow=length(.SIMNAME),ncol=4)
 # [[2]] -> est -read.rep("lagrangian_est.rep")
 # [[3]] -> par - read.fit("lagrangian_est")
 # [[4]] -> seed
+# [[5]] -> pin - in a list
 #========================================================================
 
+
+
 indAyr<-rep(1:3,1200)[2161:3600]
+titulos<-c("3 areas, tau=1.0","3 areas, tau=0.4","5 areas, tau=1.0","5 areas, tau=0.4")
 
-for( i in 1:length(.SIMNAME)){
-  load(.SIMNAME[i])
 
-  #parameters
-  estn[i,]<-exp(sims[[3]]$est)
-  pbias[i,]<-((estn[i,]-true_pars)/true_pars)*100
+setwd("/Users/catarinawor/Documents/hake/Thesis/figs")
+#setwd("/Users/catarinawor/Documents/hake/JTC_talk")
+pdf("quatroscn.pdf")
+par(mfrow=c(2,2))
+for( i in 1:length(.SIMDIRS)){
+  boxplot(pbias[[i]],names= c("mo","cvPos","maxPos50","maxPossd"),ylim=c(-10,10),main=titulos[i])
+  abline(h=0)
+  text(4, y = 8, labels = nrow(pbias[[i]]))
+}
+dev.off()
 
+
+#plot of initial guesses
+par(mfrow=c(2,4))
+#for( i in 1:length(.SIMDIRS)){
+  hist(round(initvals[[1]][,1]), main="mo")
+  hist(round(initvals[[1]][,2],2), main="cvPos")
+  hist(round(initvals[[1]][,3],2), main="maxPos50")
+  hist(round(initvals[[1]][,4],2), main="maxPossd")
+  #boxplot(pbias[[i]],names= c("mo","cvPos","maxPos50","maxPossd"),ylim=c(-10,10),main=titulos[i])
+#}
+
+#par(mfrow=c(2,2))
+#for( i in 1:length(.SIMDIRS)){
+  hist(round(initvals_bad[[1]][,1]), main="mo")
+  hist(round(initvals_bad[[1]][,2],2), main="cvPos")
+  hist(round(initvals_bad[[1]][,3],2), main="maxPos50")
+  hist(round(initvals_bad[[1]][,4],2), main="maxPossd")
+  #boxplot(pbias[[i]],names= c("mo","cvPos","maxPos50","maxPossd"),ylim=c(-10,10),main=titulos[i])
+#}
+
+
+#with Tau =40
+.SIMDIRS   <- "/Users/catarinawor/Documents/Lagrangian/SimResult_tau40"
+.SIMNAME   <- list.files(.SIMDIRS,pattern="\\.Rdata", full.name=TRUE)
+
+estn<-list(length(.SIMDIRS))
+pbias<-list(length(.SIMDIRS))
+
+
+
+for( i in 1:length(.SIMDIRS)){
+  .SIMNAME[[i]]   <- list.files(.SIMDIRS[i],pattern="\\.Rdata", full.name=TRUE)
   
+  tmp_estn<-matrix(NA,nrow=length(.SIMNAME[[i]]),ncol=4)
+  tmp_pbias<-matrix(NA,nrow=length(.SIMNAME[[i]]),ncol=4)
+
+  for( j in 1:length(.SIMNAME[[i]])){
+    load(.SIMNAME[[i]][j])
+
+    #parameters
+    tmp_estn[j,]<-exp(sims[[3]]$est)
+    tmp_pbias[j,]<-((tmp_estn[j,]-true_pars)/true_pars)*100
+
+  }
+  estn[[i]]<-tmp_estn
+  pbias[[i]]<-tmp_pbias
 
 }
 
-#setwd("/Users/catarinawor/Documents/hake/Thesis/figs")
-setwd("/Users/catarinawor/Documents/hake/JTC_talk")
-pdf("5terr_scn_tau1.pdf")
-boxplot(pbias,names= c("mo","cvPos","maxPos50","maxPossd"),ylim=c(-10,10))
-abline(h=0)
-dev.off()
 
-#with Tau =0.4
-.SIMDIRS   <- "/Users/catarinawor/Documents/Lagrangian/SimResult_tau04"
-.SIMNAME   <- list.files(.SIMDIRS,pattern="\\.Rdata", full.name=TRUE)
+boxplot(pbias[[1]],names= c("mo","cvPos","maxPos50","maxPossd"),ylim=c(-10,10),main="5 areas, tau=40")
+  abline(h=0)
 
-estn<-matrix(NA,nrow=length(.SIMNAME),ncol=4)
-pbias<-matrix(NA,nrow=length(.SIMNAME),ncol=4)
+
+
+
+
 
 CN1pb_median<-matrix(NA,nrow=length(.SIMNAME),ncol=12)
 CN1pb_sd<-matrix(NA,nrow=length(.SIMNAME),ncol=12)
@@ -273,8 +392,8 @@ library(ggmap)
 
 PosXplot<-sim$PosX[(nrow(sim$PosX)-11):nrow(sim$PosX),c(1,3,5,7,9,11,13,15,17,19)]
 
-x<-baseF$sarea:baseF$narea
-agep<-(baseF$sage:baseF$nage)[c(1,3,5,7,9,11,13,15,17,19)]
+x<-sim$sarea:sim$narea
+agep<-(sim$sage:sim$nage)[c(1,5,9,13,17,20)]
 
 
 
@@ -308,24 +427,6 @@ title(xlab = expression("Latitude "(degree)),
 
 #setwd("/Users/catarinawor/Documents/hake/Proposal/Proposal_rev_mtng")
 #pdf("fish_mov.pdf", width=6, height=4)
-par(mfrow=c(3,4), mar=c(4.1,4.1,4.1,0.3), marc(4, 1, 1, 1) )
-for(mth in 1:12){
-  for( i in 1:(length(PosXplot[mth,]))){
-    plot(x,dnorm(x,PosXplot[mth,i],baseF$varPos[i]),type="l", lwd=2, col=cores[i],main=meses[mth],xlab="",ylim=c(0,.2), ylab=" ", cex.main=3,cex.lab=2)
-      abline(v=48.9)
-    if(mth==1){
-      legend("topright", legend=agep,  col = cores, border = "n", lwd=2, bty="n")
-    }
-    ##if(m==5){
-    ##  polygon(c(x[30:100],x[100]), c(dnorm(x[30:100],PosX[mth,4],varPos[4]),0),col="blue")
-    ##}
-    par(new=T)
-
-}
-par(new=F)
-}
-mtext(expression("Latitude "(degree)), side = 1, line = -1, outer=T, cex=1.5, font=2)
-
 
 
 #========================================================================
