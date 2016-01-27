@@ -48,7 +48,7 @@ readOutput <- function(dir)
 	seed<-scan("seed.txt")	
 	file.name <- paste("simest",seed,".Rdata",sep="")
 	sims<-readOutput("/Users/catarinawor/Documents/Lagrangian/")
-	setwd("/Users/catarinawor/Documents/Lagrangian/SimResult_5areas")
+	setwd("/Users/catarinawor/Documents/Lagrangian/SimResult_survey_tau1")
 	save(sims,file=file.name)
 
 

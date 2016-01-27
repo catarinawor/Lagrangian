@@ -34,7 +34,7 @@ rom: $(OM) $(SIMDAT) $(ARG) $(SEED)
 
 
 run: $(EXEC) $(DAT) $(ARG)
-	./$(EXEC) -ind $(DAT) $(ARG)
+	-./$(EXEC) -ind $(DAT) $(ARG)
 
 readRdat: 
 	-@echo $(RDATA) | R --vanilla --slave
