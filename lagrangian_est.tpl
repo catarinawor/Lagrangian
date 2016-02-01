@@ -514,12 +514,12 @@ FUNCTION calc_obj_func
 
 		}
 		
-		cout<<"tau_c is"<<tau_c<<endl;
+		//cout<<"tau_c is"<<tau_c<<endl;
 	//exit(1);
 
 	
 	//f=sum(nlvec)+sum(npvec);
-	f=sum(nlvec)/100;
+	f=sum(nlvec)/10000;
 
 FUNCTION dvar_vector calcmaxpos(const dvariable& tb)
 

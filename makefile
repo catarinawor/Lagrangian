@@ -37,7 +37,7 @@ run: $(EXEC) $(DAT) $(ARG)
 	-./$(EXEC) -ind $(DAT) $(ARG)
 
 readRdat: 
-	-@echo $(RDATA) | R --vanilla --slave
+	@echo $(RDATA) | R --vanilla --slave
 
 
 doall: rom run readRdat 

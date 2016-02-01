@@ -136,7 +136,9 @@ sims[[3]]
 .SIMDIRS   <- c("/Users/catarinawor/Documents/Lagrangian/SimResult",
   "/Users/catarinawor/Documents/Lagrangian/SimResult_tau04",
   "/Users/catarinawor/Documents/Lagrangian/SimResult_5areas",
-  "/Users/catarinawor/Documents/Lagrangian/SimResult_tau04_5areas")
+  "/Users/catarinawor/Documents/Lagrangian/SimResult_tau04_5areas",
+  "/Users/catarinawor/Documents/Lagrangian/SimResult_survey_tau1",
+  "/Users/catarinawor/Documents/Lagrangian/SimResult_survey_tau04")
 
 .SIMNAME<-list(length(.SIMDIRS))
 
@@ -162,7 +164,7 @@ for( i in 1:length(.SIMDIRS)){
 
     #parameters
     tmp_estn[j,]<-exp(sims[[3]]$est)
-    tmp_pbias[j,]<-((tmp_estn[j,]-true_pars)/true_pars)*100
+    tmp_pbias[j,]<-((round(tmp_estn[j,],2)-true_pars)/true_pars)*100
     tmp_maxgrad[j]<-sims[[3]]$maxgrad
     tmp_initvals[j,]<-exp(unlist(sims[[5]][1:4]))
    }
@@ -192,19 +194,19 @@ for( i in 1:length(.SIMDIRS)){
 
 
 indAyr<-rep(1:3,1200)[2161:3600]
-titulos<-c("3 areas, tau=1.0","3 areas, tau=0.4","5 areas, tau=1.0","5 areas, tau=0.4")
+titulos<-c("3 areas, tau=1.0","3 areas, tau=0.4","5 areas, tau=1.0","5 areas, tau=0.4","survey, tau=1.0","survey, tau=0.4")
 
 
-setwd("/Users/catarinawor/Documents/hake/Thesis/figs")
+#setwd("/Users/catarinawor/Documents/hake/Thesis/figs")
 #setwd("/Users/catarinawor/Documents/hake/JTC_talk")
-pdf("quatroscn.pdf")
-par(mfrow=c(2,2))
+#pdf("quatroscn.pdf")
+par(mfcol=c(2,3))
 for( i in 1:length(.SIMDIRS)){
   boxplot(pbias[[i]],names= c("mo","cvPos","maxPos50","maxPossd"),ylim=c(-10,10),main=titulos[i])
   abline(h=0)
   text(4, y = 8, labels = nrow(pbias[[i]]))
 }
-dev.off()
+#dev.off()
 
 
 #plot of initial guesses
