@@ -77,6 +77,7 @@ DATA_SECTION
 		
 		if( eof != 999 )
 		{
+			cout<<"TotEffmonth "<<TotEffmonth<<endl;
 			cout<<"Error reading data.\n Fix it."<<endl;
 			cout<< "eof is: "<<eof<<endl;
 			ad_exit(1);
@@ -318,16 +319,16 @@ FUNCTION initialization
 	
 	for(int rr= sarea; rr<=narea; rr++)
 	{
-		//tmp1(rr)= (VBarea(1)(rr)/ (sum(VulB(1)) + 0.0001))* effPwr(rr);
-		//tmp2(rr) = tmp1(rr)*TotEffyear(indnatarea(rr))(indyr(1));
-		//Effarea(1)(rr) = tmp2(rr)*TotEffmonth(indnatarea(rr))(indmonth(1));
+		tmp1(rr)= (VBarea(1)(rr)/ (sum(VulB(1)) + 0.0001))* effPwr(rr);
+		tmp2(rr) = tmp1(rr)*TotEffyear(indnatarea(rr))(indyr(1));
+		Effarea(1)(rr) = tmp2(rr)*TotEffmonth(indnatarea(rr))(indmonth(1));
 
 
 
 		//survey option
-		tmp1(rr)= 0.3;
-		tmp2(rr) = tmp1(rr)*TotEffyear(indnatarea(rr))(indyr(1));
-		Effarea(1)(rr) = tmp2(rr)*TotEffmonth(indnatarea(rr))(indmonth(1));
+		//tmp1(rr)= 0.3;
+		//tmp2(rr) = tmp1(rr)*TotEffyear(indnatarea(rr))(indyr(1));
+		//Effarea(1)(rr) = tmp2(rr)*TotEffmonth(indnatarea(rr))(indmonth(1));
 		
 
 
@@ -415,12 +416,14 @@ FUNCTION move_grow_die
 		{
 			//tmp1(rr)= pow((VBarea(i)(rr)/(NationVulB(i)(indnatarea(rr)) + 0.001))+ 1.0e-20,effPwr(rr));
 			//tmp1(rr)= VBarea(i)(rr)/(NationVulB(i)(indnatarea(rr)) + 0.0001);
-			//tmp1(rr)= (VBarea(i)(rr)/ (sum(VulB(i)) + 0.0001))* effPwr(rr);
-			//tmp2(rr) = tmp1(rr)*TotEffyear(indnatarea(rr))(indyr(i));
-			//survey option 
-			tmp1(rr)= 0.3;
+			tmp1(rr)= (VBarea(i)(rr)/ (sum(VulB(i)) + 0.0001))* effPwr(rr);
 			tmp2(rr) = tmp1(rr)*TotEffyear(indnatarea(rr))(indyr(i));
 			Effarea(i)(rr) = tmp2(rr)*TotEffmonth(indnatarea(rr))(indmonth(i));
+
+			//survey option 
+			//tmp1(rr)= 0.3;
+			//tmp2(rr) = tmp1(rr)*TotEffyear(indnatarea(rr))(indyr(i));
+			//Effarea(i)(rr) = tmp2(rr)*TotEffmonth(indnatarea(rr))(indmonth(i));
 		}
 		
 		for(int a = sage; a<=nage;a++)

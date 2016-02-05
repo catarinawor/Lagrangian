@@ -383,11 +383,162 @@ library(ggplot2)
 library(reshape2)
 library(animation)
 library(ggmap)
-
+library("plyr")
 #======================================================================== 
 # Graphs for base case scenario
 #======================================================================== 
 #Has the biomass stabilized -non error only
+
+rm(list=ls()); 
+#if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")
+setwd("/Users/catarinawor/Documents/Lagrangian/")
+source("read.admb.R")
+
+sim <- read.rep("lagrangian_OM.rep")
+est <- read.rep("lagrangian_est.rep")
+
+names(sim)
+VBplot<-sim$VBarea[(nrow(sim$PosX)-11):nrow(sim$PosX),]
+which.max(apply(VBplot,1,sum))
+Biomass<-c(VBplot/apply(VBplot,1,sum))
+
+
+
+PosXplot<-sim$PosX[(nrow(sim$PosX)-11):nrow(sim$PosX),5]
+
+
+
+propXplot<-matrix(NA, nrow=12,ncol=length(x))
+x<-sim$sarea:sim$narea
+
+
+for(mth in 1:12){
+  propXplot[mth,]<-dnorm(x,PosXplot[mth],sim$varPos[mth])
+}
+Fish<-c(propXplot)
+
+EffAplot<-sim$Effarea[(nrow(sim$PosX)-11):nrow(sim$PosX),]
+Effort<-c(EffAplot)/max(c(EffAplot))*0.12
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+
+
+Month<-rep(meses,length(x))
+Latitude<-rep(x, each=length(meses))
+
+
+df<- data.frame(Month,Latitude,Fish,Effort)
+df2<-arrange(transform(df,Month=factor(Month,levels=meses)),Month)
+
+#dftry<-df[df$Month=="Jun",]
+
+
+
+p <- ggplot(df2, aes(x=Latitude, y=-Effort)) 
+p <- p + geom_bar(stat="identity", alpha=0.5, aes(fill="Effort") )
+p <- p + geom_vline(xintercept=48.5, linetype=3,alpha=0.3)
+p <- p + geom_line(data=df2, aes(x=Latitude, y=-Fish, colour="Abundance"))
+p <- p + facet_wrap(~Month,ncol=4)
+p <- p + coord_flip()
+p <- p + theme_bw()+theme(legend.title=element_blank(), panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),axis.ticks = element_blank(), axis.text.x = element_blank(),
+        axis.title.x= element_blank())
+p <- p + scale_colour_grey() +scale_fill_grey() 
+p
+
+
+df2<-melt(df,c("Month","Latitude"))
+df2<-arrange(transform(df2,Month=factor(Month,levels=meses)),Month)
+
+p <- ggplot(df2, aes(x=Latitude, y=value)) 
+p <- p + geom_bar(stat="identity", alpha=0.5 )
+p<- p + subset(df2, value %in% c("Effort"))
+
+
+p <- p + geom_line(data=df2, aes(x=Latitude, y=Fish, fill="Biomass"))
+p <- p + facet_wrap(~Month,ncol=4)
+p <- p + coord_flip()
+p
+
+
+
+p <- ggplot(df2, aes(x=Latitude, y=value)) 
+p <- p + geom_line(data=df2, aes(group=variable))
+p <- p + facet_wrap(~Month,ncol=4)
+p <- p + coord_flip()
+p
+
+head(df2)
+p <- p + geom_bar(stat="identity", alpha=0.5) 
+
+dnorm(x,PosXplot[6],sim$varPos[6])
+
+
+c(EffAplot)[1:12]
+EffAplot[,1]
+
+dim(EffAplot)
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+
+
+
+plot(x,dnorm(x,PosXplot[6],sim$varPos[6]),type="l", lwd=2, main=meses[6],xlab="",ylim=c(0,.2), ylab=" ", cex.main=2,cex.lab=2)
+      abline(v=48.9)
+par(new=F)
+barplot(EffAplot[6,])
+
+for(mth in 1:12){
+  for( i in 1:(length(PosXplot[mth,]))){
+    plot(x,dnorm(x,PosXplot[mth,i],sim$varPos[i]),type="l", lwd=2, col=cores[i],main=meses[mth],xlab="",ylim=c(0,.2), ylab=" ", cex.main=2,cex.lab=2)
+      abline(v=48.9)
+    if(mth==1){
+      legend("topright", legend=agep,  col = cores, border = "n", lwd=2, bty="n")
+    }
+    ##if(m==5){
+    ##  polygon(c(x[30:100],x[100]), c(dnorm(x[30:100],PosX[mth,4],varPos[4]),0),col="blue")
+    ##}
+    par(new=T)
+  }
+par(new=F)
+}
+
+dim(sim$Effarea)
+
+x<-sim$sarea:sim$narea
+agep<-(sim$sage:sim$nage)[c(1,5,9,13,17,20)]
+
+
+
+
+
+
+
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+cores<-gray.colors(length(agep)+1)
+setwd("/Users/catarinawor/Documents/hake/Thesis/figs/chap2")
+pdf("fish_mov.pdf", width=8, height=6)
+par(mfrow=c(3,4), oma = c(5,4,3,0) + 0.1, mar = c(2,2,3,1) + 0.1 )
+
+for(mth in 1:12){
+  for( i in 1:(length(PosXplot[mth,]))){
+    plot(x,dnorm(x,PosXplot[mth,i],sim$varPos[i]),type="l", lwd=2, col=cores[i],main=meses[mth],xlab="",ylim=c(0,.2), ylab=" ", cex.main=2,cex.lab=2)
+      abline(v=48.9)
+    if(mth==1){
+      legend("topright", legend=agep,  col = cores, border = "n", lwd=2, bty="n")
+    }
+    ##if(m==5){
+    ##  polygon(c(x[30:100],x[100]), c(dnorm(x[30:100],PosX[mth,4],varPos[4]),0),col="blue")
+    ##}
+    par(new=T)
+  }
+par(new=F)
+}
+title(xlab = expression("Latitude "(degree)),
+       outer = TRUE, line = 3,cex.main=3,cex.lab=3,font.main=2,)
+ dev.off()
+
+#setwd("/Users/catarinawor/Documents/hake/Proposal/Proposal_rev_mtng")
+#pdf("fish_mov.pdf", width=6, height=4)
+
 
 
 
