@@ -78,6 +78,7 @@ DATA_SECTION
 		if( eof != 999 )
 		{
 			cout<<"TotEffmonth "<<TotEffmonth<<endl;
+			cout<<"effPwr "<<effPwr<<endl;
 			cout<<"Error reading data.\n Fix it."<<endl;
 			cout<< "eof is: "<<eof<<endl;
 			ad_exit(1);
@@ -280,6 +281,7 @@ FUNCTION initialization
 	NAreaAge.initialize();
  	CatchAreaAge.initialize();
  	CatchNatAge.initialize(); 
+ 	Nage.initialize();
 
 	Nage(1,1) = So*Bo/(1+beta*Bo);
 
@@ -287,6 +289,7 @@ FUNCTION initialization
 	{
 		Nage(1,i) = Nage(1,i-1) * mfexp(-za(i-1));
 	}
+	//Nage(1)(nage) /= (1.-mfexp(-za(nage)));
 
 	VulB(1) = elem_prod(elem_prod(Nage(1),va),wa);
 	SB(1) = elem_prod(Nage(1),fa)*wa/2;
@@ -374,12 +377,14 @@ FUNCTION move_grow_die
             	{
             		Nage(i)(a) = Nage(i-1)(a-1)*mfexp(-(m_tsp+q*Effage(i-1)(a-1)*va(a-1)));
             	}
+            	//Nage(i)(nage) /= (1.-mfexp(-(m_tsp+q*Effage(i-1)(nage)*va(nage))));
             	
             	break;
             	
             default: 
             
             	Nage(i) = elem_prod(Nage(i-1),mfexp(-(m_tsp+q*elem_prod(Effage(i-1),va))));
+            	//Nage(i)(nage) /= (1.-mfexp(-(m_tsp+q*Effage(i-1)(nage)*va(nage))));
             	break;
         }
 		
