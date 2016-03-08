@@ -289,7 +289,7 @@ FUNCTION initialization
 	{
 		Nage(1,i) = Nage(1,i-1) * mfexp(-za(i-1));
 	}
-	//Nage(1)(nage) /= (1.-mfexp(-za(nage)));
+	Nage(1)(nage) /= (1.-mfexp(-za(nage)));
 
 	VulB(1) = elem_prod(elem_prod(Nage(1),va),wa);
 	SB(1) = elem_prod(Nage(1),fa)*wa/2;
@@ -377,14 +377,14 @@ FUNCTION move_grow_die
             	{
             		Nage(i)(a) = Nage(i-1)(a-1)*mfexp(-(m_tsp+q*Effage(i-1)(a-1)*va(a-1)));
             	}
-            	//Nage(i)(nage) /= (1.-mfexp(-(m_tsp+q*Effage(i-1)(nage)*va(nage))));
+            	Nage(i)(nage) /= (1.-mfexp(-(m_tsp+q*Effage(i-1)(nage)*va(nage))));
             	
             	break;
             	
             default: 
             
             	Nage(i) = elem_prod(Nage(i-1),mfexp(-(m_tsp+q*elem_prod(Effage(i-1),va))));
-            	//Nage(i)(nage) /= (1.-mfexp(-(m_tsp+q*Effage(i-1)(nage)*va(nage))));
+            	
             	break;
         }
 		
@@ -481,7 +481,7 @@ FUNCTION clean_catage
        			obsCatchNatAge(p)(sage-2) = indmonth(i);
 				obsCatchNatAge(p)(sage-1) = n;
        			//pa = value((CatchNatAge(i)(n)(sage,nage)+0.1e-15)/sum(CatchNatAge(i)(n)(sage,nage)+0.1e-15));
-				pa = value((CatchNatAge(i)(n)(sage,nage)+0.1e-30)/sum(CatchNatAge(i)(n)(sage,nage)+0.1e-5));
+				pa = value((CatchNatAge(i)(n)(sage,nage))/sum(CatchNatAge(i)(n)(sage,nage)));
 				obsCatchNatAge(p)(sage,nage) = rmvlogistic(pa,tau_c,seed+i);
 				
 				p++;	
@@ -562,15 +562,17 @@ FUNCTION output_pin
 	guess_maxPossd.fill_seqadd(0.5,0.5);
 
 
-	tmp_mo 		= ceil(randu(rngmo)*(mo+3));
-	tmp_cvPos	= ceil(randu(rngcvPos)*5);
-	tmp_maxPos50= ceil(randu(rngcvPos)*9);
-	tmp_maxPossd= ceil(randu(rngcvPos)*7);
+	//tmp_mo 		= ceil(randu(rngmo)*(mo+3));
+	//tmp_cvPos	= ceil(randu(rngcvPos)*5);
+	//tmp_maxPos50= ceil(randu(rngcvPos)*9);
+	//tmp_maxPossd= ceil(randu(rngcvPos)*7);
 
-	//tmp_mo 		= rand() % 6 + 1;
-	//tmp_cvPos	= rand() % 6 + 1;
-	//tmp_maxPos50= rand() % 10 + 1;
-	//tmp_maxPossd= rand() % 8 + 1;
+	
+
+	tmp_mo 		= rand() % 6 + 1;
+	tmp_cvPos	= rand() % 6 + 1;
+	tmp_maxPos50= rand() % 10 + 1;
+	tmp_maxPossd= rand() % 8 + 1;
 
 	
 
@@ -591,7 +593,7 @@ FUNCTION output_pin
 	//ifs<<"#maxPos502 "<< endl << log(4) <<endl;
 	ifs<<"# maxPossd \n"<< log(guess_maxPossd(tmp_maxPossd)) <<endl;
 	//ifs<<"#maxPossd2 "<< endl << log(4) <<endl;
-	ifs<<"#wt \n" << wt(rep_yr+1,nyr)*err <<endl;
+	ifs<<"#wt \n" << wt(rep_yr+1-20,nyr)*err <<endl;
 
 	
 

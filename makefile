@@ -17,7 +17,7 @@ LAST := 100
 
 NUMBERS := $(shell seq 1 ${LAST})
 
-RDATA ='source(file.path("../","Lagrangian","simRun.r"))'
+RDATA ='source(file.path("../","Lagrangian/SimResult_3areas_tau1","simRun.r"))'
 
  
 all: 
