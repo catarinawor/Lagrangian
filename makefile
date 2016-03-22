@@ -10,14 +10,14 @@
 
 EXEC=lagrangian_est
 DAT=lagrangian_est.dat
-OM=lagrangian_OM
-SIMDAT=lagrangian_OM.dat
+OM=lagrangian_OM_gtg
+SIMDAT=lagrangian_OM_gtg.dat
 SEED = seed.txt
 LAST := 100
 
 NUMBERS := $(shell seq 1 ${LAST})
 
-RDATA ='source(file.path("../","Lagrangian/SimResult_3areas_tau1","simRun.r"))'
+RDATA ='source(file.path("../","Lagrangian/SimResult_gtg_5areas_tau1","simRun.r"))'
 
  
 all: 

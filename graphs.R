@@ -126,9 +126,7 @@ text(2, 49.5,"Canada", col="blue", font=2)
 .SIMDIRS   <- c("/Users/catarinawor/Documents/Lagrangian/SimResult_3areas_tau1",
   "/Users/catarinawor/Documents/Lagrangian/SimResult_3areas_tau04",
   "/Users/catarinawor/Documents/Lagrangian/SimResult_5areas_tau1",
-  "/Users/catarinawor/Documents/Lagrangian/SimResult_5areas_tau04",
-  "/Users/catarinawor/Documents/Lagrangian/SimResult_survey_tau1",
-  "/Users/catarinawor/Documents/Lagrangian/SimResult_survey_tau04")
+  "/Users/catarinawor/Documents/Lagrangian/SimResult_5areas_tau04")
 
 .SIMNAME<-list(length(.SIMDIRS))
 
@@ -154,7 +152,7 @@ for( i in 1:length(.SIMDIRS)){
 
     #parameters
     tmp_estn[j,]<-exp(sims[[3]]$est)
-    tmp_pbias[j,]<-((round(tmp_estn[j,],2)-true_pars)/true_pars)*100
+    tmp_pbias[j,]<-((tmp_estn[j,]-true_pars)/true_pars)*100
     tmp_maxgrad[j]<-sims[[3]]$maxgrad
     tmp_initvals[j,]<-exp(unlist(sims[[5]][1:4]))
    }
@@ -181,166 +179,23 @@ for( i in 1:length(.SIMDIRS)){
 # [[5]] -> pin - in a list
 #========================================================================
 
-indAyr<-rep(1:3,1200)[2161:3600]
-titulos<-c("3 areas, tau=1.0","3 areas, tau=0.4","5 areas, tau=1.0","5 areas, tau=0.4","survey, tau=1.0","survey, tau=0.4")
+
+titulos<-c("3 areas, tau=1.0","3 areas, tau=0.4","5 areas, tau=1.0","5 areas, tau=0.4")
 
 
-#setwd("/Users/catarinawor/Documents/hake/Thesis/figs")
+setwd("/Users/catarinawor/Documents/hake/Thesis/figs/chap2")
 #setwd("/Users/catarinawor/Documents/hake/JTC_talk")
-#pdf("quatroscn.pdf")
-par(mfcol=c(2,3))
+pdf("quatroscn.pdf", width=12, height=10)
+par(mfcol=c(2,2))
 for( i in 1:length(.SIMDIRS)){
-  boxplot(pbias[[i]],names= c("mo","cvPos","maxPos50","maxPossd"),ylim=c(-10,10),main=titulos[i])
+  boxplot(pbias[[i]],names= c(expression("t"[0]),expression("cv"),expression("a"[50]),expression("sd"["X"["max"])),ylim=c(-10,10),main=titulos[i],cex.axis=1.5,cex.lab=1.5,cex.main=1.5)
   abline(h=0)
   text(4, y = 8, labels = nrow(pbias[[i]]))
 }
-#dev.off()
-
-
-
-#=====================================================================
-#just one simulation scenario
-
-#with Tau =40
-.SIMDIRS   <- "/Users/catarinawor/Documents/Lagrangian/SimResult_tau40"
-.SIMNAME   <- list.files(.SIMDIRS,pattern="\\.Rdata", full.name=TRUE)
-
-estn<-matrix(NA,nrow=length(.SIMNAME),ncol=4)
-pbias<-matrix(NA,nrow=length(.SIMNAME),ncol=4)
-
-
-
-for( i in 1:length(.SIMNAME )){
-  
-    load(.SIMNAME[i])
-
-    #parameters
-    estn[i,]<-exp(sims[[3]]$est)
-    pbias[i,]<-((estn[i,]-true_pars)/true_pars)*100
-
-}
-
-
-boxplot(pbias,names= c("mo","cvPos","maxPos50","maxPossd"),ylim=c(-100,100),main="5 areas, tau=40")
-  abline(h=0)
-
-
-
-
-#=====================================================================
-#
-
-
-CN1pb_median<-matrix(NA,nrow=length(.SIMNAME),ncol=12)
-CN1pb_sd<-matrix(NA,nrow=length(.SIMNAME),ncol=12)
-CN2pb_median<-matrix(NA,nrow=length(.SIMNAME),ncol=12)
-CN2pb_sd<-matrix(NA,nrow=length(.SIMNAME),ncol=12)
-CN3pb_median<-matrix(NA,nrow=length(.SIMNAME),ncol=12)
-CN3pb_sd<-matrix(NA,nrow=length(.SIMNAME),ncol=12)
-
-
-
-
-
-
-for( i in 1:length(.SIMNAME)){
-  load(.SIMNAME[i])
-
-  #parameters
-  estn[i,]<-exp(sims[[3]]$est)
-  pbias[i,]<-((estn[i,]-true_pars)/true_pars)*100
-
-
-  #catch
-  #Catch of each nation 
-  CN1sim<-apply(sims[[1]]$"CatchNatAge"[2161:3600,],1,sum)[indAyr==1]
-  CN1est<-apply(sims[[2]]$"CatchNatAge",1,sum)[indAyr==1]
-  CN2sim<-apply(sims[[1]]$"CatchNatAge"[2161:3600,],1,sum)[indAyr==2]
-  CN2est<-apply(sims[[2]]$"CatchNatAge",1,sum)[indAyr==2]
-  CN3sim<-apply(sims[[1]]$"CatchNatAge"[2161:3600,],1,sum)[indAyr==3]
-  CN3est<-apply(sims[[2]]$"CatchNatAge",1,sum)[indAyr==3]
-
-  CN1pbias<-((CN1est-CN1sim)/CN1sim)*100
-  CN2pbias<-((CN2est-CN2sim)/CN2sim)*100
-  CN3pbias<-((CN3est-CN3sim)/CN3sim)*100
-
-  CN1pb_median[i,]<-apply(matrix(CN1pbias, ncol=12,byrow=T),2,median)
-  CN2pb_median[i,]<-apply(matrix(CN2pbias, ncol=12,byrow=T),2,median)
-  CN3pb_median[i,]<-apply(matrix(CN3pbias, ncol=12,byrow=T),2,median)
-
-  CN1pb_sd[i,]<-sqrt(apply(matrix(CN1pbias, ncol=12,byrow=T),2,var))
-  CN2pb_sd[i,]<-sqrt(apply(matrix(CN2pbias, ncol=12,byrow=T),2,var))
-  CN3pb_sd[i,]<-sqrt(apply(matrix(CN3pbias, ncol=12,byrow=T),2,var))
-
-
-}
-
-#parameter estimate plot
-#setwd("/Users/catarinawor/Documents/hake/Thesis/figs")
-setwd("/Users/catarinawor/Documents/hake/JTC_talk")
-pdf("3terr_scn_tau04.pdf")
-boxplot(pbias,names= c("mo","cvPos","maxPos50","maxPossd"),ylim=c(-10,10))
-abline(h=0)
 dev.off()
 
 
-#catch plots
-par(mfcol=c(3,2))
-boxplot(CN1pb_median)
-abline(h=0, col="red")
-boxplot(CN2pb_median)
-abline(h=0, col="red")
-boxplot(CN3pb_median)
-abline(h=0, col="red")
 
-boxplot(CN1pb_sd,ylim=c(0,1000))
-boxplot(CN2pb_sd,ylim=c(0,1000))
-boxplot(CN3pb_sd,ylim=c(0,1000))
-
-#========================================================================
-# Description of the list sims
-# [[1]] -> sim- read.rep("lagrangian_OM.rep") 
-# [[2]] -> est -read.rep("lagrangian_est.rep")
-# [[3]] -> par - read.fit("lagrangian_est")
-# [[4]] -> seed
-#========================================================================
-
-
-ls() 
-length(sims)
-names(sims[[2]])
-
-sims[[1]]$"nyr"
-dim(sims[[1]]$"CatchNatAge")
-
-
-sims[[1]]$"CatchNatAge"[,1]
-
-ind<- rep(1:3,1200)
-par(mfrow=c(3,1))
-plot(rep(1:12,100),apply(sims[[1]]$"CatchNatAge",1,sum)[ind==1], type="l")
-lines(rep(1:12,100),apply(sims[[2]]$"CatchNatAge",1,sum)[ind==1],col="red")
-plot(rep(1:12,100),apply(sims[[1]]$"CatchNatAge",1,sum)[ind==2], type="l")
-lines(rep(1:12,100),apply(sims[[2]]$"CatchNatAge",1,sum)[ind==2],col="red")
-plot(rep(1:12,100),apply(sims[[1]]$"CatchNatAge",1,sum)[ind==3], type="l")
-lines(rep(1:12,100),apply(sims[[2]]$"CatchNatAge",1,sum)[ind==3],col="red")
-
-catvar<-(apply(sims[[2]]$"CatchNatAge",1,sum)[ind==1]-apply(sims[[1]]$"CatchNatAge",1,sum)[ind==1])/apply(sims[[1]]$"CatchNatAge",1,sum)[ind==1]
-
-boxplot(catvar, ylim=c(-1,50))
-
-names(sims[[2]])
-
-plot(apply(sims[[1]]$"CatchNatAge",1,sum)[1201:2400])
-plot(apply(sims[[1]]$"CatchNatAge",1,sum)[2401:3600])
-
-
-plot(estn)
-
-mydat<-data.frame(parameter=rep(c("mo","cvPos","maxPos50","maxPossd"),each=100),estimate=c(estn))
-
-plot(mydat)
-points(true_pars[c(2,3,4,1)],col="red",pch=16)
 
 #=======================================================================
 
@@ -427,18 +282,8 @@ source("read.admb.R")
 sim_gtg <- read.rep("lagrangian_OM_gtg.rep")
 est_gtg <- read.rep("lagrangian_est_gtg.rep")
 
-est_gtg$mo
-est_gtg$maxPos50
-est_gtg$maxPossd
-est_gtg$cvPos
 
 
-
-
-plot(cbind(sim_gtg$Nage[,1],apply(sim_gtg$Nage[,-1],1,sum))[sim_gtg$Nage[,1]==1,2])
-
-head(sim_gtg$Nage)
-head(sim_gtg$propBarea)
 #propBarea indices are year, group and area
 #sim_gtg$totB
 #sim_gtg$Nage
@@ -475,7 +320,7 @@ p <- p + geom_line(aes(x=Latitude, y=value, colour=group))
 p <- p + geom_vline(xintercept=48.5, linetype=3,alpha=0.3)
 p <- p + facet_wrap(~month,ncol=4)
 p <- p + geom_bar(data=Effplot,aes(x=as.numeric(Latitude), y=effort,fill="effort"),stat="identity", alpha=0.5 )
-p <- p + coord_flip()
+#p <- p + coord_flip()
 p <- p + theme_bw()+theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),axis.ticks = element_blank(), axis.text.x = element_blank(),
         axis.title.x= element_blank())
@@ -492,10 +337,13 @@ ggsave(file="gtg_model_example.pdf")
 
 true_pars_gtg <- c(sim_gtg$"mo",sim_gtg$"cvPos",sim_gtg$"maxPos50",sim_gtg$"maxPossd")
 
-indpar<-c(0,1,4,7,10)
+indpar<-c(1,2,3,3,3,4)
 
 #parameter estimates
-.SIMDIRSGTG   <- c("/Users/catarinawor/Documents/Lagrangian/SimResult_gtg_tau01_5areas")
+.SIMDIRSGTG   <- c("/Users/catarinawor/Documents/Lagrangian/SimResult_gtg_3areas_tau1",
+  "/Users/catarinawor/Documents/Lagrangian/SimResult_gtg_3areas_tau04",
+  "/Users/catarinawor/Documents/Lagrangian/SimResult_gtg_5areas_tau1",
+  "/Users/catarinawor/Documents/Lagrangian/SimResult_gtg_5areas_tau04")
 
 .SIMNAME<-list(length(.SIMDIRSGTG))
 
@@ -521,8 +369,8 @@ for( i in 1:length(.SIMDIRSGTG)){
     tmp_estn[j,]<-exp(sims[[3]]$est)
     #tmp_pbias[j,]<-((round(tmp_estn[j,],2)-true_pars_gtg)/true_pars_gtg)*100
     
-    for(a in 2:5){
-        tmp_pbias[j,(indpar[a-1]+1):indpar[a]]<-((round(tmp_estn[j,a-1],2)-true_pars_gtg[(indpar[a-1]+1):indpar[a]])/true_pars_gtg[(indpar[a-1]+1):indpar[a]])*100
+    for(a in 1:(length(true_pars_gtg))){
+        tmp_pbias[j,a]<-((tmp_estn[j,indpar[a]]-true_pars_gtg[a])/true_pars_gtg[a])*100
     }
 
     
@@ -544,18 +392,20 @@ for( i in 1:length(.SIMDIRSGTG)){
 }
 
 indAyr<-rep(1:3,1200)[2161:3600]
-titulos<-c("3 areas, tau=1.0","3 areas, tau=0.4","5 areas, tau=1.0","5 areas, tau=0.4","survey, tau=1.0","survey, tau=0.4")
+titulos<-c("3 areas, tau=1.0","3 areas, tau=0.4","5 areas, tau=1.0","5 areas, tau=0.4")
 
 
 #setwd("/Users/catarinawor/Documents/hake/Thesis/figs")
 #setwd("/Users/catarinawor/Documents/hake/JTC_talk")
 #pdf("quatroscn.pdf")
 
-boxplot(pbias_gtg[[1]],names= c("mo","cvPos","maxPos50","maxPossd"),main=" ")
+
 
 par(mfcol=c(1,1))
 for( i in 1:length(.SIMDIRSGTG)){
-  boxplot(pbias_gtg[[i]],names= c("mo","cvPos","maxPos50","maxPossd"),ylim=c(-10,10),main=" ")
+  boxplot(pbias_gtg[[i]],names= c(expression("t"[0]),expression("cv"),
+    expression("a"[50,s]),expression("a"[50,m]),expression("a"[50,f]),expression("sd"["X"["max"]))
+    ,ylim=c(-10,10),main=" ")
   abline(h=0)
   text(4, y = 8, labels = nrow(pbias_gtg[[i]]))
 }
@@ -916,4 +766,152 @@ print(p2)
 }
 ,
 pdflatex = "/usr/texbin/pdflatex")
+
+
+#==================================================================================
+#Random graphs
+#==================================================================================
+ #=====================================================================
+#just one simulation scenario
+
+#with Tau =40
+.SIMDIRS   <- "/Users/catarinawor/Documents/Lagrangian/SimResult_tau40"
+.SIMNAME   <- list.files(.SIMDIRS,pattern="\\.Rdata", full.name=TRUE)
+
+estn<-matrix(NA,nrow=length(.SIMNAME),ncol=4)
+pbias<-matrix(NA,nrow=length(.SIMNAME),ncol=4)
+
+
+
+for( i in 1:length(.SIMNAME )){
+  
+    load(.SIMNAME[i])
+
+    #parameters
+    estn[i,]<-exp(sims[[3]]$est)
+    pbias[i,]<-((estn[i,]-true_pars)/true_pars)*100
+
+}
+
+
+boxplot(pbias,names= c("mo","cvPos","maxPos50","maxPossd"),ylim=c(-100,100),main="5 areas, tau=40")
+  abline(h=0)
+
+
+
+
+#=====================================================================
+#
+
+
+CN1pb_median<-matrix(NA,nrow=length(.SIMNAME),ncol=12)
+CN1pb_sd<-matrix(NA,nrow=length(.SIMNAME),ncol=12)
+CN2pb_median<-matrix(NA,nrow=length(.SIMNAME),ncol=12)
+CN2pb_sd<-matrix(NA,nrow=length(.SIMNAME),ncol=12)
+CN3pb_median<-matrix(NA,nrow=length(.SIMNAME),ncol=12)
+CN3pb_sd<-matrix(NA,nrow=length(.SIMNAME),ncol=12)
+
+
+
+
+
+
+for( i in 1:length(.SIMNAME)){
+  load(.SIMNAME[i])
+
+  #parameters
+  estn[i,]<-exp(sims[[3]]$est)
+  pbias[i,]<-((estn[i,]-true_pars)/true_pars)*100
+
+
+  #catch
+  #Catch of each nation 
+  CN1sim<-apply(sims[[1]]$"CatchNatAge"[2161:3600,],1,sum)[indAyr==1]
+  CN1est<-apply(sims[[2]]$"CatchNatAge",1,sum)[indAyr==1]
+  CN2sim<-apply(sims[[1]]$"CatchNatAge"[2161:3600,],1,sum)[indAyr==2]
+  CN2est<-apply(sims[[2]]$"CatchNatAge",1,sum)[indAyr==2]
+  CN3sim<-apply(sims[[1]]$"CatchNatAge"[2161:3600,],1,sum)[indAyr==3]
+  CN3est<-apply(sims[[2]]$"CatchNatAge",1,sum)[indAyr==3]
+
+  CN1pbias<-((CN1est-CN1sim)/CN1sim)*100
+  CN2pbias<-((CN2est-CN2sim)/CN2sim)*100
+  CN3pbias<-((CN3est-CN3sim)/CN3sim)*100
+
+  CN1pb_median[i,]<-apply(matrix(CN1pbias, ncol=12,byrow=T),2,median)
+  CN2pb_median[i,]<-apply(matrix(CN2pbias, ncol=12,byrow=T),2,median)
+  CN3pb_median[i,]<-apply(matrix(CN3pbias, ncol=12,byrow=T),2,median)
+
+  CN1pb_sd[i,]<-sqrt(apply(matrix(CN1pbias, ncol=12,byrow=T),2,var))
+  CN2pb_sd[i,]<-sqrt(apply(matrix(CN2pbias, ncol=12,byrow=T),2,var))
+  CN3pb_sd[i,]<-sqrt(apply(matrix(CN3pbias, ncol=12,byrow=T),2,var))
+
+
+}
+
+#parameter estimate plot
+#setwd("/Users/catarinawor/Documents/hake/Thesis/figs")
+setwd("/Users/catarinawor/Documents/hake/JTC_talk")
+pdf("3terr_scn_tau04.pdf")
+boxplot(pbias,names= c("mo","cvPos","maxPos50","maxPossd"),ylim=c(-10,10))
+abline(h=0)
+dev.off()
+
+
+#catch plots
+par(mfcol=c(3,2))
+boxplot(CN1pb_median)
+abline(h=0, col="red")
+boxplot(CN2pb_median)
+abline(h=0, col="red")
+boxplot(CN3pb_median)
+abline(h=0, col="red")
+
+boxplot(CN1pb_sd,ylim=c(0,1000))
+boxplot(CN2pb_sd,ylim=c(0,1000))
+boxplot(CN3pb_sd,ylim=c(0,1000))
+
+#========================================================================
+# Description of the list sims
+# [[1]] -> sim- read.rep("lagrangian_OM.rep") 
+# [[2]] -> est -read.rep("lagrangian_est.rep")
+# [[3]] -> par - read.fit("lagrangian_est")
+# [[4]] -> seed
+#========================================================================
+
+
+ls() 
+length(sims)
+names(sims[[2]])
+
+sims[[1]]$"nyr"
+dim(sims[[1]]$"CatchNatAge")
+
+
+sims[[1]]$"CatchNatAge"[,1]
+
+ind<- rep(1:3,1200)
+par(mfrow=c(3,1))
+plot(rep(1:12,100),apply(sims[[1]]$"CatchNatAge",1,sum)[ind==1], type="l")
+lines(rep(1:12,100),apply(sims[[2]]$"CatchNatAge",1,sum)[ind==1],col="red")
+plot(rep(1:12,100),apply(sims[[1]]$"CatchNatAge",1,sum)[ind==2], type="l")
+lines(rep(1:12,100),apply(sims[[2]]$"CatchNatAge",1,sum)[ind==2],col="red")
+plot(rep(1:12,100),apply(sims[[1]]$"CatchNatAge",1,sum)[ind==3], type="l")
+lines(rep(1:12,100),apply(sims[[2]]$"CatchNatAge",1,sum)[ind==3],col="red")
+
+catvar<-(apply(sims[[2]]$"CatchNatAge",1,sum)[ind==1]-apply(sims[[1]]$"CatchNatAge",1,sum)[ind==1])/apply(sims[[1]]$"CatchNatAge",1,sum)[ind==1]
+
+boxplot(catvar, ylim=c(-1,50))
+
+names(sims[[2]])
+
+plot(apply(sims[[1]]$"CatchNatAge",1,sum)[1201:2400])
+plot(apply(sims[[1]]$"CatchNatAge",1,sum)[2401:3600])
+
+
+plot(estn)
+
+mydat<-data.frame(parameter=rep(c("mo","cvPos","maxPos50","maxPossd"),each=100),estimate=c(estn))
+
+plot(mydat)
+points(true_pars[c(2,3,4,1)],col="red",pch=16)
 
