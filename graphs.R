@@ -487,6 +487,7 @@ ggsave(file="model_example.pdf")
 
 rm(list=ls()); 
 
+
 library(plyr)
 library(data.table)
 library(ggplot2)
@@ -494,19 +495,28 @@ library(reshape2)
 library(animation)
 library(ggmap)
 
+
 #if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")
 setwd("/Users/catarinawor/Documents/Lagrangian/")
 source("read.admb.R")
 
 sim_gtg <- read.rep("lagrangian_OM_gtg.rep")
-est_gtg <- read.rep("lagrangian_est_gtg.rep")
+#est_gtg <- read.rep("lagrangian_est_gtg.rep")
+
+
 
 head(sim_gtg$propBarea)
 head(sim_gtg$Nage)
+head(sim_gtg$Effarea)
 
-plot(apply(sim_gtg$Nage[sim_gtg$Nage[,1]==1,-1],1,sum), ylim=c(0,70000))
-lines(apply(sim_gtg$Nage[sim_gtg$Nage[,1]==2,-1],1,sum), col="red")
-lines(apply(sim_gtg$Nage[sim_gtg$Nage[,1]==3,-1],1,sum), col="blue")
+cores=rainbow(sim_gtg$ngroup)
+plot(apply(sim_gtg$Nage[sim_gtg$Nage[,1]==1,-1],1,sum), ylim=c(0,20000))
+for(i in 1:sim_gtg$ngroup){
+  lines(apply(sim_gtg$Nage[sim_gtg$Nage[,1]==i,-1],1,sum), col=cores[i], lwd=2)
+}
+
+
+
 
 
 #propBarea indices are year, group and area
@@ -539,19 +549,68 @@ Effplot$Latitude<-as.numeric(Effplot$Latitude)+sim_gtg$sarea-1
 df<-merge(x = Xplot, y = Effplot, by = c("Latitude","month"), all = TRUE)
 head(df)
 
-setwd("/Users/catarinawor/Documents/hake/Thesis/figs/chap2")
+#setwd("/Users/catarinawor/Documents/hake/Thesis/figs/chap2")
 p <- ggplot(Xplot) 
-p <- p + geom_line(aes(x=Latitude, y=value, colour=group))
+p <- p + geom_line(aes(x=as.numeric(Latitude), y=as.numeric(value), colour=group))
 p <- p + geom_vline(xintercept=48.5, linetype=3,alpha=0.3)
 p <- p + facet_wrap(~month,ncol=4)
-p <- p + geom_bar(data=Effplot,aes(x=as.numeric(Latitude), y=effort,fill="effort"),stat="identity", alpha=0.5 )
+#p <- p + geom_bar(data=Effplot,aes(x=as.numeric(Latitude), y=effort,fill="effort"),stat="identity", alpha=0.5 )
 #p <- p + coord_flip()
-p <- p + theme_bw()+theme(panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),axis.ticks = element_blank(), axis.text.x = element_blank(),
-        axis.title.x= element_blank())
+#p <- p + theme_bw()+theme(panel.grid.major = element_blank(),
+#        panel.grid.minor = element_blank(),axis.ticks = element_blank(), axis.text.x = element_blank(),
+#        axis.title.x= element_blank())
 p <- p + scale_colour_grey() +scale_fill_grey(name=" ") 
 p
-ggsave(file="gtg_model_example.pdf")
+#ggsave(file="gtg_model_example.pdf")
+
+
+#groups combined
+
+
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+
+tmpXplot<-data.frame(sim_gtg$propBarea[sim_gtg$propBarea[,1]>(max(sim_gtg$propBarea[,1])-12),])
+tmpXplot[,1]<-meses[tmpXplot[,1]-(max(sim_gtg$propBarea[,1])-12)]
+tmpXplot<-rename(tmpXplot, c("V1"="month", "V2"="group", "V3"= "Latitude","V4"="1", "V5"="2", "V6"= "3",
+  "V7"="4", "V8"="5", "V9"= "6","V10"="7", "V11"="8", "V12"= "9","V13"="10", "V14"="11", "V15"= "12",
+  "V16"="13", "V17"="14", "V18"= "15","V19"="16", "V20"="17", "V21"= "18","V22"="19", "V23"="20"))
+
+Xplot<-melt(tmpXplot, id=c("month","group", "Latitude"),variable.name="age")
+#Xplot<-Xplot[as.numeric(Xplot$age)>6,]
+
+Xplot$group<-as.factor(Xplot$group)
+Xplot<-arrange(transform(Xplot,month=factor(month,levels=meses)),month)
+
+
+Xplot$month<-as.numeric(Xplot$month)
+head(Xplot)
+Xplot.v<-subset(Xplot,select= value)
+Xplot.f<-subset(Xplot,select= -c(group,value))
+
+newXplot<- aggregate(x=Xplot.v,by=Xplot.f,FUN=sum)
+
+test<-newXplot[newXplot$month==1,]
+
+test[order(test$Latitude),]
+
+
+plot(test$Latitude,test$value)
+#newXplot<-newXplot[,newXplot$value>0.0]
+head(newXplot)
+
+
+p1 <- ggplot(newXplot) 
+#p <- p + geom_bar(data=newXplot,aes(x=as.numeric(Latitude), y=value, fill="value"),stat="identity", alpha=0.8)
+p1 <- p1 + geom_line(aes(x=as.numeric(Latitude), y=as.numeric(value), col=age))
+p1 <- p1 + geom_vline(xintercept=48.5, linetype=3,alpha=0.3)
+p1 <- p1 + facet_wrap(~month,ncol=4)
+#p <- p + geom_bar(data=Effplot,aes(x=as.numeric(Latitude), y=effort,fill="effort"),stat="identity", alpha=0.5 )
+#p <- p + coord_flip()
+p1 <- p1 + theme_bw()+theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),axis.ticks = element_blank(), axis.text.x = element_blank(),
+        axis.title.x= element_blank())
+#p <- p + scale_colour_grey() +scale_fill_grey(name=" ") 
+p1
 
 #===============================================================
 #===============================================================

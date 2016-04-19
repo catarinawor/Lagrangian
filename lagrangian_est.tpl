@@ -352,7 +352,7 @@ FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt )
 		switch (indmonth(ii)) {
             case 1:           	
             	
-            	Nage(ii)(sage) = (So*SB(ii-nmon)/(1.+beta*SB(ii-nmon)))*(mfexp(wt(indyr(ii))*err));
+            	Nage(ii)(sage) = (So*SB(ii-nmon)/(1.+beta*SB(ii-nmon)))*(mfexp(wt(indyr(ii))));
 
             	for(int a = sage+1;a<=nage;a++)
             	{
@@ -398,7 +398,8 @@ FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt )
 		
 		VulB(ii) = elem_prod(elem_prod(Nage(ii),va),wa);
 		SB(ii) = elem_prod(Nage(ii),fa)*wa/2;
-		
+
+		cout<<"OK after calc_numbers_at_age"<<endl;		
 
 FUNCTION void calc_effarea(const int& ii,const int& ie)
 
@@ -425,6 +426,8 @@ FUNCTION void calc_effarea(const int& ii,const int& ie)
 			//Effarea(i)(rr) = tmp2(rr)*TotEffmonth(indnatarea(rr))(indmonth(i));
 		
 		}
+
+		cout<<"OK after calc_effarea"<<endl;		
 
 FUNCTION void calc_position(const int& ii)
 
@@ -474,6 +477,8 @@ FUNCTION void calc_catage(const int& ii)
 			}
 
 		}
+
+		cout<<"OK after calc_catage"<<endl;
 
 
 
@@ -590,6 +595,8 @@ FUNCTION clean_catage
        		}	
 		}
 	}
+
+	cout<<"OK after clean_catage"<<endl;
 
 
 
