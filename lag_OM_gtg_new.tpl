@@ -699,7 +699,7 @@ FUNCTION clean_catage
        			obsCatchNatAge(p)(sage-2) = indmonth(i);
 				obsCatchNatAge(p)(sage-1) = n;
     
-				pa = value((CatchNatAge(i)(n)(sage,nage))/sum(CatchNatAge(i)(n)(sage,nage)));
+				pa = value((CatchNatAge(i)(n)(sage,nage))/sum(CatchNatAge(i)(n)(sage,nage)))+1.0e-10;
 				obsCatchNatAge(p)(sage,nage) = rmvlogistic(pa,tau_c,seed+i);
 				
 				p++;	
@@ -822,7 +822,7 @@ FUNCTION output_pin
 	ifs<<"# maxPossd \n"<< log(guess_maxPossd(tmp_maxPossd)) <<endl;
 	//ifs<<"# maxPossd \n"<< log(maxPossd) <<endl;
 	//ifs<<"#maxPossd2 "<< endl << log(4) <<endl;
-	ifs<<"#wt \n" << wt(rep_yr+1-20,nyr)*err <<endl;
+	ifs<<"#wt \n" << wt(rep_yr+1,nyr)*err <<endl;
 
 	
 	
@@ -858,7 +858,7 @@ FUNCTION output_dat
 	afs<<"# Total effort by country and year " << endl << TotEffyear_rep <<endl;
 	afs<<"# Total effort by country and month " << endl << TotEffmonth <<endl;
 	afs<<"# effPwr"<< endl << effPwr <<endl;
-	afs<<"# dMinP " << endl << 0.1e-15 <<endl;
+	afs<<"# dMinP " << endl << 1.0e-12 <<endl;
 	afs<<"# tstp month area catage " << endl << obsCatchNatAge <<endl;	
 	afs<<"# eof " << endl << 999 <<endl;
 

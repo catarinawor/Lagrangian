@@ -340,7 +340,7 @@ FUNCTION void calc_numbers_at_age(const int& ii)
 			
 					for(int rr =sarea; rr<=narea; rr++)
 					{		
-						propBarea(rr) = (cnorm(areas(rr)+0.5,PosX(g)(ii-1),varPos)-cnorm(areas(rr)-0.5,PosX(ii),varPos))(a-sage);	
+						propBarea(rr) = (cnorm(areas(rr)+0.5,PosX(ii-1),varPos)-cnorm(areas(rr)-0.5,PosX(ii-1),varPos))(a-sage);	
 					}
 
 					Nage(ii)(a) = (Nage(ii-1)(a-1)*propBarea)*mfexp(-(m_tsp+q*Effarea(ii-1)*va(a-1))) +
@@ -365,7 +365,7 @@ FUNCTION void calc_numbers_at_age(const int& ii)
 			
 					for(int rr =sarea; rr<=narea; rr++)
 					{		
-						propBarea(rr) = (cnorm(areas(rr)+0.5,PosX(ii-1),varPos)-cnorm(areas(rr)-0.5,PosX(ii),varPos))(a-sage+1);	
+						propBarea(rr) = (cnorm(areas(rr)+0.5,PosX(ii-1),varPos)-cnorm(areas(rr)-0.5,PosX(ii-1),varPos))(a-sage+1);	
 					}
 
             		Nage(ii)(a) = Nage(ii-1)(a)*propBarea*mfexp(-(m_tsp+q*Effarea(ii-1)*va(a)))+
@@ -385,10 +385,14 @@ FUNCTION void calc_effarea(const int& ii)
 		dvar_vector tmp1(sarea,narea);
 		dvar_vector tmp2(sarea,narea);
 
-		for(int r= sarea; r<=narea; r++)
-		{
-			totVBnation(ii,indnatarea(r)) += VBarea(ii)(r);
-		}
+		//for(int r= sarea; r<=narea; r++)
+		//{
+		//	totVBnation(ii,indnatarea(r)) += VBarea(ii)(r);
+		//}
+
+		for(int n=1; n<=nations;n++){
+       		totVBnation(ii,n) = sum(VBarea(ii)(ntmp1(n),ntmp1(n+1)-1));
+       	}
 
 
 		for(int rr= sarea; rr<=narea; rr++)
@@ -407,37 +411,17 @@ FUNCTION void calc_position(const int& ii)
 
 		PosX(ii) = minPos + (maxPos - minPos) * (0.5+0.5*sin(indmonth(ii)*PI/6 - mo*PI/6)); 
 
-		VBarea(ii,sarea) = VulB(ii)* (cnorm(areas(sarea)+0.5,PosX(ii),varPos));
+		//VBarea(ii,sarea) = VulB(ii)* (cnorm(areas(sarea)+0.5,PosX(ii),varPos) - cnorm(areas(sarea)-0.5,PosX(ii),varPos));
 
 
-		for(int r = sarea+1;r <= narea;r++)
+		for(int r = sarea;r <= narea;r++)
 		{
 			VBarea(ii)(r) = VulB(ii)* (cnorm(areas(r)+0.5,PosX(ii),varPos)-cnorm(areas(r)-0.5,PosX(ii),varPos));
 			NAreaAge(ii)(r) = elem_prod(Nage(ii)(sage,nage),(cnorm(areas(r)+0.5,PosX(ii),varPos)-cnorm(areas(r)-0.5,PosX(ii),varPos)));
 		}	
 
 
-		//FUNCTION void calc_effage(const int& ii)
-		//
-		//	for(int a = sage; a<=nage;a++)
-		//		{
-		//			dvar_vector propVBarea(sarea,narea);
-		//			propVBarea.initialize();
-		//
-		//			for(int rr =sarea; rr<=narea; rr++)
-		//			{		
-		//				propVBarea(rr) = (cnorm(areas(rr)+0.5,PosX(ii),varPos)-cnorm(areas(rr)-0.5,PosX(ii),varPos))(a-sage+1);
-		//				
-		//				EffNatAge(indnatarea(rr))(ii)(sage-2) = ii;
-		//				EffNatAge(indnatarea(rr))(ii)(sage-1) = indnatarea(rr);
-		//				EffNatAge(indnatarea(rr))(ii)(a) += Effarea(ii)(rr)* propVBarea(rr);
-		//			}
-		//			
-		//			Effage(ii)(a) = Effarea(ii)*propVBarea;
-		//			cout<<"sumpropvbarea"<<sum(propVBarea)<< endl;
-		//		}
-		//		cout<<"Ok after calc_effage"<< endl;
-		//		exit(1);
+		
 
 FUNCTION void calc_catage(const int& ii)
 
@@ -486,7 +470,6 @@ FUNCTION initialization
 
 
 	
-	//calc_effage(1);
 
 	calc_catage(1);
 
@@ -499,7 +482,7 @@ FUNCTION move_grow_die
 
 	for(int i=2;i<=ntstp;i++)
 	{
-		cout<<"mmmm"<<endl;
+		
 		calc_numbers_at_age(i);
 
 		maxPos.initialize();		
@@ -510,7 +493,6 @@ FUNCTION move_grow_die
 	
 		calc_effarea(i);
 		
-		//calc_effage(i);
 
 		calc_catage(i);
 		
@@ -624,11 +606,6 @@ FUNCTION output_pin
 	guess_maxPossd.fill_seqadd(0.5,0.5);
 
 
-	//tmp_mo 		= ceil(randu(rngmo)*(mo+3));
-	//tmp_cvPos	= ceil(randu(rngcvPos)*5);
-	//tmp_maxPos50= ceil(randu(rngcvPos)*9);
-	//tmp_maxPossd= ceil(randu(rngcvPos)*7);
-
 	
 
 	tmp_mo 		= rand() % 6 + 1;
@@ -658,7 +635,7 @@ FUNCTION output_pin
 	ifs<<"# maxPossd \n"<< log(guess_maxPossd(tmp_maxPossd)) <<endl;
 	//ifs<<"# maxPossd \n"<< log(maxPossd) <<endl;
 	//ifs<<"#maxPossd2 "<< endl << log(4) <<endl;
-	ifs<<"#wt \n" << wt(rep_yr+1-20,nyr)*err <<endl;
+	ifs<<"#wt \n" << wt(rep_yr+1,nyr)*err <<endl;
 
 	
 

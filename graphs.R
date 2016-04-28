@@ -529,7 +529,7 @@ tmpXplot<-rename(tmpXplot, c("V1"="month", "V2"="group", "V3"= "Latitude","V4"="
 
 Xplot<-melt(tmpXplot, id=c("month","group", "Latitude"),variable.name="age")
 
-Xplot<-Xplot[Xplot$age==5,]
+Xplot<-Xplot[Xplot$age==4,]
 #Xplot<-Xplot[Xplot$group==5,]
 Xplot$group<-as.factor(Xplot$group)
 
@@ -573,7 +573,7 @@ tmpXplot<-rename(tmpXplot, c("V1"="month", "V2"="group", "V3"= "Latitude","V4"="
   "V16"="13", "V17"="14", "V18"= "15","V19"="16", "V20"="17", "V21"= "18","V22"="19", "V23"="20"))
 
 Xplot<-melt(tmpXplot, id=c("month","group", "Latitude"),variable.name="age")
-Xplot<-Xplot[as.numeric(Xplot$age)<20,]
+#Xplot<-Xplot[as.numeric(Xplot$age)>3,]
 
 Xplot$group<-as.factor(Xplot$group)
 Xplot<-arrange(transform(Xplot,month=factor(month,levels=meses)),month)
@@ -585,7 +585,7 @@ Xplot.v<-subset(Xplot,select= value)
 Xplot.f<-subset(Xplot,select= -c(group,value))
 
 newXplot<- aggregate(x=Xplot.v,by=Xplot.f,FUN=sum)
-head()
+
 
 
 Effplot$effort<-Effplot$effort/max(Effplot$effort)*max(Xplot$value)

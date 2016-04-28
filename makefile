@@ -10,8 +10,8 @@
 
 EXEC=lagrangian_est
 DAT=lagrangian_est.dat
-OM=lag_OM_gtg_new
-SIMDAT=lag_OM_gtg_new.dat
+OM=lagrangian_OM_gtg
+SIMDAT=lagrangian_OM_gtg.dat
 SEED = seed.txt
 LAST := 100
 
