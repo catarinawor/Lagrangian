@@ -19,7 +19,7 @@ source("read.admb.R")
 
 
 sim <- read.rep("lagrangian_OM.rep")
-sim_gtg <- read.rep("lag_OM_gtg_new.rep")
+sim_gtg <- read.rep("lagrangian_OM_gtg.rep")
 est <- read.rep("lagrangian_est.rep")
 
 
@@ -36,21 +36,22 @@ barplot(t(matrix(c(true_pars,est_pars),ncol=2)),names.arg = c("mo","cvPos","maxP
 names(sim)
 names(sim_gtg)
 
+head(sim_gtg$VulB)
 
-dim(sim$VulB) 
 
 vbgtg<-matrix(0,ncol=length(sim_gtg$sage:sim_gtg$nage),nrow=length(sim_gtg$indyr))
 
+
 for(i in 1:length(sim_gtg$indyr)){
-    vbgtg[i,]<-apply(sim_gtg$VulB[sim_gtg$VulB[,1]==i,-c(1,2)],2,sum)
+    vbgtg[i,]<- apply(sim_gtg$VulB[sim_gtg$VulB[,1]==i,-c(1,2)],2,sum)
   }
 
 #par(mfrow=c(1,2))
 plot(apply(sim$VulB,1,sum), ylim=c(0,max(apply(sim$VulB,1,sum))),type="l")
 lines(apply(vbgtg,1,sum), col="red")
 # plot(apply(sim_gtg$VulB[,-1],1,sum),ylim=c(0,max(apply(sim_gtg$VulB[,-1],1,sum))))
-head(sim$VulB)
-head(sim$Nage)
+#head(sim$VulB)
+#head(sim$Nage)
 
 
 plot(apply(sim$VulB,1,sum)-apply(vbgtg,1,sum),type="l")
@@ -75,10 +76,17 @@ meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "No
 #Plot difference catches in the last 30 years
 #============================================================================
 
+dim(sim$"CatchNatAge")
+dim(est$"CatchNatAge")
+dim(sim_gtg$"CatchNatAge")
 
 CatageFRall<-data.frame(sim$"CatchNatAge"[sim$"CatchNatAge"[,1]>(max(sim$"CatchNatAge"[,1])-12*30),])
 CatageFRestall<-data.frame(est$"CatchNatAge"[est$"CatchNatAge"[,1]>(max(est$"CatchNatAge"[,1])-12*30),])
 CatageFRgtgall<-data.frame(sim_gtg$"CatchNatAge"[sim_gtg$"CatchNatAge"[,1]>(max(sim_gtg$"CatchNatAge"[,1])-12*30),])
+
+head(CatageFRall)
+head(CatageFRall)
+head(CatageFRgtgall)
 
 CatageFRall[,1]<-rep(meses,30)[CatageFRall[,1]-(max(sim$"CatchNatAge"[,1])-12*30)]
 CatageFRestall[,1]<-rep(meses,30)[CatageFRestall[,1]-(max(est$"CatchNatAge"[,1])-12*30)]
@@ -96,12 +104,8 @@ CatageFRgtgall<-rename(CatageFRgtgall, c("V1"="month", "V2"="area", "V3"="1", "V
   "V6"="4", "V7"="5", "V8"= "6","V9"="7", "V10"="8", "V11"= "9","V12"="10", "V13"="11", "V14"= "12",
   "V15"="13", "V16"="14", "V17"= "15","V18"="16", "V19"="17", "V20"= "18","V21"="19", "V22"="20"))
 
-
-
 # bias in gtg estimation
-
-
-biasCtgtg<-cbind(CatageFRgtgall[,c(1,2)],((CatageFRestall[,-c(1,2)]-CatageFRgtgall[,-c(1,2)])/CatageFRgtgall[,-c(1,2)])*100)
+biasCtgtg<-cbind(CatageFRgtgall[,c(1,2)],((CatageFRestall[,-c(1,2)]-CatageFRgtgall[,-c(1,2)])/(CatageFRgtgall[,-c(1,2)]))*100)
 
 biasCNplot<-melt(biasCtgtg, id=c("month","area"),variable.name="age")
 biasCNplot<-arrange(transform(biasCNplot,month=factor(month,levels=meses)),month)
@@ -111,7 +115,7 @@ for(i in 1:(ncol(biasCNplot))){
   biasCNplot[is.nan(biasCNplot[,i]),i] <- NA
 }
 
-
+summary(biasCNplot)
 head(biasCNplot)
 
 p <- ggplot(biasCNplot) 
@@ -170,6 +174,7 @@ CNplotest<-arrange(transform(CNplotest,month=factor(month,levels=meses)),month)
 CNplotgtg<-melt(CatageFRgtg, id=c("month","area"),variable.name="age")
 CNplotgtg<-arrange(transform(CNplotgtg,month=factor(month,levels=meses)),month)
 
+head(CNplot)
 
 p <- ggplot(CNplot) 
 #p <- p + geom_line(aes(x=as.numeric(area), y=value, colour=age, alpha=0.5))
@@ -234,64 +239,7 @@ for(a in 1:length(sim$sage:sim$nage)){
 #Compare OM- simple and gtg 
 #============================================================================
 
-names(sim)
 
-
-
-
-
-
-
-
-
-
-
-indAyr<-rep(1:sim$fisharea,length(sim$syr:sim$nyr))
-
-
-
-
-
-
-#Catch of each nation 
-CN1sim<-apply(sim$"CatchNatAge"[2161:3600,],1,sum)[indAyr==1]
-CN1est<-apply(est$"CatchNatAge",1,sum)[indAyr==1]
-CN2sim<-apply(sim$"CatchNatAge"[2161:3600,],1,sum)[indAyr==2]
-CN2est<-apply(est$"CatchNatAge",1,sum)[indAyr==2]
-CN3sim<-apply(sim$"CatchNatAge"[2161:3600,],1,sum)[indAyr==3]
-CN3est<-apply(est$"CatchNatAge",1,sum)[indAyr==3]
-
-
-plot(rep(1:12,40),CN1sim, type="l")
-lines(rep(1:12,40),CN1est,col="red")
-
-CN1pbias<-((CN1est-CN1sim)/CN1sim)*100
-CN2pbias<-((CN2est-CN2sim)/CN2sim)*100
-CN3pbias<-((CN3est-CN3sim)/CN3sim)*100
-
-
-par(mfrow=c(3,1))
-boxplot(matrix(CN1pbias, ncol=12,byrow=T), ylim=c(-100,400))
-abline(h=0, col = "red")
-boxplot(matrix(CN2pbias, ncol=12,byrow=T),ylim=c(-100,400))
-abline(h=0, col = "red")
-boxplot(matrix(CN3pbias, ncol=12,byrow=T),ylim=c(-100,400))
-abline(h=0, col = "red")
-
-par(mfrow=c(3,1))
-boxplot(matrix(CN1pbias, ncol=12,byrow=T), ylim=c(-20,20))
-abline(h=0, col = "red")
-boxplot(matrix(CN2pbias, ncol=12,byrow=T),ylim=c(-20,20))
-abline(h=0, col = "red")
-boxplot(matrix(CN3pbias, ncol=12,byrow=T),ylim=c(-20,20))
-abline(h=0, col = "red")
-
-plot(CN1pbias,CN1sim)
-plot(CN1pbias,CN1est)
-plot(CN1est,CN1sim,ylim=range(CN1sim),xlim=range(CN1sim))
-
-CN1est[which.max(CN1pbias)]
-CN1sim[which.max(CN1pbias)]
 
 
 
@@ -551,11 +499,11 @@ p <- ggplot(Xplot)
 p <- p + geom_line(aes(x=as.numeric(Latitude), y=as.numeric(value), colour=group))
 p <- p + geom_vline(xintercept=48.5, linetype=3,alpha=0.3)
 p <- p + facet_wrap(~month,ncol=4)
-#p <- p + geom_bar(data=Effplot,aes(x=as.numeric(Latitude), y=effort,fill="effort"),stat="identity", alpha=0.5 )
+p <- p + geom_bar(data=Effplot,aes(x=as.numeric(Latitude), y=effort,fill="effort"),stat="identity", alpha=0.5 )
 #p <- p + coord_flip()
-#p <- p + theme_bw()+theme(panel.grid.major = element_blank(),
-#        panel.grid.minor = element_blank(),axis.ticks = element_blank(), axis.text.x = element_blank(),
-#        axis.title.x= element_blank())
+p <- p + theme_bw()+theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),axis.ticks = element_blank(), axis.text.x = element_blank(),
+        axis.title.x= element_blank())
 p <- p + scale_colour_grey() +scale_fill_grey(name=" ") 
 p
 #ggsave(file="gtg_model_example.pdf")

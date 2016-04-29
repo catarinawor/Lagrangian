@@ -396,7 +396,7 @@ FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt )
 		VulB(ii) = elem_prod(elem_prod(Nage(ii),va),wa);
 		SB(ii) = elem_prod(Nage(ii),fa)*wa/2;
 
-		cout<<"OK after calc_numbers_at_age"<<endl;		
+		//cout<<"OK after calc_numbers_at_age"<<endl;		
 
 FUNCTION void calc_effarea(const int& ii,const int& ie)
 
@@ -405,10 +405,7 @@ FUNCTION void calc_effarea(const int& ii,const int& ie)
 		tmp1.initialize();
 		tmp2.initialize();
 
-		//for(int r= sarea; r<=narea; r++)
-		//{
-		//	NationVulB(ii,indnatarea(r)) += VBarea(ii)(r);
-		//}
+		
 
 		for(int n=1; n<=nations;n++){
        		NationVulB(ii,n) = sum(VBarea(ii)(ntmp1(n),ntmp1(n+1)-1));
@@ -420,18 +417,12 @@ FUNCTION void calc_effarea(const int& ii,const int& ie)
 		{
 			
 			tmp1(rr)= pow((VBarea(ii)(rr)/(NationVulB(ii)(indnatarea(rr))+0.01))+0.0000001,fbeta) * effPwr(rr);	
-			//tmp1(rr)= (VBarea(ii)(rr)/(NationVulB(ii)(indnatarea(rr))+0.01)) * effPwr(rr);	
 			tmp2(rr) = tmp1(rr)*TotEffyear(indfisharea(rr))(indyr(ie));
 			Effarea(ii)(rr) = tmp2(rr)*TotEffmonth(indfisharea(rr))(indmonth(ii));
 
-			//survey option
-			//tmp1(rr)= 0.3;
-			//tmp2(rr) = tmp1(rr)*TotEffyear(indnatarea(rr))(indyr(i));
-			//Effarea(i)(rr) = tmp2(rr)*TotEffmonth(indnatarea(rr))(indmonth(i));
-		
 		}
 
-		cout<<"OK after calc_effarea"<<endl;		
+		//cout<<"OK after calc_effarea"<<endl;		
 
 FUNCTION void calc_position(const int& ii)
 
@@ -467,7 +458,7 @@ FUNCTION void calc_catage(const int& ii)
 
 		}
 
-		cout<<"OK after calc_catage"<<endl;
+		//cout<<"OK after calc_catage"<<endl;
 
 
 
@@ -587,7 +578,7 @@ FUNCTION clean_catage
 		}
 	}
 
-	cout<<"OK after clean_catage"<<endl;
+	//cout<<"OK after clean_catage"<<endl;
 
 
 
@@ -646,7 +637,7 @@ FUNCTION calc_obj_func
 
 		}
 		
-		cout<<"nlvec is"<<nlvec<<endl;
+		//cout<<"nlvec is"<<nlvec<<endl;
 	//exit(1);
 
 	

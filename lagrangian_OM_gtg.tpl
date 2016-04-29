@@ -16,7 +16,7 @@ DATA_SECTION
 	LOC_CALCS
 		ifstream ifs( "seed.txt" ); // if this file is available
 		ifs>>seed; //read in the seed
-		seed += 1; // add 10 to the seed
+		seed += 1; // add 1 to the seed
 		ofstream ofs( "seed.txt" ); //put out to seed.txt
 		ofs<<seed<<endl; //the new value of the seed
 	END_CALCS
@@ -318,7 +318,7 @@ PARAMETER_SECTION
  	 	
  	
 	3darray Nage(1,ngroup,1,ntstp,sage-2,nage); 
- 	3darray VulB(1,ngroup,1,ntstp,sage-1,nage);
+ 	3darray VulB(1,ngroup,1,ntstp,sage-2,nage);
 	
  	3darray VBarea(1,ngroup,1,ntstp,sarea,narea);
  	3darray totB(1,ngroup,1,ntstp,sage,nage);
@@ -326,7 +326,7 @@ PARAMETER_SECTION
  	3darray PosX(1,ngroup,1,ntstp,sage-1,nage);
  	3darray NAreaAge(1,ntstp,sarea,narea,sage,nage);
  	3darray CatchAreaAge(1,ntstp,sarea,narea,sage,nage);
- 	3darray CatchNatAge(1,ntstp,1,fisharea,sage,nage);
+ 	3darray CatchNatAge(1,ntstp,1,fisharea,sage-2,nage);
  	3darray EffNatAge(1,fisharea,1,ntstp,sage-2,nage);
  	
 
@@ -467,6 +467,7 @@ FUNCTION void calc_numbers_at_age(const int& ii)
         	}
             	
 
+        	VulB(g)(ii)(sage-2) = ii;
         	VulB(g)(ii)(sage-1) = g;
 	
 			VulB(g)(ii)(sage,nage) = elem_prod(elem_prod(Nage(g)(ii)(sage,nage),va),wa);
@@ -544,10 +545,16 @@ FUNCTION void calc_position(const int& ii)
 FUNCTION void calc_catage(const int& ii)
 
 		int a,r;
-		for(a = sage; a<=nage;a++)
+		
+		for(int r=sarea;r<=narea;r++)
 		{
-			for(int r=sarea;r<=narea;r++)
-			{		
+
+			CatchNatAge(ii)(indfisharea(r))(sage-2) = ii;
+			CatchNatAge(ii)(indfisharea(r))(sage-1) = indfisharea(r);
+			
+			for(int a = sage; a<=nage;a++)
+			{
+
 				CatchAreaAge(ii)(r)(a) = q*Effarea(ii)(r)*va(a)/(q*Effarea(ii)(r)*va(a)+m_tsp)*(1-mfexp(-(q*Effarea(ii)(r)*va(a)+m_tsp)))*NAreaAge(ii)(r)(a);
 				CatchNatAge(ii)(indfisharea(r))(a) += CatchAreaAge(ii)(r)(a);
 
@@ -578,7 +585,8 @@ FUNCTION initialization
 			Nage(g)(1)(a) = Nage(g)(1)(a-1) * mfexp(-za(a-1));
 		}
 		Nage(g)(1)(nage) /= (1.-mfexp(-za(nage)));
-            		          	
+
+		VulB(g)(1)(sage-2) = 1;         		          	
         VulB(g)(1)(sage-1) = g;
 		VulB(g)(1)(sage,nage) = elem_prod(elem_prod(Nage(g)(1)(sage,nage),va),wa);
 	
@@ -719,9 +727,7 @@ FUNCTION output_pin
 	random_number_generator rngmaxPossd(seed);
 	
 	double tmp_mo;
-	double tmp_cvPos;
-	double tmp_maxPos50;
-	double tmp_maxPossd;
+
 	
 	dvector guess_cvPos(1,6);
 	dvector guess_maxPos50(1,10);
@@ -733,31 +739,19 @@ FUNCTION output_pin
 	guess_maxPossd.fill_seqadd(0.5,0.5);
 
 	
-	tmp_mo 		= rand() % 6 + 1;
-	tmp_cvPos	= rand() % 6 + 1;
-	tmp_maxPos50= rand() % 10 + 1;
-	tmp_maxPossd= rand() % 8 + 1;
-
-	
-	ofstream ifs("lagrangian_est_gtg.pin");
-
-	//ifs<<"#log_mo \n "  << log(mo) <<endl;
-	//ifs<<"# cvPos " << endl << log(cvPos) <<endl;
-	//ifs<<"# maxPos50 \n" << log(maxPos50) <<endl;
-	//ifs<<"# maxPossd \n"<< log(maxPossd) <<endl;
-	//ifs<<"#wt \n" << wt(rep_yr-20+1,nyr)*err <<endl;
-
+	tmp_mo 		= ceil(randu(rngmo)*(mo+3));
+		
+	ofstream ifs("lagrangian_est.pin");
 
 	ifs<<"#log_mo \n "  << log(tmp_mo) <<endl;
-	ifs<<"#cvPos \n" << log(guess_cvPos(tmp_cvPos)) <<endl;	
-	ifs<<"# maxPos50 \n" << log(guess_maxPos50(tmp_maxPos50)) <<endl;
-	ifs<<"# maxPossd \n"<< log(guess_maxPossd(tmp_maxPossd)) <<endl;
-	ifs<<"#wt \n" << wt(rep_yr-20+1,nyr)*err <<endl;
-
-	
-	
-
-	
+	//ifs<<"#log_mo \n "  << log(mo) <<endl;
+	ifs<<"#cvPos \n" << log(guess_cvPos(ceil(randu(rngcvPos)*5))) <<endl;	
+	//ifs<<"#cvPos \n" << log(cvPos) <<endl;	
+	ifs<<"# maxPos50 \n" << log(guess_maxPos50(ceil(randu(rngmaxPos50)*9))) <<endl;
+	//ifs<<"# maxPos50 \n" << log(maxPos50) <<endl;
+	ifs<<"# maxPossd \n"<< log(guess_maxPossd(ceil(randu(rngmaxPossd)*7))) <<endl;
+	//ifs<<"# maxPossd \n"<< log(maxPossd) <<endl;
+	ifs<<"#wt \n" << wt(rep_yr+1,nyr)*err <<endl;
 
 
 FUNCTION output_dat
