@@ -407,7 +407,7 @@ FUNCTION incidence_functions
 	maxPos.initialize();
 	calcmaxpos();
 	varPos=maxPos*cvPos;
-	varPosg=varPos/(ngroup/3.0);
+	varPosg=sqrt((varPos*varPos)/(ngroup*ngroup*2))
 	//cout<<"Ok after incidence_functions"<<endl;
 
 	
@@ -640,7 +640,7 @@ FUNCTION move_grow_die
 		maxPos.initialize();	
 		calcmaxpos();
 		varPos=maxPos*cvPos;
-		varPosg=varPos/(ngroup/3.0);
+		varPosg=sqrt((varPos*varPos)/(ngroup*ngroup*2));
 
 		calc_position(i);
 		calc_effarea(i,i);
@@ -701,7 +701,7 @@ FUNCTION calc_obj_func
 				//O(i) = (obsCatchNatAge(ii)(sage,nage)+0.1e-30)/sum(obsCatchNatAge(ii)(sage,nage)+0.1e-5);
 				//P(i) = (predCatchNatAge(ii)(sage,nage)+0.1e-30)/sum(predCatchNatAge(ii)(sage,nage)+0.1e-5);
 				O(i) = (obsCatchNatAge(ii)(sage,nage))/sum(obsCatchNatAge(ii)(sage,nage));
-				P(i) = (predCatchNatAge(ii)(sage,nage))/sum(predCatchNatAge(ii)(sage,nage))+0.1e-10;
+				P(i) = (predCatchNatAge(ii)(sage,nage))/sum(predCatchNatAge(ii)(sage,nage)+0.01)+0.000001;
 				
 				//cout<<"O("<<i<<")"<<O(i)<<endl;
 				//cout<<"P("<<i<<")"<<P(i)<<endl;

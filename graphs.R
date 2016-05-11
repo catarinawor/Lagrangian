@@ -432,9 +432,7 @@ ggsave(file="model_example.pdf")
 #========================================================================================
 # GTG version
 #========================================================================================
-
 rm(list=ls()); 
-
 
 library(plyr)
 library(data.table)
@@ -477,11 +475,12 @@ tmpXplot<-rename(tmpXplot, c("V1"="month", "V2"="group", "V3"= "Latitude","V4"="
 
 Xplot<-melt(tmpXplot, id=c("month","group", "Latitude"),variable.name="age")
 
-Xplot<-Xplot[Xplot$age==4,]
-#Xplot<-Xplot[Xplot$group==5,]
+
 Xplot$group<-as.factor(Xplot$group)
 
 Xplot<-arrange(transform(Xplot,month=factor(month,levels=meses)),month)
+
+
 
 tmpEffplot<-data.frame(month= 1:12,matrix(sim_gtg$Effarea[(nrow(sim_gtg$Effarea)-11):nrow(sim_gtg$Effarea),],ncol=31,
   dimnames=list(1:12,(sim_gtg$sarea:sim_gtg$narea))))
@@ -494,12 +493,17 @@ Effplot$Latitude<-as.numeric(Effplot$Latitude)+sim_gtg$sarea-1
 df<-merge(x = Xplot, y = Effplot, by = c("Latitude","month"), all = TRUE)
 head(df)
 
+Xplot<-Xplot[Xplot$age==5,]
+Effplot$effort<-Effplot$effort/max(Effplot$effort)*max(Xplot$value)
+
+
+
 #setwd("/Users/catarinawor/Documents/hake/Thesis/figs/chap2")
 p <- ggplot(Xplot) 
 p <- p + geom_line(aes(x=as.numeric(Latitude), y=as.numeric(value), colour=group))
 p <- p + geom_vline(xintercept=48.5, linetype=3,alpha=0.3)
 p <- p + facet_wrap(~month,ncol=4)
-p <- p + geom_bar(data=Effplot,aes(x=as.numeric(Latitude), y=effort,fill="effort"),stat="identity", alpha=0.5 )
+#p <- p + geom_bar(data=Effplot,aes(x=as.numeric(Latitude), y=effort,fill="effort"),stat="identity", alpha=0.5 )
 #p <- p + coord_flip()
 p <- p + theme_bw()+theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),axis.ticks = element_blank(), axis.text.x = element_blank(),
@@ -545,17 +549,19 @@ head(Effplot)
 
 meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
 newXplot$month<-meses[newXplot$month]
+newXplot<-newXplot[newXplot$age==5,]
 
-
+setwd("/Users/catarinawor/Documents/hake/Thesis/figs/chap2")
 p1 <- ggplot(Effplot) 
-p1 <- p1+   geom_bar(aes(x=Latitude, y=effort),stat="identity")
+p1 <- p1+   geom_bar(aes(x=Latitude, y=effort),stat="identity", fill="gray50")
 p1 <- p1 + facet_wrap(~month,ncol=4)
-p1 <- p1 + geom_line(data=newXplot, aes(x=as.numeric(Latitude), y=as.numeric(value), col=age))
+p1 <- p1 + geom_line(data=newXplot, aes(x=as.numeric(Latitude), y=as.numeric(value)))
 p1 <- p1 + geom_vline(xintercept=48.5, linetype=3,alpha=0.3)
 p1 <- p1 + theme_bw()+theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),axis.ticks = element_blank(), axis.text.x = element_blank(),
         axis.title.x= element_blank())
 p1
+ggsave(file="gtg_example_graph.pdf")
 
 #===============================================================
 #===============================================================
@@ -566,13 +572,28 @@ p1
 
 true_pars_gtg <- c(sim_gtg$"mo",sim_gtg$"cvPos",sim_gtg$"maxPos50",sim_gtg$"maxPossd")
 
-indpar<-c(1,2,3,3,3,4)
+indpar<-c(1,2,3,4)
 
-#parameter estimates
-.SIMDIRSGTG   <- c("/Users/catarinawor/Documents/Lagrangian/SimResult_gtg_3areas_tau1",
-  "/Users/catarinawor/Documents/Lagrangian/SimResult_gtg_3areas_tau04",
-  "/Users/catarinawor/Documents/Lagrangian/SimResult_gtg_5areas_tau1",
-  "/Users/catarinawor/Documents/Lagrangian/SimResult_gtg_5areas_tau04")
+
+#========================================================================
+# Description of the list sims
+# [[1]] -> sim- read.rep("lagrangian_OM.rep") 
+# [[2]] -> est -read.rep("lagrangian_est.rep")
+# [[3]] -> par - read.fit("lagrangian_est")
+# [[4]] -> seed
+# [[5]] -> pin - in a list
+#========================================================================
+
+
+.SIMDIRSGTG   <- c("/Users/catarinawor/Documents/Lagrangian/SimResult_gtg_5areas_tau1",
+                   "/Users/catarinawor/Documents/Lagrangian/SimResult_gtg_3areas_tau1",
+                   #"/Users/catarinawor/Documents/Lagrangian/SimResult_3areas_tau1"
+                    #,"/Users/catarinawor/Documents/Lagrangian/SimResult_3areas_tau04",
+                    "/Users/catarinawor/Documents/Lagrangian/SimResult_5areas_tau1"
+                    #,"/Users/catarinawor/Documents/Lagrangian/SimResult_5areas_tau04"
+                   )
+
+
 
 .SIMNAME<-list(length(.SIMDIRSGTG))
 
@@ -608,14 +629,14 @@ for( i in 1:length(.SIMDIRSGTG)){
     tmp_initvals[j,]<-exp(unlist(sims[[5]][1:4]))
    }
 
-  tmp_estn<- tmp_estn[tmp_maxgrad<=1.0000e-04,]
-  tmp_pbias<- tmp_pbias[tmp_maxgrad<=1.0000e-04,]
+  tmp_estn<- tmp_estn[tmp_maxgrad<=1.0000e-02,]
+  tmp_pbias<- tmp_pbias[tmp_maxgrad<=1.0000e-02,]
   
   estn_gtg[[i]]<-tmp_estn
   pbias_gtg[[i]]<-tmp_pbias
   maxgrad_gtg[[i]]<-tmp_maxgrad
-  initvals_gtg[[i]]<-tmp_initvals[tmp_maxgrad<=1.0000e-04,]
-  initvals_bad_gtg[[i]]<-tmp_initvals[tmp_maxgrad>1.0000e-04,]
+  initvals_gtg[[i]]<-tmp_initvals[tmp_maxgrad<=1.0000e-02,]
+  initvals_bad_gtg[[i]]<-tmp_initvals[tmp_maxgrad>1.0000e-02,]
 
 
 }
@@ -630,76 +651,153 @@ titulos<-c("3 areas, tau=1.0","3 areas, tau=0.4","5 areas, tau=1.0","5 areas, ta
 
 
 
-par(mfcol=c(1,1))
+par(mfcol=c(1,3))
 for( i in 1:length(.SIMDIRSGTG)){
   boxplot(pbias_gtg[[i]],names= c(expression("t"[0]),expression("cv"),
-    expression("a"[50,s]),expression("a"[50,m]),expression("a"[50,f]),expression("sd"["X"["max"]))
-    ,ylim=c(-10,10),main=" ")
+    expression("a"[50,s]),expression("sd"["X"["max"]])),ylim=c(-100,100),main=" ")
   abline(h=0)
   text(4, y = 8, labels = nrow(pbias_gtg[[i]]))
 }
 
 
 
+#========================================================================================
+# simulation catches
+#========================================================================================
+
+#grapgs for one simulation and all years
+names(sims[[1]])
+dim(sims[[1]]$"CatchNatAge")[]
+dim(sims[[2]]$"CatchNatAge")
+
+head(sims[[1]]$"CatchNatAge")
+sum(sims[[1]]$"CatchNatAge"[,1]>(sims[[1]]$"rep_yr"*sims[[1]]$"nmon"))
+
+simcat<-sims[[1]]$"CatchNatAge"[sims[[1]]$"CatchNatAge"[,1]>(sims[[1]]$"rep_yr"*ntmon),-c(1,2)]
+    estcat<-sims[[2]]$"CatchNatAge"[,-c(1,2)]
+
+    sum_simcat<-apply(simcat,1,sum)
+    sum_estcat<-apply(estcat,1,sum)
+
+    length(sum_simcat)
+    length(sum_estcat)
+
+    biascat<-((sum_estcat-sum_simcat)/sum_simcat)*100
+    biascat[-biascat=="NaN"]<-NA
+
+    df<-data.frame(year=sims[[2]]$"CatchNatAge"[,1],area=sims[[2]]$"CatchNatAge"[,2],bias=biascat)
+    
+
+    head(df)
+
+    p <- ggplot(df, aes(y=bias,x=as.factor(area))) 
+    p <- p + geom_boxplot()
+    p
+#========================================================================================
+
+#graphs for all simulations and last year
+#========================================================================
+# Description of the list sims
+# [[1]] -> sim- read.rep("lagrangian_OM.rep") 
+# [[2]] -> est -read.rep("lagrangian_est.rep")
+# [[3]] -> par - read.fit("lagrangian_est")
+# [[4]] -> seed
+# [[5]] -> pin - in a list
+#========================================================================
 
 
 
+cat_gtg<-list(length(.SIMDIRSGTG))
 
 
-
-for( i in 1:length(.SIMDIRS)){
-  .SIMNAME[[i]]   <- list.files(.SIMDIRS[i],pattern="\\.Rdata", full.name=TRUE)
+for( i in 1:length(.SIMDIRSGTG)){
+  .SIMNAME[[i]]   <- list.files(.SIMDIRSGTG[i],pattern="\\.Rdata", full.name=TRUE)
   
-  tmp_estn<-matrix(NA,nrow=length(.SIMNAME[[i]]),ncol=4)
-  tmp_pbias<-matrix(NA,nrow=length(.SIMNAME[[i]]),ncol=4)
-  tmp_maxgrad<-vector(length=length(.SIMNAME[[i]]))
-  tmp_initvals<-matrix(NA,nrow=length(.SIMNAME[[i]]),ncol=4)
-  
-
   for( j in 1:length(.SIMNAME[[i]])){
     load(.SIMNAME[[i]][j])
 
-    #parameters
-    tmp_estn[j,]<-exp(sims[[3]]$est)
-    tmp_pbias[j,]<-((round(tmp_estn[j,],2)-true_pars)/true_pars)*100
-    tmp_maxgrad[j]<-sims[[3]]$maxgrad
-    tmp_initvals[j,]<-exp(unlist(sims[[5]][1:4]))
+    
+    ntmon<-sims[[1]]$"nmon"-sims[[1]]$"smon"+1
+
+    #simulated catches
+
+    simcat<-sims[[1]]$"CatchNatAge"[sims[[1]]$"CatchNatAge"[,1]>(max(sims[[1]]$"CatchNatAge"[,1])-120),-c(1,2)]
+    estcat<-sims[[2]]$"CatchNatAge"[sims[[2]]$"CatchNatAge"[,1]>(max(sims[[2]]$"CatchNatAge"[,1])-120),-c(1,2)]
+
+    sum_simcat<-apply(simcat,1,sum)
+    sum_estcat<-apply(estcat,1,sum)
+
+    #print(length(sum_simcat))
+    #print(length(sum_estcat))
+    
+
+
+    biascat<-((sum_estcat-sum_simcat)/sum_simcat)*100
+    biascat[-biascat=="NaN"]<-NA
+
+    area<-sims[[1]]$"CatchNatAge"[sims[[1]]$"CatchNatAge"[,1]>(max(sims[[1]]$"CatchNatAge"[,1])-120),2]
+
+    
+    df<-data.frame(scn=rep(i,length(biascat)),iter=rep(j,length(biascat)),area,bias=biascat)
+    
+    if(j==1){
+      tdf<-df
+    }else{
+      tdf<-rbind(tdf,df)
+    }
+    
+    
    }
-
-  tmp_estn<- tmp_estn[tmp_maxgrad<=1.0000e-04,]
-  tmp_pbias<- tmp_pbias[tmp_maxgrad<=1.0000e-04,]
   
-  estn[[i]]<-tmp_estn
-  pbias[[i]]<-tmp_pbias
-  maxgrad[[i]]<-tmp_maxgrad
-  initvals[[i]]<-tmp_initvals[tmp_maxgrad<=1.0000e-04,]
-  initvals_bad[[i]]<-tmp_initvals[tmp_maxgrad>1.0000e-04,]
-
+    
+    cat_gtg[[i]]<-tdf
+  
 
 }
 
+warnings()
+length(cat_gtg)
+head(cat_gtg[[1]])
+summary(cat_gtg[[4]])
+
+cat_gtg[[4]]$area
+
+test<-rbind(cat_gtg[[1]],cat_gtg[[2]],cat_gtg[[3]])
+
+p <- ggplot(test, aes(y=bias,x=as.factor(area))) 
+p <- p + geom_boxplot()
+p <- p + facet_wrap(~scn,ncol=2)
+p <- p + theme_bw()
+p <- p + scale_y_continuous(limits=c(-100,100))
+
+p
+
+
+mydf<-rbind(cat_gtg[[1]],cat_gtg[[2]],cat_gtg[[3]],cat_gtg[[4]],cat_gtg[[5]])
+
+summary(mydf)
+
+summary(mydf)
+p <- ggplot(mydf, aes(y=bias,x=as.factor(area))) 
+p <- p + geom_boxplot()
+p <- p + facet_wrap(~as.factor(scn),ncol=2)
+p <- p + theme_bw()
+p <- p + scale_y_continuous(limits=c(-100,100))
+
+p
+
+#========================================================================================
+
+
+#========================================================================================
+# Old version
+#========================================================================================
 
 
 
 
 
 
-#End of gtg plotting
-#===============================================================
-#Weight at age plotting
-
-
-WA<-c(0.13,0.41,0.47,0.48,0.54,0.57,0.62,0.66,0.72,0.70,1.16,1.02,0.95,0.97,1.06,1.06,1.06,1.06,1.06,1.06)
-plot(WA)
-lines(WA+0.1)
-lines(WA-0.1, col="blue")
-
-
-#VBplot<-sim$VBarea[(nrow(sim$PosX)-11):nrow(sim$PosX),]
-#for(g in 1:sim_gtg$ngroup){
-#  PosXplot[1:12+(12*(g-1))]<-(sim_gtg$PosX[sim_gtg$PosX[,1]==g,5])[sim_gtg$indyr==max(sim_gtg$indyr)]
-#
-#}
 
 x<-sim_gtg$sarea:sim_gtg$narea
 propXplot<-matrix(NA, nrow=12*sim_gtg$ngroup,ncol=length(x)+2)

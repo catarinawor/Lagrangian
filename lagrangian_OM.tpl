@@ -519,7 +519,7 @@ FUNCTION clean_catage
 				obsCatchNatAge(p)(sage-1) = n;
        			
        			//non-survey option
-				pa = value((CatchNatAge(i)(n)(sage,nage))/sum(CatchNatAge(i)(n)(sage,nage)));
+				pa = value((CatchNatAge(i)(n)(sage,nage))/sum(CatchNatAge(i)(n)(sage,nage)+0.01))+0.000001;
 				
 				//survey option
 				//pa = elem_prod(Nage(i)(sage,nage),va(sage,nage))

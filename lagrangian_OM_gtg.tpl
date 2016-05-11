@@ -16,7 +16,7 @@ DATA_SECTION
 	LOC_CALCS
 		ifstream ifs( "seed.txt" ); // if this file is available
 		ifs>>seed; //read in the seed
-		seed += 1; // add 1 to the seed
+		seed += 10; // add 1 to the seed
 		ofstream ofs( "seed.txt" ); //put out to seed.txt
 		ofs<<seed<<endl; //the new value of the seed
 	END_CALCS
@@ -90,7 +90,7 @@ DATA_SECTION
 		
 		if( eof != 999 )
 		{
-			cout<<"mo "<<mo<<endl;
+			cout<<"TotEffyear "<<TotEffyear<<endl;
 			cout<<"effPwr "<<effPwr<<endl;
 			cout<<"Error reading data.\n Fix it."<<endl;
 			cout<< "eof is: "<<eof<<endl;
@@ -376,7 +376,7 @@ FUNCTION dvar_vector calc_InitPos_gtg()
 	for(int g=2; g<=ngroup ;g++)
 	{
 		Xtemp(g)=value(Xini(g)*varPos(sage));
-		prop_ng(g) = cnorm(Xtemp(g),inimu,varPos)(sage)-cnorm(Xtemp(g-1),inimu,varPos)(sage);
+		prop_ng(g) = cnorm(Xtemp(g)+0.5,inimu,varPos)(sage)-cnorm(Xtemp(g-1)-0.5,inimu,varPos)(sage);
 	}
 
 	prop_ng = prop_ng/sum(prop_ng);
@@ -403,7 +403,7 @@ FUNCTION incidence_functions
 	maxPos.initialize();
 	calcmaxpos();
 	varPos=maxPos*cvPos;
-	varPosg=sqrt((varPos*varPos)/(ngroup*ngroup*2));
+	varPosg=sqrt((varPos*varPos)/(ngroup*ngroup));
 
 	//cout<<"Ok after incidence_functions"<<endl;  
 
@@ -498,7 +498,7 @@ FUNCTION void calc_effarea(const int& ii)
 
 	for(int r= sarea; r<=narea; r++)
 	{
-		tmp1(r)= pow((tVBarea(ii)(r)/((NationVulB(ii)(indnatarea(r)))+1))+0.0000001,fbeta) * effPwr(r);
+		tmp1(r)= pow((tVBarea(ii)(r)/((NationVulB(ii)(indnatarea(r)))+0.01))+0.0000001,fbeta) * effPwr(r);
 		tmp2(r) = tmp1(r)*TotEffyear(indfisharea(r))(indyr(ii));
 		Effarea(ii)(r) = tmp2(r)*TotEffmonth(indfisharea(r))(indmonth(ii));
 	}
@@ -618,7 +618,7 @@ FUNCTION move_grow_die
 		maxPos.initialize();		
 		calcmaxpos();
 		varPos=maxPos*cvPos;
-		varPosg=sqrt((varPos*varPos)/(ngroup*ngroup*2));
+		varPosg=sqrt((varPos*varPos)/(ngroup*ngroup));
 
 		
 		calc_position(i);
@@ -650,11 +650,13 @@ FUNCTION clean_catage
        			obsCatchNatAge(p)(sage-3) = i;
        			obsCatchNatAge(p)(sage-2) = indmonth(i);
 				obsCatchNatAge(p)(sage-1) = n;
-       			pa = value((CatchNatAge(i)(n)(sage,nage))/sum(CatchNatAge(i)(n)(sage,nage)))+0.1e-10;
-				
-				obsCatchNatAge(p)(sage,nage) = rmvlogistic(pa,tau_c,seed+i);
+				//if(sum(CatchNatAge(i)(n)(sage,nage))>0.0000){
+					pa = value((CatchNatAge(i)(n)(sage,nage))/sum(CatchNatAge(i)(n)(sage,nage)+0.01))+0.000001;
+					obsCatchNatAge(p)(sage,nage) = rmvlogistic(pa,tau_c,seed+i);
+					p++;	
+				//}
+       			
 				//cout<<"obsCatchNatAge(p)(sage,nage)"<<obsCatchNatAge(p)(sage,nage)<<endl;
-				p++;	
        		}	
 		}
 	}
@@ -785,7 +787,7 @@ FUNCTION output_dat
 	afs<<"# Total effort by country and year " << endl << TotEffyear_rep <<endl;
 	afs<<"# Total effort by country and month " << endl << TotEffmonth <<endl;
 	afs<<"# effPwr"<< endl << effPwr <<endl;	
-	afs<<"# dMinP " << endl << 0.1e-15 <<endl;
+	afs<<"# dMinP " << endl << 0.1e-13<<endl;
 	afs<<"# tstp month area catage " << endl << obsCatchNatAge <<endl;	
 	afs<<"# eof " << endl << 999 <<endl;
 
