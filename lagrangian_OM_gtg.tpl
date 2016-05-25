@@ -268,11 +268,11 @@ DATA_SECTION
        			tot_pcat=sum(pcat);  
 
        		//calc_propg
-       		delta = 2*3.0/ngroup;	
+       		delta = 2.0*3.0/ngroup;	
 
        		for(int g=1; g<=ngroup ;g++)
 			{
-				Xini(g) = delta*(g-ngroup/2.0);
+				Xini(g) = delta*((g)-ngroup/2.0);
 			}	
 
 			
@@ -372,11 +372,11 @@ FUNCTION dvar_vector calc_InitPos_gtg()
 	Xtemp(1)=value(Xini(1)*varPos(sage));
 	inimu.initialize();
 
-	prop_ng(1) = cnorm(Xtemp(1),inimu,varPos)(sage)-cnorm(Xtemp(1)-1,inimu,varPos)(sage);
+	prop_ng(1) = cnorm(Xtemp(1)+0.5,inimu,varPos)(sage)-cnorm(Xtemp(1)-0.5,inimu,varPos)(sage);
 	for(int g=2; g<=ngroup ;g++)
 	{
 		Xtemp(g)=value(Xini(g)*varPos(sage));
-		prop_ng(g) = cnorm(Xtemp(g)+0.5,inimu,varPos)(sage)-cnorm(Xtemp(g-1)-0.5,inimu,varPos)(sage);
+		prop_ng(g) = cnorm(Xtemp(g)+0.5,inimu,varPos)(sage)-cnorm(Xtemp(g)-0.5,inimu,varPos)(sage);
 	}
 
 	prop_ng = prop_ng/sum(prop_ng);
@@ -403,7 +403,7 @@ FUNCTION incidence_functions
 	maxPos.initialize();
 	calcmaxpos();
 	varPos=maxPos*cvPos;
-	varPosg=sqrt((varPos*varPos)/(ngroup*ngroup));
+	varPosg=sqrt((varPos*varPos)/(ngroup*ngroup*4));
 
 	//cout<<"Ok after incidence_functions"<<endl;  
 
@@ -618,7 +618,7 @@ FUNCTION move_grow_die
 		maxPos.initialize();		
 		calcmaxpos();
 		varPos=maxPos*cvPos;
-		varPosg=sqrt((varPos*varPos)/(ngroup*ngroup));
+		varPosg=sqrt((varPos*varPos)/(ngroup*ngroup*4));
 
 		
 		calc_position(i);
@@ -665,9 +665,10 @@ FUNCTION clean_catage
 	
 FUNCTION dvar_vector calcmaxpos()
 	
-		maxPos(sage,nage) = 1./(1.+mfexp(-(age-maxPos50/maxPossd)));
+		 					
+		maxPos(sage,nage) = 1./(1.+mfexp(-(age-maxPos50)/maxPossd));
 		maxPos(sage,nage) *= (narea-sarea);
-		maxPos(sage,nage) += sarea;			
+		maxPos(sage,nage) += sarea;		
 	
 		return(maxPos);
 		

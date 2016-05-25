@@ -235,13 +235,6 @@ for(a in 1:length(sim$sage:sim$nage)){
 }
 
 
-#============================================================================
-#Compare OM- simple and gtg 
-#============================================================================
-
-
-
-
 
 #==============================================================================
 #==============================================================================
@@ -289,11 +282,24 @@ text(2, 49.5,"Canada", col="blue", font=2)
 #=======================================================================
 #Simulation evaluation graphs
 
+sim <- read.rep("lagrangian_OM.rep")
+
+
+nomes <- names(sim)
+
+true_pars <- c(sim$"mo",sim$"cvPos",sim$"maxPos50",sim$"maxPossd")  
+
+
+
 #parameter estimates
-.SIMDIRS   <- c("/Users/catarinawor/Documents/Lagrangian/SimResult_3areas_tau1",
+.SIMDIRS   <- c("/Users/catarinawor/Documents/Lagrangian/SimResult_5areas_tau1",
+  "/Users/catarinawor/Documents/Lagrangian/SimResult_5areas_tau1_delta2",
+  "/Users/catarinawor/Documents/Lagrangian/SimResult_3areas_tau1",
+  "/Users/catarinawor/Documents/Lagrangian/SimResult_3areas_tau1_delta2",
+  "/Users/catarinawor/Documents/Lagrangian/SimResult_5areas_tau04",
+  "/Users/catarinawor/Documents/Lagrangian/SimResult_5areas_tau04_delta2",
   "/Users/catarinawor/Documents/Lagrangian/SimResult_3areas_tau04",
-  "/Users/catarinawor/Documents/Lagrangian/SimResult_5areas_tau1",
-  "/Users/catarinawor/Documents/Lagrangian/SimResult_5areas_tau04")
+  "/Users/catarinawor/Documents/Lagrangian/SimResult_3areas_tau04_delta2")
 
 .SIMNAME<-list(length(.SIMDIRS))
 
@@ -586,12 +592,13 @@ indpar<-c(1,2,3,4)
 
 
 .SIMDIRSGTG   <- c("/Users/catarinawor/Documents/Lagrangian/SimResult_gtg_5areas_tau1",
+                   "/Users/catarinawor/Documents/Lagrangian/SimResult_gtg_5areas_tau1_delta2",
                    "/Users/catarinawor/Documents/Lagrangian/SimResult_gtg_3areas_tau1",
-                   #"/Users/catarinawor/Documents/Lagrangian/SimResult_3areas_tau1"
-                    #,"/Users/catarinawor/Documents/Lagrangian/SimResult_3areas_tau04",
-                    "/Users/catarinawor/Documents/Lagrangian/SimResult_5areas_tau1"
-                    #,"/Users/catarinawor/Documents/Lagrangian/SimResult_5areas_tau04"
-                   )
+                   "/Users/catarinawor/Documents/Lagrangian/SimResult_gtg_3areas_tau1_delta2",
+                   "/Users/catarinawor/Documents/Lagrangian/SimResult_gtg_5areas_tau04",
+                   "/Users/catarinawor/Documents/Lagrangian/SimResult_gtg_5areas_tau04_delta2",
+                   "/Users/catarinawor/Documents/Lagrangian/SimResult_gtg_3areas_tau04",
+                   "/Users/catarinawor/Documents/Lagrangian/SimResult_gtg_3areas_tau04_delta2")
 
 
 
@@ -629,36 +636,41 @@ for( i in 1:length(.SIMDIRSGTG)){
     tmp_initvals[j,]<-exp(unlist(sims[[5]][1:4]))
    }
 
-  tmp_estn<- tmp_estn[tmp_maxgrad<=1.0000e-02,]
-  tmp_pbias<- tmp_pbias[tmp_maxgrad<=1.0000e-02,]
+  tmp_estn<- tmp_estn[tmp_maxgrad<=1.0000e-04,]
+  tmp_pbias<- tmp_pbias[tmp_maxgrad<=1.0000e-04,]
   
   estn_gtg[[i]]<-tmp_estn
   pbias_gtg[[i]]<-tmp_pbias
   maxgrad_gtg[[i]]<-tmp_maxgrad
-  initvals_gtg[[i]]<-tmp_initvals[tmp_maxgrad<=1.0000e-02,]
-  initvals_bad_gtg[[i]]<-tmp_initvals[tmp_maxgrad>1.0000e-02,]
+  initvals_gtg[[i]]<-tmp_initvals[tmp_maxgrad<=1.0000e-04,]
+  initvals_bad_gtg[[i]]<-tmp_initvals[tmp_maxgrad>1.0000e-04,]
 
 
 }
 
 indAyr<-rep(1:3,1200)[2161:3600]
-titulos<-c("3 areas, tau=1.0","3 areas, tau=0.4","5 areas, tau=1.0","5 areas, tau=0.4")
+titulos<-c("5 areas, tau=1.0, B = 1.0","5 areas, tau= 1.0, B = 2.0",
+"3 areas, tau=1.0, B = 1.0","3 areas, tau=1.0, B = 2.0",
+"5 areas, tau=0.4, B = 1.0","5 areas, tau= 0.4, B = 2.0",
+"3 areas, tau=0.4, B = 1.0","3 areas, tau=0.4, B = 2.0")
 
 
 #setwd("/Users/catarinawor/Documents/hake/Thesis/figs")
 #setwd("/Users/catarinawor/Documents/hake/JTC_talk")
 #pdf("quatroscn.pdf")
 
-
-
-par(mfcol=c(1,3))
+setwd("/Users/catarinawor/Documents/hake/Thesis/figs/chap2")
+pdf("GTG_version_simeval.pdf", width=16, height=8)
+par(mfcol=c(2,4))
 for( i in 1:length(.SIMDIRSGTG)){
   boxplot(pbias_gtg[[i]],names= c(expression("t"[0]),expression("cv"),
-    expression("a"[50,s]),expression("sd"["X"["max"]])),ylim=c(-100,100),main=" ")
+    expression("a"[50,s]),expression("sd"["X"["max"]])),ylim=c(-30,30),main=titulos[i],
+  cex=1.2, cex.lab=1.5,cex.axis=1.5, cex.main=1.3)
   abline(h=0)
-  text(4, y = 8, labels = nrow(pbias_gtg[[i]]))
+  text(4, y = 28, labels = nrow(pbias_gtg[[i]]))
 }
-
+mtext("% Bias", 2, line = -2, outer = TRUE, font=2)
+dev.off()
 
 
 #========================================================================================
@@ -785,6 +797,194 @@ p <- p + theme_bw()
 p <- p + scale_y_continuous(limits=c(-100,100))
 
 p
+
+#========================================================================================
+
+#========================================================================================
+# Biomass comparison between gtg and non gtg
+#========================================================================================
+
+
+rm(list=ls()); 
+
+library(plyr)
+library(data.table)
+library(ggplot2)
+library(reshape2)
+library(animation)
+library(ggmap)
+#if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")
+setwd("/Users/catarinawor/Documents/Lagrangian/")
+source("read.admb.R")
+
+
+
+sim <- read.rep("lagrangian_OM.rep")
+sim_gtg <- read.rep("lagrangian_OM_gtg.rep")
+
+names(sim)
+
+head(sim$propVBarea)
+dim(sim$propVBarea)
+
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+
+tmpXplot<-data.frame(sim$propVBarea[sim$propVBarea[,1]>(max(sim$propVBarea[,1])-12),])
+tmpXplot[,1]<-meses[tmpXplot[,1]-(max(sim$propVBarea[,1])-12)]
+tmpXplot<-rename(tmpXplot, c("V1"="month", "V2"= "Latitude","V3"="1", "V4"="2", "V5"= "3",
+  "V6"="4", "V7"="5", "V8"= "6","V9"="7", "V10"="8", "V11"= "9","V12"="10", "V13"="11", "V14"= "12",
+  "V15"="13", "V16"="14", "V17"= "15","V18"="16", "V19"="17", "V20"= "18","V21"="19", "V22"="20"))
+
+
+Xplot<-melt(tmpXplot, id=c("month", "Latitude"),variable.name="age")
+Xplot$group<-as.factor(rep(0,length(Xplot$month)))
+Xplot<-arrange(transform(Xplot,month=factor(month,levels=meses)),month)
+
+head(Xplot)
+
+
+head(sim_gtg$propVBarea)
+
+tmpXplotgtg<-data.frame(sim_gtg$propVBarea[sim_gtg$propVBarea[,1]>(max(sim_gtg$propVBarea[,1])-12),])
+tmpXplotgtg[,1]<-meses[tmpXplotgtg[,1]-(max(sim_gtg$propVBarea[,1])-12)]
+tmpXplotgtg<-rename(tmpXplotgtg, c("V1"="month", "V2"="group", "V3"= "Latitude","V4"="1", "V5"="2", "V6"= "3",
+  "V7"="4", "V8"="5", "V9"= "6","V10"="7", "V11"="8", "V12"= "9","V13"="10", "V14"="11", "V15"= "12",
+  "V16"="13", "V17"="14", "V18"= "15","V19"="16", "V20"="17", "V21"= "18","V22"="19", "V23"="20"))
+
+
+Xplotgtg<-melt(tmpXplotgtg, id=c("month","group", "Latitude"),variable.name="age")
+
+ggg<-as.factor(Xplotgtg$group)
+
+Xplotgtg<-arrange(transform(Xplotgtg,month=factor(month,levels=meses)),month)
+Xplotgtg<-Xplotgtg[,-2]
+Xplotgtg$group<-ggg
+
+head(Xplotgtg)
+
+d1=Xplot[Xplot$age==5,]
+d2=Xplotgtg[Xplotgtg$age==5,]
+
+#d2$value<-(d2$value/max(d2$value))*max(d1$value)
+
+Xplot$model<-rep("single",length(Xplot$age))
+Xplotgtg$model<-rep("multiple",length(Xplotgtg$age))
+
+Xplot.v<-subset(Xplotgtg,select= value)
+Xplot.f<-subset(Xplotgtg,select= -c(group,value))
+
+newXplotgtg<- aggregate(x=Xplot.v,by=Xplot.f,FUN=sum)
+head(newXplotgtg)
+
+combXplotgtg<-data.frame(month=newXplotgtg$month,
+                        Latitude=newXplotgtg$Latitude,
+                        age=newXplotgtg$age,
+                        value=newXplotgtg$value,
+                        group=rep("-1",length(newXplotgtg$value)),
+                        model=rep("sum_multiple",length(newXplotgtg$value)))
+head(combXplotgtg)
+head(Xplotgtg)
+summary(combXplotgtg)
+summary(Xplotgtg)
+
+df<-rbind(Xplotgtg,Xplot,combXplotgtg)
+#df<-rbind(d1,d2)
+head(df)
+summary(df)
+
+df<-df[df$age==5&df$month=="Jul",]
+df$Latitude<-as.numeric(df$Latitude)
+
+#setwd("/Users/catarinawor/Documents/hake/Thesis/figs/chap2")
+p <- ggplot(df) 
+p <- p + geom_line(aes(x=Latitude, y=value, lty=group, colour=model),size=1.2)
+p <- p + geom_vline(xintercept=48.5, linetype=3)
+#p <- p + facet_wrap(~month,ncol=4)
+p <- p + theme_bw()+theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),axis.ticks.y = element_blank(), axis.text.y = element_blank(),
+       axis.title.y= element_blank())
+p <- p + scale_linetype_manual(breaks=c(as.factor(1:20),"0","-1"), values=c(rep(1,20),1,5))
+p <- p + scale_colour_grey() +guides(lty=FALSE)
+p
+#ggsave(file="example_gtg_simple.pdf")
+
+
+
+Xplot.v<-subset(Xplotgtg,select= value)
+Xplot.f<-subset(Xplotgtg,select= -c(group,value))
+
+newXplotgtg<- aggregate(x=Xplot.v,by=Xplot.f,FUN=sum)
+head(newXplotgtg)
+newXplotgtg<-newXplotgtg[,-4]
+
+newXplot<-melt(tmpXplot, id=c("month", "Latitude"),variable.name="age")
+newXplot<-arrange(transform(newXplot,month=factor(month,levels=meses)),month)
+
+newXplot<-newXplot[order(newXplot$Latitude),]
+newXplot<-newXplot[order(newXplot$age),]
+
+newXplot$model<-rep("single",length(newXplot$age))
+newXplotgtg$model<-rep("multiple",length(newXplotgtg$age))
+
+
+head(newXplot)
+head(newXplotgtg)
+
+
+df2<-rbind(newXplotgtg,newXplot)
+df2<-df2[df2$age==1|df2$age==5,]
+
+head(df2)
+dim(sim_gtg$Effarea)
+dim(sim$Effarea)
+
+
+tmpEffplot<-data.frame(month= 1:12,matrix(sim$Effarea[(nrow(sim$Effarea)-11):nrow(sim$Effarea),],ncol=31,
+  dimnames=list(1:12,(sim$sarea:sim$narea))))
+tmpEffplot<-setnames(tmpEffplot, old = paste("X",30:60, sep=""), new = as.character(30:60))
+
+Effplot<-melt(tmpEffplot, id="month",variable.name="Latitude",value.name="effort")
+Effplot$month<-meses[Effplot$month]
+Effplot$effort<-Effplot$effort/max(Effplot$effort)*max(df2$value)
+Effplot$Latitude<-as.numeric(Effplot$Latitude)+sim$sarea-1
+
+tmpEffplotgtg<-data.frame(month= 1:12,matrix(sim_gtg$Effarea[(nrow(sim_gtg$Effarea)-11):nrow(sim_gtg$Effarea),],ncol=31,
+  dimnames=list(1:12,(sim_gtg$sarea:sim_gtg$narea))))
+tmpEffplotgtg<-setnames(tmpEffplotgtg, old = paste("X",30:60, sep=""), new = as.character(30:60))
+
+Effplotgtg<-melt(tmpEffplotgtg, id="month",variable.name="Latitude",value.name="effort")
+Effplotgtg$month<-meses[Effplotgtg$month]
+Effplotgtg$effort<-Effplotgtg$effort/max(Effplot$effort)*max(df2$value)
+Effplotgtg$Latitude<-as.numeric(Effplotgtg$Latitude)+sim_gtg$sarea-1
+
+head(Effplotgtg)
+head(Effplot)
+
+Effplotgtg$model<-rep("single",length(Effplotgtg$month))
+Effplot$model<-rep("multiple",length(Effplot$month))
+
+
+deff<-rbind(Effplotgtg,Effplot)
+
+summary
+head(deff)
+
+
+#setwd("/Users/catarinawor/Documents/hake/Thesis/figs/chap2")
+p <- ggplot(df2) 
+p <- p + geom_line(aes(x=Latitude, y=value, colour=model, lty=age), size=1.3)
+p <- p + geom_vline(xintercept=48.5, linetype=3,alpha=0.3)
+p <- p + facet_wrap(~month,ncol=4)
+p <- p + scale_linetype_manual(breaks=c("1","5"), values=c(3,1))
+p <- p + theme_bw()+theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),axis.ticks.y = element_blank(), axis.text.y = element_blank(),
+       axis.title.y= element_blank())
+p <- p  +   geom_bar(data=deff, aes(x=Latitude, y=effort, fill=model),alpha=0.3,stat="identity")
+
+
+p <- p + scale_colour_grey() +scale_fill_grey() 
+p
+#ggsave(file="gtg_simple_diff.pdf")
 
 #========================================================================================
 

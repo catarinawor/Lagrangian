@@ -394,7 +394,7 @@ FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt )
         }
 		
 		VulB(ii) = elem_prod(elem_prod(Nage(ii),va),wa);
-		SB(ii) = elem_prod(Nage(ii),fa)*wa/2;
+		SB(ii) = elem_prod(Nage(ii),fa)*wa/2.0;
 
 		//cout<<"OK after calc_numbers_at_age"<<endl;		
 
@@ -430,10 +430,9 @@ FUNCTION void calc_position(const int& ii)
 
 	PosX(ii) = minPos + (maxPos - minPos) * (0.5+0.5*sin(indmonth(ii)*PI/6 - mo*PI/6)); 
 
-	VBarea(ii,sarea) = VulB(ii)* (cnorm(areas(sarea)+0.5,PosX(ii),varPos));
+	
 
-
-		for(int r = sarea+1;r <= narea;r++)
+		for(int r = sarea;r <= narea;r++)
 		{
 			VBarea(ii)(r) = VulB(ii)*(cnorm(areas(r)+0.5,PosX(ii),varPos)-cnorm(areas(r)-0.5,PosX(ii),varPos));
 			NAreaAge(ii)(r) = elem_prod(Nage(ii)(sage,nage),(cnorm(areas(r)+0.5,PosX(ii),varPos)-cnorm(areas(r)-0.5,PosX(ii),varPos)));
@@ -483,10 +482,7 @@ FUNCTION incidence_functions
 	cvPos 	 = mfexp(log_cvPos);
 	mo 	= mfexp(log_mo);
 	
-	cout<<"maxPos50 is "<<maxPos50<<endl;
-	cout<<"maxPossd is "<<maxPossd<<endl;
-	cout<<"cvPos is "<<cvPos<<endl;
-	cout<<"mo is "<<mo<<endl;
+	
 
 FUNCTION initialization
 	
@@ -495,6 +491,7 @@ FUNCTION initialization
 	NAreaAge.initialize();
  	CatchAreaAge.initialize();
  	CatchNatAge.initialize();
+ 	Nage.initialize();
 
 
 	Nage(1,1) = So*Bo/(1+beta*Bo);
@@ -616,7 +613,7 @@ FUNCTION calc_obj_func
 				//O(i) = (obsCatchNatAge(ii)(sage,nage)+0.1e-30)/sum(obsCatchNatAge(ii)(sage,nage)+0.1e-5);
 				//P(i) = (predCatchNatAge(ii)(sage,nage)+0.1e-30)/sum(predCatchNatAge(ii)(sage,nage)+0.1e-5);
 				O(i) = (obsCatchNatAge(ii)(sage,nage))/sum(obsCatchNatAge(ii)(sage,nage));
-				P(i) = ((predCatchNatAge(ii)(sage,nage))/sum(predCatchNatAge(ii)(sage,nage)+0.01))+0.000001;
+				P(i) = ((predCatchNatAge(ii)(sage,nage))/(sum(predCatchNatAge(ii)(sage,nage))+0.01))+0.000001;
 				
 
 				//cout<<"O("<<i<<")"<<O(i)<<endl;
@@ -628,24 +625,30 @@ FUNCTION calc_obj_func
 			//cout<<"dmvlogistic(O,P,nu,tau_c(n),dMinP) is "<< dmvlogistic(O,P,nu,tau_c,dMinP)<<endl;
 			//exit(1);									
 			//nlvec(n) =  dmvlogistic(O,P,nu,tau_c(n),dMinP);
-			//cout<<"mo is"<<mo<<endl;
-			//	cout<<"cvPos is"<<cvPos<<endl;
-			//	cout<<"maxPos50 is"<<maxPos50<<endl;
+			cout<<"mo is"<<mo<<endl;
+			cout<<"cvPos is"<<cvPos<<endl;
+			cout<<"maxPos50 is"<<maxPos50<<endl;
 			//cout<<"tau_c is"<<tau_c<<endl;
 			//cout<<"dMinP is"<<dMinP<<endl;
 			//cout<<"pcat(n) is"<<pcat(n)<<endl;
-			//cout<<"maxPossd is"<<maxPossd<<endl;
+			cout<<"maxPossd is"<<maxPossd<<endl;
 			//cout<<"dmvlogistic(O,P,nu,tau_c,dMinP) is "<<dmvlogistic(O,P,nu,tau_c,dMinP)<<endl;
 			nlvec(n) =  dmvlogistic(O,P,nu,tau_c,dMinP);
 
 		}
 		
-		//cout<<"nlvec is"<<nlvec<<endl;
+		cout<<"nlvec is"<<nlvec<<endl;
+		//cout<<"maxPos50 is "<<maxPos50<<endl;
+		//cout<<"maxPossd is "<<maxPossd<<endl;
+		//cout<<"cvPos is "<<cvPos<<endl;
+		//cout<<"mo is "<<mo<<endl;
 	//exit(1);
 
 	
 	//f=sum(nlvec)+sum(npvec);
-	f=sum(nlvec)/10000;
+	//f=sum(nlvec)/10000;
+	f=sum(nlvec);
+
 
 FUNCTION dvar_vector calcmaxpos(const dvariable& tb)
 
