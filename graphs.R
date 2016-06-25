@@ -19,7 +19,7 @@ source("read.admb.R")
 
 
 sim <- read.rep("lagrangian_OM.rep")
-sim_gtg <- read.rep("lagrangian_OM_gtg.rep")
+#sim_gtg <- read.rep("lagrangian_OM_gtg.rep")
 est <- read.rep("lagrangian_est.rep")
 
 
@@ -34,9 +34,17 @@ barplot(t(matrix(c(true_pars,est_pars),ncol=2)),names.arg = c("mo","cvPos","maxP
 
 #Check simulations plots
 names(sim)
+names(est)
 names(sim_gtg)
 
 head(sim_gtg$VulB)
+
+plot(1:(100*12),apply(sim$Nage,1,sum), ylim=c(0,max(apply(sim$Nage,1,sum))),type="l")
+abline(v=70*12, col="red")
+#abline(v=85*12, col="blue")
+lines((50*12+1):(100*12),apply(est$Nage,1,sum), col="red")
+
+apply(sim$Nage,1,sum)[(69*12):(72*12)]
 
 
 vbgtg<-matrix(0,ncol=length(sim_gtg$sage:sim_gtg$nage),nrow=length(sim_gtg$indyr))
@@ -46,10 +54,20 @@ for(i in 1:length(sim_gtg$indyr)){
     vbgtg[i,]<- apply(sim_gtg$VulB[sim_gtg$VulB[,1]==i,-c(1,2)],2,sum)
   }
 
+
+head(sim$VBarea)
+
 #par(mfrow=c(1,2))
-plot(apply(sim$VulB,1,sum), ylim=c(0,max(apply(sim$VulB,1,sum))),type="l")
-lines(apply(vbgtg,1,sum), col="red")
-# plot(apply(sim_gtg$VulB[,-1],1,sum),ylim=c(0,max(apply(sim_gtg$VulB[,-1],1,sum))))
+plot(1:(100*12),apply(sim$VBarea,1,sum), ylim=c(0,max(apply(sim$VulB,1,sum))),type="l")
+abline(v=70*12, col="red")
+#abline(v=85*12, col="blue")
+lines((50*12+1):(100*12),apply(est$VBarea,1,sum), col="red")
+
+
+length((70*12+1):(100*12))
+dim(est$VBarea)
+#lines(apply(vbgtg,1,sum), col="red")
+#plot(apply(sim_gtg$VulB[,-1],1,sum),ylim=c(0,max(apply(sim_gtg$VulB[,-1],1,sum))))
 #head(sim$VulB)
 #head(sim$Nage)
 
@@ -324,20 +342,20 @@ for( i in 1:length(.SIMDIRS)){
     load(.SIMNAME[[i]][j])
 
     #parameters
-    tmp_estn[j,]<-exp(sims[[3]]$est)
+    tmp_estn[j,]<-exp(sims[[3]]$est[1:4])
     tmp_pbias[j,]<-((tmp_estn[j,]-true_pars)/true_pars)*100
     tmp_maxgrad[j]<-sims[[3]]$maxgrad
     tmp_initvals[j,]<-exp(unlist(sims[[5]][1:4]))
    }
 
-  tmp_estn<- tmp_estn[tmp_maxgrad<=1.0000e-04,]
-  tmp_pbias<- tmp_pbias[tmp_maxgrad<=1.0000e-04,]
+  tmp_estn<- tmp_estn[tmp_maxgrad<=1.0000e-01,]
+  tmp_pbias<- tmp_pbias[tmp_maxgrad<=1.0000e-01,]
   
   estn[[i]]<-tmp_estn
   pbias[[i]]<-tmp_pbias
   maxgrad[[i]]<-tmp_maxgrad
-  initvals[[i]]<-tmp_initvals[tmp_maxgrad<=1.0000e-04,]
-  initvals_bad[[i]]<-tmp_initvals[tmp_maxgrad>1.0000e-04,]
+  initvals[[i]]<-tmp_initvals[tmp_maxgrad<=1.0000e-01,]
+  initvals_bad[[i]]<-tmp_initvals[tmp_maxgrad>1.0000e-01,]
 
 
 }
@@ -353,18 +371,23 @@ for( i in 1:length(.SIMDIRS)){
 #========================================================================
 
 
-titulos<-c("3 areas, tau=1.0","3 areas, tau=0.4","5 areas, tau=1.0","5 areas, tau=0.4")
-
+titulos<-c("5 areas, tau=1.0, B = 1.0","5 areas, tau= 1.0, B = 2.0",
+"3 areas, tau=1.0, B = 1.0","3 areas, tau=1.0, B = 2.0",
+"5 areas, tau=0.4, B = 1.0","5 areas, tau= 0.4, B = 2.0",
+"3 areas, tau=0.4, B = 1.0","3 areas, tau=0.4, B = 2.0")
 
 setwd("/Users/catarinawor/Documents/hake/Thesis/figs/chap2")
 #setwd("/Users/catarinawor/Documents/hake/JTC_talk")
-pdf("quatroscn.pdf", width=12, height=10)
-par(mfcol=c(2,2))
+pdf("single_version_simeval.pdf", width=14, height=7)
+par(mfcol=c(2,4))
 for( i in 1:length(.SIMDIRS)){
-  boxplot(pbias[[i]],names= c(expression("t"[0]),expression("cv"),expression("a"[50]),expression("sd"["X"["max"])),ylim=c(-10,10),main=titulos[i],cex.axis=1.5,cex.lab=1.5,cex.main=1.5)
+  boxplot(pbias[[i]],names=c(expression("t"[0]),expression("cv"),expression("a"[50]),
+    expression("sd"["X"["max"]])),ylim=c(-10,10),main=titulos[i],cex.axis=1.5,
+    cex.lab=2,cex.main=2,cex=1.6)
   abline(h=0)
-  text(4, y = 8, labels = nrow(pbias[[i]]))
+  text(4, y = 8, labels = nrow(pbias[[i]]), cex=2)
 }
+mtext("% Bias", 2, line = -2, outer = TRUE, font=2)
 dev.off()
 
 
@@ -660,14 +683,14 @@ titulos<-c("5 areas, tau=1.0, B = 1.0","5 areas, tau= 1.0, B = 2.0",
 #pdf("quatroscn.pdf")
 
 setwd("/Users/catarinawor/Documents/hake/Thesis/figs/chap2")
-pdf("GTG_version_simeval.pdf", width=16, height=8)
+pdf("GTG_version_simeval.pdf", width=14, height=7)
 par(mfcol=c(2,4))
 for( i in 1:length(.SIMDIRSGTG)){
   boxplot(pbias_gtg[[i]],names= c(expression("t"[0]),expression("cv"),
     expression("a"[50,s]),expression("sd"["X"["max"]])),ylim=c(-30,30),main=titulos[i],
-  cex=1.2, cex.lab=1.5,cex.axis=1.5, cex.main=1.3)
+  cex.axis=1.5,cex.lab=2,cex.main=2,cex=1.6)
   abline(h=0)
-  text(4, y = 28, labels = nrow(pbias_gtg[[i]]))
+  text(4, y = 28, labels = nrow(pbias_gtg[[i]]),cex=2)
 }
 mtext("% Bias", 2, line = -2, outer = TRUE, font=2)
 dev.off()
@@ -804,7 +827,7 @@ p
 # Biomass comparison between gtg and non gtg
 #========================================================================================
 
-
+#need to run with no effort
 rm(list=ls()); 
 
 library(plyr)
@@ -839,7 +862,6 @@ tmpXplot<-rename(tmpXplot, c("V1"="month", "V2"= "Latitude","V3"="1", "V4"="2", 
 Xplot<-melt(tmpXplot, id=c("month", "Latitude"),variable.name="age")
 Xplot$group<-as.factor(rep(0,length(Xplot$month)))
 Xplot<-arrange(transform(Xplot,month=factor(month,levels=meses)),month)
-
 head(Xplot)
 
 
@@ -860,12 +882,14 @@ Xplotgtg<-arrange(transform(Xplotgtg,month=factor(month,levels=meses)),month)
 Xplotgtg<-Xplotgtg[,-2]
 Xplotgtg$group<-ggg
 
+
 head(Xplotgtg)
 
 d1=Xplot[Xplot$age==5,]
 d2=Xplotgtg[Xplotgtg$age==5,]
 
-#d2$value<-(d2$value/max(d2$value))*max(d1$value)
+summary(d2$value)
+
 
 Xplot$model<-rep("single",length(Xplot$age))
 Xplotgtg$model<-rep("multiple",length(Xplotgtg$age))
@@ -888,29 +912,37 @@ summary(combXplotgtg)
 summary(Xplotgtg)
 
 df<-rbind(Xplotgtg,Xplot,combXplotgtg)
+
 #df<-rbind(d1,d2)
 head(df)
 summary(df)
 
 df<-df[df$age==5&df$month=="Jul",]
 df$Latitude<-as.numeric(df$Latitude)
+df$value<-df$value/max(df$value)
 
-#setwd("/Users/catarinawor/Documents/hake/Thesis/figs/chap2")
+setwd("/Users/catarinawor/Documents/hake/Thesis/figs/chap2")
 p <- ggplot(df) 
 p <- p + geom_line(aes(x=Latitude, y=value, lty=group, colour=model),size=1.2)
 p <- p + geom_vline(xintercept=48.5, linetype=3)
 #p <- p + facet_wrap(~month,ncol=4)
 p <- p + theme_bw()+theme(panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),axis.ticks.y = element_blank(), axis.text.y = element_blank(),
-       axis.title.y= element_blank())
+        panel.grid.minor = element_blank(),axis.ticks.y = element_blank(),
+        axis.text=element_text(size=12),axis.title=element_text(size=12,face="bold")) 
+p <- p + ylab("Relative Biomass")
 p <- p + scale_linetype_manual(breaks=c(as.factor(1:20),"0","-1"), values=c(rep(1,20),1,5))
 p <- p + scale_colour_grey() +guides(lty=FALSE)
 p
-#ggsave(file="example_gtg_simple.pdf")
+ggsave(file="example_gtg_simple.pdf")
+
+############need to run with  effort ############
+
+
 
 
 
 Xplot.v<-subset(Xplotgtg,select= value)
+
 Xplot.f<-subset(Xplotgtg,select= -c(group,value))
 
 newXplotgtg<- aggregate(x=Xplot.v,by=Xplot.f,FUN=sum)
@@ -933,8 +965,8 @@ head(newXplotgtg)
 
 df2<-rbind(newXplotgtg,newXplot)
 df2<-df2[df2$age==1|df2$age==5,]
-
-head(df2)
+df2$value<-df2$value/max(df2$value)
+summary(df2)
 dim(sim_gtg$Effarea)
 dim(sim$Effarea)
 
@@ -945,7 +977,7 @@ tmpEffplot<-setnames(tmpEffplot, old = paste("X",30:60, sep=""), new = as.charac
 
 Effplot<-melt(tmpEffplot, id="month",variable.name="Latitude",value.name="effort")
 Effplot$month<-meses[Effplot$month]
-Effplot$effort<-Effplot$effort/max(Effplot$effort)*max(df2$value)
+Effplot$effort<-Effplot$effort/max(Effplot$effort)
 Effplot$Latitude<-as.numeric(Effplot$Latitude)+sim$sarea-1
 
 tmpEffplotgtg<-data.frame(month= 1:12,matrix(sim_gtg$Effarea[(nrow(sim_gtg$Effarea)-11):nrow(sim_gtg$Effarea),],ncol=31,
@@ -954,11 +986,13 @@ tmpEffplotgtg<-setnames(tmpEffplotgtg, old = paste("X",30:60, sep=""), new = as.
 
 Effplotgtg<-melt(tmpEffplotgtg, id="month",variable.name="Latitude",value.name="effort")
 Effplotgtg$month<-meses[Effplotgtg$month]
-Effplotgtg$effort<-Effplotgtg$effort/max(Effplot$effort)*max(df2$value)
+Effplotgtg$effort<-Effplotgtg$effort/max(Effplotgtg$effort)
 Effplotgtg$Latitude<-as.numeric(Effplotgtg$Latitude)+sim_gtg$sarea-1
 
 head(Effplotgtg)
 head(Effplot)
+
+summary(Effplotgtg$effort)
 
 Effplotgtg$model<-rep("single",length(Effplotgtg$month))
 Effplot$model<-rep("multiple",length(Effplot$month))
@@ -966,25 +1000,25 @@ Effplot$model<-rep("multiple",length(Effplot$month))
 
 deff<-rbind(Effplotgtg,Effplot)
 
+
 summary
 head(deff)
 
 
-#setwd("/Users/catarinawor/Documents/hake/Thesis/figs/chap2")
+setwd("/Users/catarinawor/Documents/hake/Thesis/figs/chap2")
 p <- ggplot(df2) 
 p <- p + geom_line(aes(x=Latitude, y=value, colour=model, lty=age), size=1.3)
 p <- p + geom_vline(xintercept=48.5, linetype=3,alpha=0.3)
-p <- p + facet_wrap(~month,ncol=4)
+p <- p + facet_wrap(~month,ncol=3)
 p <- p + scale_linetype_manual(breaks=c("1","5"), values=c(3,1))
 p <- p + theme_bw()+theme(panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),axis.ticks.y = element_blank(), axis.text.y = element_blank(),
-       axis.title.y= element_blank())
-p <- p  +   geom_bar(data=deff, aes(x=Latitude, y=effort, fill=model),alpha=0.3,stat="identity")
-
-
-p <- p + scale_colour_grey() +scale_fill_grey() 
+        panel.grid.minor = element_blank(),axis.ticks.y = element_blank(), axis.text=element_text(size=12),axis.title=element_text(size=12,face="bold")) 
+p <- p + ylab("Relative Biomass/Effort")
+p <- p  +geom_bar(data=deff, aes(x=Latitude, y=effort, fill=model), position="dodge",
+    alpha=0.3,stat="identity")
+p <- p + scale_colour_grey() #+scale_fill_grey() 
 p
-#ggsave(file="gtg_simple_diff.pdf")
+ggsave(file="gtg_simple_diff.pdf")
 
 #========================================================================================
 

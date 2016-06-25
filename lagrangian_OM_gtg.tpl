@@ -90,7 +90,7 @@ DATA_SECTION
 		
 		if( eof != 999 )
 		{
-			cout<<"TotEffyear "<<TotEffyear<<endl;
+			cout<<"va "<<va<<endl;
 			cout<<"effPwr "<<effPwr<<endl;
 			cout<<"Error reading data.\n Fix it."<<endl;
 			cout<< "eof is: "<<eof<<endl;
@@ -493,12 +493,12 @@ FUNCTION void calc_effarea(const int& ii)
 	tmp2.initialize();
 
 	for(int n=1; n<=nations;n++){
-       	NationVulB(ii,n) = sum(tVBarea(ii)(ntmp1(n),ntmp1(n+1)-1));		 
+       	NationVulB(ii,n) = sum(pow(tVBarea(ii)(ntmp1(n),ntmp1(n+1)-1)+0.0000001,fbeta));		 
 	}
 
 	for(int r= sarea; r<=narea; r++)
 	{
-		tmp1(r)= pow((tVBarea(ii)(r)/((NationVulB(ii)(indnatarea(r)))+0.01))+0.0000001,fbeta) * effPwr(r);
+		tmp1(r)= (pow(tVBarea(ii)(r)+0.0000001,fbeta)/(NationVulB(ii)(indnatarea(r))+0.01)) * effPwr(r);
 		tmp2(r) = tmp1(r)*TotEffyear(indfisharea(r))(indyr(ii));
 		Effarea(ii)(r) = tmp2(r)*TotEffmonth(indfisharea(r))(indmonth(ii));
 	}

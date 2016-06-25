@@ -75,6 +75,8 @@ DATA_SECTION
 
 	init_vector effPwr(sarea,narea);
 
+	init_vector wt(rep_yr+1,nyr);
+
 	init_int eof;
 	
 	
@@ -102,7 +104,8 @@ DATA_SECTION
    	vector areas(sarea,narea);
    	ivector fishingr(1,fisharea);
    	ivector nationareas(1,nations);
-   	vector wt(syr,nyr);
+   	//vector wt(syr,nyr);
+   	//vector wtsim(syr,rep_yr);
 
    	
    		LOC_CALCS		
@@ -155,8 +158,12 @@ DATA_SECTION
 			
 
 			random_number_generator rng(seed);
-			wt.fill_randn(rng);
-			wt*=sigR;
+			
+			//wt.fill_randn(rng);
+			//wt*=sigR;
+
+			//wtsim.fill_randn(rng);
+			//wtsim*=sigR;
 
 	END_CALCS
 
@@ -323,7 +330,7 @@ FUNCTION incidence_functions
 	za 	= m_tsp+va*fe;
 	//cout<<"Ok after incidence_functions"<< endl;
 	
-FUNCTION void calc_numbers_at_age(const int& ii)
+FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt)
 
 
 		
@@ -331,8 +338,8 @@ FUNCTION void calc_numbers_at_age(const int& ii)
 		
 		switch (indmonth(ii)) {
             case 1:           	
-            	
-            	Nage(ii)(sage) = (So*SB(ii-nmon)/(1.+beta*SB(ii-nmon)))*(mfexp(wt(indyr(ii))*err));
+            														//mfexp(wt(indyr(ii))
+            	Nage(ii)(sage) = (So*SB(ii-nmon)/(1.+beta*SB(ii-nmon)))*(mfexp(expwt*err));
 
             	for(int a = sage+1;a<=nage;a++)
             	{
@@ -390,17 +397,19 @@ FUNCTION void calc_effarea(const int& ii)
 
 		//for(int r= sarea; r<=narea; r++)
 		//{
-		//	totVBnation(ii,indnatarea(r)) += VBarea(ii)(r);
+		//	totVBnation(ii,indnatarea(r)) += pow(VBarea(ii)(r);
 		//}
 
 		for(int n=1; n<=nations;n++){
-       		totVBnation(ii,n) = sum(VBarea(ii)(ntmp1(n),ntmp1(n+1)-1));
+       		totVBnation(ii,n) = sum(pow(VBarea(ii)(ntmp1(n),ntmp1(n+1)-1.0) +0.00001,fbeta));
        	}
 
 
 		for(int rr= sarea; rr<=narea; rr++)
 		{
-			tmp1(rr)= pow((VBarea(ii)(rr)/(totVBnation(ii,indnatarea(rr))+0.01))+0.0000001,fbeta) * effPwr(rr);
+			//tmp1(rr)= (pow(VBarea(ii)(rr)+0.0000001,fbeta)/(totVBnation(ii,indnatarea(rr))+0.01)) * effPwr(rr);
+
+			tmp1(rr)= (pow(VBarea(ii)(rr)+0.00001,fbeta)/(totVBnation(ii,indnatarea(rr))+0.01)) * effPwr(rr);
 
 			tmp2(rr) = tmp1(rr)*TotEffyear(indfisharea(rr))(indyr(ii));
 			Effarea(ii)(rr) = tmp2(rr)*TotEffmonth(indfisharea(rr))(indmonth(ii));
@@ -489,11 +498,30 @@ FUNCTION initialization
 
 FUNCTION move_grow_die
 
+	for(int ie=2;ie<=((rep_yr)*(nmon-smon+1));ie++)
+	{ 
+		calc_numbers_at_age(ie,0.0);
 
-	for(int i=2;i<=ntstp;i++)
+		maxPos.initialize();		
+		calcmaxpos();
+
+		//cout<<"maxPos "<<maxPos<<endl;
+		calc_position(ie);
+	
+		calc_effarea(ie);
+		
+		calc_catage(ie);
+		
+		
+	}
+
+
+	for(int i=(rep_yr)*(nmon-smon+1)+1;i<=ntstp;i++)
 	{
 		
-		calc_numbers_at_age(i);
+		calc_numbers_at_age(i,wt(indyr(i)));
+		//cout<<"wt(indyr(i)) "<<wt(indyr(i))<<endl;
+		
 
 		maxPos.initialize();		
 		calcmaxpos();
@@ -501,8 +529,7 @@ FUNCTION move_grow_die
 		//cout<<"maxPos "<<maxPos<<endl;
 		calc_position(i);
 	
-		calc_effarea(i);
-		
+		calc_effarea(i);		
 
 		calc_catage(i);
 		
@@ -622,7 +649,8 @@ FUNCTION output_pin
 	
 	tmp_mo 		= ceil(randu(rngmo)*(mo+3));
 	
-
+	//dvector guess_wt(rep_yr+1,nyr);
+	//guess_wt.initialize();
 	
 	ofstream ifs("lagrangian_est.pin");
 
@@ -634,7 +662,7 @@ FUNCTION output_pin
 	//ifs<<"# maxPos50 \n" << log(maxPos50) <<endl;
 	ifs<<"# maxPossd \n"<< log(guess_maxPossd(ceil(randu(rngmaxPossd)*7))) <<endl;
 	//ifs<<"# maxPossd \n"<< log(maxPossd) <<endl;
-	ifs<<"#wt \n" << wt(rep_yr+1,nyr)*err <<endl;
+	ifs<<"#wt \n" << wt*err <<endl;
 
 	
 	

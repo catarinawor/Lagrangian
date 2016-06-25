@@ -261,7 +261,7 @@ PARAMETER_SECTION
 	//init_number log_maxPos50;
 	//init_number log_maxPossd;
 
-	init_vector wt(syr,nyr,-1);
+	init_bounded_vector wt(syr,nyr,-3.0,3.0,-1);
 
 	objective_function_value f;
 
@@ -408,7 +408,7 @@ FUNCTION void calc_effarea(const int& ii,const int& ie)
 		
 
 		for(int n=1; n<=nations;n++){
-       		NationVulB(ii,n) = sum(VBarea(ii)(ntmp1(n),ntmp1(n+1)-1));
+       		NationVulB(ii,n) = sum(pow(VBarea(ii)(ntmp1(n),ntmp1(n+1)-1.0)+0.00001,fbeta));
        	}
 
 
@@ -416,7 +416,8 @@ FUNCTION void calc_effarea(const int& ii,const int& ie)
 		for(int rr= sarea; rr<=narea; rr++)
 		{
 			
-			tmp1(rr)= pow((VBarea(ii)(rr)/(NationVulB(ii)(indnatarea(rr))+0.01))+0.0000001,fbeta) * effPwr(rr);	
+			//tmp1(rr)= pow((VBarea(ii)(rr)/(NationVulB(ii)(indnatarea(rr))+0.01))+0.0000001,fbeta) * effPwr(rr);	
+			tmp1(rr)= (pow(VBarea(ii)(rr)+0.00001,fbeta)/(NationVulB(ii)(indnatarea(rr))+0.01)) * effPwr(rr);	
 			tmp2(rr) = tmp1(rr)*TotEffyear(indfisharea(rr))(indyr(ie));
 			Effarea(ii)(rr) = tmp2(rr)*TotEffmonth(indfisharea(rr))(indmonth(ii));
 
@@ -508,7 +509,7 @@ FUNCTION initialization
 	maxPos.initialize();
 	tBo = Nage(1)*wa;
 	
-	calcmaxpos(tBo);
+	calcmaxpos();
 	
 	calc_position(1);
 	calc_effarea(1,itsp);	
@@ -526,12 +527,10 @@ FUNCTION burn_in
 		maxPos.initialize();
 		dvariable tB;	
 		tB = Nage(i)*wa;		
-		calcmaxpos(tB);
+		calcmaxpos();
 
 		calc_position(i);	
 		calc_effarea(i,itsp);	
-		
-
 		
 	}
 
@@ -547,7 +546,7 @@ FUNCTION move_grow_die
 		
 		maxPos.initialize();	
 		tB = Nage(i)*wa;		
-		calcmaxpos(tB);	
+		calcmaxpos();	
 		calc_position(i);
 		calc_effarea(i,i);
 		
@@ -616,8 +615,8 @@ FUNCTION calc_obj_func
 				P(i) = ((predCatchNatAge(ii)(sage,nage))/(sum(predCatchNatAge(ii)(sage,nage))+0.01))+0.000001;
 				
 
-				//cout<<"O("<<i<<")"<<O(i)<<endl;
 				//cout<<"P("<<i<<")"<<P(i)<<endl;
+				//cout<<"O("<<i<<")"<<O(i)<<endl;
 				
 				
 			}			
@@ -646,11 +645,11 @@ FUNCTION calc_obj_func
 
 	
 	//f=sum(nlvec)+sum(npvec);
-	//f=sum(nlvec)/10000;
-	f=sum(nlvec);
+	f=sum(nlvec)/10000;
+	
 
 
-FUNCTION dvar_vector calcmaxpos(const dvariable& tb)
+FUNCTION dvar_vector calcmaxpos()
 
 	maxPos(sage,nage) = 1./(1.+mfexp(-(age-maxPos50)/maxPossd));
 	maxPos(sage,nage) *= (narea-sarea);
