@@ -53,12 +53,21 @@ DATA_SECTION
 	init_number m;
 	init_number fe;
 	init_number q;
+	init_number fbeta;
 	init_number sigR;		
 	
-	init_number tau_c; 		
+	init_number tau_c; 
+	init_number tau_survey;		
 	init_number err;
 
-	init_number fbeta;
+
+	//======================
+	//Survey input 
+	//======================
+	init_int surv_mon;
+	init_int surv_nobs;
+	init_vector surv_yrs(1,surv_nobs);
+
 	//=================================
 	//parameters in estimation model 
 	//
