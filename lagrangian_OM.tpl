@@ -257,10 +257,10 @@ PARAMETER_SECTION
 
 	//derived quantities
 	number kappa;
-	number phie;
 	number So;
 	number Bo
 	number beta;
+	number phiE;
 
 	number m_tsp;
 	
@@ -277,10 +277,16 @@ PARAMETER_SECTION
 	vector itB(rep_yr+1,nyr);
 	vector totcatch(rep_yr+1,nyr);
 	vector Ut(rep_yr+1,nyr);
+	vector spr(syr,nyr);
+	vector phie(syr,nyr);
+
+
 	
 
 	
 	matrix Nage(1,ntstp,sage,nage);
+	matrix Catage(1,ntstp,sage,nage);
+	matrix Fatage(1,ntstp,sage,nage);
  	matrix VulB(1,ntstp,sage,nage);
  	matrix PosX(1,ntstp,sage,nage);
  	//matrix Effage(1,ntstp,sage,nage);
@@ -290,13 +296,20 @@ PARAMETER_SECTION
  	matrix tot_comm_obsCatage(rep_yr+1,nyr,sage,nage);
  	matrix comm_obsCatage(rep_yr+1,nyr,sage,nage);
  	matrix surv_obsCatage(1,surv_nobs,sage,nage);
- 	
- 	
+ 	matrix yNage(syr,nyr,sage,nage);
+ 	matrix yFatage(syr,nyr,sage,nage);
+ 	matrix seltotal(syr,nyr,sage,nage);
+ 	matrix yCatchtotalage(syr,nyr,sage,nage);
+
+ 	3darray selfisharea(syr,nyr,1,fisharea,sage-2,nage);
+ 	3darray selnation(syr,nyr,1,nations,sage-2,nage) 	
  	//3darray surv_obsCatage(1,surv_nobs,1,fisharea,sage,nage);
  	3darray propVBarea(1,ntstp,sarea,narea,sage-2,nage);
  	3darray NAreaAge(1,ntstp,sarea,narea,sage,nage);
  	3darray CatchAreaAge(1,ntstp,sarea,narea,sage,nage);
  	3darray CatchNatAge(1,ntstp,1,fisharea,sage-2,nage);
+ 	3darray yCatchNatAge(syr,nyr,1,fisharea,sage,nage);
+ 	3darray yCatchStateAge(syr,nyr,1,nations,sage,nage);
  	//3darray EffNatAge(1,fisharea,1,ntstp,sage-2,nage);
 
  	matrix obsCatchNatAge(1,tot_pcat,sage-3,nage);
@@ -310,6 +323,8 @@ PRELIMINARY_CALCS_SECTION
 
 	survey_data();
 	catage_comm();
+	calc_selectivity();
+	calc_spr();
 	
 	output_true();
 	output_dat();
@@ -341,12 +356,19 @@ FUNCTION incidence_functions
 
 	maxPos.initialize();
 	
-	lxo = mfexp(-m*age);
-	lxo(nage) /= 1. - mfexp(-m); 
+	lxo(sage)=1;
+	for(int a = sage+1; a<= nage; a++){
+		lxo(a) = lxo(a-1)*mfexp(-m);
+	}	
+	lxo(nage) /= (1. - mfexp(-m)); 
+
+	cout<<"lxo is "<< lxo<<endl;
+
 
 	kappa 	= 4*h/(1-h);
-	phie	= lxo*fa;
-	So 		= kappa/phie;
+	phiE	= elem_prod(lxo,fa)*wa;
+
+	So 		= kappa/phiE;
 	Bo 		= kappa/So*Ro;
 	beta 	= (kappa-1)/Bo;
 
@@ -385,6 +407,8 @@ FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt)
             	Nage(ii)(nage) = sum(elem_div(elem_prod((Nage(ii-1)(nage-1)*propBarea),mfexp(-(m_tsp+q*Effarea(ii-1)*va(nage-1)))),
             					(1.-mfexp(-(m_tsp+q*Effarea(ii-1)*va(nage))))))+
             					(Nage(ii-1)(nage-1)*(1.0-sum(propBarea))*mfexp(-m_tsp))/(1.-mfexp(-m_tsp));
+
+            	yNage(indyr(ii))(sage,nage)= Nage(ii)(sage,nage);
             	
             	break;
             	
@@ -478,7 +502,11 @@ FUNCTION void calc_catage(const int& ii)
 				CatchAreaAge(ii)(r)(a) = q*Effarea(ii)(r)*va(a)/(q*Effarea(ii)(r)*va(a)+m_tsp)*(1-mfexp(-(q*Effarea(ii)(r)*va(a)+m_tsp)))*NAreaAge(ii)(r)(a);
 				CatchNatAge(ii)(indfisharea(r))(a)+= CatchAreaAge(ii)(r)(a);
 			}
-
+			
+			Catage(ii)(sage,nage) += CatchAreaAge(ii)(r)(sage,nage);
+			yCatchNatAge(indyr(ii))(indfisharea(r))(sage,nage) += CatchAreaAge(ii)(r)(sage,nage);			
+			yCatchStateAge(indyr(ii))(indnatarea(r))(sage,nage) += CatchAreaAge(ii)(r)(sage,nage);
+			yCatchtotalage(indyr(ii))(sage,nage) += CatchAreaAge(ii)(r)(sage,nage);
 		}
 		//cout<<"Ok after calc_catage"<< endl;
 
@@ -502,6 +530,7 @@ FUNCTION initialization
 
 	VulB(1) = elem_prod(elem_prod(Nage(1),va),wa);
 	SB(1) = elem_prod(Nage(1),fa)*wa/2;
+	yNage(1)(sage,nage)= Nage(1)(sage,nage);
 
 	maxPos.initialize();
 	tB(1) = Nage(1)*wa;
@@ -683,6 +712,70 @@ FUNCTION dvar_vector calcmaxpos()
 
 
 
+FUNCTION calc_selectivity
+
+	int n, nn, i;
+
+	for(i=syr; i<=nyr;i++){
+		
+		for(n=1;n<=nations;n++){
+			
+			selnation(i)(n)(sage-1)=i;
+			selnation(i)(n)(sage-2)=n;
+			selnation(i)(n)(sage,nage) = elem_div(yCatchStateAge(i)(n)(sage,nage),yNage(i)(sage,nage))/max(elem_div(yCatchStateAge(i)(n)(sage,nage),yNage(i)(sage,nage)));
+
+		}
+	
+		for(nn=1;nn<=fisharea;nn++){
+			
+			selfisharea(i)(nn)(sage-1)=i;
+			selfisharea(i)(nn)(sage-2)=nn;
+			selfisharea(i)(nn)(sage,nage) = elem_div(yCatchNatAge(i)(nn)(sage,nage),yNage(i)(sage,nage))/max(elem_div(yCatchNatAge(i)(nn)(sage,nage),yNage(i)(sage,nage)));	
+
+		}
+
+		seltotal(i)(sage,nage) = elem_div(yCatchtotalage(i)(sage,nage),yNage(i)(sage,nage));
+	}
+
+FUNCTION calc_spr	
+
+	int i, ii, a;
+
+	dvector lz(sage,nage);
+
+	for(i=1; i<=ntstp;i++){
+
+		Fatage(i)(sage,nage)=elem_div(Catage(i)(sage,nage),Nage(i)(sage,nage));
+		yFatage(indyr(i))(sage,nage) += Fatage(i)(sage,nage);
+	}
+	
+	
+	for(ii=syr; ii<=nyr;ii++){
+			
+		lz.initialize();
+		lz(1) = 1;
+
+
+		for(a=sage+1; a<=nage;a++){
+			lz(a)= value(lz(a-1)*mfexp(-m-yFatage(ii)(a-1)));
+		}
+		lz(nage) /=  value(1.-mfexp(-m-yFatage(ii)(nage)));
+
+		
+			//cout<<"Fatage(ii)(nage) is "<< Fatage(ii)(nage)<<endl;
+			//cout<<"lz is "<< lz<<endl;
+	
+
+
+		phie(ii)=elem_prod(lz,fa)*wa;
+		spr(ii)=phie(ii)/phiE;
+
+
+	}
+
+
+
+
 FUNCTION output_true
 	
 	ofstream ofs("lagrangian_OM.rep");
@@ -729,7 +822,18 @@ FUNCTION output_true
 	ofs<<"indyr"<< endl << indyr<<endl;
 	ofs<<"indmonth"<< endl << indmonth<<endl;
 	ofs<<"indnatarea"<< endl << indnatarea<<endl;
-
+	ofs<<"selfisharea"<< endl << selfisharea <<endl;
+	ofs<<"selnation"<< endl << selnation <<endl;
+	ofs<<"seltotal"<< endl << seltotal <<endl;
+	ofs<<"yCatchtotalage"<< endl << yCatchtotalage <<endl;
+	ofs<<"yCatchNatAge"<< endl << yCatchNatAge <<endl;
+	ofs<<"yCatchStateAge"<< endl << yCatchStateAge <<endl;
+	ofs<<"yNage"<< endl << yNage <<endl;
+	ofs<<"Fatage"<< endl << Fatage <<endl;
+	ofs<<"yFatage"<< endl << yFatage <<endl;
+	ofs<<"spr"<< endl <<spr <<endl;
+	ofs<<"phie"<< endl <<phie <<endl;
+	ofs<<"phiE"<< endl <<phiE <<endl;
 
 
 	

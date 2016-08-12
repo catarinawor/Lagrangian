@@ -326,6 +326,7 @@ PARAMETER_SECTION
 
 	number kappa;
 	number phie;
+	number phiE;
 	number So;
 	number Bo;
 	number Ro;
@@ -551,8 +552,8 @@ FUNCTION incidence_functions
 	sigma_r = theta(8)(1);
 
 	kappa 	= 4*h/(1-h);
-	phie	= lxo*fa;
-	So 		= kappa/phie;
+	phiE	= lxo*fa;
+	So 		= kappa/phiE;
 	Bo 		= kappa/So*Ro;
 	beta 	= (kappa-1)/Bo;
 
@@ -883,6 +884,90 @@ FUNCTION dvar_vector calcmaxpos()
 			
 	return(maxPos);
 
+
+FUNCTION calcSprRatio
+	/*** @brief Calculate SPR in the last year
+	 * @details SPR=phi.e/phi.E 
+	 * TODO read in SPR target
+	 */
+
+	dvector     lx(sage,nage);
+	dvector     lw(sage,nage);  
+	dvector     lz(sage,nage);
+	dvector     lzw(sage,nage);
+	dvector 	fec(sage,nage);
+	dvector 	fa(sage,nage);
+	
+	dvector 	ma(sage,nage);
+	dvector 	fe(1,nfleet);
+	dvector 	sol(1,ngroup);
+
+	dvector fbars(1,4001);
+	fbars.fill_seqadd(0.000,0.001);
+
+	int NF=size_count(fbars);
+
+	dvector allspr(1,NF);
+	dvector allphie(1,NF);
+	dvector diffspr(1,NF);
+
+	for(it=1;it<=NF;it++)
+	{
+
+		phiE.initialize(); 
+			
+		lx.initialize();
+		lz.initialize();
+						
+		lx(sage) = 1.0;
+		lz(sage) = 1.0;
+		
+		fa.initialize();
+
+		fe = fbars(it)*va;
+					
+		//va = value(mfexp(log_sel(nFleetIndex(k))(ig)(nyr)));
+		
+				
+
+		// | Step 1. average natural mortality rate at age.
+		// | Step 2. calculate survivorship
+					for(j=sage;j<=nage;j++)
+					{
+						ma(j) = m;
+						fec(j) = ;
+	
+						if(j > sage)
+						{
+							lx(j) = lx(j-1) * mfexp(-ma(j-1));
+							lz(j) = lz(j-1) * mfexp(-ma(j-1)-fa(j-1));
+						}
+						lw(j) = lx(j) * mfexp(-ma(j)*d_iscamCntrl(13));
+						lzw(j) = lz(j) * mfexp(-(ma(j)+fa(j))*d_iscamCntrl(13));
+					}
+					lx(nage) /= 1.0 - mfexp(-ma(nage));
+					lw(nage) /= 1.0 - mfexp(-ma(nage));
+					lz(nage) /= 1.0 - mfexp(-ma(nage)-fa(nage));
+					lzw(nage) /= 1.0 - mfexp(-ma(nage)-fa(nage));
+					
+				
+					// | Step 3. calculate average spawing biomass per recruit.
+		
+				}				
+			}
+			phiE(g) = 1./(narea*nsex) * lw*fec;
+
+			allphie(g)(it) = 1./(narea*nsex) * lzw*fec;
+
+			//cout<<"phiE(g) is "<<phiE(g)<<endl;
+			//cout<<"allphie(g)(it)  is "<<allphie(g)(it) <<endl;
+			
+			allspr(g)(it)=value(allphie(g)(it)/phiE(g));
+			//cout<<"allspr(g)(it) is "<<allspr(g)(it)<<endl;
+			diffspr(g)(it) = (allspr(g)(it)-0.40)*(allspr(g)(it)-0.40); //SPR target fixed at 40% for now
+			
+			
+		} 
 
 REPORT_SECTION
 	
