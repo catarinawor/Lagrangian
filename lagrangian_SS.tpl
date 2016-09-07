@@ -48,8 +48,8 @@ DATA_SECTION
 	init_vector va(sage,nage);
 	init_vector minPos(sage,nage);
 	
-
-	init_matrix TotEffyear(1,fisharea,syr,nyr);
+	init_number Fmult;
+	init_matrix pTotEffyear(1,fisharea,syr,nyr);
 	init_matrix TotEffmonth(1,fisharea,smon,nmon);
 
 	init_vector effPwr(sarea,narea);
@@ -325,7 +325,7 @@ PARAMETER_SECTION
 	//=================================
 
 	number kappa;
-	number phie;
+	
 	number phiE;
 	number So;
 	number Bo;
@@ -353,6 +353,7 @@ PARAMETER_SECTION
 	vector za(sage,nage);
 	vector SB(1,ntstp);
 	vector tB(1,ntstp);
+	vector phie(syr,nyr);
 
 	vector maxPos(sage,nage);
 	vector varPos(sage,nage);
@@ -377,14 +378,30 @@ PARAMETER_SECTION
  	matrix PosX(1,ntstp,sage,nage);
  	matrix Effage(1,ntstp,sage,nage);
  	matrix VBarea(1,ntstp,sarea,narea);
+ 	matrix Fatage(1,ntstp,sage,nage);
+ 	matrix Catage(1,ntstp,sage,nage);
+
+ 	matrix yFatage(syr,nyr,sage,nage);
+ 	matrix yNage(syr,nyr,sage,nage);
+ 	matrix seltotal(syr,nyr,sage,nage);
+ 	matrix yCatchtotalage(syr,nyr,sage,nage);
+
+
  	
  	//matrix propVBarea(1,ntstp,sarea,narea);
  	matrix Effarea(1,ntstp,sarea,narea);
+ 	matrix TotEffyear(1,fisharea,syr,nyr);
+		
 	
  	3darray NAreaAge(1,ntstp,sarea,narea,sage,nage);	
  	3darray CatchAreaAge(itsp,ntstp,sarea,narea,sage,nage);
  	3darray CatchNatAge(itsp,ntstp,1,fisharea,sage-2,nage);
  	3darray EffNatAge(1,fisharea,itsp,ntstp,sage-2,nage);
+ 	3darray selfisharea(syr,proj_yr,1,fisharea,sage-2,nage);
+ 	3darray selnation(syr,proj_yr,1,nations,sage-2,nage) 
+
+ 	3darray yCatchNatAge(syr,proj_yr,1,fisharea,sage,nage);
+ 	3darray yCatchStateAge(syr,proj_yr,1,nations,sage,nage);
  	
  	matrix predCatchNatAge(1,tot_pcat,sage-3,nage);
 
@@ -400,6 +417,7 @@ PROCEDURE_SECTION
 	
 	move_grow_die();
 	clean_catage();
+	calc_selectivity();
 	
 	calcStockRecruitment();
 	calc_obj_func();
@@ -450,6 +468,8 @@ FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt )
             					(1.-mfexp(-(m_tsp+q*Effarea(ii-1)*va(nage))))))+
             					(Nage(ii-1)(nage-1)*(1.0-sum(propBarea))*mfexp(-m_tsp))/(1.-mfexp(-m_tsp));
 
+            	yNage(indyr(ii))(sage,nage) = Nage(ii)(sage,nage);
+
             	break;
             	
             default: 
@@ -466,6 +486,9 @@ FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt )
             		Nage(ii)(a) = Nage(ii-1)(a)*propBarea*mfexp(-(m_tsp+q*Effarea(ii-1)*va(a)))+
             					 Nage(ii-1)(a)*(1.0-sum(propBarea))*mfexp(-(m_tsp));
             	}
+
+
+            	yNage(indyr(ii))(sage,nage) += Nage(ii)(sage,nage);
 
             	break;
         }
@@ -533,6 +556,13 @@ FUNCTION void calc_catage(const int& ii)
 				CatchNatAge(ii)(indfisharea(r))(a)+= CatchAreaAge(ii)(r)(a);
 			}
 
+			Catage(ii)(sage,nage) += CatchAreaAge(ii)(r)(sage,nage);
+			yCatchNatAge(indyr(ii))(indfisharea(r))(sage,nage) += CatchAreaAge(ii)(r)(sage,nage);			
+			yCatchStateAge(indyr(ii))(indnatarea(r))(sage,nage) += CatchAreaAge(ii)(r)(sage,nage);
+			yCatchtotalage(indyr(ii))(sage,nage) += CatchAreaAge(ii)(r)(sage,nage);
+
+
+
 		}
 
 		//cout<<"OK after calc_catage"<<endl;
@@ -564,6 +594,12 @@ FUNCTION incidence_functions
 	maxPossd = mfexp(theta(4)(1));
 	cvPos 	 = mfexp(theta(2)(1));
 	mo 	= mfexp(theta(1)(1));
+
+	for(int n=1;n<=fisharea;n++)
+    {
+    	TotEffyear(n)(syr,nyr) = Fmult* pTotEffyear(n)(syr,nyr);
+    }
+
 	
 	
 
@@ -585,6 +621,7 @@ FUNCTION initialization
 	}
 	Nage(1)(nage) /= (1.-mfexp(-za(nage)));
 
+	yNage(1)(sage,nage)= Nage(1)(sage,nage);
 	VulB(1) = elem_prod(elem_prod(Nage(1),va),wa);
 	SB(1) = elem_prod(Nage(1),fa)*wa/2;
 
@@ -650,7 +687,7 @@ FUNCTION calcStockRecruitment
 	//{
 		tmp_rt = elem_div((So*SSB),(1.+beta*SSB));
 	//}
-	cout<<" chagou aqui?"<<endl;
+	
 
 	delta = (log_avgrec+wt)-log(tmp_rt)+0.5*sigma_r*sigma_r;
 
@@ -762,32 +799,14 @@ FUNCTION calc_obj_func
 			{
 				int ii;
 				ii = sum(pcat(1,n))-pcat(n)+i;
-				//cout<<"ii is "<<ii<<endl;
-				//cout<<"ii"<<ii<<endl;
-					
-				//O(i) = (obsCatchNatAge(ii)(sage,nage)+0.1e-30)/sum(obsCatchNatAge(ii)(sage,nage)+0.1e-5);
-				//P(i) = (predCatchNatAge(ii)(sage,nage)+0.1e-30)/sum(predCatchNatAge(ii)(sage,nage)+0.1e-5);
-				O(i) = (obsCatchNatAge(ii)(sage,nage))/sum(obsCatchNatAge(ii)(sage,nage));
+				O(i) = (obsCatchNatAge(ii)(sage,nage))/sum((ii)(sage,nage));
 				P(i) = ((predCatchNatAge(ii)(sage,nage))/(sum(predCatchNatAge(ii)(sage,nage))+0.01))+0.000001;
 				
 
-				//cout<<"P("<<i<<")"<<P(i)<<endl;
-				//cout<<"O("<<i<<")"<<O(i)<<endl;
 				
 				
 			}			
 
-			//cout<<"dmvlogistic(O,P,nu,tau_c(n),dMinP) is "<< dmvlogistic(O,P,nu,tau_c,dMinP)<<endl;
-			//exit(1);									
-			//nlvec(n) =  dmvlogistic(O,P,nu,tau_c(n),dMinP);
-			//cout<<"mo is"<<mo<<endl;
-			//cout<<"cvPos is"<<cvPos<<endl;
-			//cout<<"maxPos50 is"<<maxPos50<<endl;
-			//cout<<"tau_c is"<<tau_c<<endl;
-			//cout<<"dMinP is"<<dMinP<<endl;
-			//cout<<"pcat(n) is"<<pcat(n)<<endl;
-			//cout<<"maxPossd is"<<maxPossd<<endl;
-			//cout<<"dmvlogistic(O,P,nu,tau_c,dMinP) is "<<dmvlogistic(O,P,nu,tau_c,dMinP)<<endl;
 			nlvec(1)(n) =  dmvlogistic(O,P,nu,tau_c,dMinP);
 
 		}
@@ -885,25 +904,54 @@ FUNCTION dvar_vector calcmaxpos()
 	return(maxPos);
 
 
-FUNCTION calcSprRatio
+FUNCTION calc_spr
 	/*** @brief Calculate SPR in the last year
 	 * @details SPR=phi.e/phi.E 
 	 * TODO read in SPR target
 	 */
 
-	dvector     lx(sage,nage);
-	dvector     lw(sage,nage);  
-	dvector     lz(sage,nage);
-	dvector     lzw(sage,nage);
-	dvector 	fec(sage,nage);
-	dvector 	fa(sage,nage);
+	 int i, ii, a;
+
+	dvector lz(sage,nage);
+
+	for(i=1; i<=ntstp;i++){
+
+		Fatage(i)(sage,nage)=elem_div(Catage(i)(sage,nage),Nage(i)(sage,nage));
+		yFatage(indyr(i))(sage,nage) += Fatage(i)(sage,nage);
+	}
 	
-	dvector 	ma(sage,nage);
-	dvector 	fe(1,nfleet);
-	dvector 	sol(1,ngroup);
+	
+	for(ii=syr; ii<=nyr;ii++){
+			
+		lz.initialize();
+		lz(1) = 1;
+
+
+		for(a=sage+1; a<=nage;a++){
+			lz(a)= value(lz(a-1)*mfexp(-m-yFatage(ii)(a-1)));
+		}
+		lz(nage) /=  value(1.-mfexp(-m-yFatage(ii)(nage)));
+
+		
+			//cout<<"Fatage(ii)(nage) is "<< Fatage(ii)(nage)<<endl;
+			//cout<<"lz is "<< lz<<endl;
+	
+
+
+		phie(ii)=elem_prod(lz,fa)*wa;
+		spr(ii)=phie(ii)/phiE;
+
+
+	}
+
+
+FUNCTION calc_spr_optim	
+
 
 	dvector fbars(1,4001);
 	fbars.fill_seqadd(0.000,0.001);
+
+	int  it, itt, a;
 
 	int NF=size_count(fbars);
 
@@ -911,63 +959,77 @@ FUNCTION calcSprRatio
 	dvector allphie(1,NF);
 	dvector diffspr(1,NF);
 
+	dvector     lz(sage,nage);
+	dvector 	fage(sage,nage);
+	dvector 	tmpsel(sage,nage);
+
+	dvariable sol;
+
+
+
 	for(it=1;it<=NF;it++)
 	{
+		tmpsel = seltotal(nyr)(sage,nage);
+		fage = fbars(it)*seltotal;
 
-		phiE.initialize(); 
-			
-		lx.initialize();
 		lz.initialize();
-						
-		lx(sage) = 1.0;
-		lz(sage) = 1.0;
-		
-		fa.initialize();
-
-		fe = fbars(it)*va;
-					
-		//va = value(mfexp(log_sel(nFleetIndex(k))(ig)(nyr)));
-		
 				
+		lz(1) = 1;
 
-		// | Step 1. average natural mortality rate at age.
-		// | Step 2. calculate survivorship
-					for(j=sage;j<=nage;j++)
-					{
-						ma(j) = m;
-						fec(j) = ;
-	
-						if(j > sage)
-						{
-							lx(j) = lx(j-1) * mfexp(-ma(j-1));
-							lz(j) = lz(j-1) * mfexp(-ma(j-1)-fa(j-1));
-						}
-						lw(j) = lx(j) * mfexp(-ma(j)*d_iscamCntrl(13));
-						lzw(j) = lz(j) * mfexp(-(ma(j)+fa(j))*d_iscamCntrl(13));
-					}
-					lx(nage) /= 1.0 - mfexp(-ma(nage));
-					lw(nage) /= 1.0 - mfexp(-ma(nage));
-					lz(nage) /= 1.0 - mfexp(-ma(nage)-fa(nage));
-					lzw(nage) /= 1.0 - mfexp(-ma(nage)-fa(nage));
-					
-				
-					// | Step 3. calculate average spawing biomass per recruit.
-		
-				}				
-			}
-			phiE(g) = 1./(narea*nsex) * lw*fec;
+		for(a=sage+1; a<=nage;a++){
+			
+			lz(a) = value(lz(a-1)*mfexp(-m-fage(a-1)));
+		}
+		lz(nage) /=  value(1.-mfexp(-m-fage(a-1)));
 
-			allphie(g)(it) = 1./(narea*nsex) * lzw*fec;
+		allphie(it)=lz*fa;
+		allspr(it)= allphie(it)/phiE;
+		diffspr(it)= (allspr(it)-0.40)*(allspr(it)-0.40);
 
-			//cout<<"phiE(g) is "<<phiE(g)<<endl;
-			//cout<<"allphie(g)(it)  is "<<allphie(g)(it) <<endl;
-			
-			allspr(g)(it)=value(allphie(g)(it)/phiE(g));
-			//cout<<"allspr(g)(it) is "<<allspr(g)(it)<<endl;
-			diffspr(g)(it) = (allspr(g)(it)-0.40)*(allspr(g)(it)-0.40); //SPR target fixed at 40% for now
-			
-			
+
+	}
+
+
+	sol=min(diffspr);
+
+	for(itt=1; itt<=NF; itt++)
+	{
+		if(sol==diffspr(itt)){
+			spr_opt = allspr(itt);
+			fspr = fbars(itt);
 		} 
+	}	
+	
+	
+	
+
+
+FUNCTION calc_selectivity
+
+	int n, nn, i;
+
+	for(i=syr; i<=nyr;i++){
+		
+		for(n=1;n<=nations;n++){
+			
+			selnation(i)(n)(sage-1)=i;
+			selnation(i)(n)(sage-2)=n;
+			selnation(i)(n)(sage,nage) = elem_div(yCatchStateAge(i)(n)(sage,nage),yNage(i)(sage,nage))/max(elem_div(yCatchStateAge(i)(n)(sage,nage),yNage(i)(sage,nage)));
+
+		}
+	
+		for(nn=1;nn<=fisharea;nn++){
+			
+			selfisharea(i)(nn)(sage-1)=i;
+			selfisharea(i)(nn)(sage-2)=nn;
+			selfisharea(i)(nn)(sage,nage) = elem_div(yCatchNatAge(i)(nn)(sage,nage),yNage(i)(sage,nage))/max(elem_div(yCatchNatAge(i)(nn)(sage,nage),yNage(i)(sage,nage)));	
+
+		}
+
+		seltotal(i)(sage,nage) = elem_div(yCatchtotalage(i)(sage,nage),yNage(i)(sage,nage));
+	}
+
+
 
 REPORT_SECTION
 	
