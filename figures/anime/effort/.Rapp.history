@@ -1,0 +1,2687 @@
+x[,4]<-1
+x
+as.data.frame(x)
+a<-rep("a",6)
+x<-as.data.frame(x)
+x[,7]<-a
+x
+r=.3
+K=1000
+t=20
+B r<-.3#
+  K<-1000#
+ t<-20#
+ Bo<-K#
+#
+ B<-numeric()#
+ It<-numeric()#
+#
+ B[1]<-Bo#
+ C[1:t]<-10#
+#
+ for(i in 1:20){#
+#
+ B[i+1]<-B[i]+rB[i]*(1-B[i]/K)-C[i]#
+ It[i]<-0.01*B[i]*exp(rnorm(1,0,.2))#
+#
+ }
+r<-.3#
+  K<-1000#
+ t<-20#
+ Bo<-K#
+#
+ B<-numeric()#
+ It<-numeric()#
+#
+ B[1]<-Bo#
+ C[1:t]<-10#
+#
+ for(i in 1:20){#
+#
+ B[i+1]<-B[i]+r*B[i]*(1-B[i]/K)-C[i]#
+ It[i]<-0.01*B[i]*exp(rnorm(1,0,.2))#
+#
+ }
+r<-.3#
+  K<-1000#
+ t<-20#
+ Bo<-K#
+#
+ B<-numeric()#
+ It<-numeric()#
+ Ct<-numeric()#
+#
+ B[1]<-Bo#
+ Ct[1:t]<-10#
+#
+ for(i in 1:20){#
+#
+ B[i+1]<-B[i]+r*B[i]*(1-B[i]/K)-Ct[i]#
+ It[i]<-0.01*B[i]*exp(rnorm(1,0,.2))#
+#
+ }
+B
+r<-.3#
+  K<-1000#
+ t<-20#
+ Bo<-K#
+#
+ B<-numeric()#
+ It<-numeric()#
+ Ct<-numeric()#
+#
+ B[1]<-Bo#
+ Ct[1:5]<-5#
+ Ct[6:15]<-15#
+ Ct[6:15]<-10#
+ for(i in 1:20){#
+#
+ B[i+1]<-B[i]+r*B[i]*(1-B[i]/K)-Ct[i]#
+ It[i]<-0.01*B[i]*exp(rnorm(1,0,.2))#
+#
+ }
+B
+r<-.3#
+  K<-1000#
+ t<-20#
+ Bo<-K#
+#
+ B<-numeric()#
+ It<-numeric()#
+ Ct<-numeric()#
+#
+ B[1]<-Bo#
+ Ct[1:5]<-5#
+ Ct[6:15]<-15#
+ Ct[16:t]<-10#
+ for(i in 1:20){#
+#
+ B[i+1]<-B[i]+r*B[i]*(1-B[i]/K)-Ct[i]#
+ It[i]<-0.01*B[i]*exp(rnorm(1,0,.2))#
+#
+ }
+B
+plot(1:21,B)
+?optim
+SPfunc<-function(p){#
+#
+Best<-numeric()#
+IT<-numeric()#
+Ctrep<-Ct*2#
+#
+for(i in 1:20){#
+#
+ Best[i+1]<-Best[i]+r*Best[i]*(1-Best[i]/K)-Ctrep[i]#
+ IT[i]<-0.01*Best[i]#
+#
+ }#
+#
+SS<-sum((log(IT)-log(It))^2)#
+return(SS)#
+#
+}#
+#
+param<-c(0.3,1000)#
+#
+optim(param,SPfunc)
+SPfunc<-function(p){#
+#
+Best<-numeric()#
+IT<-numeric()#
+Ctrep<-Ct*2#
+#
+r<-p[1]#
+K<-p[2]#
+#
+for(i in 1:20){#
+#
+ Best[i+1]<-Best[i]+r*Best[i]*(1-Best[i]/K)-Ctrep[i]#
+ IT[i]<-0.01*Best[i]#
+#
+ }#
+#
+SS<-sum((log(IT)-log(It))^2)#
+return(SS)#
+#
+}
+param<-c(0.3,1000)#
+#
+optim(param,SPfunc)
+SPfunc(param)
+It
+IT
+SPfunc<-function(p){#
+#
+Best<-numeric()#
+IT<-numeric()#
+Ctrep<-Ct*2#
+#
+r<-p[1]#
+K<-p[2]#
+#
+for(i in 1:20){#
+#
+ Best[i+1]<-Best[i]+r*Best[i]*(1-Best[i]/K)-Ctrep[i]#
+ IT[i]<-0.01*Best[i]#
+#
+ }#
+#
+SS<-sum((log(IT)-log(It))^2)#
+return(SS)#
+#
+}
+SPfunc(param)
+param
+Best<-numeric()#
+IT<-numeric()#
+Ctrep<-Ct*2#
+#
+r<-p[1]#
+K<-p[2]#
+#
+for(i in 1:20){#
+#
+ Best[i+1]<-Best[i]+r*Best[i]*(1-Best[i]/K)-Ctrep[i]#
+ IT[i]<-0.01*Best[i]#
+#
+ }#
+#
+SS<-sum((log(IT)-log(It))^2)
+SS
+(log(IT)-log(It)
+)
+IT
+Best
+SPfunc<-function(p){#
+#
+Best<-numeric()#
+IT<-numeric()#
+Ctrep<-Ct*2#
+#
+r<-p[1]#
+K<-p[2]#
+Best[1]<-K#
+for(i in 1:20){#
+#
+ Best[i+1]<-Best[i]+r*Best[i]*(1-Best[i]/K)-Ctrep[i]#
+ IT[i]<-0.01*Best[i]#
+#
+ }#
+#
+SS<-sum((log(IT)-log(It))^2)#
+return(SS)#
+#
+}#
+#
+param<-c(0.3,1000)#
+#
+SPfunc(param)
+optim(param,SPfunc)
+warnings
+warnings()
+param<-c(0.3,000)#
+#
+SPfunc(param)#
+#
+optim(param,SPfunc)
+SPfunc(param)
+param<-c(0.3,3000)
+SPfunc(param)
+optim(param,SPfunc)
+r<-.3#
+  K<-1000#
+ t<-20#
+ Bo<-K#
+#
+ B<-numeric()#
+ It<-numeric()#
+ Ct<-numeric()#
+#
+ B[1]<-Bo#
+ Ct[1:5]<-5#
+ Ct[6:15]<-15#
+ Ct[16:t]<-10#
+ for(i in 1:20){#
+#
+ B[i+1]<-B[i]+r*B[i]*(1-B[i]/K)-Ct[i]#
+ It[i]<-0.01*B[i]*exp(rnorm(1,0,.01))#
+#
+ }#
+SPfunc<-function(p){#
+#
+Best<-numeric()#
+IT<-numeric()#
+Ctrep<-Ct*2#
+#
+r<-p[1]#
+K<-p[2]#
+Best[1]<-K#
+for(i in 1:20){#
+#
+ Best[i+1]<-Best[i]+r*Best[i]*(1-Best[i]/K)-Ctrep[i]#
+ IT[i]<-0.01*Best[i]#
+#
+ }#
+#
+SS<-sum((log(IT)-log(It))^2)#
+return(SS)#
+#
+}#
+#
+param<-c(0.3,3000)#
+#
+SPfunc(param)
+optim(param,SPfunc)
+plot(1:20,It)
+plot(1:20,It,type="b")
+p=param
+param<-c(0.3,1000)
+p=param
+Best<-numeric()#
+IT<-numeric()#
+Ctrep<-Ct*2#
+#
+r<-p[1]#
+K<-p[2]#
+Best[1]<-K#
+for(i in 1:20){#
+#
+ Best[i+1]<-Best[i]+r*Best[i]*(1-Best[i]/K)-Ctrep[i]#
+ IT[i]<-0.01*Best[i]#
+#
+ }
+IT[
+IT
+iT
+IT
+CT
+Ct
+Ctrep
+B<-numeric()#
+ It<-numeric()#
+ Ct<-numeric()#
+#
+ B[1]<-Bo#
+ Ct[1:5]<-5#
+ Ct[6:15]<-15#
+ Ct[16:t]<-10#
+ for(i in 1:20){#
+#
+ B[i+1]<-B[i]+r*B[i]*(1-B[i]/K)-Ct[i]#
+ It[i]<-0.01*B[i]*exp(rnorm(1,0,.01))#
+#
+ }
+Best<-numeric()#
+IT<-numeric()#
+Ctrep<-Ct*2#
+#
+r<-p[1]#
+K<-p[2]#
+Best[1]<-K#
+for(i in 1:20){#
+#
+ Best[i+1]<-Best[i]+r*Best[i]*(1-Best[i]/K)-Ctrep[i]#
+ IT[i]<-0.01*Best[i]#
+#
+ }
+IT
+It
+SPfunc<-function(p){#
+#
+Best<-numeric()#
+IT<-numeric()#
+Ctrep<-Ct*2#
+#
+r<-p[1]#
+K<-p[2]#
+Best[1]<-K#
+for(i in 1:20){#
+#
+ Best[i+1]<-Best[i]+r*Best[i]*(1-Best[i]/K)-Ctrep[i]#
+ IT[i]<-0.01*Best[i]#
+#
+ }#
+#
+SS<-sum((log(IT)-log(It))^2)#
+return(SS)#
+#
+}
+param<-c(0.3,1000)
+SPfunc(param)
+optim(param,SPfunc)
+warnings()
+SPfunc<-function(p){#
+#
+Best<-numeric()#
+IT<-numeric()#
+Ctrep<-Ct*2#
+#
+r<-p[1]#
+K<-p[2]#
+q<-p[3]#
+Best[1]<-K#
+for(i in 1:20){#
+#
+ Best[i+1]<-Best[i]+r*Best[i]*(1-Best[i]/K)-Ctrep[i]#
+ IT[i]<-q*Best[i]#
+#
+ }#
+#
+SS<-sum((log(IT)-log(It))^2)#
+return(SS)#
+#
+}#
+#
+param<-c(0.3,1000,0.01)#
+#
+SPfunc(param)
+optim(param,SPfunc)
+Best<-numeric()#
+#
+Ctrep<-Ct*2#
+#
+for(i in 1:20){#
+#
+ Best[i+1]<-Best[i]+rest*Best[i]*(1-Best[i]/Kest)-Ctrep[i]#
+#
+ }
+rest<-res$par[1]#
+Kest<-res$par[2]#
+qest<res$par[3]#
+Best<-numeric()#
+#
+Ctrep<-Ct*2#
+#
+for(i in 1:20){#
+#
+ Best[i+1]<-Best[i]+rest*Best[i]*(1-Best[i]/Kest)-Ctrep[i]#
+#
+ }
+res<-optim(param,SPfunc)#
+rest<-res$par[1]#
+Kest<-res$par[2]#
+qest<res$par[3]#
+Best<-numeric()#
+#
+Ctrep<-Ct*2#
+#
+for(i in 1:20){#
+#
+ Best[i+1]<-Best[i]+rest*Best[i]*(1-Best[i]/Kest)-Ctrep[i]#
+#
+ }
+qest<-res$par[3]
+plot(1:21,B, type="b",color="hotpink",lwd=2)#
+lines(1:21,Best, type="b",lwd=2)
+plot(1:21,B, type="b",color="hotpink",lwd=2, ylim(0,2000))#
+lines(1:21,Best, type="b",lwd=2)
+plot(1:21,B, type="b",color="hotpink",lwd=2, ylim(0,2000))
+plot(1:21,B, type="b",color="hotpink",lwd=2, ylim=c(0,2000))
+plot(1:21,B, type="b",color="hotpink",lwd=2, ylim=c(800,1200))
+plot(1:21,B, type="b",colour="hotpink",lwd=2, ylim=c(800,1200))
+plot(1:21,B, type="b",col="hotpink",lwd=2, ylim=c(800,1200))
+lines(1:21,Best, type="b",lwd=2)
+Best
+Best<-numeric()#
+#
+Ctrep<-Ct*2#
+#
+for(i in 1:20){#
+#
+ Best[i+1]<-Best[i]+rest*Best[i]*(1-Best[i]/Kest)-Ctrep[i]#
+#
+ }
+Best
+Best<-numeric()#
+Best[1]<-Kest#
+#
+Ctrep<-Ct*2#
+#
+for(i in 1:20){#
+#
+ Best[i+1]<-Best[i]+rest*Best[i]*(1-Best[i]/Kest)-Ctrep[i]#
+#
+ }
+Best
+plot(1:21,B, type="b",col="hotpink",lwd=2, ylim=c(800,2200))#
+lines(1:21,Best, type="b",lwd=2)
+Best/B
+24*40*50
+24*40*52*.7
+24*40*52
+24*40*52*.8
+25*40*52*.8
+17.5*40*52*
+17.5*40*52
+2.200*12
+2200*12
+26400/36400
+24*40*52*.72
+xmin=0
+t=1:12
+xmax=15
+vbar=xmin+(xmax-xmin)*(.5+.5*sin(t*2*pi/12-3*2*pi/12))
+plot(t,vbar,type="l", lwd=2)
+t=1:36
+vbar=xmin+(xmax-xmin)*(.5+.5*sin(t*2*pi/12-3*2*pi/12))
+plot(t,vbar,type="l", lwd=2)
+vbar2=xmin+(xmax-xmin)*(sin(t*2*pi/12-3*2*pi/12))
+par(mfrow=c(1,2))
+plot(t,vbar,type="l", lwd=2)
+plot(t,vbar2,type="l", lwd=2)
+(sin(t*2*pi/12-3*2*pi/12))
+(.5+.5*sin(t*2*pi/12-3*2*pi/12))
+(.5*sin(t*2*pi/12-3*2*pi/12))
+(.5*sin(t*2*pi/12))
+log(1)
+xmin=0
+vmax=15
+t=1:12
+xmin+(xmax-xmin)*(0.5+0.5*sin(2*pi/t))
+xmax=15
+xmin+(xmax-xmin)*(0.5+0.5*sin(2*pi/t))
+curva=xmin+(xmax-xmin)*(0.5+0.5*sin(2*pi/t))
+plot(t,curva)
+xmin+(xmax-xmin)*(sin(2*pi/t))
+curva=xmin+(xmax-xmin)*(sin(2*pi/t))
+plot(t,curva)
+2*pi/t
+curva=xmin+(xmax-xmin)*(0.5+0.5*sin(2*pi*t/12))
+plot(t,curva)
+curva=xmin+(xmax-xmin)*(0.5*sin(2*pi*t/12))
+plot(t,curva)
+curva=xmin+(xmax-xmin)*(sin(2*pi*t/12))
+plot(t,curva)
+curva=xmin+(xmax-xmin)*(0.5*sin(2*pi*t/12))
+plot(t,curva)
+min(curva)
+curva=(xmin+(xmax-xmin))*(0.5*sin(2*pi*t/12))
+plot(t,curva)
+curva=(xmin+(xmax-xmin))*(0.5+0.5*sin(2*pi*t/12))
+plot(t,curva)
+min(curva)
+curva=(0.5*sin(2*pi*t/12))
+plot(t,curva)
+17*7
+12*12
+300/144
+install.packages("Rcpp", type = "source")
+q()
+install.packages("Rcpp").
+install.packages("Rcpp")
+library(Rcpp)#
+#> #
+#> Attaching package: 'Rcpp'#
+#> #
+#> The following object is masked from 'package:inline':#
+#> #
+#>     registerPlugin#
+cppFunction('int add(int x, int y, int z) {#
+  int sum = x + y + z;#
+  return sum;#
+}')
+ad(4,7,8)
+add(4,7,8)
+23-12
+ro<-1000#
+h<-0.7#
+m<-0.3#
+fe<-0#
+kappa<-4*h/(1-h)#
+q<-1#
+#
+#vectors#
+wa<-c(1.0121,1.3858,1.725,2.0174,2.2609,2.4589,2.6171)#
+fa<-c(0.072924,0.66935,1.5841,2.0026,2.2595,2.4588,2.6171)#
+va<-c(0.0041512,0.084884,0.60249,1,1,1,1)#
+za<-m+va*fe#
+#
+lx<-vector(length=length(age))#
+lx<-exp(-m*age)#
+lx[length(age)]<-lx[length(age)]/(1-exp(-m))#
+#
+#summary vectors#
+phie<-sum(lx*fa)#
+So<-kappa/phie#
+bo<-kappa/So*ro#
+beta<-(kappa-1)/bo#
+SDR<-1#
+#model dims#
+age<-1:7; nage<-length(age)#
+months<-1:12; nmonths<-length(months)#
+years<-1:20; nyears<-length(years)#
+ntstp<-nmonths*nyears#
+areas<-30:60; nareas<-length(areas)#
+nations<-2; #
+border<-48.7#
+nationareas<-c(sum(areas<border),sum(areas>=border))#
+#annual forcing inputs - this is the stuff that will need to be estimated#
+RelRec<-exp(SDR*rnorm(nyears,0,.6))#
+TotEffyear<-matrix(c(rep(2,nyears),rep(1,nyears)),ncol=2, byrow=F)#
+TotEffmonth<-matrix(c(0,0,0,0.5,1,1,1,1,0.5,0.1,0,0,0,0,0,0,0,1,1,1,0.5,0.3,0.2,0.1),ncol=2, byrow=F)#
+#
+minPos<-c(33.5,33.5,33.5,33.5,33.5,33.5,33.5) #min position in this exalmple is the spawning area so all min positions will bbe set to 0#
+maxPos<-c(33.5,34,39,41,43,45,45) #age based max position#
+varPos<-c(33.5,33.5,33.5,33.5,33.5,33.5,33.5)*0.1#
+#empty objects#
+SB<-vector(length=ntstp)#
+NationVulB<-matrix(nrow=ntstp,ncol=nations)#
+Nage<-matrix(NA,nrow=ntstp,ncol=nage)#
+VulB<-matrix(NA,nrow=ntstp,ncol=nage)#
+PosX<-matrix(NA,nrow=ntstp,ncol=nage)#
+VBarea<-matrix(NA,nrow=ntstp,ncol=nareas)#
+Effarea<-matrix(NA,nrow=ntstp,ncol=nareas)#
+Effage<-matrix(NA,nrow=ntstp,ncol=nage)#
+#
+#fill in matrices#
+#
+#indices#
+indyr<-rep(years, each=nmonths)#
+indmonth<-rep(months,nyears)#
+indnatarea<-rep(1:nations,times=nationareas)#
+#first row stuff#
+Nage[1,1]<-So*bo/(1+beta*bo)#
+#numbers and biomass#
+for(i in 2:nage)#
+{#
+    Nage[1,i]<-Nage[1,(i-1)]*exp(-(m+fe*va[i-1]))#
+}#
+VulB[1,]<-Nage[1,]*va*wa#
+SB[1]<-sum(Nage[1,]*wa*fa)/2#
+#
+#mean positions and biomass by area#
+for(i in 1:length(indyr))#
+{#
+    PosX[i,]<-minPos+(maxPos-minPos)*(0.5+0.5*sin(indmonth[i]*pi/6-pi))#
+}#
+#=======================================================================================================#
+#plot of age distribution by area in a single year - abundance is not represented here.#
+x<-seq(min(areas),max(areas),by=0.1)#
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")#
+cores<-rainbow(nage)#
+#setwd("/Users/catarinawor/Documents/hake/Proposal/Proposal_rev_mtng")#
+#pdf("fish_mov.pdf", width=6, height=4)#
+par(mfrow=c(3,4), mar=c(4.1,4.1,4.1,0.3),c(4, 1, 1, 1) )#
+for(mth in 1:12){#
+    for( i in 1:(length(PosX[mth,]))){#
+        plot(x,dnorm(x,PosX[mth,i],varPos[i]),type="l", lwd=2, col=cores[i],main=meses[mth],xlab="",ylim=c(0,.2), ylab=" ", cex.main=3,cex.lab=2)#
+            abline(v=48.9)#
+        if(mth==1){#
+            legend("topright", legend=age,  col = cores, border = "n", lwd=2, bty="n")#
+        }#
+        ##if(m==5){#
+        ##  polygon(c(x[30:100],x[100]), c(dnorm(x[30:100],PosX[mth,4],varPos[4]),0),col="blue")#
+        ##}#
+        par(new=T)#
+#
+}#
+par(new=F)#
+}#
+mtext(expression("Latitude "(degree)), side = 1, line = -1, outer=T, cex=2, font=2)#
+#dev.off()#
+#=======================================================================================================#
+#=======================================================================================================#
+#high biomass scenario#
+#
+maxPos2<-c(33.5,38,41,47,51,53,57)#age based max position#
+PosX2<-matrix(NA,nrow=ntstp,ncol=nage)#
+for(i in 1:length(indyr))#
+{#
+    PosX2[i,]<-minPos+(maxPos2-minPos)*(0.5+0.5*sin(indmonth[i]*pi/6-5*pi/6))#
+}
+for (r in 1:nareas){#
+        VBarea[1,r]<-sum(VulB[1,]*(pnorm(areas[r]+0.5,PosX[1,],varPos)-pnorm(areas[r]-0.5,PosX[1,],varPos)))#
+        print#
+    }#
+NationVulB[1,]<-c(sum(VBarea[1,1:nationareas[1]]),sum(VBarea[1,(nationareas[1]+1):nareas]))#
+#effort#
+Effarea[1,]<-VBarea[1,]/(NationVulB[1,indnatarea]+0.000001)*TotEffyear[indyr[1],indnatarea]*TotEffmonth[indmonth[1],indnatarea]#
+#Calculate the effort that each class is subject to. weighted average of effort in each area wieghted by the prop of that age class in each area #
+for (a in 1:nage){#
+    propVBarea<-vector(length=nareas)#
+    for(r in 1:nareas){#
+        propVBarea[r]<-(pnorm(areas[r]+0.5,PosX[1,],varPos)-pnorm(areas[r]-0.5,PosX[1,],varPos))[a]#
+    }#
+#
+    Effage[1,a]<- sum(Effarea[1,]* propVBarea)#
+#
+}
+for(i in 2:(length(indyr)))#
+{#
+    Effarea[i,]<-VBarea[i-1,]/(NationVulB[i-1,indnatarea]+0.000001)*TotEffyear[indyr[i-1],indnatarea]*TotEffmonth[indmonth[i-1],indnatarea]#
+    for (a in 1:nage)#
+    {#
+        propVBarea<-vector(length=nareas)#
+        for(r in 1:nareas)#
+        {#
+            propVBarea[r]<-(pnorm(areas[r]+0.5,PosX[i,],varPos)-pnorm(areas[r]-0.5,PosX[i,],varPos))[a]#
+        }#
+#
+        Effage[i,a]<- sum(Effarea[i,]* propVBarea)#
+#
+    }#
+    #Effage[i,]<- Effarea[i-1,PosX[i-1,]+1]#
+#
+    if(indmonth[i]>1)#
+    {#
+        Nage[i,]<-Nage[i-1,]*exp(-(m+q*Effage[i,]*va)/12)#
+#
+    }else{#
+        Nage[i,1]<-So*SB[i-nmonths]/(1+beta*SB[i-nmonths])*RelRec[indyr[i]]#
+        Nage[i,2:nage]<-Nage[i-1,1:(nage-1)]*exp(-(m+q*Effage[i,1:(nage-1)]*va[1:(nage-1)])/12)#
+#
+    }#
+    VulB[i,]<-Nage[i,]*va*wa#
+    SB[i]<-sum(VulB[i,]*fa)/2#
+#
+    for (r in 1:nareas){#
+        VBarea[i,r]<-sum(VulB[i,]*(pnorm(areas[r]+0.5,PosX[i,],varPos)-pnorm(areas[r]-0.5,PosX[i,],varPos)))#
+    }#
+    NationVulB[i,]<-c(sum(VBarea[i,1:nationareas[1]]),sum(VBarea[i,(nationareas[1]+1):nareas])) #
+#
+}
+apply(VulB,1,sum)
+ro<-1000#
+h<-0.7#
+m<-0.3#
+fe<-0#
+kappa<-4*h/(1-h)#
+q<-1#
+#
+#vectors#
+wa<-c(1.0121,1.3858,1.725,2.0174,2.2609,2.4589,2.6171)#
+fa<-c(0.072924,0.66935,1.5841,2.0026,2.2595,2.4588,2.6171)#
+va<-c(0.0041512,0.084884,0.60249,1,1,1,1)#
+za<-m+va*fe#
+#
+lx<-vector(length=length(age))#
+lx<-exp(-m*age)#
+lx[length(age)]<-lx[length(age)]/(1-exp(-m))#
+#
+#summary vectors#
+phie<-sum(lx*fa)#
+So<-kappa/phie#
+bo<-kappa/So*ro#
+beta<-(kappa-1)/bo#
+SDR<-1
+So
+age<-1:7; nage<-length(age)#
+months<-1:12; nmonths<-length(months)#
+years<-1:20; nyears<-length(years)#
+ntstp<-nmonths*nyears#
+areas<-30:60; nareas<-length(areas)#
+nations<-2; #
+border<-48.7#
+nationareas<-c(sum(areas<border),sum(areas>=border))#
+#annual forcing inputs - this is the stuff that will need to be estimated#
+RelRec<-exp(SDR*rnorm(nyears,0,.6))#
+TotEffyear<-matrix(c(rep(2,nyears),rep(1,nyears)),ncol=2, byrow=F)#
+TotEffmonth<-matrix(c(0,0,0,0.5,1,1,1,1,0.5,0.1,0,0,0,0,0,0,0,1,1,1,0.5,0.3,0.2,0.1),ncol=2, byrow=F)#
+#
+minPos<-c(33.5,33.5,33.5,33.5,33.5,33.5,33.5) #min position in this exalmple is the spawning area so all min positions will bbe set to 0#
+maxPos<-c(33.5,34,39,41,43,45,45) #age based max position#
+varPos<-c(33.5,33.5,33.5,33.5,33.5,33.5,33.5)*0.1#
+#empty objects#
+SB<-vector(length=ntstp)#
+NationVulB<-matrix(nrow=ntstp,ncol=nations)#
+Nage<-matrix(NA,nrow=ntstp,ncol=nage)#
+VulB<-matrix(NA,nrow=ntstp,ncol=nage)#
+PosX<-matrix(NA,nrow=ntstp,ncol=nage)#
+VBarea<-matrix(NA,nrow=ntstp,ncol=nareas)#
+Effarea<-matrix(NA,nrow=ntstp,ncol=nareas)#
+Effage<-matrix(NA,nrow=ntstp,ncol=nage)#
+#
+#fill in matrices#
+#
+#indices#
+indyr<-rep(years, each=nmonths)#
+indmonth<-rep(months,nyears)#
+indnatarea<-rep(1:nations,times=nationareas)#
+#first row stuff#
+Nage[1,1]<-So*bo/(1+beta*bo)#
+#numbers and biomass#
+for(i in 2:nage)#
+{#
+    Nage[1,i]<-Nage[1,(i-1)]*exp(-(m+fe*va[i-1]))#
+}#
+VulB[1,]<-Nage[1,]*va*wa#
+SB[1]<-sum(Nage[1,]*wa*fa)/2#
+#
+#mean positions and biomass by area#
+for(i in 1:length(indyr))#
+{#
+    PosX[i,]<-minPos+(maxPos-minPos)*(0.5+0.5*sin(indmonth[i]*pi/6-pi))#
+}
+maxPos2<-c(33.5,38,41,47,51,53,57)#age based max position#
+PosX2<-matrix(NA,nrow=ntstp,ncol=nage)#
+for(i in 1:length(indyr))#
+{#
+    PosX2[i,]<-minPos+(maxPos2-minPos)*(0.5+0.5*sin(indmonth[i]*pi/6-5*pi/6))#
+}#
+#
+#=========#
+#=======================================================================================================#
+#
+par(mfrow=c(2,1), mar=c(4.1,4.1,4.1,0.3),c(4, 1, 1, 1),new=F)#
+x<-seq(min(areas),max(areas),by=0.1)#
+for( i in 1:(length(PosX[mth,]))){#
+    plot(x,dnorm(x,PosX[6,i],varPos[i]),type="l", lwd=2, col=cores[i],main="low VB",xlab="",ylim=c(0,.2), ylab=" ",cex.main=1,cex.lab=1)#
+    legend("topright", legend=age,  col = cores, border = "n", lwd=2, bty="n")#
+    abline(v=48.5)#
+    par(new=T)#
+}   #
+par(new=F)#
+for( i in 1:(length(PosX[mth,]))){#
+    plot(x,dnorm(x,PosX2[6,i],varPos[i]),type="l", lwd=2, col=cores[i],main="high VB",xlab=expression("Latitude "(degree)),ylim=c(0,.2), ylab=" ",cex.main=1,cex.lab=1)#
+    abline(v=48.5)#
+    par(new=T)#
+}#
+#=======================================================================================================#
+#calculate biomass in around each area x (1 degree interval )#
+#
+for (r in 1:nareas){#
+        VBarea[1,r]<-sum(VulB[1,]*(pnorm(areas[r]+0.5,PosX[1,],varPos)-pnorm(areas[r]-0.5,PosX[1,],varPos)))#
+        print#
+    }#
+NationVulB[1,]<-c(sum(VBarea[1,1:nationareas[1]]),sum(VBarea[1,(nationareas[1]+1):nareas]))#
+#effort#
+Effarea[1,]<-VBarea[1,]/(NationVulB[1,indnatarea]+0.000001)*TotEffyear[indyr[1],indnatarea]*TotEffmonth[indmonth[1],indnatarea]#
+#Calculate the effort that each class is subject to. weighted average of effort in each area wieghted by the prop of that age class in each area #
+for (a in 1:nage){#
+    propVBarea<-vector(length=nareas)#
+    for(r in 1:nareas){#
+        propVBarea[r]<-(pnorm(areas[r]+0.5,PosX[1,],varPos)-pnorm(areas[r]-0.5,PosX[1,],varPos))[a]#
+    }#
+#
+    Effage[1,a]<- sum(Effarea[1,]* propVBarea)#
+#
+}
+for(i in 2:(length(indyr)))#
+{#
+    Effarea[i,]<-VBarea[i-1,]/(NationVulB[i-1,indnatarea]+0.000001)*TotEffyear[indyr[i-1],indnatarea]*TotEffmonth[indmonth[i-1],indnatarea]#
+    for (a in 1:nage)#
+    {#
+        propVBarea<-vector(length=nareas)#
+        for(r in 1:nareas)#
+        {#
+            propVBarea[r]<-(pnorm(areas[r]+0.5,PosX[i,],varPos)-pnorm(areas[r]-0.5,PosX[i,],varPos))[a]#
+        }#
+#
+        Effage[i,a]<- sum(Effarea[i,]* propVBarea)#
+#
+    }#
+    #Effage[i,]<- Effarea[i-1,PosX[i-1,]+1]#
+#
+    if(indmonth[i]>1)#
+    {#
+        Nage[i,]<-Nage[i-1,]*exp(-(m+q*Effage[i,]*va)/12)#
+#
+    }else{#
+        Nage[i,1]<-So*SB[i-nmonths]/(1+beta*SB[i-nmonths])*RelRec[indyr[i]]#
+        Nage[i,2:nage]<-Nage[i-1,1:(nage-1)]*exp(-(m+q*Effage[i,1:(nage-1)]*va[1:(nage-1)])/12)#
+#
+    }#
+    VulB[i,]<-Nage[i,]*va*wa#
+    SB[i]<-sum(VulB[i,]*fa)/2#
+#
+    for (r in 1:nareas){#
+        VBarea[i,r]<-sum(VulB[i,]*(pnorm(areas[r]+0.5,PosX[i,],varPos)-pnorm(areas[r]-0.5,PosX[i,],varPos)))#
+    }#
+    NationVulB[i,]<-c(sum(VBarea[i,1:nationareas[1]]),sum(VBarea[i,(nationareas[1]+1):nareas])) #
+#
+}
+apply(VulB,1,sum)
+ro<-1000#
+h<-0.7#
+m<-0.3#
+fe<-0#
+kappa<-4*h/(1-h)#
+q<-1#
+#
+#vectors#
+wa<-c(1.0121,1.3858,1.725,2.0174,2.2609,2.4589,2.6171)#
+fa<-c(0.072924,0.66935,1.5841,2.0026,2.2595,2.4588,2.6171)#
+va<-c(0.0041512,0.084884,0.60249,1,1,1,1)#
+za<-m+va*fe#
+#
+lx<-vector(length=length(age))#
+lx<-exp(-m*age)#
+lx[length(age)]<-lx[length(age)]/(1-exp(-m))#
+#
+#summary vectors#
+phie<-sum(lx*fa)#
+So<-kappa/phie#
+bo<-kappa/So*ro#
+beta<-(kappa-1)/bo#
+SDR<-1#
+#model dims#
+age<-1:7; nage<-length(age)#
+months<-1:12; nmonths<-length(months)#
+years<-1:20; nyears<-length(years)#
+ntstp<-nmonths*nyears#
+areas<-30:60; nareas<-length(areas)#
+nations<-2; #
+border<-48.7#
+nationareas<-c(sum(areas<border),sum(areas>=border))#
+#annual forcing inputs - this is the stuff that will need to be estimated#
+RelRec<-exp(SDR*rnorm(nyears))#
+TotEffyear<-matrix(c(rep(2,nyears),rep(1,nyears)),ncol=2, byrow=F)#
+TotEffmonth<-matrix(c(0,0,0,0.5,1,1,1,1,0.5,0.1,0,0,0,0,0,0,0,1,1,1,0.5,0.3,0.2,0.1),ncol=2, byrow=F)#
+#
+minPos<-c(33.5,33.5,33.5,33.5,33.5,33.5,33.5) #min position in this exalmple is the spawning area so all min positions will bbe set to 0#
+maxPos<-c(33.5,34,39,41,43,45,45) #age based max position#
+varPos<-c(33.5,33.5,33.5,33.5,33.5,33.5,33.5)*0.1#
+#empty objects#
+SB<-vector(length=ntstp)#
+NationVulB<-matrix(nrow=ntstp,ncol=nations)#
+Nage<-matrix(NA,nrow=ntstp,ncol=nage)#
+VulB<-matrix(NA,nrow=ntstp,ncol=nage)#
+PosX<-matrix(NA,nrow=ntstp,ncol=nage)#
+VBarea<-matrix(NA,nrow=ntstp,ncol=nareas)#
+Effarea<-matrix(NA,nrow=ntstp,ncol=nareas)#
+Effage<-matrix(NA,nrow=ntstp,ncol=nage)#
+#
+#fill in matrices#
+#
+#indices#
+indyr<-rep(years, each=nmonths)#
+indmonth<-rep(months,nyears)#
+indnatarea<-rep(1:nations,times=nationareas)#
+#first row stuff#
+Nage[1,1]<-So*bo/(1+beta*bo)#
+#numbers and biomass#
+for(i in 2:nage)#
+{#
+    Nage[1,i]<-Nage[1,(i-1)]*exp(-(m+fe*va[i-1]))#
+}#
+VulB[1,]<-Nage[1,]*va*wa#
+SB[1]<-sum(Nage[1,]*wa*fa)/2#
+#
+#mean positions and biomass by area#
+for(i in 1:length(indyr))#
+{#
+    PosX[i,]<-minPos+(maxPos-minPos)*(0.5+0.5*sin(indmonth[i]*pi/6-pi))#
+}#
+#=======================================================================================================#
+#plot of age distribution by area in a single year - abundance is not represented here.#
+x<-seq(min(areas),max(areas),by=0.1)#
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")#
+cores<-rainbow(nage)#
+#setwd("/Users/catarinawor/Documents/hake/Proposal/Proposal_rev_mtng")#
+#pdf("fish_mov.pdf", width=6, height=4)#
+par(mfrow=c(3,4), mar=c(4.1,4.1,4.1,0.3),c(4, 1, 1, 1) )#
+for(mth in 1:12){#
+    for( i in 1:(length(PosX[mth,]))){#
+        plot(x,dnorm(x,PosX[mth,i],varPos[i]),type="l", lwd=2, col=cores[i],main=meses[mth],xlab="",ylim=c(0,.2), ylab=" ", cex.main=3,cex.lab=2)#
+            abline(v=48.9)#
+        if(mth==1){#
+            legend("topright", legend=age,  col = cores, border = "n", lwd=2, bty="n")#
+        }#
+        ##if(m==5){#
+        ##  polygon(c(x[30:100],x[100]), c(dnorm(x[30:100],PosX[mth,4],varPos[4]),0),col="blue")#
+        ##}#
+        par(new=T)#
+#
+}#
+par(new=F)#
+}#
+mtext(expression("Latitude "(degree)), side = 1, line = -1, outer=T, cex=2, font=2)#
+#dev.off()#
+#=======================================================================================================#
+#=======================================================================================================#
+#high biomass scenario#
+#
+maxPos2<-c(33.5,38,41,47,51,53,57)#age based max position#
+PosX2<-matrix(NA,nrow=ntstp,ncol=nage)#
+for(i in 1:length(indyr))#
+{#
+    PosX2[i,]<-minPos+(maxPos2-minPos)*(0.5+0.5*sin(indmonth[i]*pi/6-5*pi/6))#
+}#
+#
+#=========#
+#=======================================================================================================#
+#
+par(mfrow=c(2,1), mar=c(4.1,4.1,4.1,0.3),c(4, 1, 1, 1),new=F)#
+x<-seq(min(areas),max(areas),by=0.1)#
+for( i in 1:(length(PosX[mth,]))){#
+    plot(x,dnorm(x,PosX[6,i],varPos[i]),type="l", lwd=2, col=cores[i],main="low VB",xlab="",ylim=c(0,.2), ylab=" ",cex.main=1,cex.lab=1)#
+    legend("topright", legend=age,  col = cores, border = "n", lwd=2, bty="n")#
+    abline(v=48.5)#
+    par(new=T)#
+}   #
+par(new=F)#
+for( i in 1:(length(PosX[mth,]))){#
+    plot(x,dnorm(x,PosX2[6,i],varPos[i]),type="l", lwd=2, col=cores[i],main="high VB",xlab=expression("Latitude "(degree)),ylim=c(0,.2), ylab=" ",cex.main=1,cex.lab=1)#
+    abline(v=48.5)#
+    par(new=T)#
+}#
+#=======================================================================================================#
+#calculate biomass in around each area x (1 degree interval )#
+#
+for (r in 1:nareas){#
+        VBarea[1,r]<-sum(VulB[1,]*(pnorm(areas[r]+0.5,PosX[1,],varPos)-pnorm(areas[r]-0.5,PosX[1,],varPos)))#
+        print#
+    }#
+NationVulB[1,]<-c(sum(VBarea[1,1:nationareas[1]]),sum(VBarea[1,(nationareas[1]+1):nareas]))#
+#effort#
+Effarea[1,]<-VBarea[1,]/(NationVulB[1,indnatarea]+0.000001)*TotEffyear[indyr[1],indnatarea]*TotEffmonth[indmonth[1],indnatarea]#
+#Calculate the effort that each class is subject to. weighted average of effort in each area wieghted by the prop of that age class in each area #
+for (a in 1:nage){#
+    propVBarea<-vector(length=nareas)#
+    for(r in 1:nareas){#
+        propVBarea[r]<-(pnorm(areas[r]+0.5,PosX[1,],varPos)-pnorm(areas[r]-0.5,PosX[1,],varPos))[a]#
+    }#
+#
+    Effage[1,a]<- sum(Effarea[1,]* propVBarea)#
+#
+}#
+#for(i in 2:(length(indyr)))#
+#{#
+#   #Effarea[i,]<-VBarea[i-1,]/(NationVulB[i-1,indnatarea]+0.000001)*TotEffyear[indyr[i-1],]*TotEffmonth[indmonth[i-1],]#
+##
+#   if(indmonth[i]>1)#
+#   {#
+#       Nage[i,]<-Nage[i-1,]*exp(-(m+q*Effage[i-1,]*va)/12)#
+##
+#   }else{#
+#       Nage[i,1]<-So*SB[i-nmonths]/(1+beta*SB[i-nmonths])*RelRec[indyr[i]]#
+#           #
+#       Nage[i,2:nage]<-Nage[i-1,1:(nage-1)]*exp(-(m+q*Effage[i-1,1:(nage-1)]+va[1:(nage-1)])/12)#
+##
+#   }#
+#   VulB[i,]<-Nage[i,]*va*wa#
+#   SB[i]<-sum(VulB[i,]*fa)/2#
+##
+#   VBarea[i,]<-calcVBarea(pos=PosX[i,],vulb=VulB[i,])#
+##
+#   NationVulB[i,]<-c(sum(VBarea[i,1:nationareas[1]]),sum(VBarea[i,(nationareas[1]+1):nareas]))#
+##
+#   Effarea[i,]<-VBarea[i,]/(NationVulB[i,indnatarea]+0.000001)*TotEffyear[indyr[i],]*TotEffmonth[indmonth[i],]#
+#   Effage[i,]<- Effarea[i,PosX[i,]+1]#
+##
+##
+#}#
+#
+#putting the effort first...  I'm still not sure this makes sense but Carl said this was the way I should do it#
+for(i in 2:(length(indyr)))#
+{#
+    Effarea[i,]<-VBarea[i-1,]/(NationVulB[i-1,indnatarea]+0.000001)*TotEffyear[indyr[i-1],indnatarea]*TotEffmonth[indmonth[i-1],indnatarea]#
+    for (a in 1:nage)#
+    {#
+        propVBarea<-vector(length=nareas)#
+        for(r in 1:nareas)#
+        {#
+            propVBarea[r]<-(pnorm(areas[r]+0.5,PosX[i,],varPos)-pnorm(areas[r]-0.5,PosX[i,],varPos))[a]#
+        }#
+#
+        Effage[i,a]<- sum(Effarea[i,]* propVBarea)#
+#
+    }#
+    #Effage[i,]<- Effarea[i-1,PosX[i-1,]+1]#
+#
+    if(indmonth[i]>1)#
+    {#
+        Nage[i,]<-Nage[i-1,]*exp(-(m+q*Effage[i,]*va)/12)#
+#
+    }else{#
+        Nage[i,1]<-So*SB[i-nmonths]/(1+beta*SB[i-nmonths])*RelRec[indyr[i]]#
+        Nage[i,2:nage]<-Nage[i-1,1:(nage-1)]*exp(-(m+q*Effage[i,1:(nage-1)]*va[1:(nage-1)])/12)#
+#
+    }#
+    VulB[i,]<-Nage[i,]*va*wa#
+    SB[i]<-sum(VulB[i,]*fa)/2#
+#
+    for (r in 1:nareas){#
+        VBarea[i,r]<-sum(VulB[i,]*(pnorm(areas[r]+0.5,PosX[i,],varPos)-pnorm(areas[r]-0.5,PosX[i,],varPos)))#
+    }#
+    NationVulB[i,]<-c(sum(VBarea[i,1:nationareas[1]]),sum(VBarea[i,(nationareas[1]+1):nareas])) #
+#
+}#
+plot((1:(length(indyr))),apply(VulB,1,sum), type="l")
+apply(VulB,1,sum)
+RelRec
+ro<-1000#
+h<-0.7#
+m<-0.3#
+fe<-0#
+kappa<-4*h/(1-h)#
+q<-1#
+#
+#vectors#
+wa<-c(1.0121,1.3858,1.725,2.0174,2.2609,2.4589,2.6171)#
+fa<-c(0.072924,0.66935,1.5841,2.0026,2.2595,2.4588,2.6171)#
+va<-c(0.0041512,0.084884,0.60249,1,1,1,1)#
+za<-m+va*fe#
+#
+lx<-vector(length=length(age))#
+lx<-exp(-m*age)#
+lx[length(age)]<-lx[length(age)]/(1-exp(-m))#
+#
+#summary vectors#
+phie<-sum(lx*fa)#
+So<-kappa/phie#
+bo<-kappa/So*ro#
+beta<-(kappa-1)/bo#
+SDR<-1#
+#model dims#
+age<-1:7; nage<-length(age)#
+months<-1:12; nmonths<-length(months)#
+years<-1:20; nyears<-length(years)#
+ntstp<-nmonths*nyears#
+areas<-30:60; nareas<-length(areas)#
+nations<-2; #
+border<-48.7#
+nationareas<-c(sum(areas<border),sum(areas>=border))
+RelRec<-exp(SDR*rnorm(nyears))
+RelRec
+RelRec<-c(0.5736087,0.5597609,2.2722937,1.2785199,0.9122991,1.4026742,0.7339414,0.3264110,1.6858989,0.6330520,0.6411976,0.3343025,2.8175568,0.1532375#
+,0.6608086,0.6067317,0.6269567,0.7951264,0.3650248,0.7071489)#
+#
+TotEffyear<-matrix(c(rep(2,nyears),rep(1,nyears)),ncol=2, byrow=F)#
+TotEffmonth<-matrix(c(0,0,0,0.5,1,1,1,1,0.5,0.1,0,0,0,0,0,0,0,1,1,1,0.5,0.3,0.2,0.1),ncol=2, byrow=F)#
+#
+minPos<-c(33.5,33.5,33.5,33.5,33.5,33.5,33.5) #min position in this exalmple is the spawning area so all min positions will bbe set to 0#
+maxPos<-c(33.5,34,39,41,43,45,45) #age based max position#
+varPos<-c(33.5,33.5,33.5,33.5,33.5,33.5,33.5)*0.1#
+#empty objects#
+SB<-vector(length=ntstp)#
+NationVulB<-matrix(nrow=ntstp,ncol=nations)#
+Nage<-matrix(NA,nrow=ntstp,ncol=nage)#
+VulB<-matrix(NA,nrow=ntstp,ncol=nage)#
+PosX<-matrix(NA,nrow=ntstp,ncol=nage)#
+VBarea<-matrix(NA,nrow=ntstp,ncol=nareas)#
+Effarea<-matrix(NA,nrow=ntstp,ncol=nareas)#
+Effage<-matrix(NA,nrow=ntstp,ncol=nage)#
+#
+#fill in matrices#
+#
+#indices#
+indyr<-rep(years, each=nmonths)#
+indmonth<-rep(months,nyears)#
+indnatarea<-rep(1:nations,times=nationareas)#
+#first row stuff#
+Nage[1,1]<-So*bo/(1+beta*bo)#
+#numbers and biomass#
+for(i in 2:nage)#
+{#
+    Nage[1,i]<-Nage[1,(i-1)]*exp(-(m+fe*va[i-1]))#
+}#
+VulB[1,]<-Nage[1,]*va*wa#
+SB[1]<-sum(Nage[1,]*wa*fa)/2#
+#
+#mean positions and biomass by area#
+for(i in 1:length(indyr))#
+{#
+    PosX[i,]<-minPos+(maxPos-minPos)*(0.5+0.5*sin(indmonth[i]*pi/6-pi))#
+}#
+#================
+ro<-1000#
+h<-0.7#
+m<-0.3#
+fe<-0#
+kappa<-4*h/(1-h)#
+q<-1#
+#
+#vectors#
+wa<-c(1.0121,1.3858,1.725,2.0174,2.2609,2.4589,2.6171)#
+fa<-c(0.072924,0.66935,1.5841,2.0026,2.2595,2.4588,2.6171)#
+va<-c(0.0041512,0.084884,0.60249,1,1,1,1)#
+za<-m+va*fe#
+#
+lx<-vector(length=length(age))#
+lx<-exp(-m*age)#
+lx[length(age)]<-lx[length(age)]/(1-exp(-m))#
+#
+#summary vectors#
+phie<-sum(lx*fa)#
+So<-kappa/phie#
+bo<-kappa/So*ro#
+beta<-(kappa-1)/bo#
+SDR<-1
+age<-1:7; nage<-length(age)#
+months<-1:12; nmonths<-length(months)#
+years<-1:20; nyears<-length(years)#
+ntstp<-nmonths*nyears#
+areas<-30:60; nareas<-length(areas)#
+nations<-2; #
+border<-48.7#
+nationareas<-c(sum(areas<border),sum(areas>=border))#
+#annual forcing inputs - this is the stuff that will need to be estimated#
+#RelRec<-exp(SDR*rnorm(nyears))#
+#fixed relrec for comparison with ADMB#
+RelRec<-c(0.5736087,0.5597609,2.2722937,1.2785199,0.9122991,1.4026742,0.7339414,0.3264110,1.6858989,0.6330520,0.6411976,0.3343025,2.8175568,0.1532375#
+,0.6608086,0.6067317,0.6269567,0.7951264,0.3650248,0.7071489)#
+#
+TotEffyear<-matrix(c(rep(2,nyears),rep(1,nyears)),ncol=2, byrow=F)#
+TotEffmonth<-matrix(c(0,0,0,0.5,1,1,1,1,0.5,0.1,0,0,0,0,0,0,0,1,1,1,0.5,0.3,0.2,0.1),ncol=2, byrow=F)#
+#
+minPos<-c(33.5,33.5,33.5,33.5,33.5,33.5,33.5) #min position in this exalmple is the spawning area so all min positions will bbe set to 0#
+maxPos<-c(33.5,34,39,41,43,45,45) #age based max position#
+varPos<-c(33.5,33.5,33.5,33.5,33.5,33.5,33.5)*0.1#
+#empty objects#
+SB<-vector(length=ntstp)#
+NationVulB<-matrix(nrow=ntstp,ncol=nations)#
+Nage<-matrix(NA,nrow=ntstp,ncol=nage)#
+VulB<-matrix(NA,nrow=ntstp,ncol=nage)#
+PosX<-matrix(NA,nrow=ntstp,ncol=nage)#
+VBarea<-matrix(NA,nrow=ntstp,ncol=nareas)#
+Effarea<-matrix(NA,nrow=ntstp,ncol=nareas)#
+Effage<-matrix(NA,nrow=ntstp,ncol=nage)#
+#
+#fill in matrices#
+#
+#indices#
+indyr<-rep(years, each=nmonths)#
+indmonth<-rep(months,nyears)#
+indnatarea<-rep(1:nations,times=nationareas)#
+#first row stuff#
+Nage[1,1]<-So*bo/(1+beta*bo)#
+#numbers and biomass#
+for(i in 2:nage)#
+{#
+    Nage[1,i]<-Nage[1,(i-1)]*exp(-(m+fe*va[i-1]))#
+}#
+VulB[1,]<-Nage[1,]*va*wa#
+SB[1]<-sum(Nage[1,]*wa*fa)/2#
+#
+#mean positions and biomass by area#
+for(i in 1:length(indyr))#
+{#
+    PosX[i,]<-minPos+(maxPos-minPos)*(0.5+0.5*sin(indmonth[i]*pi/6-pi))#
+}
+x<-seq(min(areas),max(areas),by=0.1)#
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")#
+cores<-rainbow(nage)#
+#setwd("/Users/catarinawor/Documents/hake/Proposal/Proposal_rev_mtng")#
+#pdf("fish_mov.pdf", width=6, height=4)#
+par(mfrow=c(3,4), mar=c(4.1,4.1,4.1,0.3),c(4, 1, 1, 1) )#
+for(mth in 1:12){#
+    for( i in 1:(length(PosX[mth,]))){#
+        plot(x,dnorm(x,PosX[mth,i],varPos[i]),type="l", lwd=2, col=cores[i],main=meses[mth],xlab="",ylim=c(0,.2), ylab=" ", cex.main=3,cex.lab=2)#
+            abline(v=48.9)#
+        if(mth==1){#
+            legend("topright", legend=age,  col = cores, border = "n", lwd=2, bty="n")#
+        }#
+        ##if(m==5){#
+        ##  polygon(c(x[30:100],x[100]), c(dnorm(x[30:100],PosX[mth,4],varPos[4]),0),col="blue")#
+        ##}#
+        par(new=T)#
+#
+}#
+par(new=F)#
+}#
+mtext(expression("Latitude "(degree)), side = 1, line = -1, outer=T, cex=2, font=2)#
+#dev.off()#
+#=======================================================================================================#
+#=======================================================================================================#
+#high biomass scenario#
+#
+maxPos2<-c(33.5,38,41,47,51,53,57)#age based max position#
+PosX2<-matrix(NA,nrow=ntstp,ncol=nage)#
+for(i in 1:length(indyr))#
+{#
+    PosX2[i,]<-minPos+(maxPos2-minPos)*(0.5+0.5*sin(indmonth[i]*pi/6-5*pi/6))#
+}#
+#
+#=========#
+#=======================================================================================================#
+#
+par(mfrow=c(2,1), mar=c(4.1,4.1,4.1,0.3),c(4, 1, 1, 1),new=F)#
+x<-seq(min(areas),max(areas),by=0.1)#
+for( i in 1:(length(PosX[mth,]))){#
+    plot(x,dnorm(x,PosX[6,i],varPos[i]),type="l", lwd=2, col=cores[i],main="low VB",xlab="",ylim=c(0,.2), ylab=" ",cex.main=1,cex.lab=1)#
+    legend("topright", legend=age,  col = cores, border = "n", lwd=2, bty="n")#
+    abline(v=48.5)#
+    par(new=T)#
+}   #
+par(new=F)#
+for( i in 1:(length(PosX[mth,]))){#
+    plot(x,dnorm(x,PosX2[6,i],varPos[i]),type="l", lwd=2, col=cores[i],main="high VB",xlab=expression("Latitude "(degree)),ylim=c(0,.2), ylab=" ",cex.main=1,cex.lab=1)#
+    abline(v=48.5)#
+    par(new=T)#
+}
+for (r in 1:nareas){#
+        VBarea[1,r]<-sum(VulB[1,]*(pnorm(areas[r]+0.5,PosX[1,],varPos)-pnorm(areas[r]-0.5,PosX[1,],varPos)))#
+        print#
+    }#
+NationVulB[1,]<-c(sum(VBarea[1,1:nationareas[1]]),sum(VBarea[1,(nationareas[1]+1):nareas]))#
+#effort#
+Effarea[1,]<-VBarea[1,]/(NationVulB[1,indnatarea]+0.000001)*TotEffyear[indyr[1],indnatarea]*TotEffmonth[indmonth[1],indnatarea]#
+#Calculate the effort that each class is subject to. weighted average of effort in each area wieghted by the prop of that age class in each area #
+for (a in 1:nage){#
+    propVBarea<-vector(length=nareas)#
+    for(r in 1:nareas){#
+        propVBarea[r]<-(pnorm(areas[r]+0.5,PosX[1,],varPos)-pnorm(areas[r]-0.5,PosX[1,],varPos))[a]#
+    }#
+#
+    Effage[1,a]<- sum(Effarea[1,]* propVBarea)#
+#
+}#
+#for(i in 2:(length(indyr)))#
+#{#
+#   #Effarea[i,]<-VBarea[i-1,]/(NationVulB[i-1,indnatarea]+0.000001)*TotEffyear[indyr[i-1],]*TotEffmonth[indmonth[i-1],]#
+##
+#   if(indmonth[i]>1)#
+#   {#
+#       Nage[i,]<-Nage[i-1,]*exp(-(m+q*Effage[i-1,]*va)/12)#
+##
+#   }else{#
+#       Nage[i,1]<-So*SB[i-nmonths]/(1+beta*SB[i-nmonths])*RelRec[indyr[i]]#
+#           #
+#       Nage[i,2:nage]<-Nage[i-1,1:(nage-1)]*exp(-(m+q*Effage[i-1,1:(nage-1)]+va[1:(nage-1)])/12)#
+##
+#   }#
+#   VulB[i,]<-Nage[i,]*va*wa#
+#   SB[i]<-sum(VulB[i,]*fa)/2#
+##
+#   VBarea[i,]<-calcVBarea(pos=PosX[i,],vulb=VulB[i,])#
+##
+#   NationVulB[i,]<-c(sum(VBarea[i,1:nationareas[1]]),sum(VBarea[i,(nationareas[1]+1):nareas]))#
+##
+#   Effarea[i,]<-VBarea[i,]/(NationVulB[i,indnatarea]+0.000001)*TotEffyear[indyr[i],]*TotEffmonth[indmonth[i],]#
+#   Effage[i,]<- Effarea[i,PosX[i,]+1]#
+##
+##
+#}#
+#
+#putting the effort first...  I'm still not sure this makes sense but Carl said this was the way I should do it#
+for(i in 2:(length(indyr)))#
+{#
+    Effarea[i,]<-VBarea[i-1,]/(NationVulB[i-1,indnatarea]+0.000001)*TotEffyear[indyr[i-1],indnatarea]*TotEffmonth[indmonth[i-1],indnatarea]#
+    for (a in 1:nage)#
+    {#
+        propVBarea<-vector(length=nareas)#
+        for(r in 1:nareas)#
+        {#
+            propVBarea[r]<-(pnorm(areas[r]+0.5,PosX[i,],varPos)-pnorm(areas[r]-0.5,PosX[i,],varPos))[a]#
+        }#
+#
+        Effage[i,a]<- sum(Effarea[i,]* propVBarea)#
+#
+    }#
+    #Effage[i,]<- Effarea[i-1,PosX[i-1,]+1]#
+#
+    if(indmonth[i]>1)#
+    {#
+        Nage[i,]<-Nage[i-1,]*exp(-(m+q*Effage[i,]*va)/12)#
+#
+    }else{#
+        Nage[i,1]<-So*SB[i-nmonths]/(1+beta*SB[i-nmonths])*RelRec[indyr[i]]#
+        Nage[i,2:nage]<-Nage[i-1,1:(nage-1)]*exp(-(m+q*Effage[i,1:(nage-1)]*va[1:(nage-1)])/12)#
+#
+    }#
+    VulB[i,]<-Nage[i,]*va*wa#
+    SB[i]<-sum(VulB[i,]*fa)/2#
+#
+    for (r in 1:nareas){#
+        VBarea[i,r]<-sum(VulB[i,]*(pnorm(areas[r]+0.5,PosX[i,],varPos)-pnorm(areas[r]-0.5,PosX[i,],varPos)))#
+    }#
+    NationVulB[i,]<-c(sum(VBarea[i,1:nationareas[1]]),sum(VBarea[i,(nationareas[1]+1):nareas])) #
+#
+}#
+plot((1:(length(indyr))),apply(VulB,1,sum), type="l")#
+plot((1:(length(years))),apply(VulB,1,sum)[indmonth==12], type="l")
+plot((1:(length(indyr))),apply(VulB,1,sum), type="l")
+ro<-1000#
+h<-0.7#
+m<-0.3#
+fe<-0#
+kappa<-4*h/(1-h)#
+q<-1#
+#
+#vectors#
+wa<-c(1.0121,1.3858,1.725,2.0174,2.2609,2.4589,2.6171)#
+fa<-c(0.072924,0.66935,1.5841,2.0026,2.2595,2.4588,2.6171)#
+va<-c(0.0041512,0.084884,0.60249,1,1,1,1)#
+za<-m+va*fe#
+#
+lx<-vector(length=length(age))#
+lx<-exp(-m*age)#
+lx[length(age)]<-lx[length(age)]/(1-exp(-m))#
+#
+#summary vectors#
+phie<-sum(lx*fa)#
+So<-kappa/phie#
+bo<-kappa/So*ro#
+beta<-(kappa-1)/bo#
+SDR<-1#
+#model dims#
+age<-1:7; nage<-length(age)#
+months<-1:12; nmonths<-length(months)#
+years<-1:100; nyears<-length(years)#
+ntstp<-nmonths*nyears#
+areas<-30:60; nareas<-length(areas)#
+nations<-2; #
+border<-48.7#
+nationareas<-c(sum(areas<border),sum(areas>=border))#
+#annual forcing inputs - this is the stuff that will need to be estimated#
+#RelRec<-exp(SDR*rnorm(nyears))#
+#fixed relrec for comparison with ADMB#
+RelRec<-c(0.5736087,0.5597609,2.2722937,1.2785199,0.9122991,1.4026742,0.7339414,0.3264110,1.6858989,0.6330520,0.6411976,0.3343025,2.8175568,0.1532375#
+,0.6608086,0.6067317,0.6269567,0.7951264,0.3650248,0.7071489)#
+#
+TotEffyear<-matrix(c(rep(2,nyears),rep(1,nyears)),ncol=2, byrow=F)#
+TotEffmonth<-matrix(c(0,0,0,0.5,1,1,1,1,0.5,0.1,0,0,0,0,0,0,0,1,1,1,0.5,0.3,0.2,0.1),ncol=2, byrow=F)#
+#
+minPos<-c(33.5,33.5,33.5,33.5,33.5,33.5,33.5) #min position in this exalmple is the spawning area so all min positions will bbe set to 0#
+maxPos<-c(33.5,34,39,41,43,45,45) #age based max position#
+varPos<-c(33.5,33.5,33.5,33.5,33.5,33.5,33.5)*0.1#
+#empty objects#
+SB<-vector(length=ntstp)#
+NationVulB<-matrix(nrow=ntstp,ncol=nations)#
+Nage<-matrix(NA,nrow=ntstp,ncol=nage)#
+VulB<-matrix(NA,nrow=ntstp,ncol=nage)#
+PosX<-matrix(NA,nrow=ntstp,ncol=nage)#
+VBarea<-matrix(NA,nrow=ntstp,ncol=nareas)#
+Effarea<-matrix(NA,nrow=ntstp,ncol=nareas)#
+Effage<-matrix(NA,nrow=ntstp,ncol=nage)#
+#
+#fill in matrices#
+#
+#indices#
+indyr<-rep(years, each=nmonths)#
+indmonth<-rep(months,nyears)#
+indnatarea<-rep(1:nations,times=nationareas)#
+#first row stuff#
+Nage[1,1]<-So*bo/(1+beta*bo)#
+#numbers and biomass#
+for(i in 2:nage)#
+{#
+    Nage[1,i]<-Nage[1,(i-1)]*exp(-(m+fe*va[i-1]))#
+}#
+VulB[1,]<-Nage[1,]*va*wa#
+SB[1]<-sum(Nage[1,]*wa*fa)/2#
+#
+#mean positions and biomass by area#
+for(i in 1:length(indyr))#
+{#
+    PosX[i,]<-minPos+(maxPos-minPos)*(0.5+0.5*sin(indmonth[i]*pi/6-pi))#
+}#
+#=======================================================================================================#
+#plot of age distribution by area in a single year - abundance is not represented here.#
+x<-seq(min(areas),max(areas),by=0.1)#
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")#
+cores<-rainbow(nage)#
+#setwd("/Users/catarinawor/Documents/hake/Proposal/Proposal_rev_mtng")#
+#pdf("fish_mov.pdf", width=6, height=4)#
+par(mfrow=c(3,4), mar=c(4.1,4.1,4.1,0.3),c(4, 1, 1, 1) )#
+for(mth in 1:12){#
+    for( i in 1:(length(PosX[mth,]))){#
+        plot(x,dnorm(x,PosX[mth,i],varPos[i]),type="l", lwd=2, col=cores[i],main=meses[mth],xlab="",ylim=c(0,.2), ylab=" ", cex.main=3,cex.lab=2)#
+            abline(v=48.9)#
+        if(mth==1){#
+            legend("topright", legend=age,  col = cores, border = "n", lwd=2, bty="n")#
+        }#
+        ##if(m==5){#
+        ##  polygon(c(x[30:100],x[100]), c(dnorm(x[30:100],PosX[mth,4],varPos[4]),0),col="blue")#
+        ##}#
+        par(new=T)#
+#
+}#
+par(new=F)#
+}#
+mtext(expression("Latitude "(degree)), side = 1, line = -1, outer=T, cex=2, font=2)#
+#dev.off()#
+#=======================================================================================================#
+#=======================================================================================================#
+#high biomass scenario#
+#
+maxPos2<-c(33.5,38,41,47,51,53,57)#age based max position#
+PosX2<-matrix(NA,nrow=ntstp,ncol=nage)#
+for(i in 1:length(indyr))#
+{#
+    PosX2[i,]<-minPos+(maxPos2-minPos)*(0.5+0.5*sin(indmonth[i]*pi/6-5*pi/6))#
+}#
+#
+#=========#
+#=======================================================================================================#
+#
+par(mfrow=c(2,1), mar=c(4.1,4.1,4.1,0.3),c(4, 1, 1, 1),new=F)#
+x<-seq(min(areas),max(areas),by=0.1)#
+for( i in 1:(length(PosX[mth,]))){#
+    plot(x,dnorm(x,PosX[6,i],varPos[i]),type="l", lwd=2, col=cores[i],main="low VB",xlab="",ylim=c(0,.2), ylab=" ",cex.main=1,cex.lab=1)#
+    legend("topright", legend=age,  col = cores, border = "n", lwd=2, bty="n")#
+    abline(v=48.5)#
+    par(new=T)#
+}   #
+par(new=F)#
+for( i in 1:(length(PosX[mth,]))){#
+    plot(x,dnorm(x,PosX2[6,i],varPos[i]),type="l", lwd=2, col=cores[i],main="high VB",xlab=expression("Latitude "(degree)),ylim=c(0,.2), ylab=" ",cex.main=1,cex.lab=1)#
+    abline(v=48.5)#
+    par(new=T)#
+}#
+#=======================================================================================================#
+#calculate biomass in around each area x (1 degree interval )#
+#
+for (r in 1:nareas){#
+        VBarea[1,r]<-sum(VulB[1,]*(pnorm(areas[r]+0.5,PosX[1,],varPos)-pnorm(areas[r]-0.5,PosX[1,],varPos)))#
+        print#
+    }#
+NationVulB[1,]<-c(sum(VBarea[1,1:nationareas[1]]),sum(VBarea[1,(nationareas[1]+1):nareas]))#
+#effort#
+Effarea[1,]<-VBarea[1,]/(NationVulB[1,indnatarea]+0.000001)*TotEffyear[indyr[1],indnatarea]*TotEffmonth[indmonth[1],indnatarea]#
+#Calculate the effort that each class is subject to. weighted average of effort in each area wieghted by the prop of that age class in each area #
+for (a in 1:nage){#
+    propVBarea<-vector(length=nareas)#
+    for(r in 1:nareas){#
+        propVBarea[r]<-(pnorm(areas[r]+0.5,PosX[1,],varPos)-pnorm(areas[r]-0.5,PosX[1,],varPos))[a]#
+    }#
+#
+    Effage[1,a]<- sum(Effarea[1,]* propVBarea)#
+#
+}#
+#for(i in 2:(length(indyr)))#
+#{#
+#   #Effarea[i,]<-VBarea[i-1,]/(NationVulB[i-1,indnatarea]+0.000001)*TotEffyear[indyr[i-1],]*TotEffmonth[indmonth[i-1],]#
+##
+#   if(indmonth[i]>1)#
+#   {#
+#       Nage[i,]<-Nage[i-1,]*exp(-(m+q*Effage[i-1,]*va)/12)#
+##
+#   }else{#
+#       Nage[i,1]<-So*SB[i-nmonths]/(1+beta*SB[i-nmonths])*RelRec[indyr[i]]#
+#           #
+#       Nage[i,2:nage]<-Nage[i-1,1:(nage-1)]*exp(-(m+q*Effage[i-1,1:(nage-1)]+va[1:(nage-1)])/12)#
+##
+#   }#
+#   VulB[i,]<-Nage[i,]*va*wa#
+#   SB[i]<-sum(VulB[i,]*fa)/2#
+##
+#   VBarea[i,]<-calcVBarea(pos=PosX[i,],vulb=VulB[i,])#
+##
+#   NationVulB[i,]<-c(sum(VBarea[i,1:nationareas[1]]),sum(VBarea[i,(nationareas[1]+1):nareas]))#
+##
+#   Effarea[i,]<-VBarea[i,]/(NationVulB[i,indnatarea]+0.000001)*TotEffyear[indyr[i],]*TotEffmonth[indmonth[i],]#
+#   Effage[i,]<- Effarea[i,PosX[i,]+1]#
+##
+##
+#}#
+#
+#putting the effort first...  I'm still not sure this makes sense but Carl said this was the way I should do it#
+for(i in 2:(length(indyr)))#
+{#
+    Effarea[i,]<-VBarea[i-1,]/(NationVulB[i-1,indnatarea]+0.000001)*TotEffyear[indyr[i-1],indnatarea]*TotEffmonth[indmonth[i-1],indnatarea]#
+    for (a in 1:nage)#
+    {#
+        propVBarea<-vector(length=nareas)#
+        for(r in 1:nareas)#
+        {#
+            propVBarea[r]<-(pnorm(areas[r]+0.5,PosX[i,],varPos)-pnorm(areas[r]-0.5,PosX[i,],varPos))[a]#
+        }#
+#
+        Effage[i,a]<- sum(Effarea[i,]* propVBarea)#
+#
+    }#
+    #Effage[i,]<- Effarea[i-1,PosX[i-1,]+1]#
+#
+    if(indmonth[i]>1)#
+    {#
+        Nage[i,]<-Nage[i-1,]*exp(-(m+q*Effage[i,]*va)/12)#
+#
+    }else{#
+        Nage[i,1]<-So*SB[i-nmonths]/(1+beta*SB[i-nmonths])*RelRec[indyr[i]]#
+        Nage[i,2:nage]<-Nage[i-1,1:(nage-1)]*exp(-(m+q*Effage[i,1:(nage-1)]*va[1:(nage-1)])/12)#
+#
+    }#
+    VulB[i,]<-Nage[i,]*va*wa#
+    SB[i]<-sum(VulB[i,]*fa)/2#
+#
+    for (r in 1:nareas){#
+        VBarea[i,r]<-sum(VulB[i,]*(pnorm(areas[r]+0.5,PosX[i,],varPos)-pnorm(areas[r]-0.5,PosX[i,],varPos)))#
+    }#
+    NationVulB[i,]<-c(sum(VBarea[i,1:nationareas[1]]),sum(VBarea[i,(nationareas[1]+1):nareas])) #
+#
+}#
+plot((1:(length(indyr))),apply(VulB,1,sum), type="l")
+plot((1:(length(indyr))),apply(VulB,1,sum), type="l")
+plot((1:(length(years))),apply(VulB,1,sum)[indmonth==12], type="l")
+ro<-1000#
+h<-0.7#
+m<-0.3#
+fe<-0#
+kappa<-4*h/(1-h)#
+q<-1#
+#
+#vectors#
+wa<-c(1.0121,1.3858,1.725,2.0174,2.2609,2.4589,2.6171)#
+fa<-c(0.072924,0.66935,1.5841,2.0026,2.2595,2.4588,2.6171)#
+va<-c(0.0041512,0.084884,0.60249,1,1,1,1)#
+za<-m+va*fe#
+#
+lx<-vector(length=length(age))#
+lx<-exp(-m*age)#
+lx[length(age)]<-lx[length(age)]/(1-exp(-m))#
+#
+#summary vectors#
+phie<-sum(lx*fa)#
+So<-kappa/phie#
+bo<-kappa/So*ro#
+beta<-(kappa-1)/bo#
+SDR<-1#
+#model dims#
+age<-1:7; nage<-length(age)#
+months<-1:12; nmonths<-length(months)#
+years<-1:100; nyears<-length(years)#
+ntstp<-nmonths*nyears#
+areas<-30:60; nareas<-length(areas)#
+nations<-2; #
+border<-48.7#
+nationareas<-c(sum(areas<border),sum(areas>=border))#
+#annual forcing inputs - this is the stuff that will need to be estimated#
+#RelRec<-exp(SDR*rnorm(nyears))#
+#fixed relrec for comparison with ADMB#
+RelRec<-c(0.5736087,0.5597609,2.2722937,1.2785199,0.9122991,1.4026742,0.7339414,0.3264110,1.6858989,0.6330520,0.6411976,0.3343025,2.8175568,0.1532375#
+,0.6608086,0.6067317,0.6269567,0.7951264,0.3650248,0.7071489)#
+#
+TotEffyear<-matrix(c(rep(2,nyears),rep(1,nyears)),ncol=2, byrow=F)#
+TotEffmonth<-matrix(c(0,0,0,0.5,1,1,1,1,0.5,0.1,0,0,0,0,0,0,0,1,1,1,0.5,0.3,0.2,0.1),ncol=2, byrow=F)#
+#
+minPos<-c(33.5,33.5,33.5,33.5,33.5,33.5,33.5) #min position in this exalmple is the spawning area so all min positions will bbe set to 0#
+maxPos<-c(33.5,34,39,41,43,45,45) #age based max position#
+varPos<-c(33.5,33.5,33.5,33.5,33.5,33.5,33.5)*0.1#
+#empty objects#
+SB<-vector(length=ntstp)#
+NationVulB<-matrix(nrow=ntstp,ncol=nations)#
+Nage<-matrix(NA,nrow=ntstp,ncol=nage)#
+VulB<-matrix(NA,nrow=ntstp,ncol=nage)#
+PosX<-matrix(NA,nrow=ntstp,ncol=nage)#
+VBarea<-matrix(NA,nrow=ntstp,ncol=nareas)#
+Effarea<-matrix(NA,nrow=ntstp,ncol=nareas)#
+Effage<-matrix(NA,nrow=ntstp,ncol=nage)#
+#
+#fill in matrices#
+#
+#indices#
+indyr<-rep(years, each=nmonths)#
+indmonth<-rep(months,nyears)#
+indnatarea<-rep(1:nations,times=nationareas)#
+#first row stuff#
+Nage[1,1]<-So*bo/(1+beta*bo)#
+#numbers and biomass#
+for(i in 2:nage)#
+{#
+    Nage[1,i]<-Nage[1,(i-1)]*exp(-(m+fe*va[i-1]))#
+}#
+VulB[1,]<-Nage[1,]*va*wa#
+SB[1]<-sum(Nage[1,]*wa*fa)/2#
+#
+#mean positions and biomass by area#
+for(i in 1:length(indyr))#
+{#
+    PosX[i,]<-minPos+(maxPos-minPos)*(0.5+0.5*sin(indmonth[i]*pi/6-pi))#
+}
+# biological parameters#
+#double#
+ro<-1000#
+h<-0.7#
+m<-0.3#
+fe<-0#
+kappa<-4*h/(1-h)#
+q<-1#
+#
+#vectors#
+wa<-c(1.0121,1.3858,1.725,2.0174,2.2609,2.4589,2.6171)#
+fa<-c(0.072924,0.66935,1.5841,2.0026,2.2595,2.4588,2.6171)#
+va<-c(0.0041512,0.084884,0.60249,1,1,1,1)#
+za<-m+va*fe#
+#
+lx<-vector(length=length(age))#
+lx<-exp(-m*age)#
+lx[length(age)]<-lx[length(age)]/(1-exp(-m))#
+#
+#summary vectors#
+phie<-sum(lx*fa)#
+So<-kappa/phie#
+bo<-kappa/So*ro#
+beta<-(kappa-1)/bo#
+SDR<-1#
+#model dims#
+age<-1:7; nage<-length(age)#
+months<-1:12; nmonths<-length(months)#
+years<-1:20; nyears<-length(years)#
+ntstp<-nmonths*nyears#
+areas<-30:60; nareas<-length(areas)#
+nations<-2; #
+border<-48.7#
+nationareas<-c(sum(areas<border),sum(areas>=border))#
+#annual forcing inputs - this is the stuff that will need to be estimated#
+#RelRec<-exp(SDR*rnorm(nyears))#
+#fixed relrec for comparison with ADMB#
+RelRec<-c(0.5736087,0.5597609,2.2722937,1.2785199,0.9122991,1.4026742,0.7339414,0.3264110,1.6858989,0.6330520,0.6411976,0.3343025,2.8175568,0.1532375#
+,0.6608086,0.6067317,0.6269567,0.7951264,0.3650248,0.7071489)#
+#
+TotEffyear<-matrix(c(rep(2,nyears),rep(1,nyears)),ncol=2, byrow=F)#
+TotEffmonth<-matrix(c(0,0,0,0.5,1,1,1,1,0.5,0.1,0,0,0,0,0,0,0,1,1,1,0.5,0.3,0.2,0.1),ncol=2, byrow=F)#
+#
+minPos<-c(33.5,33.5,33.5,33.5,33.5,33.5,33.5) #min position in this exalmple is the spawning area so all min positions will bbe set to 0#
+maxPos<-c(33.5,34,39,41,43,45,45) #age based max position#
+varPos<-c(33.5,33.5,33.5,33.5,33.5,33.5,33.5)*0.1#
+#empty objects#
+SB<-vector(length=ntstp)#
+NationVulB<-matrix(nrow=ntstp,ncol=nations)#
+Nage<-matrix(NA,nrow=ntstp,ncol=nage)#
+VulB<-matrix(NA,nrow=ntstp,ncol=nage)#
+PosX<-matrix(NA,nrow=ntstp,ncol=nage)#
+VBarea<-matrix(NA,nrow=ntstp,ncol=nareas)#
+Effarea<-matrix(NA,nrow=ntstp,ncol=nareas)#
+Effage<-matrix(NA,nrow=ntstp,ncol=nage)#
+#
+#fill in matrices#
+#
+#indices#
+indyr<-rep(years, each=nmonths)#
+indmonth<-rep(months,nyears)#
+indnatarea<-rep(1:nations,times=nationareas)#
+#first row stuff#
+Nage[1,1]<-So*bo/(1+beta*bo)#
+#numbers and biomass#
+for(i in 2:nage)#
+{#
+    Nage[1,i]<-Nage[1,(i-1)]*exp(-(m+fe*va[i-1]))#
+}#
+VulB[1,]<-Nage[1,]*va*wa#
+SB[1]<-sum(Nage[1,]*wa*fa)/2#
+#
+#mean positions and biomass by area#
+for(i in 1:length(indyr))#
+{#
+    PosX[i,]<-minPos+(maxPos-minPos)*(0.5+0.5*sin(indmonth[i]*pi/6-pi))#
+}#
+#=======================================================================================================#
+#plot of age distribution by area in a single year - abundance is not represented here.#
+x<-seq(min(areas),max(areas),by=0.1)#
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")#
+cores<-rainbow(nage)#
+#setwd("/Users/catarinawor/Documents/hake/Proposal/Proposal_rev_mtng")#
+#pdf("fish_mov.pdf", width=6, height=4)#
+par(mfrow=c(3,4), mar=c(4.1,4.1,4.1,0.3),c(4, 1, 1, 1) )#
+for(mth in 1:12){#
+    for( i in 1:(length(PosX[mth,]))){#
+        plot(x,dnorm(x,PosX[mth,i],varPos[i]),type="l", lwd=2, col=cores[i],main=meses[mth],xlab="",ylim=c(0,.2), ylab=" ", cex.main=3,cex.lab=2)#
+            abline(v=48.9)#
+        if(mth==1){#
+            legend("topright", legend=age,  col = cores, border = "n", lwd=2, bty="n")#
+        }#
+        ##if(m==5){#
+        ##  polygon(c(x[30:100],x[100]), c(dnorm(x[30:100],PosX[mth,4],varPos[4]),0),col="blue")#
+        ##}#
+        par(new=T)#
+#
+}#
+par(new=F)#
+}#
+mtext(expression("Latitude "(degree)), side = 1, line = -1, outer=T, cex=2, font=2)#
+#dev.off()#
+#=======================================================================================================#
+#=======================================================================================================#
+#high biomass scenario#
+#
+maxPos2<-c(33.5,38,41,47,51,53,57)#age based max position#
+PosX2<-matrix(NA,nrow=ntstp,ncol=nage)#
+for(i in 1:length(indyr))#
+{#
+    PosX2[i,]<-minPos+(maxPos2-minPos)*(0.5+0.5*sin(indmonth[i]*pi/6-5*pi/6))#
+}
+for (r in 1:nareas){#
+        VBarea[1,r]<-sum(VulB[1,]*(pnorm(areas[r]+0.5,PosX[1,],varPos)-pnorm(areas[r]-0.5,PosX[1,],varPos)))#
+        print#
+    }#
+NationVulB[1,]<-c(sum(VBarea[1,1:nationareas[1]]),sum(VBarea[1,(nationareas[1]+1):nareas]))#
+#effort#
+Effarea[1,]<-VBarea[1,]/(NationVulB[1,indnatarea]+0.000001)*TotEffyear[indyr[1],indnatarea]*TotEffmonth[indmonth[1],indnatarea]#
+#Calculate the effort that each class is subject to. weighted average of effort in each area wieghted by the prop of that age class in each area #
+for (a in 1:nage){#
+    propVBarea<-vector(length=nareas)#
+    for(r in 1:nareas){#
+        propVBarea[r]<-(pnorm(areas[r]+0.5,PosX[1,],varPos)-pnorm(areas[r]-0.5,PosX[1,],varPos))[a]#
+    }#
+#
+    Effage[1,a]<- sum(Effarea[1,]* propVBarea)#
+#
+}
+for(i in 2:(length(indyr)))#
+{#
+    Effarea[i,]<-VBarea[i-1,]/(NationVulB[i-1,indnatarea]+0.000001)*TotEffyear[indyr[i-1],indnatarea]*TotEffmonth[indmonth[i-1],indnatarea]#
+    for (a in 1:nage)#
+    {#
+        propVBarea<-vector(length=nareas)#
+        for(r in 1:nareas)#
+        {#
+            propVBarea[r]<-(pnorm(areas[r]+0.5,PosX[i,],varPos)-pnorm(areas[r]-0.5,PosX[i,],varPos))[a]#
+        }#
+#
+        Effage[i,a]<- sum(Effarea[i,]* propVBarea)#
+#
+    }#
+    #Effage[i,]<- Effarea[i-1,PosX[i-1,]+1]#
+#
+    if(indmonth[i]>1)#
+    {#
+        Nage[i,]<-Nage[i-1,]*exp(-(m+q*Effage[i,]*va)/12)#
+#
+    }else{#
+        Nage[i,1]<-So*SB[i-nmonths]/(1+beta*SB[i-nmonths])*RelRec[indyr[i]]#
+        Nage[i,2:nage]<-Nage[i-1,1:(nage-1)]*exp(-(m+q*Effage[i,1:(nage-1)]*va[1:(nage-1)])/12)#
+#
+    }#
+    VulB[i,]<-Nage[i,]*va*wa#
+    SB[i]<-sum(VulB[i,]*fa)/2#
+#
+    for (r in 1:nareas){#
+        VBarea[i,r]<-sum(VulB[i,]*(pnorm(areas[r]+0.5,PosX[i,],varPos)-pnorm(areas[r]-0.5,PosX[i,],varPos)))#
+    }#
+    NationVulB[i,]<-c(sum(VBarea[i,1:nationareas[1]]),sum(VBarea[i,(nationareas[1]+1):nareas])) #
+#
+}
+plot((1:(length(indyr))),apply(VulB,1,sum), type="l")
+apply(VulB,1,sum)
+RelRec
+maxPos<-1./(1.+exp(-(age-maxPos50)/maxPossd));#
+maxPos<- (maxPos * (areas[nareas]-areas[1]))+areas[1]
+maxPos
+maxPos50<-6#
+maxPossd<-1.0#
+#
+maxPos<-1./(1.+exp(-(age-maxPos50)/maxPossd));#
+maxPos<- (maxPos * (areas[nareas]-areas[1]))+areas[1]
+maxPos
+minPos<-rep(30,nage) #min position in this exalmple is the spawning area so all min positions will bbe set to 0
+maxPos50<-6#
+maxPossd<-1.0#
+#
+maxPos<-1./(1.+exp(-(age-maxPos50)/maxPossd));#
+maxPos<- (maxPos * (areas[nareas]-areas[1]))+areas[1]#
+varPos<-maxPos*0.1
+SB<-vector(length=ntstp)#
+NationVulB<-matrix(nrow=ntstp,ncol=nations)#
+Nage<-matrix(NA,nrow=ntstp,ncol=nage)#
+VulB<-matrix(NA,nrow=ntstp,ncol=nage)#
+PosX<-matrix(NA,nrow=ntstp,ncol=nage)#
+VBarea<-matrix(NA,nrow=ntstp,ncol=nareas)#
+Effarea<-matrix(NA,nrow=ntstp,ncol=nareas)#
+Effage<-matrix(NA,nrow=ntstp,ncol=nage)#
+#
+#fill in matrices#
+#
+#indices#
+indyr<-rep(years, each=nmonths)#
+indmonth<-rep(months,nyears)#
+indnatarea<-rep(1:nations,times=nationareas)#
+#first row stuff#
+Nage[1,1]<-So*bo/(1+beta*bo)#
+#numbers and biomass#
+for(i in 2:nage)#
+{#
+    Nage[1,i]<-Nage[1,(i-1)]*exp(-(m+fe*va[i-1]))#
+}#
+VulB[1,]<-Nage[1,]*va*wa#
+SB[1]<-sum(Nage[1,]*wa*fa)/2#
+#
+#mean positions and biomass by area#
+for(i in 1:length(indyr))#
+{#
+    PosX[i,]<-minPos+(maxPos-minPos)*(0.5+0.5*sin(indmonth[i]*pi/6-pi))#
+}
+maxPos2<-c(33.5,38,41,47,51,53,57)#age based max position#
+PosX2<-matrix(NA,nrow=ntstp,ncol=nage)#
+for(i in 1:length(indyr))#
+{#
+    PosX2[i,]<-minPos+(maxPos2-minPos)*(0.5+0.5*sin(indmonth[i]*pi/6-5*pi/6))#
+}
+for (r in 1:nareas){#
+        VBarea[1,r]<-sum(VulB[1,]*(pnorm(areas[r]+0.5,PosX[1,],varPos)-pnorm(areas[r]-0.5,PosX[1,],varPos)))#
+        print#
+    }#
+NationVulB[1,]<-c(sum(VBarea[1,1:nationareas[1]]),sum(VBarea[1,(nationareas[1]+1):nareas]))#
+#effort#
+Effarea[1,]<-VBarea[1,]/(NationVulB[1,indnatarea]+0.000001)*TotEffyear[indyr[1],indnatarea]*TotEffmonth[indmonth[1],indnatarea]#
+#Calculate the effort that each class is subject to. weighted average of effort in each area wieghted by the prop of that age class in each area #
+for (a in 1:nage){#
+    propVBarea<-vector(length=nareas)#
+    for(r in 1:nareas){#
+        propVBarea[r]<-(pnorm(areas[r]+0.5,PosX[1,],varPos)-pnorm(areas[r]-0.5,PosX[1,],varPos))[a]#
+    }#
+#
+    Effage[1,a]<- sum(Effarea[1,]* propVBarea)#
+#
+}#
+#for(i in 2:(length(indyr)))#
+#{#
+#   #Effarea[i,]<-VBarea[i-1,]/(NationVulB[i-1,indnatarea]+0.000001)*TotEffyear[indyr[i-1],]*TotEffmonth[indmonth[i-1],]#
+##
+#   if(indmonth[i]>1)#
+#   {#
+#       Nage[i,]<-Nage[i-1,]*exp(-(m+q*Effage[i-1,]*va)/12)#
+##
+#   }else{#
+#       Nage[i,1]<-So*SB[i-nmonths]/(1+beta*SB[i-nmonths])*RelRec[indyr[i]]#
+#           #
+#       Nage[i,2:nage]<-Nage[i-1,1:(nage-1)]*exp(-(m+q*Effage[i-1,1:(nage-1)]+va[1:(nage-1)])/12)#
+##
+#   }#
+#   VulB[i,]<-Nage[i,]*va*wa#
+#   SB[i]<-sum(VulB[i,]*fa)/2#
+##
+#   VBarea[i,]<-calcVBarea(pos=PosX[i,],vulb=VulB[i,])#
+##
+#   NationVulB[i,]<-c(sum(VBarea[i,1:nationareas[1]]),sum(VBarea[i,(nationareas[1]+1):nareas]))#
+##
+#   Effarea[i,]<-VBarea[i,]/(NationVulB[i,indnatarea]+0.000001)*TotEffyear[indyr[i],]*TotEffmonth[indmonth[i],]#
+#   Effage[i,]<- Effarea[i,PosX[i,]+1]#
+##
+##
+#}#
+#
+#putting the effort first...  I'm still not sure this makes sense but Carl said this was the way I should do it#
+for(i in 2:(length(indyr)))#
+{#
+    Effarea[i,]<-VBarea[i-1,]/(NationVulB[i-1,indnatarea]+0.000001)*TotEffyear[indyr[i-1],indnatarea]*TotEffmonth[indmonth[i-1],indnatarea]#
+    for (a in 1:nage)#
+    {#
+        propVBarea<-vector(length=nareas)#
+        for(r in 1:nareas)#
+        {#
+            propVBarea[r]<-(pnorm(areas[r]+0.5,PosX[i,],varPos)-pnorm(areas[r]-0.5,PosX[i,],varPos))[a]#
+        }#
+#
+        Effage[i,a]<- sum(Effarea[i,]* propVBarea)#
+#
+    }#
+    #Effage[i,]<- Effarea[i-1,PosX[i-1,]+1]#
+#
+    if(indmonth[i]>1)#
+    {#
+        Nage[i,]<-Nage[i-1,]*exp(-(m+q*Effage[i,]*va)/12)#
+#
+    }else{#
+        Nage[i,1]<-So*SB[i-nmonths]/(1+beta*SB[i-nmonths])*RelRec[indyr[i]]#
+        Nage[i,2:nage]<-Nage[i-1,1:(nage-1)]*exp(-(m+q*Effage[i,1:(nage-1)]*va[1:(nage-1)])/12)#
+#
+    }#
+    VulB[i,]<-Nage[i,]*va*wa#
+    SB[i]<-sum(VulB[i,]*fa)/2#
+#
+    for (r in 1:nareas){#
+        VBarea[i,r]<-sum(VulB[i,]*(pnorm(areas[r]+0.5,PosX[i,],varPos)-pnorm(areas[r]-0.5,PosX[i,],varPos)))#
+    }#
+    NationVulB[i,]<-c(sum(VBarea[i,1:nationareas[1]]),sum(VBarea[i,(nationareas[1]+1):nareas])) #
+#
+}
+plot((1:(length(indyr))),apply(VulB,1,sum), type="l")
+apply(VulB,1,sum)
+Nage[1:12,]
+Nage[1:13,]
+Nage[13,]
+indmonth[13]
+indmonth[25]
+Nage[25,]
+RelRec
+Nage[12*15+1,]
+Nage[25,]
+Nage[13,]
+Nage[25,]
+# source('./www/globals.R')#
+source('helpers.R')#
+shinyServer(function(input,output,session){#
+#
+    ## ------------------------------------------------------------ ###
+    ## MANAGEMENT STRATEGY EVALUATION MODEL (May 15, 2015)#
+    ## ------------------------------------------------------------ ###
+#
+    ##
+    # plotMSE#
+    # #
+    output$plotMSE <- renderPlot({#
+      .funnelPlot( input )#
+    })#
+#
+    # #
+    # Median depletion table#
+    # #
+    output$viewDepletionTable <- renderTable({#
+      .tablePeformanceMetric(input,"t.Dt0.5")#
+    })#
+#
+    # #
+    # Probability of falling below SB 20%#
+    # #
+    output$viewSSBLimitTable <- renderTable({#
+      .tablePeformanceMetric(input,"P.SSB.0.20.")#
+    })#
+#
+    # #
+    # Probability of falling below SB 30%#
+    # #
+    output$viewSSBThresholdTable <- renderTable({#
+      .tablePeformanceMetric(input,"P.SSB.0.30.")#
+    })#
+#
+    # #
+    # Median catch table#
+    # #
+    output$viewCatchTable <- renderTable({#
+      .tablePeformanceMetric(input,"ct50")#
+    })#
+#
+    # #
+    # Median annual variation in catch#
+    # #
+    output$viewAAVTable <- renderTable({#
+      .tablePeformanceMetric(input,"AAV50")#
+    })#
+      ## ------------------------------------------------------------ ###
+    ## EQUILIBRIUM MODEL (May 7, 2015)#
+    ## ------------------------------------------------------------ ###
+    ## ------------------------------------------------------------ ###
+    ## Run equilibrium models#
+    ## ------------------------------------------------------------ ###
+    scnA <- reactive(do.call(equilibrium_model_cpp, getParams("A",input)))#
+    scnB <- reactive(do.call(equilibrium_model_cpp, getParams("B",input)))#
+    ## ------------------------------------------------------------ ###
+    ## Plot Equilibrium values versus fishing mortality#
+    ## ------------------------------------------------------------ ###
+    output$plot_equil <- renderPlot({#
+      AB <- rbind(scnA(),scnB())#
+      xx <- input$chkEquilPlot#
+      if(length(xx) != 0)#
+      {#
+        .plotEquilFe(AB,xx)#
+      }#
+    })      #
+#
+    ## ------------------------------------------------------------ ###
+    ## Run Selex plots#
+    ## ------------------------------------------------------------ ###
+    output$plotSelex <-renderPlot({#
+      pars <- list(getParams("A",input),getParams("B",input))#
+      .plotBycatchSelex(pars)#
+    })#
+#
+    output$plotFishSelex <-renderPlot({#
+      pars <- list(getParams("A",input),getParams("B",input))#
+      .plotFishSelex(pars)#
+    })#
+#
+    ## ------------------------------------------------------------ ###
+    ## Print Equilibrium MSY Table#
+    ## ------------------------------------------------------------ ###
+    output$msyTable <- renderTable({#
+      AB <- rbind(scnA(),scnB())#
+      xx <- input$chkMSYTable#
+#
+      .msyTable(AB,xx)#
+#
+    })#
+#
+    ## ------------------------------------------------------------ ###
+    ## Print Equilibrium SPR Table#
+    ## ------------------------------------------------------------ ###
+    output$sprTable <- renderTable({#
+      AB <- rbind(scnA(),scnB())#
+      xx <- input$chkMSYTable#
+#
+      .sprTable(AB,xx)#
+#
+    })#
+#
+    ## ------------------------------------------------------------ ###
+    ## Print Equilibrium MEY Table#
+    ## ------------------------------------------------------------ ###
+    output$meyTable <- renderTable({#
+      AB <- rbind(scnA(),scnB())#
+      xx <- input$chkMSYTable#
+#
+      .meyTable(AB,xx)#
+#
+    })#
+    # BYCATCH#
+    observe({#
+      A_dmr = input$A_bycatch_dmr#
+      B_dmr = input$A_bycatch_dmr#
+      print(A_dmr)#
+      A_bycatch = input$A_num_bycatch_total#
+      B_bycatch = input$B_num_bycatch_total#
+#
+      A_bcm = A_dmr * A_bycatch#
+      B_bcm = B_dmr * B_bycatch#
+      updateNumericInput(session, paste0("A","_","num_bycatch"), value = A_bcm)#
+      updateNumericInput(session, paste0("B","_","num_bycatch"), value = B_bcm)#
+    })#
+#
+    # output$num_bycatch <- renderText({#
+    #     bycatch = input$bycatch_dmr * input$num_bycatch_total#
+    # })#
+  #   observe({#
+  #   pars <- list(getParams("A",input),getParams("B",input))#
+  #   print(pars)#
+  #   dmr <- input$bycatch_dmr#
+  #   bct <- input$num_bycatch_total#
+  #   bcm <- 8#
+  #   updateNumericInput(session, paste0("A","_","num_bycatch"), value = bcm)#
+  #   updateNumericInput(session, paste0("B","_","num_bycatch"), value = bcm)#
+#
+  #   # updateNumericInput(session, "inNumber2",#
+  #   #   label = paste("Number label ", x),#
+  #   #   value = x, min = x-10, max = x+10, step = 5)#
+  # })#
+})#
+# End of shinyServer
+rm(list=ls()); #
+#if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")#
+setwd("/Users/catarinawor/Documents/Lagrangian/")#
+source("read.admb.R")#
+#
+sim = read.rep("lagrangian_OM.rep")#
+est = read.rep("lagrangian_est.rep")#
+#
+nomes <- names(sim)#
+#
+true_pars <- c(sim$"mo", exp(sim$"log_tau_c"),sim$"maxPos50",sim$"maxPossd",sim$"cvPos")  #
+est_pars <- c(est$"mo",exp(est$"log_tau_c"),est$"maxPos50",est$"maxPossd",est$"cvPos")#
+#
+#parameter plot#
+par(mfrow=c(1,1))#
+barplot(t(matrix(c(true_pars,est_pars),ncol=2)),names.arg = c("mo","tau_c","maxPos50","maxPossd","cvPos"),beside=T)
+ntsp=1:((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))#
+ages=sim$nage-sim$sage+1#
+indmonth= rep(sim$smon:sim$nmon,(sim$nyr-sim$syr+1))#
+#
+#======================================================================================================#
+#Biomass history#
+plot(ntsp,sim$SB, type="l", lwd=2)
+plot(ntsp,sim$SB, type="l", lwd=2)#
+lines(ntsp,est$SB, type="l", lwd=2, col="olivedrab3")
+lines(ntsp,est$SB, type="l", lwd=2, col="olivedrab")
+exp(-4)
+exp(-5)
+exp(-4.5)
+exp(-1)
+exp(-.5)
+rm(list=ls()); #
+#if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")#
+setwd("/Users/catarinawor/Documents/Lagrangian/")#
+source("read.admb.R")#
+#
+sim = read.rep("lagrangian_OM.rep")#
+est = read.rep("lagrangian_est.rep")#
+#
+nomes <- names(sim)#
+#
+true_pars <- c(sim$"mo", exp(sim$"log_tau_c"),sim$"maxPos50",sim$"maxPossd",sim$"cvPos")  #
+est_pars <- c(est$"mo",exp(est$"log_tau_c"),est$"maxPos50",est$"maxPossd",est$"cvPos")#
+#
+#parameter plot#
+par(mfrow=c(1,1))#
+barplot(t(matrix(c(true_pars,est_pars),ncol=2)),names.arg = c("mo","tau_c","maxPos50","maxPossd","cvPos"),beside=T)#
+#========================================================================#
+#multiplot function from http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_%28ggplot2%29/#
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {#
+  require(grid)#
+#
+  # Make a list from the ... arguments and plotlist#
+  plots <- c(list(...), plotlist)#
+#
+  numPlots = length(plots)#
+#
+  # If layout is NULL, then use 'cols' to determine layout#
+  if (is.null(layout)) {#
+    # Make the panel#
+    # ncol: Number of columns of plots#
+    # nrow: Number of rows needed, calculated from # of cols#
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),#
+                    ncol = cols, nrow = ceiling(numPlots/cols))#
+  }#
+#
+ if (numPlots==1) {#
+    print(plots[[1]])#
+#
+  } else {#
+    # Set up the page#
+    grid.newpage()#
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))#
+#
+    # Make each plot, in the correct location#
+    for (i in 1:numPlots) {#
+      # Get the i,j matrix positions of the regions that contain this subplot#
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))#
+#
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,#
+                                      layout.pos.col = matchidx$col))#
+    }#
+  }#
+}#
+#======================================================================================================#
+#indexes#
+ntsp=1:((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))#
+ages=sim$nage-sim$sage+1#
+indmonth= rep(sim$smon:sim$nmon,(sim$nyr-sim$syr+1))#
+#
+#======================================================================================================#
+#Biomass history#
+plot(ntsp,sim$SB, type="l", lwd=2)#
+lines(ntsp,est$SB, type="l", lwd=2, col="olivedrab3")
+library(ggplot2)#
+library(reshape2)#
+#
+ntsp=1:((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))#
+ages=sim$nage-sim$sage+1#
+indmonth= rep(sim$smon:sim$nmon,(sim$nyr-sim$syr+1))#
+EffNatAgeSim<-matrix(sim$EffNatAge,ncol=(sim$nage-sim$sage+3),dimnames=list(1:(((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))*sim$nations),c("tstp","nation",sim$sage:sim$nage)))#
+EffNatAgeEst<-matrix(est$EffNatAge,ncol=(est$nage-est$sage+3),dimnames=list(1:(((est$nyr-sim$syr+1)*(est$nmon-est$smon+1))*est$nations),c("tstp","nation",est$sage:est$nage)))#
+#
+EffNatAgeSim<-as.data.frame(EffNatAgeSim)#
+ ENAsim<-NULL#
+#
+for(i in 1:sim$nations)#
+{#
+    tmp <- melt(EffNatAgeSim[EffNatAgeSim$nation==i,sim$sage:sim$nage+2])#
+    tmp2 <- cbind(tim=rep(ntsp,ages),tmp, nat=rep(i,nrow(tmp)),met=rep("simulated",nrow(tmp)))#
+    ENAsim <- rbind(ENAsim,tmp2)#
+}#
+#
+names(ENAsim) <- c("time","age", "effort","nations","method") #
+#============####============###
+EffNatAgeEst<-matrix(est$EffNatAge,ncol=(est$nage-est$sage+3),dimnames=list(1:(((est$nyr-sim$syr+1)*(est$nmon-est$smon+1))*est$nations),c("tstp","nation",est$sage:est$nage)))#
+EffNatAgeEst<-as.data.frame(EffNatAgeEst)#
+ ENAest<-NULL#
+#
+for(i in 1:est$nations)#
+{#
+    tmp <- melt(EffNatAgeEst[EffNatAgeEst$nation==i,est$sage:est$nage+2])#
+    tmp2 <- cbind(tim=rep(ntsp,ages),tmp, nat=rep(i,nrow(tmp)),met=rep("estimated",nrow(tmp)))#
+    ENAest <- rbind(ENAest,tmp2)#
+}#
+#
+names(ENAest) <- c("time","age", "effort","nations","method") #
+#
+ENA<- rbind(ENAsim,ENAest)#
+#
+ENA <- ENA[order(ENA$time),]#
+#
+maxeff<-max(ENA$effort)#
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")#
+mets<-c("simulated","estimated")#
+#
+setwd("/Users/catarinawor/Documents/Lagrangian/anime/effort")#
+#
+library("animation")#
+#
+saveLatex(#
+#if you don't have latex installed you need to install it or use other function such as saveGIF#
+#
+for(i in 1:length(ntsp))#
+{#
+    df <-ENA[ENA$time==i,]#
+    for(n in 1:est$nations )#
+    {#
+        for(m in 1:(length(mets)) )#
+        {#
+            if(min(df[df$nations==n&df$method==mets[m],]$effort)>0)#
+            {#
+                tmp3 <- df[df$nations==n&df$method==mets[m],]$effort/max(df[df$nations==n&df$method==mets[m],]$effort)#
+                df[df$nations==n&df$method==mets[m],]$effort = tmp3#
+            }#
+        }#
+    }#
+    y<- ggplot(df, aes(x=age,y=effort, group=method)) + theme_bw()#
+    y <- y+ facet_grid(.~nations)#
+    y <- y+ geom_line(size=2, aes(colour=method))#
+    y <- y + scale_y_continuous(limits=c(0,1))#
+    y <- y + labs(title=meses[indmonth[i]])#
+print(y)#
+}#
+,#
+pdflatex = "/usr/texbin/pdflatex",latex.filename = "VBarea.tex")#
+#====================================================================================================================#
+setwd("/Users/catarinawor/Documents/Lagrangian/anime/VBarea")#
+#
+VBareaSim<-matrix(sim$VBarea, ncol=(sim$narea-sim$sarea+1),dimnames=list(ntsp,sim$sarea:sim$narea))#
+VBareaEst<-matrix(est$VBarea, ncol=(est$narea-est$sarea+1),dimnames=list(ntsp,est$sarea:est$narea))#
+#
+VBplotSim<-cbind(melt(VBareaSim),rep("simulated",nrow(melt(VBareaSim))))#
+VBplotEst<-cbind(melt(VBareaEst),rep("estimated",nrow(melt(VBareaEst))))#
+names(VBplotSim)<- c("time","area", "VB","method")#
+names(VBplotEst)<- c("time","area", "VB","method")#
+#
+lat<-VBareaplot$area#
+lon<-rep(-131,length(lat))#
+VBareaplot<-rbind(VBplotSim,VBplotEst)#
+#
+lat<-VBareaplot$area#
+lon<-rep(-131,length(lat))#
+#
+VBareaplot<-cbind(VBareaplot,lat,lon)#
+#
+library(ggmap)#
+basemap<-get_map(location = c(lon = -125, lat = 45),#
+    zoom = 5, maptype = "terrain")#
+#
+saveLatex(#
+#if you don't have latex installed you need to install it or use other function such as saveGIF#
+for(i in 1:ntsp)#
+{#
+ex1<-VBareaplot[VBareaplot$time==i ,]#
+        minVB<-min(VBareaplot$VB)#
+        maxVB<-max(VBareaplot$VB)#
+#
+p2<-  ggmap(basemap,#
+    extent = "panel",#
+    ylab = "Latitude",#
+    xlab = "Longitude")#
+p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+p2 <- p2 + geom_point(alpha=0.8,aes(size=VB, group=method,colour=method),data=ex1) #
+p2 <- p2 + labs(title=meses[indmonth[i]])#
+p2 <- p2 + scale_size_area(limits=c(minVB,maxVB),max_size = 10,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")#
+print(p2)   #
+}#
+,#
+pdflatex = "/usr/texbin/pdflatex")
+install.packages("animation")
+library(ggplot2)#
+library(reshape2)#
+#
+ntsp=1:((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))#
+ages=sim$nage-sim$sage+1#
+indmonth= rep(sim$smon:sim$nmon,(sim$nyr-sim$syr+1))#
+EffNatAgeSim<-matrix(sim$EffNatAge,ncol=(sim$nage-sim$sage+3),dimnames=list(1:(((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))*sim$nations),c("tstp","nation",sim$sage:sim$nage)))#
+EffNatAgeEst<-matrix(est$EffNatAge,ncol=(est$nage-est$sage+3),dimnames=list(1:(((est$nyr-sim$syr+1)*(est$nmon-est$smon+1))*est$nations),c("tstp","nation",est$sage:est$nage)))#
+#
+EffNatAgeSim<-as.data.frame(EffNatAgeSim)#
+ ENAsim<-NULL#
+#
+for(i in 1:sim$nations)#
+{#
+    tmp <- melt(EffNatAgeSim[EffNatAgeSim$nation==i,sim$sage:sim$nage+2])#
+    tmp2 <- cbind(tim=rep(ntsp,ages),tmp, nat=rep(i,nrow(tmp)),met=rep("simulated",nrow(tmp)))#
+    ENAsim <- rbind(ENAsim,tmp2)#
+}#
+#
+names(ENAsim) <- c("time","age", "effort","nations","method") #
+#============####============###
+EffNatAgeEst<-matrix(est$EffNatAge,ncol=(est$nage-est$sage+3),dimnames=list(1:(((est$nyr-sim$syr+1)*(est$nmon-est$smon+1))*est$nations),c("tstp","nation",est$sage:est$nage)))#
+EffNatAgeEst<-as.data.frame(EffNatAgeEst)#
+ ENAest<-NULL#
+#
+for(i in 1:est$nations)#
+{#
+    tmp <- melt(EffNatAgeEst[EffNatAgeEst$nation==i,est$sage:est$nage+2])#
+    tmp2 <- cbind(tim=rep(ntsp,ages),tmp, nat=rep(i,nrow(tmp)),met=rep("estimated",nrow(tmp)))#
+    ENAest <- rbind(ENAest,tmp2)#
+}#
+#
+names(ENAest) <- c("time","age", "effort","nations","method") #
+#
+ENA<- rbind(ENAsim,ENAest)#
+#
+ENA <- ENA[order(ENA$time),]#
+#
+maxeff<-max(ENA$effort)#
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")#
+mets<-c("simulated","estimated")#
+#
+setwd("/Users/catarinawor/Documents/Lagrangian/anime/effort")#
+#
+library("animation")#
+#
+saveLatex(#
+#if you don't have latex installed you need to install it or use other function such as saveGIF#
+#
+for(i in 1:length(ntsp))#
+{#
+    df <-ENA[ENA$time==i,]#
+    for(n in 1:est$nations )#
+    {#
+        for(m in 1:(length(mets)) )#
+        {#
+            if(min(df[df$nations==n&df$method==mets[m],]$effort)>0)#
+            {#
+                tmp3 <- df[df$nations==n&df$method==mets[m],]$effort/max(df[df$nations==n&df$method==mets[m],]$effort)#
+                df[df$nations==n&df$method==mets[m],]$effort = tmp3#
+            }#
+        }#
+    }#
+    y<- ggplot(df, aes(x=age,y=effort, group=method)) + theme_bw()#
+    y <- y+ facet_grid(.~nations)#
+    y <- y+ geom_line(size=2, aes(colour=method))#
+    y <- y + scale_y_continuous(limits=c(0,1))#
+    y <- y + labs(title=meses[indmonth[i]])#
+print(y)#
+}#
+,#
+pdflatex = "/usr/texbin/pdflatex",latex.filename = "VBarea.tex")#
+#====================================================================================================================#
+setwd("/Users/catarinawor/Documents/Lagrangian/anime/VBarea")#
+#
+VBareaSim<-matrix(sim$VBarea, ncol=(sim$narea-sim$sarea+1),dimnames=list(ntsp,sim$sarea:sim$narea))#
+VBareaEst<-matrix(est$VBarea, ncol=(est$narea-est$sarea+1),dimnames=list(ntsp,est$sarea:est$narea))#
+#
+VBplotSim<-cbind(melt(VBareaSim),rep("simulated",nrow(melt(VBareaSim))))#
+VBplotEst<-cbind(melt(VBareaEst),rep("estimated",nrow(melt(VBareaEst))))#
+names(VBplotSim)<- c("time","area", "VB","method")#
+names(VBplotEst)<- c("time","area", "VB","method")#
+#
+lat<-VBareaplot$area#
+lon<-rep(-131,length(lat))#
+VBareaplot<-rbind(VBplotSim,VBplotEst)#
+#
+lat<-VBareaplot$area#
+lon<-rep(-131,length(lat))#
+#
+VBareaplot<-cbind(VBareaplot,lat,lon)#
+#
+library(ggmap)#
+basemap<-get_map(location = c(lon = -125, lat = 45),#
+    zoom = 5, maptype = "terrain")#
+#
+saveLatex(#
+#if you don't have latex installed you need to install it or use other function such as saveGIF#
+for(i in 1:ntsp)#
+{#
+ex1<-VBareaplot[VBareaplot$time==i ,]#
+        minVB<-min(VBareaplot$VB)#
+        maxVB<-max(VBareaplot$VB)#
+#
+p2<-  ggmap(basemap,#
+    extent = "panel",#
+    ylab = "Latitude",#
+    xlab = "Longitude")#
+p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+p2 <- p2 + geom_point(alpha=0.8,aes(size=VB, group=method,colour=method),data=ex1) #
+p2 <- p2 + labs(title=meses[indmonth[i]])#
+p2 <- p2 + scale_size_area(limits=c(minVB,maxVB),max_size = 10,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")#
+print(p2)   #
+}#
+,#
+pdflatex = "/usr/texbin/pdflatex")
+install.packages("ggmap")
+setwd("/Users/catarinawor/Documents/Lagrangian/anime/VBarea")#
+#
+VBareaSim<-matrix(sim$VBarea, ncol=(sim$narea-sim$sarea+1),dimnames=list(ntsp,sim$sarea:sim$narea))#
+VBareaEst<-matrix(est$VBarea, ncol=(est$narea-est$sarea+1),dimnames=list(ntsp,est$sarea:est$narea))#
+#
+VBplotSim<-cbind(melt(VBareaSim),rep("simulated",nrow(melt(VBareaSim))))#
+VBplotEst<-cbind(melt(VBareaEst),rep("estimated",nrow(melt(VBareaEst))))#
+names(VBplotSim)<- c("time","area", "VB","method")#
+names(VBplotEst)<- c("time","area", "VB","method")#
+#
+lat<-VBareaplot$area#
+lon<-rep(-131,length(lat))#
+VBareaplot<-rbind(VBplotSim,VBplotEst)#
+#
+lat<-VBareaplot$area#
+lon<-rep(-131,length(lat))#
+#
+VBareaplot<-cbind(VBareaplot,lat,lon)#
+#
+library(ggmap)#
+basemap<-get_map(location = c(lon = -125, lat = 45),#
+    zoom = 5, maptype = "terrain")#
+#
+saveLatex(#
+#if you don't have latex installed you need to install it or use other function such as saveGIF#
+for(i in 1:ntsp)#
+{#
+ex1<-VBareaplot[VBareaplot$time==i ,]#
+        minVB<-min(VBareaplot$VB)#
+        maxVB<-max(VBareaplot$VB)#
+#
+p2<-  ggmap(basemap,#
+    extent = "panel",#
+    ylab = "Latitude",#
+    xlab = "Longitude")#
+p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+p2 <- p2 + geom_point(alpha=0.8,aes(size=VB, group=method,colour=method),data=ex1) #
+p2 <- p2 + labs(title=meses[indmonth[i]])#
+p2 <- p2 + scale_size_area(limits=c(minVB,maxVB),max_size = 10,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")#
+print(p2)   #
+}#
+,#
+pdflatex = "/usr/texbin/pdflatex")
+library(ggplot2)#
+library(reshape2)#
+#
+ntsp=1:((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))#
+ages=sim$nage-sim$sage+1#
+indmonth= rep(sim$smon:sim$nmon,(sim$nyr-sim$syr+1))#
+EffNatAgeSim<-matrix(sim$EffNatAge,ncol=(sim$nage-sim$sage+3),dimnames=list(1:(((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))*sim$nations),c("tstp","nation",sim$sage:sim$nage)))#
+EffNatAgeEst<-matrix(est$EffNatAge,ncol=(est$nage-est$sage+3),dimnames=list(1:(((est$nyr-sim$syr+1)*(est$nmon-est$smon+1))*est$nations),c("tstp","nation",est$sage:est$nage)))#
+#
+EffNatAgeSim<-as.data.frame(EffNatAgeSim)#
+ ENAsim<-NULL#
+#
+for(i in 1:sim$nations)#
+{#
+    tmp <- melt(EffNatAgeSim[EffNatAgeSim$nation==i,sim$sage:sim$nage+2])#
+    tmp2 <- cbind(tim=rep(ntsp,ages),tmp, nat=rep(i,nrow(tmp)),met=rep("simulated",nrow(tmp)))#
+    ENAsim <- rbind(ENAsim,tmp2)#
+}#
+#
+names(ENAsim) <- c("time","age", "effort","nations","method")
+for(i in 1:sim$nations)#
+{#
+    tmp <- melt(EffNatAgeSim[EffNatAgeSim$nation==i,sim$sage:sim$nage+2])#
+    tmp2 <- cbind(tim=rep(ntsp,ages),tmp, nat=rep(i,nrow(tmp)),met=rep("simulated",nrow(tmp)))#
+    ENAsim <- rbind(ENAsim,tmp2)#
+}#
+#
+names(ENAsim) <- c("time","age", "effort","nations","method")
+names(ENAsim)
+EffNatAgeEst<-matrix(est$EffNatAge,ncol=(est$nage-est$sage+3),dimnames=list(1:(((est$nyr-sim$syr+1)*(est$nmon-est$smon+1))*est$nations),c("tstp","nation",est$sage:est$nage)))
+EffNatAgeEst<-as.data.frame(EffNatAgeEst)
+ENAest<-NULL
+for(i in 1:est$nations)#
+{#
+    tmp <- melt(EffNatAgeEst[EffNatAgeEst$nation==i,est$sage:est$nage+2])#
+    tmp2 <- cbind(tim=rep(ntsp,ages),tmp, nat=rep(i,nrow(tmp)),met=rep("estimated",nrow(tmp)))#
+    ENAest <- rbind(ENAest,tmp2)#
+}
+names(ENAest) <- c("time","age", "effort","nations","method")
+ENA<- rbind(ENAsim,ENAest)
+ENA <- ENA[order(ENA$time),]
+maxeff<-max(ENA$effort)
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+mets<-c("simulated","estimated")
+setwd("/Users/catarinawor/Documents/Lagrangian/anime/effort")
+library("animation")
+saveLatex(#
+#if you don't have latex installed you need to install it or use other function such as saveGIF#
+#
+for(i in 1:length(ntsp))#
+{#
+    df <-ENA[ENA$time==i,]#
+    for(n in 1:est$nations )#
+    {#
+        for(m in 1:(length(mets)) )#
+        {#
+            if(min(df[df$nations==n&df$method==mets[m],]$effort)>0)#
+            {#
+                tmp3 <- df[df$nations==n&df$method==mets[m],]$effort/max(df[df$nations==n&df$method==mets[m],]$effort)#
+                df[df$nations==n&df$method==mets[m],]$effort = tmp3#
+            }#
+        }#
+    }#
+    y<- ggplot(df, aes(x=age,y=effort, group=method)) + theme_bw()#
+    y <- y+ facet_grid(.~nations)#
+    y <- y+ geom_line(size=2, aes(colour=method))#
+    y <- y + scale_y_continuous(limits=c(0,1))#
+    y <- y + labs(title=meses[indmonth[i]])#
+print(y)#
+}#
+,#
+pdflatex = "/usr/texbin/pdflatex",latex.filename = "VBarea.tex")
+?pdflatex
+?saveLatex
+ani.options(ani.width=8, ani.height=4)
+saveLatex(#
+#if you don't have latex installed you need to install it or use other function such as saveGIF#
+#
+for(i in 1:length(ntsp))#
+{#
+    df <-ENA[ENA$time==i,]#
+    for(n in 1:est$nations )#
+    {#
+        for(m in 1:(length(mets)) )#
+        {#
+            if(min(df[df$nations==n&df$method==mets[m],]$effort)>0)#
+            {#
+                tmp3 <- df[df$nations==n&df$method==mets[m],]$effort/max(df[df$nations==n&df$method==mets[m],]$effort)#
+                df[df$nations==n&df$method==mets[m],]$effort = tmp3#
+            }#
+        }#
+    }#
+    y<- ggplot(df, aes(x=age,y=effort, group=method)) + theme_bw()#
+    y <- y+ facet_grid(.~nations)#
+    y <- y+ geom_line(size=2, aes(colour=method))#
+    y <- y + scale_y_continuous(limits=c(0,1))#
+    y <- y + labs(title=meses[indmonth[i]])#
+print(y)#
+}#
+,#
+pdflatex = "/usr/texbin/pdflatex",latex.filename = "VBarea.tex")
+ani.options(ani.dev = "pdf", ani.type = "pdf",ani.width=8, ani.height=4)#
+saveLatex(#
+#if you don't have latex installed you need to install it or use other function such as saveGIF#
+#
+for(i in 1:length(ntsp))#
+{#
+    df <-ENA[ENA$time==i,]#
+    for(n in 1:est$nations )#
+    {#
+        for(m in 1:(length(mets)) )#
+        {#
+            if(min(df[df$nations==n&df$method==mets[m],]$effort)>0)#
+            {#
+                tmp3 <- df[df$nations==n&df$method==mets[m],]$effort/max(df[df$nations==n&df$method==mets[m],]$effort)#
+                df[df$nations==n&df$method==mets[m],]$effort = tmp3#
+            }#
+        }#
+    }#
+    y<- ggplot(df, aes(x=age,y=effort, group=method)) + theme_bw()#
+    y <- y+ facet_grid(.~nations)#
+    y <- y+ geom_line(size=2, aes(colour=method))#
+    y <- y + scale_y_continuous(limits=c(0,1))#
+    y <- y + labs(title=meses[indmonth[i]])#
+print(y)#
+}#
+,#
+pdflatex = "/usr/texbin/pdflatex",latex.filename = "VBarea.tex")
+rm(list=ls()); #
+#if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")#
+setwd("/Users/catarinawor/Documents/Lagrangian/")#
+source("read.admb.R")#
+#
+sim = read.rep("lagrangian_OM.rep")#
+est = read.rep("lagrangian_est.rep")#
+#
+nomes <- names(sim)#
+#
+true_pars <- c(sim$"mo", exp(sim$"log_tau_c"),sim$"maxPos50",sim$"maxPossd",sim$"cvPos")  #
+est_pars <- c(est$"mo",exp(est$"log_tau_c"),est$"maxPos50",est$"maxPossd",est$"cvPos")#
+#
+#parameter plot#
+par(mfrow=c(1,1))#
+barplot(t(matrix(c(true_pars,est_pars),ncol=2)),names.arg = c("mo","tau_c","maxPos50","maxPossd","cvPos"),beside=T)
+setwd("/Users/catarinawor/Documents/Lagrangian/anime/effort")#
+#
+library("animation")#
+#
+ani.options(ani.dev = "pdf", ani.type = "pdf",ani.width=8, ani.height=4)#
+saveLatex(#
+#if you don't have latex installed you need to install it or use other function such as saveGIF#
+#
+for(i in 1:length(ntsp))#
+{#
+  df <-ENA[ENA$time==i,]#
+  for(n in 1:est$nations )#
+  {#
+    for(m in 1:(length(mets)) )#
+    {#
+      if(min(df[df$nations==n&df$method==mets[m],]$effort)>0)#
+      {#
+        tmp3 <- df[df$nations==n&df$method==mets[m],]$effort/max(df[df$nations==n&df$method==mets[m],]$effort)#
+        df[df$nations==n&df$method==mets[m],]$effort = tmp3#
+      }#
+    }#
+  }#
+  y<- ggplot(df, aes(x=age,y=effort, group=method)) + theme_bw()#
+  y <- y+ facet_grid(.~nations)#
+  y <- y+ geom_line(size=2, aes(colour=method))#
+  y <- y + scale_y_continuous(limits=c(0,1))#
+  y <- y + labs(title=meses[indmonth[i]])#
+print(y)#
+}#
+,#
+pdflatex = "/usr/texbin/pdflatex",latex.filename = "VBarea.tex")
+library(ggplot2)#
+library(reshape2)#
+#
+ntsp=1:((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))#
+ages=sim$nage-sim$sage+1#
+indmonth= rep(sim$smon:sim$nmon,(sim$nyr-sim$syr+1))#
+EffNatAgeSim<-matrix(sim$EffNatAge,ncol=(sim$nage-sim$sage+3),dimnames=list(1:(((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))*sim$nations),c("tstp","nation",sim$sage:sim$nage)))#
+EffNatAgeEst<-matrix(est$EffNatAge,ncol=(est$nage-est$sage+3),dimnames=list(1:(((est$nyr-sim$syr+1)*(est$nmon-est$smon+1))*est$nations),c("tstp","nation",est$sage:est$nage)))#
+#
+EffNatAgeSim<-as.data.frame(EffNatAgeSim)#
+ ENAsim<-NULL#
+#
+for(i in 1:sim$nations)#
+{#
+    tmp <- melt(EffNatAgeSim[EffNatAgeSim$nation==i,sim$sage:sim$nage+2])#
+    tmp2 <- cbind(tim=rep(ntsp,ages),tmp, nat=rep(i,nrow(tmp)),met=rep("simulated",nrow(tmp)))#
+    ENAsim <- rbind(ENAsim,tmp2)#
+}#
+#
+names(ENAsim) <- c("time","age", "effort","nations","method") #
+#============####============###
+EffNatAgeEst<-matrix(est$EffNatAge,ncol=(est$nage-est$sage+3),dimnames=list(1:(((est$nyr-sim$syr+1)*(est$nmon-est$smon+1))*est$nations),c("tstp","nation",est$sage:est$nage)))#
+EffNatAgeEst<-as.data.frame(EffNatAgeEst)#
+ ENAest<-NULL#
+#
+for(i in 1:est$nations)#
+{#
+    tmp <- melt(EffNatAgeEst[EffNatAgeEst$nation==i,est$sage:est$nage+2])#
+    tmp2 <- cbind(tim=rep(ntsp,ages),tmp, nat=rep(i,nrow(tmp)),met=rep("estimated",nrow(tmp)))#
+    ENAest <- rbind(ENAest,tmp2)#
+}#
+#
+names(ENAest) <- c("time","age", "effort","nations","method") #
+#
+ENA<- rbind(ENAsim,ENAest)#
+#
+ENA <- ENA[order(ENA$time),]#
+#
+maxeff<-max(ENA$effort)#
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")#
+mets<-c("simulated","estimated")#
+#
+setwd("/Users/catarinawor/Documents/Lagrangian/anime/effort")#
+#
+library("animation")#
+#
+ani.options(ani.dev = "pdf", ani.type = "pdf",ani.width=8, ani.height=4)#
+saveLatex(#
+#if you don't have latex installed you need to install it or use other function such as saveGIF#
+#
+for(i in 1:length(ntsp))#
+{#
+  df <-ENA[ENA$time==i,]#
+  for(n in 1:est$nations )#
+  {#
+    for(m in 1:(length(mets)) )#
+    {#
+      if(min(df[df$nations==n&df$method==mets[m],]$effort)>0)#
+      {#
+        tmp3 <- df[df$nations==n&df$method==mets[m],]$effort/max(df[df$nations==n&df$method==mets[m],]$effort)#
+        df[df$nations==n&df$method==mets[m],]$effort = tmp3#
+      }#
+    }#
+  }#
+  y<- ggplot(df, aes(x=age,y=effort, group=method)) + theme_bw()#
+  y <- y+ facet_grid(.~nations)#
+  y <- y+ geom_line(size=2, aes(colour=method))#
+  y <- y + scale_y_continuous(limits=c(0,1))#
+  y <- y + labs(title=meses[indmonth[i]])#
+print(y)#
+}#
+,#
+pdflatex = "/usr/texbin/pdflatex",latex.filename = "VBarea.tex")

@@ -1,0 +1,2038 @@
+EffNatAgeSim$nations==1
+head(EffNatAgeSim)
+EffNatAgeSim<-matrix(sim$EffNatAge,ncol=(sim$nage-sim$sage+3),dimnames=list(1:(((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))*sim$nations),c("tstp","nation",sim$sage:sim$nage)))
+EffNatAgeSim[EffNatAgeSim$nations==1,sim$sage:sim$nage]
+melt(EffNatAgeSim[EffNatAgeSim$nation==1,sim$sage:sim$nage])
+EffNatAgeSim[EffNatAgeSim$nation==1,]
+EffNatAgeSim<-as.data.frame(EffNatAgeSim)
+EffNatAgeSim[EffNatAgeSim$nation==1,sim$sage:sim$nage]
+sim$sage:sim$nage+2
+melt(EffNatAgeSim[EffNatAgeSim$nation==1,sim$sage:sim$nage+2])
+tmp <- melt(EffNatAgeSim[EffNatAgeSim$nation==1,sim$sage:sim$nage+2])#
+tmp <- cbind(tmp, rep(1,nrow(tmp)))
+tmp
+tmp <- cbind(tmp, nat=rep(1,nrow(tmp)))
+tmp
+tmp <- melt(EffNatAgeSim[EffNatAgeSim$nation==1,sim$sage:sim$nage+2])
+ENAsim<-NULL#
+tmp <- melt(EffNatAgeSim[EffNatAgeSim$nation==1,sim$sage:sim$nage+2])#
+tmp <- cbind(tmp, nat=rep(1,nrow(tmp)))#
+#
+ENAsim <- rbind(ENAsim,tmp)
+ENAsim<-NULL#
+tmp <- melt(EffNatAgeSim[EffNatAgeSim$nation==1,sim$sage:sim$nage+2])#
+tmp2 <- cbind(tmp, nat=rep(1,nrow(tmp)))#
+#
+ENAsim <- rbind(ENAsim,tmp)
+ENAsim
+ENAsim<-NULL#
+#
+for(i in 1:sim$nations)#
+{#
+    tmp <- melt(EffNatAgeSim[EffNatAgeSim$nation==i,sim$sage:sim$nage+2])#
+    tmp2 <- cbind(tmp, nat=rep(i,nrow(tmp)))#
+    ENAsim <- rbind(ENAsim,tmp2)#
+}#
+#
+names(ENAsim) <- c("time","age", "effort","nations")
+names(ENAsim) <- c("age", "effort","nations")
+(ENAsim)
+for(i in 1:sim$nations)#
+{#
+    tmp <- melt(EffNatAgeSim[EffNatAgeSim$nation==i,sim$sage:sim$nage+2])#
+    tmp2 <- cbind(time=1:nrow(tmp),tmp, nat=rep(i,nrow(tmp)))#
+    ENAsim <- rbind(ENAsim,tmp2)#
+}#
+#
+names(ENAsim) <- c("time","age", "effort","nations")
+ENAsim<-NULL#
+#
+for(i in 1:sim$nations)#
+{#
+    tmp <- melt(EffNatAgeSim[EffNatAgeSim$nation==i,sim$sage:sim$nage+2])#
+    tmp2 <- cbind(time=1:nrow(tmp),tmp, nat=rep(i,nrow(tmp)))#
+    ENAsim <- rbind(ENAsim,tmp2)#
+}#
+#
+names(ENAsim) <- c("time","age", "effort","nations")
+ENAsim
+EffNatAgeSim
+ages=sim$nage-sim$sage+1
+ENAsim<-NULL#
+#
+for(i in 1:sim$nations)#
+{#
+    tmp <- melt(EffNatAgeSim[EffNatAgeSim$nation==i,sim$sage:sim$nage+2])#
+    tmp2 <- cbind(tim=rep(tstp,ages),tmp, nat=rep(i,nrow(tmp)))#
+    ENAsim <- rbind(ENAsim,tmp2)#
+}#
+#
+names(ENAsim) <- c("time","age", "effort","nations")
+ntsp=1:((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))#
+ages=sim$nage-sim$sage+1#
+#
+EffNatAgeSim<-matrix(sim$EffNatAge,ncol=(sim$nage-sim$sage+3),dimnames=list(1:(((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))*sim$nations),c("tstp","nation",sim$sage:sim$nage)))#
+EffNatAgeSim<-as.data.frame(EffNatAgeSim)#
+ ENAsim<-NULL#
+#
+for(i in 1:sim$nations)#
+{#
+    tmp <- melt(EffNatAgeSim[EffNatAgeSim$nation==i,sim$sage:sim$nage+2])#
+    tmp2 <- cbind(tim=rep(tstp,ages),tmp, nat=rep(i,nrow(tmp)))#
+    ENAsim <- rbind(ENAsim,tmp2)#
+}#
+#
+names(ENAsim) <- c("time","age", "effort","nations")
+ntsp=1:((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))#
+ages=sim$nage-sim$sage+1#
+#
+EffNatAgeSim<-matrix(sim$EffNatAge,ncol=(sim$nage-sim$sage+3),dimnames=list(1:(((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))*sim$nations),c("tstp","nation",sim$sage:sim$nage)))#
+EffNatAgeSim<-as.data.frame(EffNatAgeSim)#
+ ENAsim<-NULL#
+#
+for(i in 1:sim$nations)#
+{#
+    tmp <- melt(EffNatAgeSim[EffNatAgeSim$nation==i,sim$sage:sim$nage+2])#
+    tmp2 <- cbind(tim=rep(ntsp,ages),tmp, nat=rep(i,nrow(tmp)))#
+    ENAsim <- rbind(ENAsim,tmp2)#
+}#
+#
+names(ENAsim) <- c("time","age", "effort","nations")
+ENAsim
+ENAsim
+ENAsim <- ENAsim[order(ENAsim$time),]
+ENAsim
+28+14
+y<- ggplot(ENAsim[22:28,], aes(age, effort)) + theme_bw()#
+y <- facet_grid(~nations)#
+y <- y+ geom_line(size=2)#
+y
+y<- ggplot(ENAsim[22:28,], aes(age, effort)) + theme_bw()#
+y <- facet_grid(effort~nations)#
+y <- y+ geom_line(size=2)#
+y
+?facet_grid
+y<- ggplot(ENAsim[22:28,], aes(age, effort)) + theme_bw()#
+y <- y+ facet_grid(.~nations)#
+y <- y+ geom_line(size=2)#
+y
+y<- ggplot(ENAsim[29:42,], aes(age, effort)) + theme_bw()#
+y <- y+ facet_grid(.~nations)#
+y <- y+ geom_line(size=2)#
+y
+ENAsim[29:42,]
+ENAsim
+42+14
+y<- ggplot(ENAsim[43:56,], aes(age, effort)) + theme_bw()#
+y <- y+ facet_grid(.~nations)#
+y <- y+ geom_line(size=2)#
+y
+ENAsim[43:56,]
+y<- ggplot(ENAsim[43:56,], aes(age, effort)) + theme_bw()#
+#y <- y+ facet_grid(.~nations)#
+y <- y+ geom_line(size=2)#
+y
+y<- ggplot(ENAsim[43:56,], aes(age, effort)) + theme_bw()#
+y <- y+ facet_grid(nations~.)#
+y <- y+ geom_line(size=2)#
+y
+y<- ggplot(ENAsim[43:56,], aes(age, effort)) + theme_bw()
+y <- y+ geom_line(size=2)
+y
+y<- ggplot(ENAsim[43:49,], aes(age, effort)) + theme_bw()
+y <- y+ geom_line(size=2)
+y
+ENAsim[43:49,]
+y<- ggplot(ENAsim[43:56,], aes(x=age,y=effort)) + theme_bw()
+y <- y+ facet_grid(.~nations)
+y <- y+ geom_line(size=2)
+y
+y<- ggplot(ENAsim[43:49,], aes(x=age,y=effort)) + theme_bw()#
+#y <- y+ facet_grid(.~nations)#
+y <- y+ geom_line(size=2)#
+y
+?geom_line
+y<- ggplot(ENAsim[43:49,], aes(x=age,y=effort, grou=nations)) + theme_bw()
+y <- y+ geom_line(size=2)
+y
+y<- ggplot(ENAsim[43:49,], aes(x=age,y=effort, group=nations)) + theme_bw()
+y <- y+ geom_line(size=2)
+y
+y<- ggplot(ENAsim[43:56,], aes(x=age,y=effort, group=nations)) + theme_bw()#
+#y <- y+ facet_grid(.~nations)#
+y <- y+ geom_line(size=2)#
+y
+y<- ggplot(ENAsim[43:56,], aes(x=age,y=effort, group=nations)) + theme_bw()#
+y <- y+ facet_grid(.~nations)#
+y <- y+ geom_line(size=2)#
+y
+ntsp=1:((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))#
+ages=sim$nage-sim$sage+1#
+#
+EffNatAgeSim<-matrix(sim$EffNatAge,ncol=(sim$nage-sim$sage+3),dimnames=list(1:(((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))*sim$nations),c("tstp","nation",sim$sage:sim$nage)))#
+EffNatAgeSim<-as.data.frame(EffNatAgeSim)#
+ ENAsim<-NULL#
+#
+for(i in 1:sim$nations)#
+{#
+    tmp <- melt(EffNatAgeSim[EffNatAgeSim$nation==i,sim$sage:sim$nage+2])#
+    tmp2 <- cbind(tim=rep(ntsp,ages),tmp, nat=rep(i,nrow(tmp)),met=rep("simulated",nrow(tmp)))#
+    ENAsim <- rbind(ENAsim,tmp2)#
+}#
+#
+names(ENAsim) <- c("time","age", "effort","nations","method") #
+#============####============###
+EffNatAgeEst<-matrix(est$EffNatAge,ncol=(est$nage-est$sage+3),dimnames=list(1:(((est$nyr-sim$syr+1)*(est$nmon-est$smon+1))*est$nations),c("tstp","nation",est$sage:est$nage)))#
+EffNatAgeEst<-as.data.frame(EffNatAgeEst)#
+ ENAest<-NULL#
+#
+for(i in 1:est$nations)#
+{#
+    tmp <- melt(EffNatAgeEst[EffNatAgeEst$nation==i,est$sage:est$nage+2])#
+    tmp2 <- cbind(tim=rep(ntsp,ages),tmp, nat=rep(i,nrow(tmp)),met=rep("estimated",,nrow(tmp)))#
+    ENAest <- rbind(ENAest,tmp2)#
+}#
+#
+names(ENAest) <- c("time","age", "effort","nations","method") #
+#
+ENA<- cbind(ENAsim,ENAest)#
+#
+ENA <- ENA[order(ENA$time),]
+EffNatAgeEst<-matrix(est$EffNatAge,ncol=(est$nage-est$sage+3),dimnames=list(1:(((est$nyr-sim$syr+1)*(est$nmon-est$smon+1))*est$nations),c("tstp","nation",est$sage:est$nage)))
+rm(list=ls()); #
+#if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")#
+setwd("/Users/catarinawor/Documents/Lagrangian/")#
+source("read.admb.R")#
+#
+sim = read.rep("lagrangian_OM.rep")#
+est = read.rep("lagrangian_est.rep")#
+#
+nomes <- names(sim)#
+#
+true_pars <- c(sim$"mo", exp(sim$"log_tau_c"),sim$"maxPos50",sim$"maxPossd",sim$"cvPos")  #
+est_pars <- c(est$"mo",exp(est$"log_tau_c"),est$"maxPos50",est$"maxPossd",est$"cvPos")#
+#
+#parameter plot#
+par(mfrow=c(1,1))#
+barplot(t(matrix(c(true_pars,est_pars),ncol=2)),names.arg = c("mo","tau_c","maxPos50","maxPossd","cvPos"),beside=T)#
+#========================================================================#
+#multiplot function from http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_%28ggplot2%29/#
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {#
+  require(grid)#
+#
+  # Make a list from the ... arguments and plotlist#
+  plots <- c(list(...), plotlist)#
+#
+  numPlots = length(plots)#
+#
+  # If layout is NULL, then use 'cols' to determine layout#
+  if (is.null(layout)) {#
+    # Make the panel#
+    # ncol: Number of columns of plots#
+    # nrow: Number of rows needed, calculated from # of cols#
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),#
+                    ncol = cols, nrow = ceiling(numPlots/cols))#
+  }#
+#
+ if (numPlots==1) {#
+    print(plots[[1]])#
+#
+  } else {#
+    # Set up the page#
+    grid.newpage()#
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))#
+#
+    # Make each plot, in the correct location#
+    for (i in 1:numPlots) {#
+      # Get the i,j matrix positions of the regions that contain this subplot#
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))#
+#
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,#
+                                      layout.pos.col = matchidx$col))#
+    }#
+  }#
+}#
+#======================================================================================================#
+#
+#========================================================================#
+library(ggplot2)#
+library(reshape2)
+ntsp=1:((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))
+ages=sim$nage-sim$sage+1
+EffNatAgeSim<-matrix(sim$EffNatAge,ncol=(sim$nage-sim$sage+3),dimnames=list(1:(((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))*sim$nations),c("tstp","nation",sim$sage:sim$nage)))
+EffNatAgeEst<-matrix(est$EffNatAge,ncol=(est$nage-est$sage+3),dimnames=list(1:(((est$nyr-sim$syr+1)*(est$nmon-est$smon+1))*est$nations),c("tstp","nation",est$sage:est$nage)))
+rm(list=ls()); #
+#if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")#
+setwd("/Users/catarinawor/Documents/Lagrangian/")#
+source("read.admb.R")#
+#
+sim = read.rep("lagrangian_OM.rep")#
+est = read.rep("lagrangian_est.rep")#
+#
+nomes <- names(sim)#
+#
+true_pars <- c(sim$"mo", exp(sim$"log_tau_c"),sim$"maxPos50",sim$"maxPossd",sim$"cvPos")  #
+est_pars <- c(est$"mo",exp(est$"log_tau_c"),est$"maxPos50",est$"maxPossd",est$"cvPos")#
+#
+#parameter plot#
+par(mfrow=c(1,1))#
+barplot(t(matrix(c(true_pars,est_pars),ncol=2)),names.arg = c("mo","tau_c","maxPos50","maxPossd","cvPos"),beside=T)#
+#========================================================================#
+#multiplot function from http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_%28ggplot2%29/#
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {#
+  require(grid)#
+#
+  # Make a list from the ... arguments and plotlist#
+  plots <- c(list(...), plotlist)#
+#
+  numPlots = length(plots)#
+#
+  # If layout is NULL, then use 'cols' to determine layout#
+  if (is.null(layout)) {#
+    # Make the panel#
+    # ncol: Number of columns of plots#
+    # nrow: Number of rows needed, calculated from # of cols#
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),#
+                    ncol = cols, nrow = ceiling(numPlots/cols))#
+  }#
+#
+ if (numPlots==1) {#
+    print(plots[[1]])#
+#
+  } else {#
+    # Set up the page#
+    grid.newpage()#
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))#
+#
+    # Make each plot, in the correct location#
+    for (i in 1:numPlots) {#
+      # Get the i,j matrix positions of the regions that contain this subplot#
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))#
+#
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,#
+                                      layout.pos.col = matchidx$col))#
+    }#
+  }#
+}#
+#======================================================================================================#
+#
+#========================================================================#
+library(ggplot2)#
+library(reshape2)#
+#
+ntsp=1:((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))#
+ages=sim$nage-sim$sage+1#
+#
+EffNatAgeSim<-matrix(sim$EffNatAge,ncol=(sim$nage-sim$sage+3),dimnames=list(1:(((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))*sim$nations),c("tstp","nation",sim$sage:sim$nage)))#
+EffNatAgeEst<-matrix(est$EffNatAge,ncol=(est$nage-est$sage+3),dimnames=list(1:(((est$nyr-sim$syr+1)*(est$nmon-est$smon+1))*est$nations),c("tstp","nation",est$sage:est$nage)))#
+#
+EffNatAgeSim<-as.data.frame(EffNatAgeSim)#
+ ENAsim<-NULL#
+#
+for(i in 1:sim$nations)#
+{#
+    tmp <- melt(EffNatAgeSim[EffNatAgeSim$nation==i,sim$sage:sim$nage+2])#
+    tmp2 <- cbind(tim=rep(ntsp,ages),tmp, nat=rep(i,nrow(tmp)),met=rep("simulated",nrow(tmp)))#
+    ENAsim <- rbind(ENAsim,tmp2)#
+}#
+#
+names(ENAsim) <- c("time","age", "effort","nations","method") #
+#============####============###
+EffNatAgeEst<-matrix(est$EffNatAge,ncol=(est$nage-est$sage+3),dimnames=list(1:(((est$nyr-sim$syr+1)*(est$nmon-est$smon+1))*est$nations),c("tstp","nation",est$sage:est$nage)))#
+EffNatAgeEst<-as.data.frame(EffNatAgeEst)#
+ ENAest<-NULL#
+#
+for(i in 1:est$nations)#
+{#
+    tmp <- melt(EffNatAgeEst[EffNatAgeEst$nation==i,est$sage:est$nage+2])#
+    tmp2 <- cbind(tim=rep(ntsp,ages),tmp, nat=rep(i,nrow(tmp)),met=rep("estimated",,nrow(tmp)))#
+    ENAest <- rbind(ENAest,tmp2)#
+}#
+#
+names(ENAest) <- c("time","age", "effort","nations","method") #
+#
+ENA<- cbind(ENAsim,ENAest)#
+#
+ENA <- ENA[order(ENA$time),]
+y<- ggplot(ENAsim[43:56,], aes(x=age,y=effort, group=nations)) + theme_bw()#
+y <- y+ facet_grid(.~nations)#
+y <- y+ geom_line(size=2, col=method)#
+y
+head(ENA)
+ENA[1:20,]
+ENA[1:40,]
+library(ggplot2)#
+library(reshape2)#
+#
+ntsp=1:((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))#
+ages=sim$nage-sim$sage+1#
+#
+EffNatAgeSim<-matrix(sim$EffNatAge,ncol=(sim$nage-sim$sage+3),dimnames=list(1:(((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))*sim$nations),c("tstp","nation",sim$sage:sim$nage)))#
+EffNatAgeEst<-matrix(est$EffNatAge,ncol=(est$nage-est$sage+3),dimnames=list(1:(((est$nyr-sim$syr+1)*(est$nmon-est$smon+1))*est$nations),c("tstp","nation",est$sage:est$nage)))#
+#
+EffNatAgeSim<-as.data.frame(EffNatAgeSim)#
+ ENAsim<-NULL#
+#
+for(i in 1:sim$nations)#
+{#
+    tmp <- melt(EffNatAgeSim[EffNatAgeSim$nation==i,sim$sage:sim$nage+2])#
+    tmp2 <- cbind(tim=rep(ntsp,ages),tmp, nat=rep(i,nrow(tmp)),met=rep("simulated",nrow(tmp)))#
+    ENAsim <- rbind(ENAsim,tmp2)#
+}#
+#
+names(ENAsim) <- c("time","age", "effort","nations","method") #
+#============####============###
+EffNatAgeEst<-matrix(est$EffNatAge,ncol=(est$nage-est$sage+3),dimnames=list(1:(((est$nyr-sim$syr+1)*(est$nmon-est$smon+1))*est$nations),c("tstp","nation",est$sage:est$nage)))#
+EffNatAgeEst<-as.data.frame(EffNatAgeEst)#
+ ENAest<-NULL#
+#
+for(i in 1:est$nations)#
+{#
+    tmp <- melt(EffNatAgeEst[EffNatAgeEst$nation==i,est$sage:est$nage+2])#
+    tmp2 <- cbind(tim=rep(ntsp,ages),tmp, nat=rep(i,nrow(tmp)),met=rep("estimated",nrow(tmp)))#
+    ENAest <- rbind(ENAest,tmp2)#
+}#
+#
+names(ENAest) <- c("time","age", "effort","nations","method") #
+#
+ENA<- rbind(ENAsim,ENAest)#
+#
+ENA <- ENA[order(ENA$time),]
+head(ENA)
+ENA[1:40,]
+42/7
+7*8
+7*12
+ENA[47:84,]
+ENA[57:84,]
+y<- ggplot(ENA[57:84,], aes(x=age,y=effort, group=nations)) + theme_bw()#
+y <- y+ facet_grid(.~nations)#
+y <- y+ geom_line(size=2, col=method)#
+y
+y<- ggplot(ENA[57:84,], aes(x=age,y=effort, group=nations)) + theme_bw()#
+y <- y+ facet_grid(.~nations)#
+y <- y+ geom_line(size=2, colour=method)#
+y
+y<- ggplot(ENA[57:84,], aes(x=age,y=effort, group=nations)) + theme_bw()#
+y <- y+ facet_grid(.~nations)#
+y <- y+ geom_line(size=2, color=method)#
+y
+y<- ggplot(ENA[57:84,], aes(x=age,y=effort, group=nations)) + theme_bw()#
+y <- y+ facet_grid(.~nations)#
+y <- y+ geom_line(aes(size=2, color=method))#
+y
+y<- ggplot(ENA[57:84,], aes(x=age,y=effort, group=nations)) + theme_bw()#
+y <- y+ facet_grid(.~nations)#
+y <- y+ geom_line(size=2,aes( color=method))#
+y
+maxeff<-max(ENA$effort)
+y<- ggplot(ENA[57:84,], aes(x=age,y=effort, group=nations)) + theme_bw()#
+y <- y+ facet_grid(.~nations)#
+y <- y+ geom_line(size=2,aes(color=method))#
+y <- y + scale_size_area(limits=c(0,maxeff),breaks = est$sage:est$nage, labels = est$sage:est$nage, name = "effort")#
+#
+y
+maxeff<-max(ENA$effort)#
+#
+y<- ggplot(ENA[57:84,], aes(x=age,y=effort, group=nations)) + theme_bw()#
+y <- y+ facet_grid(.~nations)#
+y <- y+ geom_line(size=2,aes(color=method))#
+y <- y + scale_size_area(limits=c(0,maxeff),breaks = est$sage:est$nage, labels = est$sage:est$nage, name = "effort")#
+#
+y
+?scale_size_area
+y<- ggplot(ENA[57:84,], aes(x=age,y=effort, group=nations)) + theme_bw()#
+y <- y+ facet_grid(.~nations)#
+y <- y+ geom_line(size=2,aes(color=method))#
+y <- y + scale_y_continuous(limits=c(0,maxeff))
+y
+ENA[57:84,]
+setwd("/Users/catarinawor/Documents/Lagrangian/anime")#
+#
+library("animation")#
+#
+saveLatex(#
+#if you don't have latex installed you need to install it or use other function such as saveGIF#
+for(i in 30:40)#
+#
+for(i in 1:ntsp)#
+{#
+    y<- ggplot(ENA[57:84,], aes(x=age,y=effort, group=nations)) + theme_bw()#
+    y <- y+ facet_grid(.~nations)#
+    y <- y+ geom_line(size=2,aes(color=method))#
+    y <- y + scale_y_continuous(limits=c(0,maxeff))#
+print(y)#
+}#
+,#
+pdflatex = "/usr/texbin/pdflatex")
+saveLatex(#
+#if you don't have latex installed you need to install it or use other function such as saveGIF#
+for(i in 30:40)#
+#
+for(i in 1:ntsp)#
+{#
+    y<- ggplot(ENA[ENA$time==i,], aes(x=age,y=effort, group=nations)) + theme_bw()#
+    y <- y+ facet_grid(.~nations)#
+    y <- y+ geom_line(size=2,aes(color=method))#
+    y <- y + scale_y_continuous(limits=c(0,maxeff))#
+print(y)#
+}#
+,#
+pdflatex = "/usr/texbin/pdflatex")
+warnings()
+saveLatex(#
+#if you don't have latex installed you need to install it or use other function such as saveGIF#
+#
+for(i in 1:ntsp)#
+{#
+    y<- ggplot(ENA[ENA$time==i,], aes(x=age,y=effort, group=nations)) + theme_bw()#
+    y <- y+ facet_grid(.~nations)#
+    y <- y+ geom_line(size=2,aes(color=method))#
+    y <- y + scale_y_continuous(limits=c(0,maxeff))#
+print(y)#
+}#
+,#
+pdflatex = "/usr/texbin/pdflatex")
+ENA[ENA$time==i,]
+i
+1:ntsp
+ntsp
+saveLatex(#
+#if you don't have latex installed you need to install it or use other function such as saveGIF#
+#
+for(i in 1:length(ntsp))#
+{#
+    y<- ggplot(ENA[ENA$time==i,], aes(x=age,y=effort, group=nations)) + theme_bw()#
+    y <- y+ facet_grid(.~nations)#
+    y <- y+ geom_line(size=2,aes(color=method))#
+    y <- y + scale_y_continuous(limits=c(0,maxeff))#
+print(y)#
+}#
+,#
+pdflatex = "/usr/texbin/pdflatex")
+saveLatex(#
+#if you don't have latex installed you need to install it or use other function such as saveGIF#
+#
+for(i in 1:length(ntsp))#
+{#
+    y<- ggplot(ENA[ENA$time==i,], aes(x=age,y=effort, group=nations)) + theme_bw()#
+    y <- y+ facet_grid(.~nations)#
+    y <- y+ geom_line(size=2,aes(color=method))#
+    y <- y + scale_y_continuous(limits=c(0,maxeff))#
+print(y)#
+}#
+,#
+pdflatex = "/usr/texbin/pdflatex")
+y<- ggplot(ENA[ENA$time==6,], aes(x=age,y=effort, group=nations)) + theme_bw()#
+    y <- y+ facet_grid(.~nations)#
+    y <- y+ geom_line(size=2,aes(color=method))#
+    y <- y + scale_y_continuous(limits=c(0,maxeff))#
+print(y)
+ENA[ENA$time==6,]
+y<- ggplot(ENA[ENA$time==6,], aes(x=age,y=effort, group=nations,color=method)) + theme_bw()#
+    y <- y+ facet_grid(.~nations)#
+    y <- y+ geom_line(size=2#
+    y <- y + scale_y_continuous(limits=c(0,maxeff))#
+print(y)
+y<- ggplot(ENA[ENA$time==6,], aes(x=age,y=effort, group=nations,color=method)) + theme_bw()#
+    y <- y+ facet_grid(.~nations)#
+    y <- y+ geom_line(size=2)#
+    y <- y + scale_y_continuous(limits=c(0,maxeff))#
+print(y)
+y<- ggplot(ENA[ENA$time==6&method=="simulated",], aes(x=age,y=effort, group=nations)) + theme_bw()#
+    y <- y+ facet_grid(.~nations)#
+    y <- y+ geom_line(size=2)#
+    y <- y + scale_y_continuous(limits=c(0,maxeff))#
+print(y)
+y<- ggplot(ENA[ENA$time==6&ENA$method=="simulated",], aes(x=age,y=effort, group=nations)) + theme_bw()#
+    y <- y+ facet_grid(.~nations)#
+    y <- y+ geom_line(size=2)#
+    y <- y + scale_y_continuous(limits=c(0,maxeff))#
+print(y)
+ENA[ENA$time==6 & ENA$method=="simulated",]
+y<- ggplot(ENA[ENA$time==6 & ENA$method=="simulated",], aes(x=age,y=effort, group=nations)) + theme_bw()#
+    y <- y+ facet_grid(.~nations)#
+    y <- y+ geom_line(size=2)#
+    y <- y + scale_y_continuous(limits=c(0,maxeff))#
+print(y)
+y<- ggplot(ENA[ENA$time==6 & ENA$method=="simulated",], aes(x=age,y=effort, group=nations)) + theme_bw()#
+    y <- y+ facet_grid(.~nations)#
+    y <- y+ geom_line(size=2)#
+    #y <- y + scale_y_continuous(limits=c(0,maxeff))#
+print(y)
+y<- ggplot(ENA[ENA$time==6,], aes(x=age,y=effort, group=nations)) + theme_bw()#
+    y <- y+ facet_grid(.~nations)#
+    y <- y+ geom_line(size=2)
+y
+y<- ggplot(ENA[ENA$time==6,], aes(x=age,y=effort, group=nations,colour=method)) + theme_bw()#
+    y <- y+ facet_grid(.~nations)#
+    y <- y+ geom_line(size=2)#
+    #y <- y + scale_y_continuous(limits=c(0,maxeff))#
+print(y)#
+#}
+y
+y<- ggplot(ENA[ENA$time==6,], aes(x=age,y=effort, group=method)) + theme_bw()#
+    y <- y+ facet_grid(.~nations)#
+    y <- y+ geom_line(size=2)
+y
+indmonth= rep(sim$smon:sim$nmon,(sim$nyr-sim$syr+1))
+ENA[ENA$time==6,]$effort/max(ENA[ENA$time==6,]$effort)
+i=6
+for(n in 1:est$nations )#
+    {#
+        tmp3 <- ENA[ENA$time==i&ENA$nations==n,]$effort/max(ENA[ENA$time==i&ENA$nations==n,]$effort)#
+        ENA[ENA$time==i&ENA$nations==n,]$effort = tmp3#
+    }#
+    y<- ggplot(ENA[ENA$time==i,], aes(x=age,y=effort, group=method)) + theme_bw()#
+    y <- y+ facet_grid(.~nations)#
+    y <- y+ geom_line(size=2, aes(colour=method))#
+    y <- y + scale_y_continuous(limits=c(0,1))#
+    y<- y+ geom_text(data = NULL, x = 7 , y = .9, label = meses[indmonth[i]] )#
+print(y)
+ENA[ENA$time==i,]
+ENA[ENA$time==i&ENA$nations==n,]$effort
+ENA[ENA$time==i&ENA$nations==n,]
+ntsp=1:((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))#
+ages=sim$nage-sim$sage+1#
+indmonth= rep(sim$smon:sim$nmon,(sim$nyr-sim$syr+1))#
+EffNatAgeSim<-matrix(sim$EffNatAge,ncol=(sim$nage-sim$sage+3),dimnames=list(1:(((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))*sim$nations),c("tstp","nation",sim$sage:sim$nage)))#
+EffNatAgeEst<-matrix(est$EffNatAge,ncol=(est$nage-est$sage+3),dimnames=list(1:(((est$nyr-sim$syr+1)*(est$nmon-est$smon+1))*est$nations),c("tstp","nation",est$sage:est$nage)))#
+#
+EffNatAgeSim<-as.data.frame(EffNatAgeSim)#
+ ENAsim<-NULL#
+#
+for(i in 1:sim$nations)#
+{#
+    tmp <- melt(EffNatAgeSim[EffNatAgeSim$nation==i,sim$sage:sim$nage+2])#
+    tmp2 <- cbind(tim=rep(ntsp,ages),tmp, nat=rep(i,nrow(tmp)),met=rep("simulated",nrow(tmp)))#
+    ENAsim <- rbind(ENAsim,tmp2)#
+}#
+#
+names(ENAsim) <- c("time","age", "effort","nations","method") #
+#============####============###
+EffNatAgeEst<-matrix(est$EffNatAge,ncol=(est$nage-est$sage+3),dimnames=list(1:(((est$nyr-sim$syr+1)*(est$nmon-est$smon+1))*est$nations),c("tstp","nation",est$sage:est$nage)))#
+EffNatAgeEst<-as.data.frame(EffNatAgeEst)#
+ ENAest<-NULL#
+#
+for(i in 1:est$nations)#
+{#
+    tmp <- melt(EffNatAgeEst[EffNatAgeEst$nation==i,est$sage:est$nage+2])#
+    tmp2 <- cbind(tim=rep(ntsp,ages),tmp, nat=rep(i,nrow(tmp)),met=rep("estimated",nrow(tmp)))#
+    ENAest <- rbind(ENAest,tmp2)#
+}#
+#
+names(ENAest) <- c("time","age", "effort","nations","method") #
+#
+ENA<- rbind(ENAsim,ENAest)#
+#
+ENA <- ENA[order(ENA$time),]#
+#
+maxeff<-max(ENA$effort)#
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")#
+mets<-c("simulated","estimated")
+ENA[ENA$time==i&ENA$nations==n,]
+i
+i=6
+ENA[ENA$time==i&ENA$nations==n,]
+rm(list=ls()); #
+#if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")#
+setwd("/Users/catarinawor/Documents/Lagrangian/")#
+source("read.admb.R")#
+#
+sim = read.rep("lagrangian_OM.rep")#
+est = read.rep("lagrangian_est.rep")#
+#
+nomes <- names(sim)#
+#
+true_pars <- c(sim$"mo", exp(sim$"log_tau_c"),sim$"maxPos50",sim$"maxPossd",sim$"cvPos")  #
+est_pars <- c(est$"mo",exp(est$"log_tau_c"),est$"maxPos50",est$"maxPossd",est$"cvPos")#
+#
+#parameter plot#
+par(mfrow=c(1,1))#
+barplot(t(matrix(c(true_pars,est_pars),ncol=2)),names.arg = c("mo","tau_c","maxPos50","maxPossd","cvPos"),beside=T)#
+#========================================================================#
+#multiplot function from http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_%28ggplot2%29/#
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {#
+  require(grid)#
+#
+  # Make a list from the ... arguments and plotlist#
+  plots <- c(list(...), plotlist)#
+#
+  numPlots = length(plots)#
+#
+  # If layout is NULL, then use 'cols' to determine layout#
+  if (is.null(layout)) {#
+    # Make the panel#
+    # ncol: Number of columns of plots#
+    # nrow: Number of rows needed, calculated from # of cols#
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),#
+                    ncol = cols, nrow = ceiling(numPlots/cols))#
+  }#
+#
+ if (numPlots==1) {#
+    print(plots[[1]])#
+#
+  } else {#
+    # Set up the page#
+    grid.newpage()#
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))#
+#
+    # Make each plot, in the correct location#
+    for (i in 1:numPlots) {#
+      # Get the i,j matrix positions of the regions that contain this subplot#
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))#
+#
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,#
+                                      layout.pos.col = matchidx$col))#
+    }#
+  }#
+}#
+#======================================================================================================#
+#
+#========================================================================#
+library(ggplot2)#
+library(reshape2)#
+#
+ntsp=1:((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))#
+ages=sim$nage-sim$sage+1#
+indmonth= rep(sim$smon:sim$nmon,(sim$nyr-sim$syr+1))#
+EffNatAgeSim<-matrix(sim$EffNatAge,ncol=(sim$nage-sim$sage+3),dimnames=list(1:(((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))*sim$nations),c("tstp","nation",sim$sage:sim$nage)))#
+EffNatAgeEst<-matrix(est$EffNatAge,ncol=(est$nage-est$sage+3),dimnames=list(1:(((est$nyr-sim$syr+1)*(est$nmon-est$smon+1))*est$nations),c("tstp","nation",est$sage:est$nage)))#
+#
+EffNatAgeSim<-as.data.frame(EffNatAgeSim)#
+ ENAsim<-NULL#
+#
+for(i in 1:sim$nations)#
+{#
+    tmp <- melt(EffNatAgeSim[EffNatAgeSim$nation==i,sim$sage:sim$nage+2])#
+    tmp2 <- cbind(tim=rep(ntsp,ages),tmp, nat=rep(i,nrow(tmp)),met=rep("simulated",nrow(tmp)))#
+    ENAsim <- rbind(ENAsim,tmp2)#
+}#
+#
+names(ENAsim) <- c("time","age", "effort","nations","method") #
+#============####============###
+EffNatAgeEst<-matrix(est$EffNatAge,ncol=(est$nage-est$sage+3),dimnames=list(1:(((est$nyr-sim$syr+1)*(est$nmon-est$smon+1))*est$nations),c("tstp","nation",est$sage:est$nage)))#
+EffNatAgeEst<-as.data.frame(EffNatAgeEst)#
+ ENAest<-NULL#
+#
+for(i in 1:est$nations)#
+{#
+    tmp <- melt(EffNatAgeEst[EffNatAgeEst$nation==i,est$sage:est$nage+2])#
+    tmp2 <- cbind(tim=rep(ntsp,ages),tmp, nat=rep(i,nrow(tmp)),met=rep("estimated",nrow(tmp)))#
+    ENAest <- rbind(ENAest,tmp2)#
+}#
+#
+names(ENAest) <- c("time","age", "effort","nations","method") #
+#
+ENA<- rbind(ENAsim,ENAest)#
+#
+ENA <- ENA[order(ENA$time),]#
+#
+maxeff<-max(ENA$effort)#
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")#
+mets<-c("simulated","estimated")
+df <-ENA[ENA$time==i,]#
+    for(n in 1:est$nations )#
+    {#
+        for(m in 1:length(mets) )#
+        {#
+            tmp3 <- df[df$nations==n&df$method==mets(m),]$effort/max(df[df$nations==n&df$method==mets(m),]$effort)#
+            df[df$nations==n&df$method==mets(m),]$effort = tmp3#
+        }#
+    }#
+    y<- ggplot(df, aes(x=age,y=effort, group=method)) + theme_bw()#
+    y <- y+ facet_grid(.~nations)#
+    y <- y+ geom_line(size=2, aes(colour=method))#
+    y <- y + scale_y_continuous(limits=c(0,1))#
+    y<- y+ geom_text(data = NULL, x = 7 , y = .9, label = meses[indmonth[i]] )#
+print(y)#
+#}
+mets<-c("simulated","estimated")
+=========================================================================#
+#graphing simulation -estiation routine for lagrangian model#
+# Author: Catarina Wor#
+# Jun 1st 2015#
+#=========================================================================#
+rm(list=ls()); #
+#if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")#
+setwd("/Users/catarinawor/Documents/Lagrangian/")#
+source("read.admb.R")#
+#
+sim = read.rep("lagrangian_OM.rep")#
+est = read.rep("lagrangian_est.rep")#
+#
+nomes <- names(sim)#
+#
+true_pars <- c(sim$"mo", exp(sim$"log_tau_c"),sim$"maxPos50",sim$"maxPossd",sim$"cvPos")  #
+est_pars <- c(est$"mo",exp(est$"log_tau_c"),est$"maxPos50",est$"maxPossd",est$"cvPos")#
+#
+#parameter plot#
+par(mfrow=c(1,1))#
+barplot(t(matrix(c(true_pars,est_pars),ncol=2)),names.arg = c("mo","tau_c","maxPos50","maxPossd","cvPos"),beside=T)#
+#========================================================================#
+#multiplot function from http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_%28ggplot2%29/#
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {#
+  require(grid)#
+#
+  # Make a list from the ... arguments and plotlist#
+  plots <- c(list(...), plotlist)#
+#
+  numPlots = length(plots)#
+#
+  # If layout is NULL, then use 'cols' to determine layout#
+  if (is.null(layout)) {#
+    # Make the panel#
+    # ncol: Number of columns of plots#
+    # nrow: Number of rows needed, calculated from # of cols#
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),#
+                    ncol = cols, nrow = ceiling(numPlots/cols))#
+  }#
+#
+ if (numPlots==1) {#
+    print(plots[[1]])#
+#
+  } else {#
+    # Set up the page#
+    grid.newpage()#
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))#
+#
+    # Make each plot, in the correct location#
+    for (i in 1:numPlots) {#
+      # Get the i,j matrix positions of the regions that contain this subplot#
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))#
+#
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,#
+                                      layout.pos.col = matchidx$col))#
+    }#
+  }#
+}#
+#======================================================================================================#
+#
+#========================================================================#
+library(ggplot2)#
+library(reshape2)#
+#
+ntsp=1:((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))#
+ages=sim$nage-sim$sage+1#
+indmonth= rep(sim$smon:sim$nmon,(sim$nyr-sim$syr+1))#
+EffNatAgeSim<-matrix(sim$EffNatAge,ncol=(sim$nage-sim$sage+3),dimnames=list(1:(((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))*sim$nations),c("tstp","nation",sim$sage:sim$nage)))#
+EffNatAgeEst<-matrix(est$EffNatAge,ncol=(est$nage-est$sage+3),dimnames=list(1:(((est$nyr-sim$syr+1)*(est$nmon-est$smon+1))*est$nations),c("tstp","nation",est$sage:est$nage)))#
+#
+EffNatAgeSim<-as.data.frame(EffNatAgeSim)#
+ ENAsim<-NULL#
+#
+for(i in 1:sim$nations)#
+{#
+    tmp <- melt(EffNatAgeSim[EffNatAgeSim$nation==i,sim$sage:sim$nage+2])#
+    tmp2 <- cbind(tim=rep(ntsp,ages),tmp, nat=rep(i,nrow(tmp)),met=rep("simulated",nrow(tmp)))#
+    ENAsim <- rbind(ENAsim,tmp2)#
+}#
+#
+names(ENAsim) <- c("time","age", "effort","nations","method") #
+#============####============###
+EffNatAgeEst<-matrix(est$EffNatAge,ncol=(est$nage-est$sage+3),dimnames=list(1:(((est$nyr-sim$syr+1)*(est$nmon-est$smon+1))*est$nations),c("tstp","nation",est$sage:est$nage)))#
+EffNatAgeEst<-as.data.frame(EffNatAgeEst)#
+ ENAest<-NULL#
+#
+for(i in 1:est$nations)#
+{#
+    tmp <- melt(EffNatAgeEst[EffNatAgeEst$nation==i,est$sage:est$nage+2])#
+    tmp2 <- cbind(tim=rep(ntsp,ages),tmp, nat=rep(i,nrow(tmp)),met=rep("estimated",nrow(tmp)))#
+    ENAest <- rbind(ENAest,tmp2)#
+}#
+#
+names(ENAest) <- c("time","age", "effort","nations","method") #
+#
+ENA<- rbind(ENAsim,ENAest)#
+#
+ENA <- ENA[order(ENA$time),]#
+#
+maxeff<-max(ENA$effort)#
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")#
+mets<-c("simulated","estimated")
+i=6
+df <-ENA[ENA$time==i,]#
+    for(n in 1:est$nations )#
+    {#
+        for(m in 1:length(mets) )#
+        {#
+            tmp3 <- df[df$nations==n&df$method==mets(m),]$effort/max(df[df$nations==n&df$method==mets(m),]$effort)#
+            df[df$nations==n&df$method==mets(m),]$effort = tmp3#
+        }#
+    }
+df <-ENA[ENA$time==i,]#
+    for(n in 1:est$nations )#
+    {#
+        for(m in 1:length(mets) )#
+        {#
+            tmp3 <- df[df$nations==n&df$method==mets[m],]$effort/max(df[df$nations==n&df$method==mets[m],]$effort)#
+            df[df$nations==n&df$method==mets(m),]$effort = tmp3#
+        }#
+    }#
+    y<- ggplot(df, aes(x=age,y=effort, group=method)) + theme_bw()#
+    y <- y+ facet_grid(.~nations)#
+    y <- y+ geom_line(size=2, aes(colour=method))#
+    y <- y + scale_y_continuous(limits=c(0,1))#
+    y<- y+ geom_text(data = NULL, x = 7 , y = .9, label = meses[indmonth[i]] )#
+print(y)
+df
+df[df$nations==n&df$method==mets[m],]$effort/max(df[df$nations==n&df$method==mets[m],]$effort)
+m
+mets
+length(m)
+length(mets)
+1:length(mets)
+rm(list=ls()); #
+#if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")#
+setwd("/Users/catarinawor/Documents/Lagrangian/")#
+source("read.admb.R")#
+#
+sim = read.rep("lagrangian_OM.rep")#
+est = read.rep("lagrangian_est.rep")#
+#
+nomes <- names(sim)#
+#
+true_pars <- c(sim$"mo", exp(sim$"log_tau_c"),sim$"maxPos50",sim$"maxPossd",sim$"cvPos")  #
+est_pars <- c(est$"mo",exp(est$"log_tau_c"),est$"maxPos50",est$"maxPossd",est$"cvPos")#
+#
+#parameter plot#
+par(mfrow=c(1,1))#
+barplot(t(matrix(c(true_pars,est_pars),ncol=2)),names.arg = c("mo","tau_c","maxPos50","maxPossd","cvPos"),beside=T)#
+#========================================================================#
+#multiplot function from http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_%28ggplot2%29/#
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {#
+  require(grid)#
+#
+  # Make a list from the ... arguments and plotlist#
+  plots <- c(list(...), plotlist)#
+#
+  numPlots = length(plots)#
+#
+  # If layout is NULL, then use 'cols' to determine layout#
+  if (is.null(layout)) {#
+    # Make the panel#
+    # ncol: Number of columns of plots#
+    # nrow: Number of rows needed, calculated from # of cols#
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),#
+                    ncol = cols, nrow = ceiling(numPlots/cols))#
+  }#
+#
+ if (numPlots==1) {#
+    print(plots[[1]])#
+#
+  } else {#
+    # Set up the page#
+    grid.newpage()#
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))#
+#
+    # Make each plot, in the correct location#
+    for (i in 1:numPlots) {#
+      # Get the i,j matrix positions of the regions that contain this subplot#
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))#
+#
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,#
+                                      layout.pos.col = matchidx$col))#
+    }#
+  }#
+}#
+#======================================================================================================#
+#
+#========================================================================#
+library(ggplot2)#
+library(reshape2)#
+#
+ntsp=1:((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))#
+ages=sim$nage-sim$sage+1#
+indmonth= rep(sim$smon:sim$nmon,(sim$nyr-sim$syr+1))#
+EffNatAgeSim<-matrix(sim$EffNatAge,ncol=(sim$nage-sim$sage+3),dimnames=list(1:(((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))*sim$nations),c("tstp","nation",sim$sage:sim$nage)))#
+EffNatAgeEst<-matrix(est$EffNatAge,ncol=(est$nage-est$sage+3),dimnames=list(1:(((est$nyr-sim$syr+1)*(est$nmon-est$smon+1))*est$nations),c("tstp","nation",est$sage:est$nage)))#
+#
+EffNatAgeSim<-as.data.frame(EffNatAgeSim)#
+ ENAsim<-NULL#
+#
+for(i in 1:sim$nations)#
+{#
+    tmp <- melt(EffNatAgeSim[EffNatAgeSim$nation==i,sim$sage:sim$nage+2])#
+    tmp2 <- cbind(tim=rep(ntsp,ages),tmp, nat=rep(i,nrow(tmp)),met=rep("simulated",nrow(tmp)))#
+    ENAsim <- rbind(ENAsim,tmp2)#
+}#
+#
+names(ENAsim) <- c("time","age", "effort","nations","method") #
+#============####============###
+EffNatAgeEst<-matrix(est$EffNatAge,ncol=(est$nage-est$sage+3),dimnames=list(1:(((est$nyr-sim$syr+1)*(est$nmon-est$smon+1))*est$nations),c("tstp","nation",est$sage:est$nage)))#
+EffNatAgeEst<-as.data.frame(EffNatAgeEst)#
+ ENAest<-NULL#
+#
+for(i in 1:est$nations)#
+{#
+    tmp <- melt(EffNatAgeEst[EffNatAgeEst$nation==i,est$sage:est$nage+2])#
+    tmp2 <- cbind(tim=rep(ntsp,ages),tmp, nat=rep(i,nrow(tmp)),met=rep("estimated",nrow(tmp)))#
+    ENAest <- rbind(ENAest,tmp2)#
+}#
+#
+names(ENAest) <- c("time","age", "effort","nations","method") #
+#
+ENA<- rbind(ENAsim,ENAest)#
+#
+ENA <- ENA[order(ENA$time),]#
+#
+maxeff<-max(ENA$effort)#
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")#
+mets<-c("simulated","estimated")#
+#
+setwd("/Users/catarinawor/Documents/Lagrangian/anime")#
+#
+library("animation")#
+#
+#saveLatex(#
+#if you don't have latex installed you need to install it or use other function such as saveGIF#
+#
+#for(i in 1:length(ntsp))#
+#{#
+    df <-ENA[ENA$time==i,]#
+    for(n in 1:est$nations )#
+    {#
+        for(m in 1:(length(mets)) )#
+        {#
+            tmp3 <- df[df$nations==n&df$method==mets[m],]$effort/max(df[df$nations==n&df$method==mets[m],]$effort)#
+            df[df$nations==n&df$method==mets(m),]$effort = tmp3#
+        }#
+    }#
+    y<- ggplot(df, aes(x=age,y=effort, group=method)) + theme_bw()#
+    y <- y+ facet_grid(.~nations)#
+    y <- y+ geom_line(size=2, aes(colour=method))#
+    y <- y + scale_y_continuous(limits=c(0,1))#
+    y<- y+ geom_text(data = NULL, x = 7 , y = .9, label = meses[indmonth[i]] )#
+print(y)
+i=6
+df <-ENA[ENA$time==i,]#
+    for(n in 1:est$nations )#
+    {#
+        for(m in 1:(length(mets)) )#
+        {#
+            tmp3 <- df[df$nations==n&df$method==mets[m],]$effort/max(df[df$nations==n&df$method==mets[m],]$effort)#
+            df[df$nations==n&df$method==mets(m),]$effort = tmp3#
+        }#
+    }#
+    y<- ggplot(df, aes(x=age,y=effort, group=method)) + theme_bw()#
+    y <- y+ facet_grid(.~nations)#
+    y <- y+ geom_line(size=2, aes(colour=method))#
+    y <- y + scale_y_continuous(limits=c(0,1))#
+    y<- y+ geom_text(data = NULL, x = 7 , y = .9, label = meses[indmonth[i]] )#
+print(y)
+df
+df <-ENA[ENA$time==i,]#
+    for(n in 1:est$nations )#
+    {#
+        for(m in 1:(length(mets)) )#
+        {#
+            tmp3 <- df[df$nations==n&df$method==mets[m],]$effort/max(df[df$nations==n&df$method==mets[m],]$effort)#
+            df[df$nations==n&df$method==mets(m),]$effort = tmp3#
+        }#
+    }
+=========================================================================#
+#graphing simulation -estiation routine for lagrangian model#
+# Author: Catarina Wor#
+# Jun 1st 2015#
+#=========================================================================#
+rm(list=ls()); #
+#if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")#
+setwd("/Users/catarinawor/Documents/Lagrangian/")#
+source("read.admb.R")#
+#
+sim = read.rep("lagrangian_OM.rep")#
+est = read.rep("lagrangian_est.rep")#
+#
+nomes <- names(sim)#
+#
+true_pars <- c(sim$"mo", exp(sim$"log_tau_c"),sim$"maxPos50",sim$"maxPossd",sim$"cvPos")  #
+est_pars <- c(est$"mo",exp(est$"log_tau_c"),est$"maxPos50",est$"maxPossd",est$"cvPos")#
+#
+#parameter plot#
+par(mfrow=c(1,1))#
+barplot(t(matrix(c(true_pars,est_pars),ncol=2)),names.arg = c("mo","tau_c","maxPos50","maxPossd","cvPos"),beside=T)#
+#========================================================================#
+#multiplot function from http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_%28ggplot2%29/#
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {#
+  require(grid)#
+#
+  # Make a list from the ... arguments and plotlist#
+  plots <- c(list(...), plotlist)#
+#
+  numPlots = length(plots)#
+#
+  # If layout is NULL, then use 'cols' to determine layout#
+  if (is.null(layout)) {#
+    # Make the panel#
+    # ncol: Number of columns of plots#
+    # nrow: Number of rows needed, calculated from # of cols#
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),#
+                    ncol = cols, nrow = ceiling(numPlots/cols))#
+  }#
+#
+ if (numPlots==1) {#
+    print(plots[[1]])#
+#
+  } else {#
+    # Set up the page#
+    grid.newpage()#
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))#
+#
+    # Make each plot, in the correct location#
+    for (i in 1:numPlots) {#
+      # Get the i,j matrix positions of the regions that contain this subplot#
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))#
+#
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,#
+                                      layout.pos.col = matchidx$col))#
+    }#
+  }#
+}#
+#======================================================================================================#
+#
+#========================================================================#
+library(ggplot2)#
+library(reshape2)#
+#
+ntsp=1:((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))#
+ages=sim$nage-sim$sage+1#
+indmonth= rep(sim$smon:sim$nmon,(sim$nyr-sim$syr+1))#
+EffNatAgeSim<-matrix(sim$EffNatAge,ncol=(sim$nage-sim$sage+3),dimnames=list(1:(((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))*sim$nations),c("tstp","nation",sim$sage:sim$nage)))#
+EffNatAgeEst<-matrix(est$EffNatAge,ncol=(est$nage-est$sage+3),dimnames=list(1:(((est$nyr-sim$syr+1)*(est$nmon-est$smon+1))*est$nations),c("tstp","nation",est$sage:est$nage)))#
+#
+EffNatAgeSim<-as.data.frame(EffNatAgeSim)#
+ ENAsim<-NULL#
+#
+for(i in 1:sim$nations)#
+{#
+    tmp <- melt(EffNatAgeSim[EffNatAgeSim$nation==i,sim$sage:sim$nage+2])#
+    tmp2 <- cbind(tim=rep(ntsp,ages),tmp, nat=rep(i,nrow(tmp)),met=rep("simulated",nrow(tmp)))#
+    ENAsim <- rbind(ENAsim,tmp2)#
+}#
+#
+names(ENAsim) <- c("time","age", "effort","nations","method") #
+#============####============###
+EffNatAgeEst<-matrix(est$EffNatAge,ncol=(est$nage-est$sage+3),dimnames=list(1:(((est$nyr-sim$syr+1)*(est$nmon-est$smon+1))*est$nations),c("tstp","nation",est$sage:est$nage)))#
+EffNatAgeEst<-as.data.frame(EffNatAgeEst)#
+ ENAest<-NULL#
+#
+for(i in 1:est$nations)#
+{#
+    tmp <- melt(EffNatAgeEst[EffNatAgeEst$nation==i,est$sage:est$nage+2])#
+    tmp2 <- cbind(tim=rep(ntsp,ages),tmp, nat=rep(i,nrow(tmp)),met=rep("estimated",nrow(tmp)))#
+    ENAest <- rbind(ENAest,tmp2)#
+}#
+#
+names(ENAest) <- c("time","age", "effort","nations","method") #
+#
+ENA<- rbind(ENAsim,ENAest)#
+#
+ENA <- ENA[order(ENA$time),]#
+#
+maxeff<-max(ENA$effort)#
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")#
+mets<-c("simulated","estimated")
+df <-ENA[ENA$time==i,]
+df
+i=6
+df <-ENA[ENA$time==i,]
+df
+df[df$nations==n&df$method==mets[m],]$effort
+for(n in 1:est$nations )#
+    {#
+        for(m in 1:(length(mets)) )#
+        {#
+            tmp3 <- df[df$nations==n&df$method==mets[m],]$effort/max(df[df$nations==n&df$method==mets[m],]$effort)#
+            df[df$nations==n&df$method==mets(m),]$effort = tmp3#
+        }#
+    }
+for(n in 1:est$nations )#
+    {#
+        for(m in 1:(length(mets)) )#
+        {#
+            tmp3 <- df[df$nations==n&df$method==mets[m],]$effort/max(df[df$nations==n&df$method==mets[m],]$effort)#
+            df[df$nations==n&df$method==mets(m),]$effort = tmp3#
+        }#
+    }
+mets
+df <-ENA[ENA$time==i,]#
+    for(n in 1:est$nations )#
+    {#
+        for(m in 1:(length(mets)) )#
+        {#
+            tmp3 <- df[df$nations==n&df$method==mets[m],]$effort/max(df[df$nations==n&df$method==mets[m],]$effort)#
+            df[df$nations==n&df$method==mets[m],]$effort = tmp3#
+        }#
+    }
+y<- ggplot(df, aes(x=age,y=effort, group=method)) + theme_bw()#
+    y <- y+ facet_grid(.~nations)#
+    y <- y+ geom_line(size=2, aes(colour=method))#
+    y <- y + scale_y_continuous(limits=c(0,1))#
+    y<- y+ geom_text(data = NULL, x = 7 , y = .9, label = meses[indmonth[i]] )#
+print(y)
+rm(list=ls()); #
+#if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")#
+setwd("/Users/catarinawor/Documents/Lagrangian/")#
+source("read.admb.R")#
+#
+sim = read.rep("lagrangian_OM.rep")#
+est = read.rep("lagrangian_est.rep")#
+#
+nomes <- names(sim)#
+#
+true_pars <- c(sim$"mo", exp(sim$"log_tau_c"),sim$"maxPos50",sim$"maxPossd",sim$"cvPos")  #
+est_pars <- c(est$"mo",exp(est$"log_tau_c"),est$"maxPos50",est$"maxPossd",est$"cvPos")#
+#
+#parameter plot#
+par(mfrow=c(1,1))#
+barplot(t(matrix(c(true_pars,est_pars),ncol=2)),names.arg = c("mo","tau_c","maxPos50","maxPossd","cvPos"),beside=T)#
+#========================================================================#
+#multiplot function from http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_%28ggplot2%29/#
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {#
+  require(grid)#
+#
+  # Make a list from the ... arguments and plotlist#
+  plots <- c(list(...), plotlist)#
+#
+  numPlots = length(plots)#
+#
+  # If layout is NULL, then use 'cols' to determine layout#
+  if (is.null(layout)) {#
+    # Make the panel#
+    # ncol: Number of columns of plots#
+    # nrow: Number of rows needed, calculated from # of cols#
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),#
+                    ncol = cols, nrow = ceiling(numPlots/cols))#
+  }#
+#
+ if (numPlots==1) {#
+    print(plots[[1]])#
+#
+  } else {#
+    # Set up the page#
+    grid.newpage()#
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))#
+#
+    # Make each plot, in the correct location#
+    for (i in 1:numPlots) {#
+      # Get the i,j matrix positions of the regions that contain this subplot#
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))#
+#
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,#
+                                      layout.pos.col = matchidx$col))#
+    }#
+  }#
+}#
+#======================================================================================================#
+#
+#========================================================================#
+library(ggplot2)#
+library(reshape2)#
+#
+ntsp=1:((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))#
+ages=sim$nage-sim$sage+1#
+indmonth= rep(sim$smon:sim$nmon,(sim$nyr-sim$syr+1))#
+EffNatAgeSim<-matrix(sim$EffNatAge,ncol=(sim$nage-sim$sage+3),dimnames=list(1:(((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))*sim$nations),c("tstp","nation",sim$sage:sim$nage)))#
+EffNatAgeEst<-matrix(est$EffNatAge,ncol=(est$nage-est$sage+3),dimnames=list(1:(((est$nyr-sim$syr+1)*(est$nmon-est$smon+1))*est$nations),c("tstp","nation",est$sage:est$nage)))#
+#
+EffNatAgeSim<-as.data.frame(EffNatAgeSim)#
+ ENAsim<-NULL#
+#
+for(i in 1:sim$nations)#
+{#
+    tmp <- melt(EffNatAgeSim[EffNatAgeSim$nation==i,sim$sage:sim$nage+2])#
+    tmp2 <- cbind(tim=rep(ntsp,ages),tmp, nat=rep(i,nrow(tmp)),met=rep("simulated",nrow(tmp)))#
+    ENAsim <- rbind(ENAsim,tmp2)#
+}#
+#
+names(ENAsim) <- c("time","age", "effort","nations","method") #
+#============####============###
+EffNatAgeEst<-matrix(est$EffNatAge,ncol=(est$nage-est$sage+3),dimnames=list(1:(((est$nyr-sim$syr+1)*(est$nmon-est$smon+1))*est$nations),c("tstp","nation",est$sage:est$nage)))#
+EffNatAgeEst<-as.data.frame(EffNatAgeEst)#
+ ENAest<-NULL#
+#
+for(i in 1:est$nations)#
+{#
+    tmp <- melt(EffNatAgeEst[EffNatAgeEst$nation==i,est$sage:est$nage+2])#
+    tmp2 <- cbind(tim=rep(ntsp,ages),tmp, nat=rep(i,nrow(tmp)),met=rep("estimated",nrow(tmp)))#
+    ENAest <- rbind(ENAest,tmp2)#
+}#
+#
+names(ENAest) <- c("time","age", "effort","nations","method") #
+#
+ENA<- rbind(ENAsim,ENAest)#
+#
+ENA <- ENA[order(ENA$time),]#
+#
+maxeff<-max(ENA$effort)#
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")#
+mets<-c("simulated","estimated")#
+#
+setwd("/Users/catarinawor/Documents/Lagrangian/anime")#
+#
+library("animation")#
+#
+#saveLatex(#
+#if you don't have latex installed you need to install it or use other function such as saveGIF#
+#
+#for(i in 1:length(ntsp))#
+#{#
+    df <-ENA[ENA$time==i,]#
+    for(n in 1:est$nations )#
+    {#
+        for(m in 1:(length(mets)) )#
+        {#
+            tmp3 <- df[df$nations==n&df$method==mets[m],]$effort/max(df[df$nations==n&df$method==mets[m],]$effort)#
+            df[df$nations==n&df$method==mets[m],]$effort = tmp3#
+        }#
+    }#
+    y<- ggplot(df, aes(x=age,y=effort, group=method)) + theme_bw()#
+    y <- y+ facet_grid(.~nations)#
+    y <- y+ geom_line(size=2, aes(colour=method))#
+    y <- y + scale_y_continuous(limits=c(0,1))#
+    y<- y+ geom_text(data = NULL, x = 7 , y = .9, label = meses[indmonth[i]] )#
+print(y)
+df
+rm(list=ls()); #
+#if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")#
+setwd("/Users/catarinawor/Documents/Lagrangian/")#
+source("read.admb.R")#
+#
+sim = read.rep("lagrangian_OM.rep")#
+est = read.rep("lagrangian_est.rep")#
+#
+nomes <- names(sim)#
+#
+true_pars <- c(sim$"mo", exp(sim$"log_tau_c"),sim$"maxPos50",sim$"maxPossd",sim$"cvPos")  #
+est_pars <- c(est$"mo",exp(est$"log_tau_c"),est$"maxPos50",est$"maxPossd",est$"cvPos")#
+#
+#parameter plot#
+par(mfrow=c(1,1))#
+barplot(t(matrix(c(true_pars,est_pars),ncol=2)),names.arg = c("mo","tau_c","maxPos50","maxPossd","cvPos"),beside=T)#
+#========================================================================#
+#multiplot function from http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_%28ggplot2%29/#
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {#
+  require(grid)#
+#
+  # Make a list from the ... arguments and plotlist#
+  plots <- c(list(...), plotlist)#
+#
+  numPlots = length(plots)#
+#
+  # If layout is NULL, then use 'cols' to determine layout#
+  if (is.null(layout)) {#
+    # Make the panel#
+    # ncol: Number of columns of plots#
+    # nrow: Number of rows needed, calculated from # of cols#
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),#
+                    ncol = cols, nrow = ceiling(numPlots/cols))#
+  }#
+#
+ if (numPlots==1) {#
+    print(plots[[1]])#
+#
+  } else {#
+    # Set up the page#
+    grid.newpage()#
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))#
+#
+    # Make each plot, in the correct location#
+    for (i in 1:numPlots) {#
+      # Get the i,j matrix positions of the regions that contain this subplot#
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))#
+#
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,#
+                                      layout.pos.col = matchidx$col))#
+    }#
+  }#
+}#
+#======================================================================================================#
+#
+#========================================================================#
+library(ggplot2)#
+library(reshape2)#
+#
+ntsp=1:((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))#
+ages=sim$nage-sim$sage+1#
+indmonth= rep(sim$smon:sim$nmon,(sim$nyr-sim$syr+1))#
+EffNatAgeSim<-matrix(sim$EffNatAge,ncol=(sim$nage-sim$sage+3),dimnames=list(1:(((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))*sim$nations),c("tstp","nation",sim$sage:sim$nage)))#
+EffNatAgeEst<-matrix(est$EffNatAge,ncol=(est$nage-est$sage+3),dimnames=list(1:(((est$nyr-sim$syr+1)*(est$nmon-est$smon+1))*est$nations),c("tstp","nation",est$sage:est$nage)))#
+#
+EffNatAgeSim<-as.data.frame(EffNatAgeSim)#
+ ENAsim<-NULL#
+#
+for(i in 1:sim$nations)#
+{#
+    tmp <- melt(EffNatAgeSim[EffNatAgeSim$nation==i,sim$sage:sim$nage+2])#
+    tmp2 <- cbind(tim=rep(ntsp,ages),tmp, nat=rep(i,nrow(tmp)),met=rep("simulated",nrow(tmp)))#
+    ENAsim <- rbind(ENAsim,tmp2)#
+}#
+#
+names(ENAsim) <- c("time","age", "effort","nations","method") #
+#============####============###
+EffNatAgeEst<-matrix(est$EffNatAge,ncol=(est$nage-est$sage+3),dimnames=list(1:(((est$nyr-sim$syr+1)*(est$nmon-est$smon+1))*est$nations),c("tstp","nation",est$sage:est$nage)))#
+EffNatAgeEst<-as.data.frame(EffNatAgeEst)#
+ ENAest<-NULL#
+#
+for(i in 1:est$nations)#
+{#
+    tmp <- melt(EffNatAgeEst[EffNatAgeEst$nation==i,est$sage:est$nage+2])#
+    tmp2 <- cbind(tim=rep(ntsp,ages),tmp, nat=rep(i,nrow(tmp)),met=rep("estimated",nrow(tmp)))#
+    ENAest <- rbind(ENAest,tmp2)#
+}#
+#
+names(ENAest) <- c("time","age", "effort","nations","method") #
+#
+ENA<- rbind(ENAsim,ENAest)#
+#
+ENA <- ENA[order(ENA$time),]#
+#
+maxeff<-max(ENA$effort)#
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")#
+mets<-c("simulated","estimated")#
+#
+setwd("/Users/catarinawor/Documents/Lagrangian/anime")#
+#
+library("animation")#
+#
+#saveLatex(#
+#if you don't have latex installed you need to install it or use other function such as saveGIF#
+#
+#for(i in 1:length(ntsp))#
+#{#
+    df <-ENA[ENA$time==i,]#
+    for(n in 1:est$nations )#
+    {#
+        for(m in 1:(length(mets)) )#
+        {#
+            if(min(df[df$nations==n&df$method==mets[m],]$effort)>0)#
+            {#
+                tmp3 <- df[df$nations==n&df$method==mets[m],]$effort/max(df[df$nations==n&df$method==mets[m],]$effort)#
+                df[df$nations==n&df$method==mets[m],]$effort = tmp3#
+            }#
+        }#
+    }#
+    y<- ggplot(df, aes(x=age,y=effort, group=method)) + theme_bw()#
+    y <- y+ facet_grid(.~nations)#
+    y <- y+ geom_line(size=2, aes(colour=method))#
+    y <- y + scale_y_continuous(limits=c(0,1))#
+    y<- y+ geom_text(data = NULL, x = 7 , y = .9, label = meses[indmonth[i]] )#
+print(y)
+library(ggplot2)#
+library(reshape2)#
+#
+ntsp=1:((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))#
+ages=sim$nage-sim$sage+1#
+indmonth= rep(sim$smon:sim$nmon,(sim$nyr-sim$syr+1))#
+EffNatAgeSim<-matrix(sim$EffNatAge,ncol=(sim$nage-sim$sage+3),dimnames=list(1:(((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))*sim$nations),c("tstp","nation",sim$sage:sim$nage)))#
+EffNatAgeEst<-matrix(est$EffNatAge,ncol=(est$nage-est$sage+3),dimnames=list(1:(((est$nyr-sim$syr+1)*(est$nmon-est$smon+1))*est$nations),c("tstp","nation",est$sage:est$nage)))#
+#
+EffNatAgeSim<-as.data.frame(EffNatAgeSim)#
+ ENAsim<-NULL#
+#
+for(i in 1:sim$nations)#
+{#
+    tmp <- melt(EffNatAgeSim[EffNatAgeSim$nation==i,sim$sage:sim$nage+2])#
+    tmp2 <- cbind(tim=rep(ntsp,ages),tmp, nat=rep(i,nrow(tmp)),met=rep("simulated",nrow(tmp)))#
+    ENAsim <- rbind(ENAsim,tmp2)#
+}#
+#
+names(ENAsim) <- c("time","age", "effort","nations","method") #
+#============####============###
+EffNatAgeEst<-matrix(est$EffNatAge,ncol=(est$nage-est$sage+3),dimnames=list(1:(((est$nyr-sim$syr+1)*(est$nmon-est$smon+1))*est$nations),c("tstp","nation",est$sage:est$nage)))#
+EffNatAgeEst<-as.data.frame(EffNatAgeEst)#
+ ENAest<-NULL#
+#
+for(i in 1:est$nations)#
+{#
+    tmp <- melt(EffNatAgeEst[EffNatAgeEst$nation==i,est$sage:est$nage+2])#
+    tmp2 <- cbind(tim=rep(ntsp,ages),tmp, nat=rep(i,nrow(tmp)),met=rep("estimated",nrow(tmp)))#
+    ENAest <- rbind(ENAest,tmp2)#
+}#
+#
+names(ENAest) <- c("time","age", "effort","nations","method") #
+#
+ENA<- rbind(ENAsim,ENAest)#
+#
+ENA <- ENA[order(ENA$time),]#
+#
+maxeff<-max(ENA$effort)#
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")#
+mets<-c("simulated","estimated")#
+#
+setwd("/Users/catarinawor/Documents/Lagrangian/anime")#
+#
+library("animation")#
+#
+saveLatex(#
+#if you don't have latex installed you need to install it or use other function such as saveGIF#
+#
+for(i in 1:length(ntsp))#
+{#
+    df <-ENA[ENA$time==i,]#
+    for(n in 1:est$nations )#
+    {#
+        for(m in 1:(length(mets)) )#
+        {#
+            if(min(df[df$nations==n&df$method==mets[m],]$effort)>0)#
+            {#
+                tmp3 <- df[df$nations==n&df$method==mets[m],]$effort/max(df[df$nations==n&df$method==mets[m],]$effort)#
+                df[df$nations==n&df$method==mets[m],]$effort = tmp3#
+            }#
+        }#
+    }#
+    y<- ggplot(df, aes(x=age,y=effort, group=method)) + theme_bw()#
+    y <- y+ facet_grid(.~nations)#
+    y <- y+ geom_line(size=2, aes(colour=method))#
+    y <- y + scale_y_continuous(limits=c(0,1))#
+    y<- y+ geom_text(data = NULL, x = 7 , y = .9, label = meses[indmonth[i]] )#
+print(y)#
+}#
+,#
+pdflatex = "/usr/texbin/pdflatex")
+5e-6*1:16^3
+5e-6*1:16
+scan()
+am50=3.5
+amsd=.35
+idade=1:20
+1./(1.+exp(-(idade-am50)/amsd))
+fecun=(1./(1.+exp(-(idade-am50)/amsd)))
+peso=scan()
+fecun*peso
+scan()
+names(sim)
+sim$VBarea
+names(sim)
+VBareaSim<-matrix(sim$VBarea, ncol=(sim$narea-sim$sarea+1),dimnames=list(ntsp,sim$sarea:sim$narea))
+melt(VBareaSim)
+nrow(melt(VBareaSim))
+meses
+?saveLatex
+rm(list=ls()); #
+#if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")#
+setwd("/Users/catarinawor/Documents/Lagrangian/")#
+source("read.admb.R")#
+#
+sim = read.rep("lagrangian_OM.rep")#
+est = read.rep("lagrangian_est.rep")#
+#
+nomes <- names(sim)#
+#
+true_pars <- c(sim$"mo", exp(sim$"log_tau_c"),sim$"maxPos50",sim$"maxPossd",sim$"cvPos")  #
+est_pars <- c(est$"mo",exp(est$"log_tau_c"),est$"maxPos50",est$"maxPossd",est$"cvPos")#
+#
+#parameter plot#
+par(mfrow=c(1,1))#
+barplot(t(matrix(c(true_pars,est_pars),ncol=2)),names.arg = c("mo","tau_c","maxPos50","maxPossd","cvPos"),beside=T)#
+#========================================================================#
+#multiplot function from http://www.cookbook-r.com/Graphs/Multiple_graphs_on_one_page_%28ggplot2%29/#
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {#
+  require(grid)#
+#
+  # Make a list from the ... arguments and plotlist#
+  plots <- c(list(...), plotlist)#
+#
+  numPlots = length(plots)#
+#
+  # If layout is NULL, then use 'cols' to determine layout#
+  if (is.null(layout)) {#
+    # Make the panel#
+    # ncol: Number of columns of plots#
+    # nrow: Number of rows needed, calculated from # of cols#
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),#
+                    ncol = cols, nrow = ceiling(numPlots/cols))#
+  }#
+#
+ if (numPlots==1) {#
+    print(plots[[1]])#
+#
+  } else {#
+    # Set up the page#
+    grid.newpage()#
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))#
+#
+    # Make each plot, in the correct location#
+    for (i in 1:numPlots) {#
+      # Get the i,j matrix positions of the regions that contain this subplot#
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))#
+#
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,#
+                                      layout.pos.col = matchidx$col))#
+    }#
+  }#
+}#
+#======================================================================================================#
+#
+#========================================================================#
+library(ggplot2)#
+library(reshape2)#
+#
+ntsp=1:((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))#
+ages=sim$nage-sim$sage+1#
+indmonth= rep(sim$smon:sim$nmon,(sim$nyr-sim$syr+1))#
+EffNatAgeSim<-matrix(sim$EffNatAge,ncol=(sim$nage-sim$sage+3),dimnames=list(1:(((sim$nyr-sim$syr+1)*(sim$nmon-est$smon+1))*sim$nations),c("tstp","nation",sim$sage:sim$nage)))#
+EffNatAgeEst<-matrix(est$EffNatAge,ncol=(est$nage-est$sage+3),dimnames=list(1:(((est$nyr-sim$syr+1)*(est$nmon-est$smon+1))*est$nations),c("tstp","nation",est$sage:est$nage)))#
+#
+EffNatAgeSim<-as.data.frame(EffNatAgeSim)#
+ ENAsim<-NULL#
+#
+for(i in 1:sim$nations)#
+{#
+    tmp <- melt(EffNatAgeSim[EffNatAgeSim$nation==i,sim$sage:sim$nage+2])#
+    tmp2 <- cbind(tim=rep(ntsp,ages),tmp, nat=rep(i,nrow(tmp)),met=rep("simulated",nrow(tmp)))#
+    ENAsim <- rbind(ENAsim,tmp2)#
+}#
+#
+names(ENAsim) <- c("time","age", "effort","nations","method") #
+#============####============###
+EffNatAgeEst<-matrix(est$EffNatAge,ncol=(est$nage-est$sage+3),dimnames=list(1:(((est$nyr-sim$syr+1)*(est$nmon-est$smon+1))*est$nations),c("tstp","nation",est$sage:est$nage)))#
+EffNatAgeEst<-as.data.frame(EffNatAgeEst)#
+ ENAest<-NULL#
+#
+for(i in 1:est$nations)#
+{#
+    tmp <- melt(EffNatAgeEst[EffNatAgeEst$nation==i,est$sage:est$nage+2])#
+    tmp2 <- cbind(tim=rep(ntsp,ages),tmp, nat=rep(i,nrow(tmp)),met=rep("estimated",nrow(tmp)))#
+    ENAest <- rbind(ENAest,tmp2)#
+}#
+#
+names(ENAest) <- c("time","age", "effort","nations","method") #
+#
+ENA<- rbind(ENAsim,ENAest)#
+#
+ENA <- ENA[order(ENA$time),]#
+#
+maxeff<-max(ENA$effort)#
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")#
+mets<-c("simulated","estimated")#
+#
+setwd("/Users/catarinawor/Documents/Lagrangian/anime")#
+#
+library("animation")#
+#
+saveLatex(#
+#if you don't have latex installed you need to install it or use other function such as saveGIF#
+#
+for(i in 1:length(ntsp))#
+{#
+    df <-ENA[ENA$time==i,]#
+    for(n in 1:est$nations )#
+    {#
+        for(m in 1:(length(mets)) )#
+        {#
+            if(min(df[df$nations==n&df$method==mets[m],]$effort)>0)#
+            {#
+                tmp3 <- df[df$nations==n&df$method==mets[m],]$effort/max(df[df$nations==n&df$method==mets[m],]$effort)#
+                df[df$nations==n&df$method==mets[m],]$effort = tmp3#
+            }#
+        }#
+    }#
+    y<- ggplot(df, aes(x=age,y=effort, group=method)) + theme_bw()#
+    y <- y+ facet_grid(.~nations)#
+    y <- y+ geom_line(size=2, aes(colour=method))#
+    y <- y + scale_y_continuous(limits=c(0,1))#
+    y <- y + labs(title=meses[indmonth[i]])#
+print(y)#
+}#
+,#
+pdflatex = "/usr/texbin/pdflatex",latex.filename = "VBarea.tex",latex.filename = "effort.tex")
+library("animation")#
+#
+saveLatex(#
+#if you don't have latex installed you need to install it or use other function such as saveGIF#
+#
+for(i in 1:length(ntsp))#
+{#
+    df <-ENA[ENA$time==i,]#
+    for(n in 1:est$nations )#
+    {#
+        for(m in 1:(length(mets)) )#
+        {#
+            if(min(df[df$nations==n&df$method==mets[m],]$effort)>0)#
+            {#
+                tmp3 <- df[df$nations==n&df$method==mets[m],]$effort/max(df[df$nations==n&df$method==mets[m],]$effort)#
+                df[df$nations==n&df$method==mets[m],]$effort = tmp3#
+            }#
+        }#
+    }#
+    y<- ggplot(df, aes(x=age,y=effort, group=method)) + theme_bw()#
+    y <- y+ facet_grid(.~nations)#
+    y <- y+ geom_line(size=2, aes(colour=method))#
+    y <- y + scale_y_continuous(limits=c(0,1))#
+    y <- y + labs(title=meses[indmonth[i]])#
+print(y)#
+}#
+,#
+pdflatex = "/usr/texbin/pdflatex",latex.filename = "VBarea.tex")
+VBareaSim<-matrix(sim$VBarea, ncol=(sim$narea-sim$sarea+1),dimnames=list(ntsp,sim$sarea:sim$narea))#
+VBareaEst<-matrix(est$VBarea, ncol=(est$narea-est$sarea+1),dimnames=list(ntsp,est$sarea:est$narea))#
+#
+VBplotSim<-cbind(melt(VBareaSim),rep("simulated",nrow(melt(VBareaSim))))#
+VBplotEst<-cbind(melt(VBareaEst),rep("simulated",nrow(melt(VBareaEst)))#
+names(VBplotSim)<- c("time","area", "VB","method")#
+names(VBplotEst)<- c("time","area", "VB","method")#
+VBareaplot<-rbind(VBplotSim,VBplotEst)#
+basemap<-get_map(location = c(lon = -125, lat = 45),#
+    zoom = 5, maptype = "terrain")
+VBplotEst<-cbind(melt(VBareaEst),rep("simulated",nrow(melt(VBareaEst))))
+names(VBplotSim)<- c("time","area", "VB","method")#
+names(VBplotEst)<- c("time","area", "VB","method")#
+VBareaplot<-rbind(VBplotSim,VBplotEst)#
+basemap<-get_map(location = c(lon = -125, lat = 45),#
+    zoom = 5, maptype = "terrain")
+VBplotSim<-cbind(melt(VBareaSim),rep("simulated",nrow(melt(VBareaSim))))
+VBplotEst<-cbind(melt(VBareaEst),rep("simulated",nrow(melt(VBareaEst))))
+names(VBplotSim)<- c("time","area", "VB","method")
+names(VBplotEst)<- c("time","area", "VB","method")
+VBareaplot<-rbind(VBplotSim,VBplotEst)
+library(ggmap)
+basemap<-get_map(location = c(lon = -125, lat = 45),#
+    zoom = 5, maptype = "terrain")
+saveLatex(#
+#if you don't have latex installed you need to install it or use other function such as saveGIF#
+for(i in 1:ntsp)#
+{#
+ex1<-VBareaplot[time==i ,]#
+        minVB<-min(VBareaSim$VB)#
+        maxVB<-max(VBareaplot$VB)#
+#
+p2<-  ggmap(teste,#
+    extent = "panel",#
+    ylab = "Latitude",#
+    xlab = "Longitude")#
+p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+p2 <- p2 + geom_point(alpha=0.8,aes(size=VB),data=ex1) #
+p2 <- p2 + labs(title=meses[t])#
+p2 <- p2 + scale_size_area(limits=c(minVB,maxVB),max_size = 12,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")#
+print(p2)   #
+}#
+}#
+,#
+pdflatex = "/usr/texbin/pdflatex")
+saveLatex(#
+#if you don't have latex installed you need to install it or use other function such as saveGIF#
+for(i in 1:ntsp)#
+{#
+ex1<-VBareaplot[time==i ,]#
+        minVB<-min(VBareaSim$VB)#
+        maxVB<-max(VBareaplot$VB)#
+#
+p2<-  ggmap(teste,#
+    extent = "panel",#
+    ylab = "Latitude",#
+    xlab = "Longitude")#
+p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+p2 <- p2 + geom_point(alpha=0.8,aes(size=VB),data=ex1) #
+p2 <- p2 + labs(title=meses[t])#
+p2 <- p2 + scale_size_area(limits=c(minVB,maxVB),max_size = 12,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")#
+print(p2)   #
+}#
+#
+,#
+pdflatex = "/usr/texbin/pdflatex")
+saveLatex(#
+#if you don't have latex installed you need to install it or use other function such as saveGIF#
+for(i in 1:ntsp)#
+{#
+ex1<-VBareaplot[time==i ,]#
+        minVB<-min(VBareaSim$VB)#
+        maxVB<-max(VBareaplot$VB)#
+#
+p2<-  ggmap(teste,#
+    extent = "panel",#
+    ylab = "Latitude",#
+    xlab = "Longitude")#
+p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+p2 <- p2 + geom_point(alpha=0.8,aes(size=VB),data=ex1) #
+p2 <- p2 + labs(title=meses[indmonth[i]])#
+p2 <- p2 + scale_size_area(limits=c(minVB,maxVB),max_size = 12,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")#
+print(p2)   #
+}#
+#
+,#
+pdflatex = "/usr/texbin/pdflatex")
+head(VBareaplot)
+saveLatex(#
+#if you don't have latex installed you need to install it or use other function such as saveGIF#
+for(i in 1:ntsp)#
+{#
+ex1<-VBareaplot[VBareaplot$time==i ,]#
+        minVB<-min(VBareaSim$VB)#
+        maxVB<-max(VBareaplot$VB)#
+#
+p2<-  ggmap(teste,#
+    extent = "panel",#
+    ylab = "Latitude",#
+    xlab = "Longitude")#
+p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+p2 <- p2 + geom_point(alpha=0.8,aes(size=VB),data=ex1) #
+p2 <- p2 + labs(title=meses[indmonth[i]])#
+p2 <- p2 + scale_size_area(limits=c(minVB,maxVB),max_size = 12,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")#
+print(p2)   #
+}#
+#
+,#
+pdflatex = "/usr/texbin/pdflatex")
+i=6
+ex1<-VBareaplot[VBareaplot$time==i ,]#
+        minVB<-min(VBareaSim$VB)#
+        maxVB<-max(VBareaplot$VB)#
+#
+p2<-  ggmap(teste,#
+    extent = "panel",#
+    ylab = "Latitude",#
+    xlab = "Longitude")#
+p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+p2 <- p2 + geom_point(alpha=0.8,aes(size=VB),data=ex1) #
+p2 <- p2 + labs(title=meses[indmonth[i]])#
+p2 <- p2 + scale_size_area(limits=c(minVB,maxVB),max_size = 12,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")#
+print(p2)
+ex1<-VBareaplot[VBareaplot$time==i ,]#
+        minVB<-min(VBareaSim$VB)#
+        maxVB<-max(VBareaplot$VB)#
+#
+p2<-  ggmap(basemap,#
+    extent = "panel",#
+    ylab = "Latitude",#
+    xlab = "Longitude")#
+p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+p2 <- p2 + geom_point(alpha=0.8,aes(size=VB),data=ex1) #
+p2 <- p2 + labs(title=meses[indmonth[i]])#
+p2 <- p2 + scale_size_area(limits=c(minVB,maxVB),max_size = 12,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")#
+print(p2)
+ex1<-VBareaplot[VBareaplot$time==i ,]#
+        minVB<-min(VBareaSim$VB)#
+        maxVB<-max(VBareaplot$VB)#
+#
+p2<-  ggmap(basemap,#
+    extent = "panel",#
+    ylab = "Latitude",#
+    xlab = "Longitude")#
+p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+p2 <- p2 + geom_point(alpha=0.8,aes(size=VB),data=ex1) #
+p2 <- p2 + labs(title=meses[indmonth[i]])#
+p2 <- p2 + scale_size_area(limits=c(minVB,maxVB),max_size = 12,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")#
+print(p2)
+ex1<-VBareaplot[VBareaplot$time==i ,]#
+        minVB<-min(VBareaplot$VB)#
+        maxVB<-max(VBareaplot$VB)
+p2<-  ggmap(basemap,#
+    extent = "panel",#
+    ylab = "Latitude",#
+    xlab = "Longitude")#
+p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+p2 <- p2 + geom_point(alpha=0.8,aes(size=VB),data=ex1) #
+p2 <- p2 + labs(title=meses[indmonth[i]])#
+p2 <- p2 + scale_size_area(limits=c(minVB,maxVB),max_size = 12,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")#
+print(p2)
+basemap<-get_map(location = c(lon = -125, lat = 45),#
+    zoom = 5, maptype = "terrain")
+p2<-  ggmap(basemap,#
+    extent = "panel",#
+    ylab = "Latitude",#
+    xlab = "Longitude")#
+p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+p2 <- p2 + geom_point(alpha=0.8,aes(size=VB),data=ex1) #
+p2 <- p2 + labs(title=meses[indmonth[i]])#
+p2 <- p2 + scale_size_area(limits=c(minVB,maxVB),max_size = 12,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")#
+print(p2)
+VBareaplot
+lat<-VBareaplot$area#
+lon<-rep(-131,length(lat))#
+VBareaplot<-rbind(VBplotSim,VBplotEst,lat,lon)#
+library(ggmap)#
+basemap<-get_map(location = c(lon = -125, lat = 45),#
+    zoom = 5, maptype = "terrain")
+ex1<-VBareaplot[VBareaplot$time==i ,]#
+        minVB<-min(VBareaplot$VB)#
+        maxVB<-max(VBareaplot$VB)#
+#
+p2<-  ggmap(basemap,#
+    extent = "panel",#
+    ylab = "Latitude",#
+    xlab = "Longitude")#
+p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+p2 <- p2 + geom_point(alpha=0.8,aes(size=VB),data=ex1) #
+p2 <- p2 + labs(title=meses[indmonth[i]])#
+p2 <- p2 + scale_size_area(limits=c(minVB,maxVB),max_size = 12,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")#
+print(p2)
+ex1<-VBareaplot[VBareaplot$time==i ,]#
+        minVB<-min(VBareaplot$VB)#
+        maxVB<-max(VBareaplot$VB)#
+#
+p2<-  ggmap(basemap,#
+    extent = "panel",#
+    ylab = "Latitude",#
+    xlab = "Longitude")#
+p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+p2 <- p2 + geom_point(alpha=0.8,aes(size=VB),data=ex1) #
+p2 <- p2 + labs(title=meses[indmonth[i]])#
+p2 <- p2 + scale_size_area(limits=c(minVB,maxVB),max_size = 12,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")#
+print(p2)
+VBareaSim<-matrix(sim$VBarea, ncol=(sim$narea-sim$sarea+1),dimnames=list(ntsp,sim$sarea:sim$narea))#
+VBareaEst<-matrix(est$VBarea, ncol=(est$narea-est$sarea+1),dimnames=list(ntsp,est$sarea:est$narea))#
+#
+VBplotSim<-cbind(melt(VBareaSim),rep("simulated",nrow(melt(VBareaSim))))#
+VBplotEst<-cbind(melt(VBareaEst),rep("simulated",nrow(melt(VBareaEst))))#
+names(VBplotSim)<- c("time","area", "VB","method")#
+names(VBplotEst)<- c("time","area", "VB","method")#
+#
+lat<-VBareaplot$area#
+lon<-rep(-131,length(lat))#
+VBareaplot<-rbind(VBplotSim,VBplotEst,lat,lon)#
+#
+lat<-VBareaplot$area#
+lon<-rep(-131,length(lat))#
+#
+VBareaplot<-cbind(VBareaplot)#
+#
+library(ggmap)#
+basemap<-get_map(location = c(lon = -125, lat = 45),#
+    zoom = 5, maptype = "terrain")
+ex1<-VBareaplot[VBareaplot$time==i ,]#
+        minVB<-min(VBareaplot$VB)#
+        maxVB<-max(VBareaplot$VB)#
+#
+p2<-  ggmap(basemap,#
+    extent = "panel",#
+    ylab = "Latitude",#
+    xlab = "Longitude")#
+p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+p2 <- p2 + geom_point(alpha=0.8,aes(size=VB),data=ex1) #
+p2 <- p2 + labs(title=meses[indmonth[i]])#
+p2 <- p2 + scale_size_area(limits=c(minVB,maxVB),max_size = 12,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")#
+print(p2)
+VBareaplot
+VBareaSim<-matrix(sim$VBarea, ncol=(sim$narea-sim$sarea+1),dimnames=list(ntsp,sim$sarea:sim$narea))#
+VBareaEst<-matrix(est$VBarea, ncol=(est$narea-est$sarea+1),dimnames=list(ntsp,est$sarea:est$narea))#
+#
+VBplotSim<-cbind(melt(VBareaSim),rep("simulated",nrow(melt(VBareaSim))))#
+VBplotEst<-cbind(melt(VBareaEst),rep("simulated",nrow(melt(VBareaEst))))#
+names(VBplotSim)<- c("time","area", "VB","method")#
+names(VBplotEst)<- c("time","area", "VB","method")#
+#
+lat<-VBareaplot$area#
+lon<-rep(-131,length(lat))#
+VBareaplot<-rbind(VBplotSim,VBplotEst)#
+#
+lat<-VBareaplot$area#
+lon<-rep(-131,length(lat))#
+#
+VBareaplot<-cbind(VBareaplot,lat,lon)
+ex1<-VBareaplot[VBareaplot$time==i ,]#
+        minVB<-min(VBareaplot$VB)#
+        maxVB<-max(VBareaplot$VB)#
+#
+p2<-  ggmap(basemap,#
+    extent = "panel",#
+    ylab = "Latitude",#
+    xlab = "Longitude")#
+p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+p2 <- p2 + geom_point(alpha=0.8,aes(size=VB),data=ex1) #
+p2 <- p2 + labs(title=meses[indmonth[i]])#
+p2 <- p2 + scale_size_area(limits=c(minVB,maxVB),max_size = 12,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")#
+print(p2)
+p2
+VBareaplot
+p2<-  ggmap(basemap,#
+    extent = "panel",#
+    ylab = "Latitude",#
+    xlab = "Longitude")
+p2
+p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")
+p2
+dev.off()
+p2
+2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+p2 <- p2 + geom_point(alpha=0.8,aes(size=VB),data=ex1) #
+p2 <- p2 + labs(title=meses[indmonth[i]])#
+p2 <- p2 + scale_size_area(limits=c(minVB,maxVB),max_size = 12,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")#
+print(p2)
+ex1<-VBareaplot[VBareaplot$time==i ,]#
+        minVB<-min(VBareaplot$VB)#
+        maxVB<-max(VBareaplot$VB)#
+#
+p2<-  ggmap(basemap,#
+    extent = "panel",#
+    ylab = "Latitude",#
+    xlab = "Longitude")#
+p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+p2 <- p2 + geom_point(alpha=0.8,aes(size=VB, group=method,colour=method),data=ex1) #
+p2 <- p2 + labs(title=meses[indmonth[i]])#
+p2 <- p2 + scale_size_area(limits=c(minVB,maxVB),max_size = 12,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")#
+print(p2)
+ex1
+VBareaSim<-matrix(sim$VBarea, ncol=(sim$narea-sim$sarea+1),dimnames=list(ntsp,sim$sarea:sim$narea))#
+VBareaEst<-matrix(est$VBarea, ncol=(est$narea-est$sarea+1),dimnames=list(ntsp,est$sarea:est$narea))#
+#
+VBplotSim<-cbind(melt(VBareaSim),rep("simulated",nrow(melt(VBareaSim))))#
+VBplotEst<-cbind(melt(VBareaEst),rep("estimated",nrow(melt(VBareaEst))))#
+names(VBplotSim)<- c("time","area", "VB","method")#
+names(VBplotEst)<- c("time","area", "VB","method")#
+#
+lat<-VBareaplot$area#
+lon<-rep(-131,length(lat))#
+VBareaplot<-rbind(VBplotSim,VBplotEst)#
+#
+lat<-VBareaplot$area#
+lon<-rep(-131,length(lat))#
+#
+VBareaplot<-cbind(VBareaplot,lat,lon)#
+#
+library(ggmap)#
+basemap<-get_map(location = c(lon = -125, lat = 45),#
+    zoom = 5, maptype = "terrain")
+ex1<-VBareaplot[VBareaplot$time==i ,]#
+        minVB<-min(VBareaplot$VB)#
+        maxVB<-max(VBareaplot$VB)#
+#
+p2<-  ggmap(basemap,#
+    extent = "panel",#
+    ylab = "Latitude",#
+    xlab = "Longitude")#
+p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+p2 <- p2 + geom_point(alpha=0.8,aes(size=VB, group=method,colour=method),data=ex1) #
+p2 <- p2 + labs(title=meses[indmonth[i]])#
+p2 <- p2 + scale_size_area(limits=c(minVB,maxVB),max_size = 12,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")#
+print(p2)
+p2<-  ggmap(basemap,#
+    extent = "panel",#
+    ylab = "Latitude",#
+    xlab = "Longitude")#
+p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+p2 <- p2 + geom_point(alpha=0.8,aes(size=VB, group=method,colour=method),data=ex1) #
+p2 <- p2 + labs(title=meses[indmonth[i]])#
+p2 <- p2 + scale_size_area(limits=c(minVB,maxVB),max_size = 8,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")#
+print(p2)
+saveLatex(#
+#if you don't have latex installed you need to install it or use other function such as saveGIF#
+for(i in 1:ntsp)#
+{#
+ex1<-VBareaplot[VBareaplot$time==i ,]#
+        minVB<-min(VBareaplot$VB)#
+        maxVB<-max(VBareaplot$VB)#
+#
+p2<-  ggmap(basemap,#
+    extent = "panel",#
+    ylab = "Latitude",#
+    xlab = "Longitude")#
+p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+p2 <- p2 + geom_point(alpha=0.8,aes(size=VB, group=method,colour=method),data=ex1) #
+p2 <- p2 + labs(title=meses[indmonth[i]])#
+p2 <- p2 + scale_size_area(limits=c(minVB,maxVB),max_size = 10,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")#
+print(p2)   #
+}#
+,#
+pdflatex = "/usr/texbin/pdflatex")
+sim
+names(sim)
+sim$maxPos
+30+14
+14+5+12
+length(30:44)
+length(44:48)
+length(49:60)
+30+14
+44+5
+19*2*2.5
