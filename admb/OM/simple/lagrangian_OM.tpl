@@ -13,10 +13,10 @@ DATA_SECTION
 	int seed;
 
 	LOC_CALCS
-		ifstream ifs( "seed.txt" ); // if this file is available
+		ifstream ifs( "../../seed.txt" ); // if this file is available
 		ifs>>seed; //read in the seed
 		seed += 1; // add 10 to the seed
-		ofstream ofs( "seed.txt" ); //put out to seed.txt
+		ofstream ofs( "../../seed.txt" ); //put out to seed.txt
 		ofs<<seed<<endl; //the new value of the seed
 	END_CALCS
 
@@ -373,11 +373,7 @@ PRELIMINARY_CALCS_SECTION
 		
 		
 
-		//survey_data();
-		//catage_comm();
-		//calc_selectivity();
-		//calc_spr();
-
+	
 		run_projections();
 	
 		output_true();
@@ -465,7 +461,7 @@ FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt)
             					(1.-mfexp(-(m_tsp+q*Effarea(ii-1)*va(nage))))))+
             					(Nage(ii-1)(nage-1)*(1.0-sum(propBarea))*mfexp(-m_tsp))/(1.-mfexp(-m_tsp));
 
-            	yNage(indyr(ii))(sage,nage) += Nage(ii)(sage,nage);
+            	yNage(indyr(ii))(sage,nage) = Nage(ii)(sage,nage);
             	
             	break;
             	
@@ -826,17 +822,14 @@ FUNCTION calc_spr
 
 	int i, ii, a;
 
+	
 	dvector lz(sage,nage);
-
-	for(i=1; i<=ntstp;i++){
-		Fatage(i)(sage,nage)=elem_div(Catage(i)(sage,nage),Nage(i)(sage,nage));
-	}
 	
 	
-	for(ii=syr; ii<=nyr;ii++){
+	for(ii=syr; ii<=proj_yr;ii++){
 
 
-		yFatage(ii)(sage,nage) = elem_div(yCatchtotalage(ii)(sage,nage),Nage(ii*smon-(smon-1))(sage,nage));
+		yFatage(ii)(sage,nage) = elem_div(yCatchtotalage(ii)(sage,nage),yNage(ii)(sage,nage));
 		
 		lz.initialize();
 		lz(sage) = 1.;
@@ -848,10 +841,12 @@ FUNCTION calc_spr
 
 		phie(ii)=elem_prod(lz,fa)*wa;
 		spr(ii)=phie(ii)/phiE;
-		
 
-
+	
 	}
+
+	
+	cout<<"Ok after calculating SPR"<<endl;
 
 //FUNCTION calc_spr_optim
 
@@ -932,6 +927,10 @@ FUNCTION run_projections
 		calc_catage(ii);
 		clean_catage(ii);
 
+		cout<<"ii is "<<ii<<endl;
+		cout<<"Nage "<<Nage(ii)(sage,nage)<<endl;
+		
+
 		if(indmonth(ii)==nmon){
 			//survey calculations
 
@@ -941,12 +940,12 @@ FUNCTION run_projections
 			}
 			
 			catage_comm(indyr(ii));
-			run_stock_assessment(indyr(ii),svyr-1);
+			//run_stock_assessment(indyr(ii),svyr-1);
 		}
 		
 		
 
-		calc_spr();
+		
 		//calc_spr_optim();
 
 
@@ -958,6 +957,8 @@ FUNCTION run_projections
 		
 	}
 
+	calc_spr();
+	
 
 
 
@@ -1052,7 +1053,7 @@ FUNCTION output_pin
 	//dvector guess_wt(rep_yr+1,nyr);
 	//guess_wt.initialize();
 	
-	ofstream ifs("lagrangian_est.pin");
+	ofstream ifs("../../mov_est/simple/lagrangian_est.pin");
 
 	ifs<<"#log_mo \n "  << log(tmp_mo) <<endl;
 	//ifs<<"#log_mo \n "  << log(mo) <<endl;
@@ -1112,7 +1113,7 @@ FUNCTION output_pin_SA
 
 FUNCTION output_dat
 
-	ofstream afs("lagrangian_est.dat");
+	ofstream afs("../../mov_est/simple/lagrangian_est.dat");
 	afs<<"# syr " << endl << rep_yr+1 <<endl;
 	afs<<"# nyr " << endl << nyr <<endl;
 	afs<<"# sage " << endl << sage <<endl;
@@ -1158,7 +1159,7 @@ FUNCTION void output_datSA(const int& ii,const int& svy)
 	 tot_tmppcat = sum(tmppcat);
 
 	 
-	ofstream mfs("lagrangian_SS.dat");
+	ofstream mfs("../../stock_assessment/lagrangian_SA.dat");
 	mfs<<"# syr " << endl << rep_yr+1 <<endl;
 	mfs<<"# nyr " << endl << ii <<endl;
 	mfs<<"# sage " << endl << sage <<endl;
@@ -1312,7 +1313,8 @@ FUNCTION void run_stock_assessment(const int& ii,const int& svy)
 
             #if defined __APPLE__ || defined __linux
             // cout<<m_est_fmsy<<endl;
-            system("./lagrangian_SS");
+            
+            system("cd ../../stock_assessment/ && ./lagrangian_SS");
 
             #endif
 
