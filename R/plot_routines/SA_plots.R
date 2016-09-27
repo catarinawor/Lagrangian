@@ -228,45 +228,4 @@ par(mfrow=c(1,2))
 plot(apply(sim$yNage,1,sum), type="b",lwd=2)
 plot(sim$spr, type="b",lwd=2)
 
-dim(sim$yCatchtotalage)
-
-
-matplot(sim$yCatchtotalage, type="b",lwd=2)
-
-
-
-
-lz=matrix(0, nrow=11,ncol=20)
-
-for(i in 110:120){
-  
-  ii=i-109
-
-  lz[ii,1] = 1.
-  for(a in 2:20 ){
-      lz[ii,a]= lz[ii,a-1]*exp(-.3-(sim$yCatchtotalage[i,]/sim$yNage[i,])[a-1]);
-    }
-    lz[ii,20] = lz[ii,20]/(1.-exp(-.3-(sim$yCatchtotalage[i,]/sim$yNage[i,])[20]));
-}
-
-    
-
-
-    phie(ii)=elem_prod(lz,fa)*wa;
-    spr(ii)=phie(ii)/phiE;
-
-length(sim$yNage)
-
-sim$spr
-sim$yFatage
-
-
-
-
-
-plot(sim$spr)
-
-sim$phiE
-sim$phie
-
 

@@ -318,25 +318,28 @@ PARAMETER_SECTION
 	vector tB(1,ntstp);
 	vector survB(1,surv_nobs);
     
-
-	
 	vector maxPos(sage,nage);
 	vector varPos(sage,nage);
+	
 	vector itB(rep_yr+1,proj_yr);
 	vector totcatch(rep_yr+1,proj_yr);
 	vector Ut(rep_yr+1,proj_yr);
 	vector spr(syr,proj_yr);
 	vector phie(syr,proj_yr);
 
+	
+
 	matrix Nage(1,ntstp,sage,nage);
+ 	matrix VulB(1,ntstp,sage,nage);
+	
 	matrix Catage(1,ntstp,sage,nage);
 	matrix Fatage(1,ntstp,sage,nage);
- 	matrix VulB(1,ntstp,sage,nage);
  	matrix PosX(1,ntstp,sage,nage);
  	//matrix Effage(1,ntstp,sage,nage);
  	matrix VBarea(1,ntstp,sarea,narea);
  	matrix totVBnation(1,ntstp,1,nations);	
  	matrix Effarea(1,ntstp,sarea,narea);
+ 	
  	matrix tot_comm_obsCatage(rep_yr+1,proj_yr,sage,nage);
  	matrix comm_obsCatage(rep_yr+1,proj_yr,sage,nage);
  	matrix surv_obsCatage(1,surv_nobs,sage,nage);
@@ -630,6 +633,7 @@ FUNCTION move_grow_die
 
  	int svyr;
  	svyr = 1;
+
 	for(int i=rep_yr*tmon+1;i<=ststp;i++){
 		
 		calc_numbers_at_age(i,wt(indyr(i)));
@@ -738,8 +742,8 @@ FUNCTION void catage_comm(const int& ii)
 		
 		comm_obsCatage(ii)(sage,nage) = rmvlogistic(pa,tau_c,seed+ii);	
 		totcatch(ii) = 	sum(tot_comm_obsCatage(ii)(sage,nage));	
-		Ut(ii) = totcatch(ii)/tB(ii*(nmon-smon+1)-(nmon-smon));
-		itB(ii) = tB(ii*(nmon-smon+1)-(nmon-smon));
+		Ut(ii) = totcatch(ii)/tB(ii*tmon-(nmon-smon));
+		itB(ii) = tB(ii*tmon-(nmon-smon));
     	
 	
 	//cout<<"Ok after catage_comm"<< endl;	
