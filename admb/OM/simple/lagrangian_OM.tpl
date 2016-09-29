@@ -371,20 +371,15 @@ PRELIMINARY_CALCS_SECTION
 		incidence_functions();
 		initialization();
 		
-		
 		move_grow_die();
-		
-		
-
 	
 		run_projections();
 	
 		output_true();
-		output_dat();
 		
 		
 		
-
+	
 		exit(1);
 		//break;
 

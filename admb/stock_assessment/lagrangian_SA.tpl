@@ -247,7 +247,7 @@ DATA_SECTION
 	//vector tau_c(1,nations);
 	number tau_c;
 
-	!! ad_comm::change_datafile_name("lagrangian_SS.ctl");
+	!! ad_comm::change_datafile_name("lagrangian_SA.ctl");
 	
 	// |---------------------------------------------------------------------------------|
 	// | Control File - parameter intitial values and prior info
@@ -389,10 +389,10 @@ PARAMETER_SECTION
  	matrix Fatage(1,ntstp,sage,nage);
  	matrix Catage(1,ntstp,sage,nage);
 
- 	matrix yFatage(syr,nyr,sage,nage);
- 	matrix yNage(syr,nyr,sage,nage);
- 	matrix seltotal(syr,nyr,sage,nage);
- 	matrix yCatchtotalage(syr,nyr,sage,nage);
+ 	matrix yFatage(syr-20,nyr,sage,nage);
+ 	matrix yNage(syr-20,nyr,sage,nage);
+ 	matrix seltotal(syr-20,nyr,sage,nage);
+ 	matrix yCatchtotalage(syr-20,nyr,sage,nage);
 
 
  	
@@ -497,8 +497,6 @@ FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt )
             	}
 
 
-            	yNage(indyr(ii))(sage,nage) += Nage(ii)(sage,nage);
-
             	break;
         }
 		
@@ -582,8 +580,11 @@ FUNCTION incidence_functions
 	
 	maxPos.initialize();
 
-	lxo = mfexp(-m*age);
-	lxo(nage) /= 1. - mfexp(-m); 
+	lxo(sage)=1.;
+	for(int a = sage+1; a<= nage; a++){
+		lxo(a) = lxo(a-1)*mfexp(-m);
+	}	
+	lxo(nage) /= (1. - mfexp(-m)); 
 
 	Ro = mfexp(theta(5)(1));
 	h = theta(6)(1);
@@ -591,7 +592,7 @@ FUNCTION incidence_functions
 	sigma_r = theta(8)(1);
 
 	kappa 	= 4*h/(1-h);
-	phiE	= lxo*fa;
+	phiE	= elem_prod(lxo,fa)*wa;
 	So 		= kappa/phiE;
 	Bo 		= kappa/So*Ro;
 	beta 	= (kappa-1)/Bo;
@@ -624,6 +625,7 @@ FUNCTION initialization
  	Nage.initialize();
 
 
+
 	Nage(1,1) = So*Bo/(1+beta*Bo);
 
 	for(int i=sage+1 ; i <= nage ; i++)
@@ -632,9 +634,16 @@ FUNCTION initialization
 	}
 	Nage(1)(nage) /= (1.-mfexp(-za(nage)));
 
-	yNage(1)(sage,nage)= Nage(1)(sage,nage);
+
+	yNage(syr-20)(sage,nage)= Nage(1)(sage,nage);
+	
+	cout<<"aqui?"<<endl;
+
 	VulB(1) = elem_prod(elem_prod(Nage(1),va),wa);
+
+
 	SB(1) = elem_prod(Nage(1),fa)*wa/2;
+
 
 	maxPos.initialize();
 	tBo = Nage(1)*wa;
@@ -934,7 +943,7 @@ FUNCTION calc_spr
 	
 	for(ii=syr; ii<=nyr;ii++){
 
-		yFatage(ii)(sage,nage) = elem_div(yCatchtotalage(ii)(sage,nage),Nage(ii*smon-(smon-1))(sage,nage));
+		yFatage(ii)(sage,nage) = elem_div(yCatchtotalage(ii)(sage,nage),yNage(ii)(sage,nage));
 			
 		lz.initialize();
 		lz(sage) = 1.;
@@ -946,11 +955,6 @@ FUNCTION calc_spr
 		lz(nage) /=  value(1.-mfexp(-m-yFatage(ii)(nage)));
 
 		
-			//cout<<"Fatage(ii)(nage) is "<< Fatage(ii)(nage)<<endl;
-			//cout<<"lz is "<< lz<<endl;
-	
-
-
 		phie(ii)=elem_prod(lz,fa)*wa;
 		spr(ii)=phie(ii)/phiE;
 
@@ -978,7 +982,7 @@ FUNCTION calc_spr_optim
 
 	dvariable sol;
 
-
+	cout<<"chegou aqui?"<<endl;
 
 	for(it=1;it<=NF;it++)
 	{
@@ -990,9 +994,9 @@ FUNCTION calc_spr_optim
 		lz(sage) = 1.;
 
 		for(a=sage+1; a<=nage;a++){			
-			lz(a) = value(lz(a-1)*mfexp(-m-fage(a-1)));
+			lz(a) = (lz(a-1)*mfexp(-m-fage(a-1)));
 		}
-		lz(nage) /=  value(1.-mfexp(-m-fage(a-1)));
+		lz(nage) /=  (1.-mfexp(-m-fage(a-1)));
 
 		allphie(it)=elem_prod(lz,fa)*wa;
 		allspr(it)= value(allphie(it)/phiE);
@@ -1012,6 +1016,13 @@ FUNCTION calc_spr_optim
 		} 
 	}	
 	
+
+	ofstream ofs("spr.rep");
+
+	ofs<<"diffspr" << endl << diffspr <<endl;
+	ofs<<"allspr" << endl << allspr <<endl;
+	ofs<<"allphie" << endl << allphie <<endl;
+	ofs<<"phiE" << endl << phiE <<endl;
 	
 	
 

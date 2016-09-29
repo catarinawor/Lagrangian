@@ -13,7 +13,6 @@ source("read.admb.R")
 setwd("/Users/catarinawor/Documents/Lagrangian/admb/OM/simple")
 sim <- read.rep("lagrangian_OM.rep")
 
-
 #import data from iSCAM
 setwd("/Users/catarinawor/Documents/iSCAM/examples/hakelag/DATA")
 est <- read.rep("hakelag.rep")
@@ -28,10 +27,8 @@ est$ct
 mean(sim$Nage[sim$indmonth==1,1][71:100])
 
 
-
 plot(est$yr,sim$itB, type="l", lty=2)
 lines(est$yr,est$bt[1:30],lwd=2)
-
 
 
 
@@ -227,5 +224,20 @@ names(sim)
 par(mfrow=c(1,2))
 plot(apply(sim$yNage,1,sum), type="b",lwd=2)
 plot(sim$spr, type="b",lwd=2)
+
+
+
+
+setwd("/Users/catarinawor/Documents/Lagrangian/admb/OM/gtg")
+sim_gtg<-read.rep("lagrangian_OM_gtg.rep")
+
+names(sim_gtg)
+
+par(mfrow=c(1,2))
+plot(apply(sim_gtg$yNage,1,sum), type="b",lwd=2)
+plot(sim_gtg$spr, type="b",lwd=2)
+
+
+
 
 

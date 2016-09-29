@@ -418,12 +418,9 @@ PRELIMINARY_CALCS_SECTION
 	initialization();
 	move_grow_die();
 	
-
-	//clean_catage();
-	//
-	//output_true();
-	//output_dat();
-	//output_pin();
+	run_projections();
+	
+	output_true();
 	
 	exit(1);
 
@@ -467,11 +464,14 @@ FUNCTION dvar_vector calc_InitPos_gtg()
 FUNCTION incidence_functions
 
 	
-	lxo = mfexp(-m*age);
-	lxo(nage) /= 1. - mfexp(-m); 
+	lxo(sage)=1.;
+	for(int a = sage+1; a<= nage; a++){
+		lxo(a) = lxo(a-1)*mfexp(-m);
+	}	
+	lxo(nage) /= (1. - mfexp(-m)); 
 
 	kappa 	= 4*h/(1-h);
-	phiE	= lxo*fa;
+	phiE	= elem_prod(lxo,fa)*wa;
 	So 		= kappa/phiE;
 	Bo 		= kappa/So*Ro;
 	beta 	= (kappa-1)/Bo;
@@ -679,6 +679,7 @@ FUNCTION initialization
 		tnage(1)(sage,nage) += Nage(g)(1)(sage,nage);
 		tB(1) += Nage(g)(1)(sage,nage)*wa;
 		totB(g)(1)(sage,nage) = elem_prod(Nage(g)(1)(sage,nage),wa);
+		yNage(1)(sage,nage) += Nage(g)(1)(sage,nage);
 	}
 
 	
@@ -900,7 +901,8 @@ FUNCTION calc_spr
 
 
 		yFatage(ii)(sage,nage) = elem_div(yCatchtotalage(ii)(sage,nage),yNage(ii)(sage,nage));
-		
+		cout<<"yFatage "<<ii<<" is "<<yFatage(ii)(sage,nage)<<endl;
+
 		lz.initialize();
 		lz(sage) = 1.;
 		for(a=sage+1; a<=nage;a++){
@@ -914,6 +916,8 @@ FUNCTION calc_spr
 
 	
 	}
+
+	cout<<"spr is "<<spr<<endl;
 
 	
 	cout<<"Ok after calculating SPR"<<endl;
@@ -1017,8 +1021,19 @@ FUNCTION output_true
 	ofs<<"indyr"<< endl << indyr<<endl;
 	ofs<<"indmonth"<< endl << indmonth<<endl;
 	ofs<<"indnatarea"<< endl << indnatarea<<endl;
-	//ofs<<"propVBarea"<< endl << propVBarea <<endl;
 	ofs<<"propVBarea"<< endl << propVBarea <<endl;
+	ofs<<"selfisharea"<< endl << selfisharea <<endl;
+	ofs<<"selnation"<< endl << selnation <<endl;
+	ofs<<"seltotal"<< endl << seltotal <<endl;
+	ofs<<"yCatchtotalage"<< endl << yCatchtotalage <<endl;
+	ofs<<"yCatchNatAge"<< endl << yCatchNatAge <<endl;
+	ofs<<"yCatchStateAge"<< endl << yCatchStateAge <<endl;
+	ofs<<"yNage"<< endl << yNage <<endl;
+	ofs<<"Fatage"<< endl << Fatage <<endl;
+	ofs<<"yFatage"<< endl << yFatage <<endl;
+	ofs<<"spr"<< endl <<spr <<endl;
+	ofs<<"phie"<< endl <<phie <<endl;
+	ofs<<"phiE"<< endl <<phiE <<endl;
 
 
 
