@@ -275,6 +275,9 @@ DATA_SECTION
 		
 	END_CALCS
 
+	init_vector wt_ival(syr,nyr);
+	
+
 
 	// |---------------------------------------------------------------------------------|
 	// | VECTOR DIMENSIONS FOR NEGATIVE LOG LIKELIHOODS
@@ -291,6 +294,7 @@ DATA_SECTION
 
 INITIALIZATION_SECTION
  	 theta theta_ival;
+ 	 wt wt_ival;
 
 PARAMETER_SECTION
 
@@ -321,7 +325,7 @@ PARAMETER_SECTION
 	//init_number log_maxPos50;
 	//init_number log_maxPossd;
 
-	init_bounded_vector wt(syr,nyr,-3.0,3.0,3);
+	init_bounded_number_vector wt(syr,nyr,-3.0,3.0,4);
 
 	objective_function_value f;
 
@@ -360,6 +364,7 @@ PARAMETER_SECTION
 	vector za(sage,nage);
 	vector SB(1,ntstp);
 	vector tB(1,ntstp);
+	vector ytB(syr-20,nyr);
 	vector phie(syr,nyr);
 	vector spr(syr,nyr);
 
@@ -369,6 +374,7 @@ PARAMETER_SECTION
 	vector SSB(syr,nyr);
 	vector log_rt(syr,nyr);
 	vector delta(syr,nyr);
+	vector catlim(1,nations);
 	
 	vector it_hat(1,nItNobs);
 	vector epsilon(1,nItNobs);
@@ -452,7 +458,6 @@ FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt )
 		switch (indmonth(ii)) {
             case 1:           	
             	
-            	
             	//g_rt(indyr(ii)) = log_avgrec+ expwt;
             	Nage(ii)(sage) = mfexp(log_avgrec+ expwt);
             	//Nage(ii)(sage) = (So*SB(ii-nmon)/(1.+beta*SB(ii-nmon)))*(mfexp(expwt));
@@ -466,7 +471,7 @@ FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt )
 					{		
 						propBarea(rr) = (cnorm(areas(rr)+0.5,PosX(ii-1),varPos)-cnorm(areas(rr)-0.5,PosX(ii-1),varPos))(a-sage);	
 					}
-
+            	
 					Nage(ii)(a) = (Nage(ii-1)(a-1)*propBarea)*mfexp(-(m_tsp+q*Effarea(ii-1)*va(a-1))) +
 								  Nage(ii-1)(a-1)*(1-sum(propBarea))*mfexp(-(m_tsp));
 
@@ -478,6 +483,8 @@ FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt )
             					(Nage(ii-1)(nage-1)*(1.0-sum(propBarea))*mfexp(-m_tsp))/(1.-mfexp(-m_tsp));
 
             	yNage(indyr(ii))(sage,nage) = Nage(ii)(sage,nage);
+            	ytB(indyr(ii)) = Nage(ii)*wa;
+            	
 
             	break;
             	
@@ -503,7 +510,7 @@ FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt )
 		VulB(ii) = elem_prod(elem_prod(Nage(ii),va),wa);
 		SB(ii) = elem_prod(Nage(ii),fa)*wa/2.0;
 
-		cout<<"OK after calc_numbers_at_age"<<endl;		
+		//cout<<"OK after calc_numbers_at_age"<<endl;		
 
 FUNCTION void calc_effarea(const int& ii,const int& ie)
 
@@ -530,7 +537,7 @@ FUNCTION void calc_effarea(const int& ii,const int& ie)
 
 		}
 
-		cout<<"OK after calc_effarea"<<endl;		
+		//cout<<"OK after calc_effarea"<<endl;		
 
 FUNCTION void calc_position(const int& ii)
 
@@ -546,7 +553,7 @@ FUNCTION void calc_position(const int& ii)
 			NAreaAge(ii)(r) = elem_prod(Nage(ii)(sage,nage),(cnorm(areas(r)+0.5,PosX(ii),varPos)-cnorm(areas(r)-0.5,PosX(ii),varPos)));
 		}
 
-		cout<<"OK after calc_position"<<endl;
+		//cout<<"OK after calc_position"<<endl;
 
 
 FUNCTION void calc_catage(const int& ii)
@@ -572,7 +579,7 @@ FUNCTION void calc_catage(const int& ii)
 
 		}
 
-		cout<<"OK after calc_catage"<<endl;
+		//cout<<"OK after calc_catage"<<endl;
 
 
 
@@ -610,14 +617,13 @@ FUNCTION incidence_functions
     	TotEffyear(n)(syr,nyr) = Fmult* pTotEffyear(n)(syr,nyr);
     }
 
-    cout<<"OK after incidence_functions"<<endl;
+    //cout<<"OK after incidence_functions"<<endl;
 
 	
 	
 
 FUNCTION initialization
 	
-	dvariable tBo;
 
 	NAreaAge.initialize();
  	CatchAreaAge.initialize();
@@ -637,7 +643,7 @@ FUNCTION initialization
 
 	yNage(syr-20)(sage,nage)= Nage(1)(sage,nage);
 	
-	cout<<"aqui?"<<endl;
+	
 
 	VulB(1) = elem_prod(elem_prod(Nage(1),va),wa);
 
@@ -646,39 +652,39 @@ FUNCTION initialization
 
 
 	maxPos.initialize();
-	tBo = Nage(1)*wa;
+	tB(1) = Nage(1)*wa;
+	ytB(syr) = Nage(1)*wa;
 	
 	calcmaxpos();
 	
 	calc_position(1);
 	calc_effarea(1,itsp);
 
-	cout<<"OK after incidence_functions"<<endl;	
+	//cout<<"OK after initialization"<<endl;	
 	
 
 FUNCTION burn_in
 
-	dvariable tB;
+
 
 	for(int i=2;i<=itsp-1;i++)
 	{
 		
 		calc_numbers_at_age(i,0.0);	
 		
-		maxPos.initialize();
-		dvariable tB;	
-		tB = Nage(i)*wa;		
+		maxPos.initialize();	
+		tB(i) = Nage(i)*wa;		
 		calcmaxpos();
 
 		calc_position(i);	
 		calc_effarea(i,itsp);	
 		
 	}
+ 	//cout<<"OK after burn_in"<<endl;	
 
 
 FUNCTION move_grow_die
 
-	dvariable tB;
 
 	for(int i=itsp;i<=ntstp;i++)
 	{
@@ -689,7 +695,7 @@ FUNCTION move_grow_die
 		}
 		
 		maxPos.initialize();	
-		tB = Nage(i)*wa;		
+		tB(i) = Nage(i)*wa;		
 		calcmaxpos();	
 		calc_position(i);
 		calc_effarea(i,i);
@@ -781,19 +787,6 @@ FUNCTION calc_survey_ll
 	epsilon(1,nItNobs) = elem_div(zt,survBobs);
 
 
-       		//dvector pp(sage,nage);
-       		//pp.initialize();
-       		//for(int n=1;n<=fisharea;n++)
-			//{    
-			//	pp += value(CatchNatAge(ind_sv)(n)(sage,nage)); 			
-			//	//pp += value((CatchNatAge(ind_sv)(n)(sage,nage))/(sum(CatchNatAge(ind_sv)(n)(sage,nage))+0.01))+0.000001;
-			//}	
-			//dvector ppp(nage,sage);
-       		//ppp.initialize();
-       		//ppp = (pp)/sum(pp);
-			//surv_obsCatage(i)(sage,nage) = rmvlogistic(ppp,tau_survey,seed+i);
-      
-
 
 
 FUNCTION calc_obj_func
@@ -881,37 +874,12 @@ FUNCTION calc_obj_func
 			}
 	}
 
-	//switch(theta_prior(i))
-	//			{
-	//			case 1:		//normal
-	//				ptmp += dnorm(theta(i,j),theta_control(i,6),theta_control(i,7));
-	//				break;
-	//				
-	//			case 2:		//lognormal CHANGED RF found an error in dlnorm prior. rev 116
-	//				ptmp += dlnorm(theta(i,j),theta_control(i,6),theta_control(i,7));
-	//				break;
-	//				
-	//			case 3:		//beta distribution (0-1 scale)
-	//				double lb,ub;
-	//				lb=theta_lb(i);
-	//				ub=theta_ub(i);
-	//				ptmp += dbeta((theta(i,j)-lb)/(ub-lb),theta_control(i,6),theta_control(i,7));
-	//				break;
-	//				
-	//			case 4:		//gamma distribution
-	//				ptmp += dgamma(theta(i,j),theta_control(i,6),theta_control(i,7));
-	//				break;
-	//				
-	//			default:	//uniform density
-	//				ptmp += log(1./(theta_control(i,3)-theta_control(i,2)));
-	//				break;
-	//			}
-
 	
-
 
 	
 	f=sum(nlvec)+sum(npvec);
+
+	//cout<<"ok after calc_obj_func"<<endl;
 	//f=sum(nlvec)/10000;
 	
 
@@ -982,7 +950,6 @@ FUNCTION calc_spr_optim
 
 	dvariable sol;
 
-	cout<<"chegou aqui?"<<endl;
 
 	for(it=1;it<=NF;it++)
 	{
@@ -1019,12 +986,15 @@ FUNCTION calc_spr_optim
 
 	ofstream ofs("spr.rep");
 
+
 	ofs<<"diffspr" << endl << diffspr <<endl;
 	ofs<<"allspr" << endl << allspr <<endl;
 	ofs<<"allphie" << endl << allphie <<endl;
 	ofs<<"phiE" << endl << phiE <<endl;
 	
 	
+
+
 
 
 FUNCTION calc_selectivity
@@ -1052,11 +1022,22 @@ FUNCTION calc_selectivity
 		seltotal(i)(sage,nage) = elem_div(yCatchtotalage(i)(sage,nage),yNage(i)(sage,nage))/max(elem_div(yCatchtotalage(i)(sage,nage),yNage(i)(sage,nage)));
 	}
 
+FUNCTION TAC_input
+	
+	ofstream ofs("../OM/TAC_input.dat");
+	ofs<<"#fspr" << endl << fspr <<endl;
+	ofs<<"#seltotal" << endl << seltotal(nyr)(sage,nage) <<endl;	
+	ofs<<"#yNage" << endl << yNage(nyr)(sage,nage) <<endl;	
+	ofs<<"#Bo" << endl << Bo<<endl;
+	ofs<<"#ytB" << endl << ytB(nyr) <<endl;
+	
+
 
 
 REPORT_SECTION
 
 	calc_spr_optim();
+	TAC_input();
 
 	
 	REPORT(mo);

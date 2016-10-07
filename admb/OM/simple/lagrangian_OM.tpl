@@ -91,6 +91,8 @@ DATA_SECTION
 
 	init_int satype;
 
+	init_vector nationTACprop(1,nations);
+
 	init_int eof;
 	
 	
@@ -278,21 +280,21 @@ DATA_SECTION
        			
 	END_CALCS
 
-	!! ad_comm::change_datafile_name("catlim.txt");
+	//!! ad_comm::change_datafile_name("catlim.txt");
 	
-		init_vector catlim(1,nations);
-		init_int eoff;
+	//	init_vector catlim(1,nations);
+	//	init_int eoff;
 
-	LOC_CALCS
-		
-		if( eoff != 999 )
-		{
-			cout<<"Error reading catch limits\n Fix it."<<endl;
-			cout<< "eoff is: "<<eoff<<endl;
-			ad_exit(1);
-		}
-
-	END_CALCS
+	//LOC_CALCS
+	//	
+	//	if( eoff != 999 )
+	//	{
+	//		cout<<"Error reading catch limits\n Fix it."<<endl;
+	//		cout<< "eoff is: "<<eoff<<endl;
+	//		ad_exit(1);
+	//	}
+	//
+	//END_CALCS
 
 	
 
@@ -318,7 +320,7 @@ PARAMETER_SECTION
 	vector tB(1,ntstp);
 	vector survB(1,surv_nobs);
     
-	vector maxPos(sage,nage);
+	vector maxPos(sage,nage);;
 	vector varPos(sage,nage);
 	
 	vector itB(rep_yr+1,proj_yr);
@@ -327,6 +329,7 @@ PARAMETER_SECTION
 	vector spr(syr,proj_yr);
 	vector phie(syr,proj_yr);
 
+	vector catlim(1,nations);
 	
 
 	matrix Nage(1,ntstp,sage,nage);
@@ -488,7 +491,7 @@ FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt)
 		tB(ii) = Nage(ii)*wa;
 		//cout<<"Ok after calc_numbers_at_age"<< endl;
 
-FUNCTION void calc_effarea(const int& ii,const int& ia)
+FUNCTION void calc_effarea(const int& ii,const int& ia, const dvar_vector& ctlim)
 
 		dvar_vector tmp1(sarea,narea);
 		dvar_vector tmp2(sarea,narea);
@@ -496,7 +499,6 @@ FUNCTION void calc_effarea(const int& ii,const int& ia)
 		tmp2.initialize();
 
 		
-
 		for(int n=1; n<=nations;n++){
        		totVBnation(ii,n) = sum(pow(VBarea(ii)(ntmp1(n),ntmp1(n+1)-1.0) +0.00001,fbeta));
        	}
@@ -504,7 +506,7 @@ FUNCTION void calc_effarea(const int& ii,const int& ia)
 
 		for(int rr= sarea; rr<=narea; rr++)
 		{
-       		if(sum(CatchNatAge(ii)(indnatarea(rr))(sage,nage))<catlim(indnatarea(rr))){
+       		if(sum(yCatchNatAge(indyr(ii))(indnatarea(rr))(sage,nage))<ctlim(indnatarea(rr))){
 
 				tmp1(rr)= (pow(VBarea(ii)(rr)+0.00001,fbeta)/(totVBnation(ii,indnatarea(rr))+0.01)) * effPwr(rr);
 				tmp2(rr) = tmp1(rr)*TotEffyear(indfisharea(rr))(indyr(ia));
@@ -590,9 +592,10 @@ FUNCTION initialization
 	calcmaxpos();
 	calc_position(1);
 
+	dvar_vector catl(1,nations);
+	catl.fill("{100000000,100000000}");
 
-
-	calc_effarea(1,1);
+	calc_effarea(1,1,catl);
 
 
 	
@@ -605,6 +608,9 @@ FUNCTION initialization
 
 FUNCTION move_grow_die
 
+	dvar_vector catl(1,nations);
+	catl.fill("{100000000,100000000}");
+
 	for(int ie=2;ie<=(rep_yr*tmon);ie++)
 	{ 
 		calc_numbers_at_age(ie,0.0);
@@ -614,8 +620,9 @@ FUNCTION move_grow_die
 
 		//cout<<"maxPos "<<maxPos<<endl;
 		calc_position(ie);
+
 	
-		calc_effarea(ie,ie);
+		calc_effarea(ie,ie,catl);
 		
 		calc_catage(ie);
 		
@@ -640,7 +647,7 @@ FUNCTION move_grow_die
 		//cout<<"maxPos "<<maxPos<<endl;
 		calc_position(i);
 	
-		calc_effarea(i,i);		
+		calc_effarea(i,i,catl);		
 
 		calc_catage(i);
 
@@ -773,7 +780,7 @@ FUNCTION  void survey_data(const int& ii)
        	//}	
 	
 			
-    cout<<"Ok after survey_data"<< endl;
+    //cout<<"Ok after survey_data"<< endl;
 
     
 
@@ -845,7 +852,7 @@ FUNCTION calc_spr
 	}
 
 	
-	cout<<"Ok after calculating SPR"<<endl;
+	//cout<<"Ok after calculating SPR"<<endl;
 
 //FUNCTION calc_spr_optim
 
@@ -910,9 +917,15 @@ FUNCTION run_projections
 		if(ib==surv_yrs(svyr)) svyr++;
 	}
 
+	catage_comm(nyr);
+	run_stock_assessment(nyr,svyr-1);
+	calc_catlim();
+	read_catlim();
+
 
 	for(int ii=ststp+1;ii<=ntstp;ii++)
 	{ 
+
 
 		calc_numbers_at_age(ii,wt(indyr(ii-(30*tmon))));
 		maxPos.initialize();		
@@ -921,17 +934,14 @@ FUNCTION run_projections
 		//cout<<"maxPos "<<maxPos<<endl;
 		calc_position(ii);
 	
-		calc_effarea(ii,ststp);
+		calc_effarea(ii,ststp,catlim);
 
 		calc_catage(ii);
 		clean_catage(ii);
 
-		cout<<"ii is "<<ii<<endl;
-		cout<<"Nage "<<Nage(ii)(sage,nage)<<endl;
-		
-
 		if(indmonth(ii)==nmon){
 			//survey calculations
+
 
 			if(surv_yrs(svyr)==indyr(ii)){
 				survey_data(svyr);
@@ -939,25 +949,85 @@ FUNCTION run_projections
 			}
 			
 			catage_comm(indyr(ii));
-			//run_stock_assessment(indyr(ii),svyr-1);
+			run_stock_assessment(indyr(ii),svyr-1);
+			calc_catlim();
+			read_catlim();
+
+			exit(1);
 		}
-		
-		
-
-		
-		//calc_spr_optim();
-
-
-		//write_iscam_data_file();
-		//output_pin();
-		
-
 		
 		
 	}
 
 	calc_spr();
 	
+
+FUNCTION read_catlim
+
+	cifstream ifs_clm("../TAC_input.dat");
+
+	// Terminal year of projection.
+    ifs_clm >> catlim;
+    
+
+
+
+FUNCTION calc_catlim
+
+	
+	//variables
+
+	double fspr_SA;
+	dvar_vector seltotal_SA(sage,nage);
+	dvar_vector yNage_SA(sage,nage);
+	double Bo_SA;
+	double ytB_SA;
+	
+
+	cifstream ifs_cip("../TAC_input.dat");
+	
+    ifs_cip >> fspr_SA;
+    ifs_cip >> seltotal_SA;
+    ifs_cip >> yNage_SA;
+    ifs_cip >> Bo_SA;
+    ifs_cip >> ytB_SA;
+
+    
+    //calculate new catlim
+	double BBo;
+	dvariable TAC;
+	//dvector TACnation(1,nations);
+
+
+	BBo = ytB_SA/Bo_SA;
+
+	if(BBo>0.4){
+
+		TAC = elem_prod(elem_div(fspr_SA*seltotal_SA,fspr_SA*seltotal_SA+m),elem_prod(yNage_SA,(1-mfexp(-fspr_SA*seltotal_SA+m))))*wa; 
+
+	}else{
+		
+		if(BBo>0.1){
+
+			double y;
+
+			y = (BBo-0.1)*100/(0.4-0.1);
+
+			TAC = y*elem_prod(elem_div(fspr_SA*seltotal_SA,fspr_SA*seltotal_SA+m),elem_prod(yNage_SA,(1-mfexp(-fspr_SA*seltotal_SA+m))))*wa; 
+
+		}else{
+
+			TAC = 0;
+
+		}
+	}
+
+	catlim = TAC * nationTACprop;
+
+	ofstream afs("catlim.txt");
+	afs<<"catlim" << endl << catlim <<endl;
+
+
 
 
 
@@ -1143,6 +1213,42 @@ FUNCTION output_dat
 	afs<<"# tstp month area catage " << endl << obsCatchNatAge <<endl;	
 	afs<<"# eof " << endl << 999 <<endl;
 	
+FUNCTION void output_ctlSA(const int& i)
+
+	int curr_yr;
+
+	curr_yr = i-nyr;	
+
+	 
+	ofstream cfs("../../stock_assessment/lagrangian_SA.ctl");
+	cfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##" << endl;
+	cfs<<"## CONTROL FILE - stolen from iSCAM                                                     ##" << endl;	
+	cfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##" << endl;
+	cfs<<"## CONTROLS FOR LEADING PARAMETERS                                                      ##" << endl;
+	cfs<<"##  Prior descriptions:                                                                 ##" << endl; 
+	cfs<<"##                      -0 uniform      (0,0)                                           ##" << endl;
+	cfs<<"##                      -1 normal       (p1=mu,p2=sig)                                  ##" << endl;
+	cfs<<"##                      -2 lognormal    (p1=log(mu),p2=sig)                             ##" << endl;
+	cfs<<"##                      -3 beta         (p1=alpha,p2=beta)                              ##" << endl;
+	cfs<<"##                      -4 gamma        (p1=alpha,p2=beta)                              ##" << endl;
+	cfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##" << endl;
+	cfs<<"# npar " << endl << 8 <<endl;
+	cfs<<"##" <<endl;
+	cfs<<"## ival         lb      ub      phz     prior   p1      p2        #parameter            ##" << endl;
+	cfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##" << endl;
+   	cfs<<1.098612 	<<"\t"<<  0.0  <<"\t"<<  1.8  <<"\t"<< 3 <<"\t"<< 0 <<"\t"<<  0.0 	<<"\t"<<  1.8  	<<"\t"<< "#log_mo"	 	<<endl;        
+   	cfs<<-2.30 		<<"\t"<< -3.0  <<"\t"<< -0.01 <<"\t"<< 3 <<"\t"<< 0 <<"\t"<< -3.0 	<<"\t"<< -0.01 	<<"\t"<< "#log_cvPos"	<<endl; 
+   	cfs<<1.6 		<<"\t"<<  1.0  <<"\t"<<  2.1  <<"\t"<< 3 <<"\t"<< 2 <<"\t"<<  0.47	<<"\t"<<  0.05 	<<"\t"<< "#log_maxPos50"<<endl;
+   	cfs<<0.5 		<<"\t"<< -0.4  <<"\t"<<  1.4  <<"\t"<< 3 <<"\t"<< 0 <<"\t"<< -0.4 	<<"\t"<<  1.4  	<<"\t"<< "#log_maxPossd"<<endl;     
+   	cfs<<0.9805792 	<<"\t"<< -0.7  <<"\t"<<  3.0  <<"\t"<< 1 <<"\t"<< 1 <<"\t"<<  1.0 	<<"\t"<<  0.2 	<<"\t"<< "#log_Ro "		<<endl;
+   	cfs<<0.862 		<<"\t"<<  0.2  <<"\t"<<  1.0  <<"\t"<< 1 <<"\t"<< 3 <<"\t"<<  9.909 <<"\t"<<  2.959 <<"\t"<< "#h"			<<endl; 		
+   	cfs<<2.0 		<<"\t"<< -0.7  <<"\t"<<  6.0  <<"\t"<< 2 <<"\t"<< 0 <<"\t"<< -0.7 	<<"\t"<<  6.0 	<<"\t"<< "#log_avgrec"	<<endl;
+   	cfs<<10.4909967 <<"\t"<<  0.01 <<"\t"<<  10.0 <<"\t"<< 1 <<"\t"<< 2 <<"\t"<<  1.6 	<<"\t"<<  0.5 	<<"\t"<< "#sigma_r "	<<endl;        
+	cfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##" << endl;
+   	cfs<<"##" <<endl;
+   	cfs<<"## wt_ival" << endl << wt <<"\t"<< wt(nyr+1-30,i-30) <<endl;
+   	cfs<<"##" <<endl;
+
 	
 FUNCTION void output_datSA(const int& ii,const int& svy)
 
@@ -1307,13 +1413,12 @@ FUNCTION void run_stock_assessment(const int& ii,const int& svy)
 
             output_pin_SA();
             output_datSA(ii,svy);
-
-            exit(1);
+            output_ctlSA(ii);
 
             #if defined __APPLE__ || defined __linux
             // cout<<m_est_fmsy<<endl;
             
-            system("cd ../../stock_assessment/ && ./lagrangian_SS");
+            system("cd ../../stock_assessment/ && ./lagrangian_SA");
 
             #endif
 

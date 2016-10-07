@@ -238,6 +238,28 @@ plot(apply(sim_gtg$yNage,1,sum), type="b",lwd=2)
 plot(sim_gtg$spr, type="b",lwd=2)
 
 
+setwd("/Users/catarinawor/Documents/Lagrangian/admb/stock_assessment")
+SA<-read.rep("lagrangian_SA.rep")
+
+sprSA<-read.rep("spr.rep")
+
+names(sprSA)
+fs<-seq(length=4001, by=0.001)
+plot(fs,sprSA$diffspr)
+
+
+names(SA)
+
+SA$fspr
+SA$spr_opt
+
+
+par(mfrow=c(1,2))
+plot(apply(sim_gtg$yNage,1,sum), type="b",lwd=2)
+plot(sim_gtg$spr, type="b",lwd=2)
+
+
+
 
 
 
