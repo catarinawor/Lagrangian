@@ -953,7 +953,10 @@ FUNCTION run_projections
 			calc_catlim();
 			read_catlim();
 
-			exit(1);
+			system("cd ../../../R/read_mse && make");
+
+
+			//exit(1);
 		}
 		
 		
