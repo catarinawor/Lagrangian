@@ -13,9 +13,10 @@
 OM=lagrangian_OM
 SIMDAT=lagrangian_OM.dat
 SEED = ../../seed.txt
-LAST := 100
+LAST := 20
 SADIR= /Users/catarinawor/Documents/iSCAM/examples/hakelag/DATA
 
+NUMBERS := $(shell seq 1 ${LAST})
 
 all: 
 	compiOM rom 
@@ -24,10 +25,12 @@ compiOM: $(OM)
 	admb $(OM)
 
 
-rom: $(OM) $(SIMDAT) $(ARG) $(SEED)
-	-./$(OM) -ind $(SIMDAT) $(ARG)
+rom: $(OM) $(SIMDAT) 
+	-./$(OM) -ind $(SIMDAT)
 
- 
+
+
+simeval: $(foreach var,$(NUMBERS), $(MAKE) rom;)
 
 clean: 
 	-rm -f  admodel.* variance eigv.rpt fmin.log variance *.b01 *.p01 *.r01 *.eva *.bar *.log *.htp *.cor *.obj *.p02 *.b02 *.par *.r02 *.rep $(OM).cpp

@@ -739,8 +739,8 @@ FUNCTION void catage_comm(const int& ii)
        		pa.initialize();
       
     
-		//pa = value((tot_comm_obsCatage(ii)(sage,nage))/(sum(tot_comm_obsCatage(ii)(sage,nage))+0.01))+0.000001;			
-		pa = value((tot_comm_obsCatage(ii)(sage,nage))/(sum(tot_comm_obsCatage(ii)(sage,nage))));			
+		pa = value((tot_comm_obsCatage(ii)(sage,nage))/(sum(tot_comm_obsCatage(ii)(sage,nage))+0.01))+0.000001;			
+		//pa = value((tot_comm_obsCatage(ii)(sage,nage))/(sum(tot_comm_obsCatage(ii)(sage,nage))));			
 		
 		comm_obsCatage(ii)(sage,nage) = rmvlogistic(pa,tau_c,seed+ii);	
 		totcatch(ii) = 	sum(tot_comm_obsCatage(ii)(sage,nage));	
@@ -775,7 +775,7 @@ FUNCTION  void survey_data(const int& ii)
 			}	
 			dvector ppp(nage,sage);
        		ppp.initialize();
-       		ppp = (pp)/sum(pp);
+       		ppp = ((pp)/(sum(pp)+0.01))+0.000001;
 			surv_obsCatage(ii)(sage,nage) = rmvlogistic(ppp,tau_survey,seed+ii);
        	//}	
 	
@@ -906,6 +906,70 @@ FUNCTION calc_spr
 	//	} 
 	//}	
 	
+FUNCTION void run_stock_assessment(const int& ii,const int& svy)
+		
+	cout<<"running stock assessment"<<endl;
+
+	switch (satype) {
+            case 1:  
+
+            output_pin_SA();
+            output_datSA(ii,svy);
+            output_ctlSA(ii);
+
+            #if defined __APPLE__ || defined __linux
+            // cout<<m_est_fmsy<<endl;
+            
+            system("cd ../../stock_assessment/ && ./lagrangian_SA");
+
+            #endif
+
+            #if defined _WIN32 || defined _WIN64
+
+            system("lagrangian_SS.exe");
+
+            #endif
+
+            calc_catlim();
+			read_catlim();
+
+			system("cd ../../../R/read_mse && make");
+
+            break;
+
+            case 2:
+
+            cout<<"survB(1,10)"<<survB(1,10)<<endl;
+
+            write_iscam_data_file(ii,svy);
+
+            
+
+            #if defined __APPLE__ || defined __linux
+            // cout<<m_est_fmsy<<endl;
+            system("cd /Users/catarinawor/Documents/iSCAM/examples/hakelag/DATA && make clean && make");// && "exec make");
+           
+            #endif
+
+            calc_catlim();
+			read_catlim();
+
+			system("cd ../../../R/read_mse && make readRdattwo");
+
+
+            //need to figure out how to write the winows version of this
+            //#if defined _WIN32 || defined _WIN64
+
+            //system("lagrangian_SS.exe");
+
+            //#endif
+
+
+
+             break;
+
+         }
+
 
 FUNCTION run_projections
 
@@ -919,8 +983,8 @@ FUNCTION run_projections
 
 	catage_comm(nyr);
 	run_stock_assessment(nyr,svyr-1);
-	calc_catlim();
-	read_catlim();
+	//calc_catlim();
+	//read_catlim();
 
 
 	for(int ii=ststp+1;ii<=ntstp;ii++)
@@ -950,10 +1014,10 @@ FUNCTION run_projections
 			
 			catage_comm(indyr(ii));
 			run_stock_assessment(indyr(ii),svyr-1);
-			calc_catlim();
-			read_catlim();
+			//calc_catlim();
+			//read_catlim();
 
-			system("cd ../../../R/read_mse && make");
+			//system("cd ../../../R/read_mse && make");
 
 
 			//exit(1);
@@ -1032,6 +1096,8 @@ FUNCTION calc_catlim
 
 
 
+
+         
 
 
 FUNCTION output_true
@@ -1303,9 +1369,8 @@ FUNCTION void output_datSA(const int& ii,const int& svy)
 	}
 	mfs<<"# eof " << endl << 999 <<endl;
 
-FUNCTION void write_iscam_data_file(const int& ii,const int& svy)
 
-	
+FUNCTION void write_iscam_data_file(const int& ii,const int& svy)
 
 	ofstream ufs("/Users/catarinawor/Documents/iSCAM/examples/hakelag/DATA/hakelag.dat");
 	ufs<<"# DATA FILE FOR iSCAM  " << endl;
@@ -1406,61 +1471,9 @@ FUNCTION void write_iscam_data_file(const int& ii,const int& svy)
 	ufs<< 999 <<endl;                                
 	
 
-FUNCTION void run_stock_assessment(const int& ii,const int& svy)
-	
-	
-	cout<<"running stock assessment"<<endl;
-
-	switch (satype) {
-            case 1:  
-
-            output_pin_SA();
-            output_datSA(ii,svy);
-            output_ctlSA(ii);
-
-            #if defined __APPLE__ || defined __linux
-            // cout<<m_est_fmsy<<endl;
-            
-            system("cd ../../stock_assessment/ && ./lagrangian_SA");
-
-            #endif
-
-            #if defined _WIN32 || defined _WIN64
-
-            system("lagrangian_SS.exe");
-
-            #endif
-
-            break;
-
-            case 2:
-
-            cout<<"survB(1,10)"<<survB(1,10)<<endl;
-
-            write_iscam_data_file(ii,svy);
-
-            
-
-            #if defined __APPLE__ || defined __linux
-            // cout<<m_est_fmsy<<endl;
-            system("cd /Users/catarinawor/Documents/iSCAM/examples/hakelag/DATA && make clean && make");// && "exec make");
-           
-            #endif
-
-            //need to figure out how to write the winows version of this
-            //#if defined _WIN32 || defined _WIN64
-
-            //system("lagrangian_SS.exe");
-
-            //#endif
+	cout<<"end of iscam data file"<<endl;
 
 
-
-             break;
-
-         }
-
-         
 
 
 
