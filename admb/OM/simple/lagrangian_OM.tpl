@@ -379,8 +379,9 @@ PRELIMINARY_CALCS_SECTION
 		run_projections();
 	
 		output_true();
+
 		
-		
+		save_OMrep();
 		
 	
 		exit(1);
@@ -939,8 +940,6 @@ FUNCTION void run_stock_assessment(const int& ii,const int& svy)
 
             case 2:
 
-            cout<<"survB(1,10)"<<survB(1,10)<<endl;
-
             write_iscam_data_file(ii,svy);
 
             
@@ -1026,7 +1025,10 @@ FUNCTION run_projections
 		
 	}
 
+
 	calc_spr();
+
+	//system("cd ../../../R/read_mse && make");;
 	
 
 FUNCTION read_catlim
@@ -1036,6 +1038,12 @@ FUNCTION read_catlim
 	// Terminal year of projection.
     ifs_clm >> catlim;
     
+
+FUNCTION save_OMrep
+
+	system("cd ../../../R/read_mse && make readROM");
+	// Terminal year of projection.
+   
 
 
 
