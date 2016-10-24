@@ -13,7 +13,7 @@
 #iSCAM plots
 #
 
-
+ 
 DIR<-"/Users/catarinawor/Documents/Lagrangian/R/read_mse/result"
 setwd(DIR)
 iSCAMdir<-list.files(DIR,pattern="runiSCAM",full.name=TRUE)
