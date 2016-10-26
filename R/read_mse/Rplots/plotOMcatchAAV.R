@@ -1,8 +1,8 @@
 #==============================================
-#Title:plotOMcatch
+#Title:plotOMcatchAAV
 #Author: Catarina Wor
 #date: Oct 21th 2016
-#Function to plot realized catches from OM runs
+#Function to plot realized AAV from OM runs
 # code adapted from iSCAM stuff (Martell et al)
 #==============================================
 
@@ -80,7 +80,7 @@ plotOMCICatchAAV <- function( M )
 	mdf$AAV[mdf$Year==yrs[1]]<-0
 	for(y in 2:length(yrs)){
 
-		mdf$AAV[mdf$Year==yrs[y]]<-(mdf$Catch[mdf$Year==yrs[y]]-mdf$Catch[mdf$Year==yrs[y-1]])/(mdf$Catch[mdf$Year==yrs[y]]+mdf$Catch[mdf$Year==yrs[y-1]])
+		mdf$AAV[mdf$Year==yrs[y]]<-abs(mdf$Catch[mdf$Year==yrs[y]]-mdf$Catch[mdf$Year==yrs[y-1]])/(mdf$Catch[mdf$Year==yrs[y]]+mdf$Catch[mdf$Year==yrs[y-1]])
 	}
 
 	cdf<-data.frame(Model=mdf$Model, Year=mdf$Year, AAV=mdf$AAV, Nation=mdf$Nation)
