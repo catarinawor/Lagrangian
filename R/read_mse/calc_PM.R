@@ -19,7 +19,7 @@ setwd(DIR)
 iSCAMdir<-list.files(DIR,pattern="runiSCAM",full.name=TRUE)
 
 plotlib<-"/Users/catarinawor/Documents/Lagrangian/R/read_mse/Rplots"
-.RFILES     <- list.files(.LIB,pattern="\\.[Rr]$")
+#.RFILES     <- list.files(.LIB,pattern="\\.[Rr]$")
 
 OMdat<-list()
 SAdat<-list()

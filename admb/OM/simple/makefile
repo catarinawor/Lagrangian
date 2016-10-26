@@ -13,7 +13,7 @@
 OM=lagrangian_OM
 SIMDAT=lagrangian_OM.dat
 SEED = ../../seed.txt
-LAST := 30
+LAST := 3
 SADIR= /Users/catarinawor/Documents/iSCAM/examples/hakelag/DATA
 
 NUMBERS := $(shell seq 1 ${LAST})

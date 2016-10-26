@@ -27,7 +27,11 @@ plotOMBiomass <- function( M )
 	p <- p + theme_bw(11)
 	print(p)
 
+}
 
+plotOMCIBiomass <- function( M )
+{
+	cat("plotOMCIBiomass")
 
 	cib <- data.frame(M[[1]]$"ytB")
 

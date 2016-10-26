@@ -87,7 +87,7 @@ DATA_SECTION
 
 	init_vector effPwr(sarea,narea);
 
-	init_vector wt(rep_yr+1,nyr);
+	init_vector wt(rep_yr+1,proj_yr);
 
 	init_int satype;
 
@@ -361,8 +361,8 @@ PARAMETER_SECTION
  	3darray NAreaAge(1,ntstp,sarea,narea,sage,nage);
  	3darray CatchAreaAge(1,ntstp,sarea,narea,sage,nage);
  	3darray CatchNatAge(1,ntstp,1,fisharea,sage-2,nage);
- 	3darray yCatchNatAge(syr,proj_yr,1,fisharea,sage,nage);
- 	3darray yCatchStateAge(syr,proj_yr,1,nations,sage,nage);
+ 	3darray yCatchNatAge(syr,proj_yr,1,fisharea,sage-2,nage);
+ 	3darray yCatchStateAge(syr,proj_yr,1,nations,sage-2,nage);
  	//3darray EffNatAge(1,fisharea,1,ntstp,sage-2,nage);
 
  	matrix obsCatchNatAge(1,tot_pcat,sage-3,nage);
@@ -563,8 +563,15 @@ FUNCTION void calc_catage(const int& ii)
 			}
 			
 			Catage(ii)(sage,nage) += CatchAreaAge(ii)(r)(sage,nage);
+			yCatchNatAge(indyr(ii))(indfisharea(r))(sage-2) = indyr(ii);
+			yCatchNatAge(indyr(ii))(indfisharea(r))(sage-1) = indfisharea(r);
 			yCatchNatAge(indyr(ii))(indfisharea(r))(sage,nage) += CatchAreaAge(ii)(r)(sage,nage);			
+			
+			yCatchStateAge(indyr(ii))(indnatarea(r))(sage-2) = indyr(ii);
+			yCatchStateAge(indyr(ii))(indnatarea(r))(sage-1) = indnatarea(r);
 			yCatchStateAge(indyr(ii))(indnatarea(r))(sage,nage) += CatchAreaAge(ii)(r)(sage,nage);
+			
+
 			yCatchtotalage(indyr(ii))(sage,nage) += CatchAreaAge(ii)(r)(sage,nage);
 		}
 		//cout<<"Ok after calc_catage"<< endl;
@@ -995,7 +1002,7 @@ FUNCTION run_projections
 	{ 
 
 
-		calc_numbers_at_age(ii,wt(indyr(ii-(30*tmon))));
+		calc_numbers_at_age(ii,wt(indyr(ii)));
 		maxPos.initialize();		
 		calcmaxpos();
 
@@ -1336,7 +1343,7 @@ FUNCTION void output_ctlSA(const int& i)
    	cfs<<10.4909967 <<"\t"<<  0.01 <<"\t"<<  10.0 <<"\t"<< 1 <<"\t"<< 2 <<"\t"<<  1.6 	<<"\t"<<  0.5 	<<"\t"<< "#sigma_r "	<<endl;        
 	cfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##" << endl;
    	cfs<<"##" <<endl;
-   	cfs<<"## wt_ival" << endl << wt <<"\t"<< wt(nyr+1-30,i-30) <<endl;
+   	cfs<<"## wt_ival" << endl << wt(rep_yr+1,i) <<endl;
    	cfs<<"##" <<endl;
 
 	
@@ -1409,7 +1416,7 @@ FUNCTION void write_iscam_ctl_file(const int& ii,const int& svy)
 	mfs<<"## npar"<<endl<< "7"<< endl;
 	mfs<<"## ival         lb      ub      phz     prior   p1      p2        #parameter            ##"<< endl;
 	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
-	mfs<< 0.9805792  <<"\t"<<  -3 <<"\t"<< 3.0  <<"\t"<< 1  <<"\t"<< 1  <<"\t"<<  1.2 	 <<"\t"<<  0.3   <<"\t"<<"#log_ro   ##"<<endl;
+	mfs<< 0.9805792  <<"\t"<<  -3 <<"\t"<< 5.0  <<"\t"<< 1  <<"\t"<< 1  <<"\t"<<  1.2 	 <<"\t"<<  0.4   <<"\t"<<"#log_ro   ##"<<endl;
    	mfs<< 0.862 	 <<"\t"<<  0.2 <<"\t"<< 1.0  <<"\t"<< 2  <<"\t"<< 3  <<"\t"<<  9.909 <<"\t"<< 2.959  <<"\t"<<"#steepness    ##"<<endl;
    	mfs<< -1.537117  <<"\t"<< -4.0 <<"\t"<< 0.0  <<"\t"<< -3 <<"\t"<< 1  <<"\t"<< -1.609 <<"\t"<< 0.1    <<"\t"<<"#log_m g&b    ##"<<endl;
    	mfs<< 2.0  		 <<"\t"<< -4.0 <<"\t"<< 10.0 <<"\t"<< 4  <<"\t"<< 0  <<"\t"<< -3.0 	 <<"\t"<< 10.0   <<"\t"<<"#log_avgrec   ##"<<endl;
