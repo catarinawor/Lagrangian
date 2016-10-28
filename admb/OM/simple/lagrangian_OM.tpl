@@ -52,11 +52,24 @@ DATA_SECTION
 	init_number fe;
 	init_number q;
 	init_number fbeta;
-	init_number sigR;		
+	init_number sigR;	
+
+	
+
+
 	
 	init_number tau_c; 
 	init_number tau_survey; 		
 	init_number err;
+
+
+	//======================
+	//length parameters -- fixed
+	//======================
+	init_number Linf;
+	init_number vbk;
+	init_number to;
+
 
 	//======================
 	//Survey input - how to project these quantities??
@@ -323,7 +336,7 @@ PARAMETER_SECTION
 	vector tB(1,ntstp);
 	vector survB(1,surv_nobs);
     
-	vector maxPos(sage,nage);;
+	vector maxPos(sage,nage);
 	vector varPos(sage,nage);
 	
 	vector ytB(rep_yr+1,proj_yr);
@@ -571,7 +584,6 @@ FUNCTION void calc_catage(const int& ii)
 			yCatchStateAge(indyr(ii))(indnatarea(r))(sage-1) = indnatarea(r);
 			yCatchStateAge(indyr(ii))(indnatarea(r))(sage,nage) += CatchAreaAge(ii)(r)(sage,nage);
 			
-
 			yCatchtotalage(indyr(ii))(sage,nage) += CatchAreaAge(ii)(r)(sage,nage);
 		}
 		//cout<<"Ok after calc_catage"<< endl;
@@ -793,7 +805,10 @@ FUNCTION  void survey_data(const int& ii)
 			
     //cout<<"Ok after survey_data"<< endl;
 
-    
+
+FUNCTION calc_length_comps
+
+
 
 
 
@@ -1127,13 +1142,13 @@ FUNCTION output_true
 	
 	ofstream ofs("lagrangian_OM.rep");
 
+	ofs<<"OM type" << endl << "gtg" <<endl;
 	ofs<<"seed" << endl << seed <<endl;
 	ofs<<"mo" << endl << mo <<endl;
 	ofs<<"tau_c" << endl << tau_c<<endl;
 	ofs<<"maxPos50" << endl << maxPos50 <<endl;
 	ofs<<"maxPossd" << endl << maxPossd <<endl;
 	ofs<<"cvPos" << endl << cvPos <<endl;
-	ofs<<"seed"<< endl << seed <<endl;
 	ofs<<"syr" << endl << syr <<endl;
 	ofs<<"nyr" << endl << nyr <<endl;
 	ofs<<"rep_yr" << endl << rep_yr <<endl;

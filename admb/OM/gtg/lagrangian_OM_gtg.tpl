@@ -14,11 +14,12 @@ DATA_SECTION
 	int seed;
 
 	LOC_CALCS
-		ifstream ifs( "seed.txt" ); // if this file is available
+		ifstream ifs( "../../seed.txt" ); // if this file is available
 		ifs>>seed; //read in the seed
 		seed += 10; // add 1 to the seed
-		ofstream ofs( "seed.txt" ); //put out to seed.txt
+		ofstream ofs( "../../seed.txt" ); //put out to seed.txt
 		ofs<<seed<<endl; //the new value of the seed
+		cout<<"seed"<<seed<<endl;
 	END_CALCS
 
 	//======================
@@ -61,6 +62,13 @@ DATA_SECTION
 	init_number tau_survey;		
 	init_number err;
 
+	//======================
+	//length parameters -- fixed
+	//======================
+	init_vector Linf(1,ngroup);
+	init_number vbk;
+	init_number to;
+
 
 	//======================
 	//Survey input 
@@ -92,10 +100,11 @@ DATA_SECTION
 
 	init_vector effPwr(sarea,narea);
 
-	init_vector wt(rep_yr+1,nyr);
+	init_vector wt(rep_yr+1,proj_yr);
 
 	init_int satype;
 
+	init_vector nationTACprop(1,nations);
 
 	init_int eof;
 	
@@ -105,7 +114,7 @@ DATA_SECTION
 		
 		if( eof != 999 )
 		{
-			cout<<"va "<<va<<endl;
+			cout<<"Linf "<<Linf<<endl;
 			cout<<"effPwr "<<effPwr<<endl;
 			cout<<"Error reading data.\n Fix it."<<endl;
 			cout<< "eof is: "<<eof<<endl;
@@ -157,9 +166,6 @@ DATA_SECTION
 		tmon = nmon-smon+1;
 		ststp =	tmon * (nyr-syr+1);
 		ntstp = tmon * (proj_yr-syr+1);
-
-
-		//ntstp = (nmon-smon+1) * (nyr-syr+1);
 		age.fill_seqadd(sage,1);
 		areas.fill_seqadd(sarea,1);
 		nationareas.initialize();
@@ -313,26 +319,13 @@ DATA_SECTION
 				Xini(g) = delta*((g)-ngroup/2.0);
 			}	
 
+			ofstream nfs("catlim.txt");
+			nfs<<"catlim" << endl << "100000 100000" <<endl;
 			
        			
 	END_CALCS
 
-	!! ad_comm::change_datafile_name("catlim.txt");
 	
-		init_vector catlim(1,nations);
-		init_int eoff;
-
-	LOC_CALCS
-		
-		if( eoff != 999 )
-		{
-			cout<<"Error reading catch limits\n Fix it."<<endl;
-			cout<< "eoff is: "<<eoff<<endl;
-			ad_exit(1);
-		}
-
-	END_CALCS
-
 
 
 PARAMETER_SECTION
@@ -341,10 +334,10 @@ PARAMETER_SECTION
 
 	//derived quantities
 	number kappa;
-	number phiE;
 	number So;
 	number Bo
 	number beta;
+	number phiE;
 
 	number m_tsp;
 	
@@ -359,25 +352,22 @@ PARAMETER_SECTION
 	vector varPosg(sage,nage);
 	vector prop_ng(1,ngroup);
 
-	vector itB(rep_yr+1,proj_yr);
+	vector ytB(rep_yr+1,proj_yr);
 	vector totcatch(rep_yr+1,proj_yr);
 	vector Ut(rep_yr+1,proj_yr);
 	vector spr(syr,proj_yr);
 	vector phie(syr,proj_yr);
 
+	vector catlim(1,nations);
 
-	//matrix maxPos(1,ngroup,sage,nage);
-	//matrix varPos(1,ngroup,sage,nage);
+
 	matrix Catage(1,ntstp,sage,nage);
 	matrix Fatage(1,ntstp,sage,nage);
  	matrix meanPosX(1,ntstp,sage-1,nage);
  	matrix tVBarea(1,ntstp,sarea,narea);
-	matrix NationVulB(1,ntstp,1,nations);
+	matrix totVBnation(1,ntstp,1,nations);
 	matrix VulBage(1,ntstp,sage,nage);
-
-
-	
- 	matrix Effarea(1,ntstp,sarea,narea);
+	matrix Effarea(1,ntstp,sarea,narea);
  	matrix tnage(1,ntstp,sage,nage);
 
  	matrix tot_comm_obsCatage(rep_yr+1,proj_yr,sage,nage);
@@ -390,9 +380,7 @@ PARAMETER_SECTION
 
  	3darray selfisharea(syr,proj_yr,1,fisharea,sage-2,nage);
  	3darray selnation(syr,proj_yr,1,nations,sage-2,nage); 	
- 	
- 	 	
- 	
+ 		
 	3darray Nage(1,ngroup,1,ntstp,sage-2,nage); 
  	3darray VulB(1,ngroup,1,ntstp,sage-2,nage);
 	
@@ -403,9 +391,9 @@ PARAMETER_SECTION
  	3darray NAreaAge(1,ntstp,sarea,narea,sage,nage);
  	3darray CatchAreaAge(1,ntstp,sarea,narea,sage,nage);
  	3darray CatchNatAge(1,ntstp,1,fisharea,sage-2,nage);
- 	3darray EffNatAge(1,fisharea,1,ntstp,sage-2,nage);
- 	3darray yCatchNatAge(syr,proj_yr,1,fisharea,sage,nage);
- 	3darray yCatchStateAge(syr,proj_yr,1,nations,sage,nage);
+ 	//3darray EffNatAge(1,fisharea,1,ntstp,sage-2,nage);
+ 	3darray yCatchNatAge(syr,proj_yr,1,fisharea,sage-2,nage);
+ 	3darray yCatchStateAge(syr,proj_yr,1,nations,sage-2,nage);
  	
 
  	4darray propVBarea(1,ntstp,1,ngroup,sarea,narea,sage-3,nage);
@@ -414,6 +402,7 @@ PARAMETER_SECTION
 
 PRELIMINARY_CALCS_SECTION
 
+	read_catlim();
 	incidence_functions();
 	initialization();
 	move_grow_die();
@@ -421,6 +410,8 @@ PRELIMINARY_CALCS_SECTION
 	run_projections();
 	
 	output_true();
+
+	save_OMrep();
 	
 	exit(1);
 
@@ -568,7 +559,7 @@ FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt)
 
 	//cout<<"Ok after calc_numbers_at_age"<<endl;
 	
-FUNCTION void calc_effarea(const int& ii,const int& ia)
+FUNCTION void calc_effarea(const int& ii,const int& ia,const dvar_vector& ctlim)
 
 	dvar_vector tmp1(sarea,narea);
 	dvar_vector tmp2(sarea,narea);
@@ -576,14 +567,18 @@ FUNCTION void calc_effarea(const int& ii,const int& ia)
 	tmp2.initialize();
 
 	for(int n=1; n<=nations;n++){
-       	NationVulB(ii,n) = sum(pow(tVBarea(ii)(ntmp1(n),ntmp1(n+1)-1)+0.0000001,fbeta));		 
+       totVBnation(ii,n) = sum(pow(tVBarea(ii)(ntmp1(n),ntmp1(n+1)-1.0)+0.00001,fbeta));		 
 	}
 
 	for(int r= sarea; r<=narea; r++)
 	{
-		tmp1(r)= (pow(tVBarea(ii)(r)+0.0000001,fbeta)/(NationVulB(ii)(indnatarea(r))+0.01)) * effPwr(r);
-		tmp2(r) = tmp1(r)*TotEffyear(indfisharea(r))(indyr(ia));
-		Effarea(ii)(r) = tmp2(r)*TotEffmonth(indfisharea(r))(indmonth(ii));
+		if(sum(yCatchNatAge(indyr(ii))(indnatarea(r))(sage,nage))<ctlim(indnatarea(r))){
+			tmp1(r)= (pow(tVBarea(ii)(r)+0.0000001,fbeta)/(totVBnation(ii)(indnatarea(r))+0.01)) * effPwr(r);
+			tmp2(r) = tmp1(r)*TotEffyear(indfisharea(r))(indyr(ia));
+			Effarea(ii)(r) = tmp2(r)*TotEffmonth(indfisharea(r))(indmonth(ii));
+		}else{
+			Effarea(ii)(r) = 0.0;
+		}
 	}
 	//cout<<"Ok after calc_effarea"<<endl;
 
@@ -642,8 +637,15 @@ FUNCTION void calc_catage(const int& ii)
 			}
 
 			Catage(ii)(sage,nage) += CatchAreaAge(ii)(r)(sage,nage);
+			
+			yCatchNatAge(indyr(ii))(indfisharea(r))(sage-2) = indyr(ii);
+			yCatchNatAge(indyr(ii))(indfisharea(r))(sage-1) = indfisharea(r);
 			yCatchNatAge(indyr(ii))(indfisharea(r))(sage,nage) += CatchAreaAge(ii)(r)(sage,nage);			
+			
+			yCatchStateAge(indyr(ii))(indnatarea(r))(sage-2) = indyr(ii);
+			yCatchStateAge(indyr(ii))(indnatarea(r))(sage-1) = indnatarea(r);
 			yCatchStateAge(indyr(ii))(indnatarea(r))(sage,nage) += CatchAreaAge(ii)(r)(sage,nage);
+			
 			yCatchtotalage(indyr(ii))(sage,nage) += CatchAreaAge(ii)(r)(sage,nage);
 
 		}
@@ -688,7 +690,9 @@ FUNCTION initialization
 	
 	calc_position(1);
 	
-	calc_effarea(1,1);
+	dvar_vector catl(1,nations);
+	catl.fill("{100000000,100000000}");
+	calc_effarea(1,1,catl);
 	
 	calc_catage(1);
 
@@ -706,13 +710,16 @@ FUNCTION move_grow_die
 		varPos=maxPos*cvPos;
 		varPosg=sqrt((varPos*varPos)/(ngroup*ngroup*4));
 
+	dvar_vector catl(1,nations);
+	catl.fill("{100000000,100000000}");
+
 
 	for(int ie=2;ie<=(rep_yr*tmon);ie++)
 	{
 		calc_numbers_at_age(ie, 0.0);		
 			
 		calc_position(ie);
-		calc_effarea(ie,ie);
+		calc_effarea(ie,ie,catl);
 		calc_catage(ie);
 		//cout<<"i is "<<i<<endl;
 
@@ -732,7 +739,7 @@ FUNCTION move_grow_die
 		//cout<<"maxPos "<<maxPos<<endl;
 		calc_position(i);
 	
-		calc_effarea(i,i);		
+		calc_effarea(i,i,catl);		
 
 		calc_catage(i);
 
@@ -743,7 +750,7 @@ FUNCTION move_grow_die
 
 			if(surv_yrs(svyr)==indyr(i)){
 				
-				//survey_data(svyr);
+				survey_data(svyr);
 				svyr +=1;
 			}
 
@@ -826,13 +833,13 @@ FUNCTION void catage_comm(const int& ii)
        		pa.initialize();
       
     
-		//pa = value((tot_comm_obsCatage(ii)(sage,nage))/(sum(tot_comm_obsCatage(ii)(sage,nage))+0.01))+0.000001;			
-		pa = value((tot_comm_obsCatage(ii)(sage,nage))/(sum(tot_comm_obsCatage(ii)(sage,nage))));			
+		pa = value((tot_comm_obsCatage(ii)(sage,nage))/(sum(tot_comm_obsCatage(ii)(sage,nage))+0.01))+0.000001;			
+		//pa = value((tot_comm_obsCatage(ii)(sage,nage))/(sum(tot_comm_obsCatage(ii)(sage,nage))));			
 		
 		comm_obsCatage(ii)(sage,nage) = rmvlogistic(pa,tau_c,seed+ii);	
 		totcatch(ii) = 	sum(tot_comm_obsCatage(ii)(sage,nage));	
 		Ut(ii) = totcatch(ii)/tB(ii*tmon-(nmon-smon));
-		itB(ii) = tB(ii*tmon-(nmon-smon));
+		ytB(ii) = tB(ii*tmon-(nmon-smon));
 
 
 FUNCTION  void survey_data(const int& ii)
@@ -854,12 +861,15 @@ FUNCTION  void survey_data(const int& ii)
 			}	
 			dvector ppp(nage,sage);
        		ppp.initialize();
-       		ppp = (pp)/sum(pp);
+       		ppp = ((pp)/(sum(pp)+0.01))+0.000001;
 			surv_obsCatage(ii)(sage,nage) = rmvlogistic(ppp,tau_survey,seed+ii);
        	//}	
 	
 			
     cout<<"Ok after survey_data"<< endl;
+
+FUNCTION calc_length_comps
+
 
     
 
@@ -901,7 +911,6 @@ FUNCTION calc_spr
 
 
 		yFatage(ii)(sage,nage) = elem_div(yCatchtotalage(ii)(sage,nage),yNage(ii)(sage,nage));
-		cout<<"yFatage "<<ii<<" is "<<yFatage(ii)(sage,nage)<<endl;
 
 		lz.initialize();
 		lz(sage) = 1.;
@@ -917,10 +926,138 @@ FUNCTION calc_spr
 	
 	}
 
-	cout<<"spr is "<<spr<<endl;
-
+	
 	
 	cout<<"Ok after calculating SPR"<<endl;
+
+
+FUNCTION void run_stock_assessment(const int& ii,const int& svy)
+		
+	cout<<"running stock assessment"<<endl;
+
+	switch (satype) {
+            case 1:  
+            //to be deprecated
+            //output_pin_SA();
+            output_datSA(ii,svy);
+            //output_ctlSA(ii);
+
+            #if defined __APPLE__ || defined __linux
+            // cout<<m_est_fmsy<<endl;
+            
+            system("cd ../../stock_assessment/ && ./lagrangian_SA");
+
+            #endif
+
+            #if defined _WIN32 || defined _WIN64
+
+            system("lagrangian_SS.exe");
+
+            #endif
+
+            calc_catlim();
+			read_catlim();
+
+			system("cd ../../../R/read_mse && make");
+
+            break;
+
+            case 2:
+
+            write_iscam_data_file(ii,svy);
+            write_iscam_ctl_file(ii,svy);
+
+            
+
+            #if defined __APPLE__ || defined __linux
+            // cout<<m_est_fmsy<<endl;
+            system("cd /Users/catarinawor/Documents/iSCAM/examples/hakelag/DATA && make clean && make");// && "exec make");
+           
+            #endif
+
+            calc_catlim();
+			read_catlim();
+			
+
+			system("cd ../../../R/read_mse && make readRdattwo");
+
+
+            //need to figure out how to write the winows version of this
+            //#if defined _WIN32 || defined _WIN64
+
+            //system("lagrangian_SS.exe");
+
+            //#endif
+
+
+
+             break;
+
+         }
+
+
+
+FUNCTION calc_catlim
+
+	
+	//variables
+
+	double fspr_SA;
+	dvar_vector seltotal_SA(sage,nage);
+	dvar_vector yNage_SA(sage,nage);
+	double Bo_SA;
+	double ytB_SA;
+	
+
+	cifstream ifs_cip("../TAC_input.dat");
+	
+    ifs_cip >> fspr_SA;
+    ifs_cip >> seltotal_SA;
+    ifs_cip >> yNage_SA;
+    ifs_cip >> Bo_SA;
+    ifs_cip >> ytB_SA;
+
+    
+    //calculate new catlim
+	double BBo;
+	dvariable TAC;
+	//dvector TACnation(1,nations);
+
+
+	BBo = ytB_SA/Bo_SA;
+
+
+	if(BBo>0.4){
+
+		TAC = elem_prod(elem_div(fspr_SA*seltotal_SA,fspr_SA*seltotal_SA+m),elem_prod(yNage_SA,(1-mfexp(-fspr_SA*seltotal_SA-m))))*wa; 
+		
+
+	}else{
+		
+		if(BBo>0.1){
+
+			double y;
+
+			y = (BBo-0.1)*100/(0.4-0.1);
+
+			TAC = y*elem_prod(elem_div(fspr_SA*seltotal_SA,fspr_SA*seltotal_SA+m),elem_prod(yNage_SA,(1-mfexp(-fspr_SA*seltotal_SA-m))))*wa; 
+
+		}else{
+
+			TAC = 0;
+
+		}
+	}
+
+	catlim = TAC * nationTACprop;
+	cout<< "catlim" << endl << catlim<< endl;
+	//cout<< "seltotal_SA" << endl << seltotal_SA<< endl;
+
+	ofstream afs("catlim.txt");
+	afs<<"catlim" << endl << catlim <<endl;
+
+
+
 
 
 FUNCTION run_projections
@@ -933,18 +1070,21 @@ FUNCTION run_projections
 		if(ib==surv_yrs(svyr)) svyr++;
 	}
 
+	catage_comm(nyr);
+	run_stock_assessment(nyr,svyr-1);
+
 
 	for(int ii=ststp+1;ii<=ntstp;ii++)
 	{ 
 
-		calc_numbers_at_age(ii,wt(indyr(ii-(30*tmon))));
+		calc_numbers_at_age(ii,wt(indyr(ii)));
 		//maxPos.initialize();		
 		//calcmaxpos();
 
 		//cout<<"maxPos "<<maxPos<<endl;
 		calc_position(ii);
 	
-		calc_effarea(ii,ststp);
+		calc_effarea(ii,ststp,catlim);
 
 		calc_catage(ii);
 		clean_catage(ii);
@@ -960,17 +1100,8 @@ FUNCTION run_projections
 			}
 			
 			catage_comm(indyr(ii));
-			//run_stock_assessment(indyr(ii),svyr-1);
+			run_stock_assessment(indyr(ii),svyr-1);
 		}
-		
-		
-
-		
-		//calc_spr_optim();
-
-
-		//write_iscam_data_file();
-		//output_pin();
 		
 
 		
@@ -978,8 +1109,22 @@ FUNCTION run_projections
 	}
 
 	calc_spr();
-	
 
+
+FUNCTION save_OMrep
+
+	system("cd ../../../R/read_mse && make readROM");
+	// Terminal year of projection.
+   
+
+	
+FUNCTION read_catlim
+
+	cifstream ifs_clm("../TAC_input.dat");
+
+	// Terminal year of projection.
+    ifs_clm >> catlim;
+    
 
 
 
@@ -988,15 +1133,17 @@ FUNCTION output_true
 	
 	ofstream ofs("lagrangian_OM_gtg.rep");
 
+	ofs<<"OM type" << endl << "gtg" <<endl;
+	ofs<<"seed" << endl << seed <<endl;
 	ofs<<"mo" << endl << mo <<endl;
 	ofs<<"tau_c" << endl << tau_c<<endl;
 	ofs<<"maxPos50" << endl << maxPos50 <<endl;
 	ofs<<"maxPossd" << endl << maxPossd <<endl;
 	ofs<<"cvPos" << endl << cvPos <<endl;
-	ofs<<"seed"<< endl << seed <<endl;
 	ofs<<"syr" << endl << syr <<endl;
 	ofs<<"nyr" << endl << nyr <<endl;
 	ofs<<"rep_yr" << endl << rep_yr <<endl;
+	ofs<<"proj_yr" << endl << proj_yr <<endl;
 	ofs<<"sage" << endl << sage <<endl;
 	ofs<<"nage" << endl << nage <<endl;
 	ofs<<"ngroup" << endl << ngroup <<endl;
@@ -1005,17 +1152,29 @@ FUNCTION output_true
 	ofs<<"nmon" << endl << nmon <<endl;
 	ofs<<"sarea" << endl << sarea <<endl;
 	ofs<<"narea" << endl << narea <<endl;
+	ofs<<"Ro " << endl << Ro <<endl;
+	ofs<<"Bo " << endl << Bo <<endl;
+	ofs<<"So " << endl << So <<endl;
+	ofs<<"h " << endl << h <<endl;
+	ofs<<"m " << endl << m <<endl;
+	ofs<<"fisharea" << endl << fisharea <<endl;
 	ofs<<"nations" << endl << nations <<endl;
 	ofs<<"maxPos" << endl << maxPos <<endl;
 	ofs<<"minPos" << endl << minPos <<endl;
 	ofs<<"varPos" << endl << varPos <<endl;
 	ofs<<"PosX" << endl << PosX <<endl;	
 	ofs<<"SB" << endl << SB <<endl;
+	ofs<<"tB" << endl << tB <<endl;
+	ofs<<"Ut" << endl << Ut <<endl;
+	ofs<<"ytB" << endl << ytB <<endl;
+	ofs<<"survB" << endl << survB <<endl;
 	ofs<<"VulB" << endl << VulB <<endl;
 	ofs<<"Nage" << endl << Nage <<endl;
 	ofs<<"VBarea" << endl << VBarea <<endl;
 	ofs<<"Effarea"<< endl << Effarea <<endl;
-	ofs<<"EffNatAge"<< endl << EffNatAge<<endl;
+	ofs<<"comm_obsCatage"<< endl << comm_obsCatage <<endl;
+	ofs<<"surv_obsCatage"<< endl << surv_obsCatage <<endl;
+	ofs<<"totVBnation" << endl << totVBnation <<endl;
 	ofs<<"CatchNatAge"<< endl << CatchNatAge<<endl;
 	ofs<<"CatchAreaAge"<< endl << CatchAreaAge<<endl;
 	ofs<<"indyr"<< endl << indyr<<endl;
@@ -1162,6 +1321,207 @@ FUNCTION void output_datSA(const int& ii,const int& svy)
 		mfs<<surv_yrs(l) <<"\t"<< survB(l) <<"\t" << 0.2<<"\t"<< 0.01<<"\t"<< surv_mon <<endl;
 	}
 	mfs<<"# eof " << endl << 999 <<endl;
+
+
+FUNCTION void write_iscam_ctl_file(const int& ii,const int& svy)
+
+	ofstream mfs("/Users/catarinawor/Documents/iSCAM/examples/hakelag/DATA/hakelag.ctl");
+	mfs<<"## ------------------------------------------------------------------------------------ ##"<< endl;
+	mfs<<"## CONTROL FILE TEMPLATE                                                                ##"<< endl;
+	mfs<<"## ------------------------------------------------------------------------------------ ##"<< endl;
+	mfs<<"## ------------------------------------------------------------------------------------ ##"<< endl;
+	mfs<<"## CONTROLS FOR LEADING PARAMETERS                                                      ##"<< endl;
+	mfs<<"##  Prior descriptions:                                                                 ##"<< endl;
+	mfs<<"##                      -0 uniform      (0,0)                                           ##"<< endl;
+	mfs<<"##                      -1 normal       (p1=mu,p2=sig)                                  ##"<< endl;
+	mfs<<"##                      -2 lognormal    (p1=log(mu),p2=sig)                             ##"<< endl;
+	mfs<<"##                      -3 beta         (p1=alpha,p2=beta)                              ##"<< endl;
+	mfs<<"##                      -4 gamma        (p1=alpha,p2=beta)                              ##"<< endl;	
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## npar"<<endl<< "7"<< endl;
+	mfs<<"## ival         lb      ub      phz     prior   p1      p2        #parameter            ##"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<< 1.2  		 <<"\t"<< -1.0 <<"\t"<< 4  	 <<"\t"<< 1  <<"\t"<< 1  <<"\t"<<  1.2 	 <<"\t"<<  0.4   <<"\t"<<"#log_ro   ##"<<endl;
+   	mfs<< 0.862 	 <<"\t"<<  0.2 <<"\t"<< 1.0  <<"\t"<< 2  <<"\t"<< 3  <<"\t"<<  9.909 <<"\t"<< 2.959  <<"\t"<<"#steepness    ##"<<endl;
+   	mfs<< -1.537117  <<"\t"<< -4.0 <<"\t"<< 0.0  <<"\t"<< -3 <<"\t"<< 1  <<"\t"<< -1.609 <<"\t"<< 0.1    <<"\t"<<"#log_m g&b    ##"<<endl;
+   	mfs<< 2.0  		 <<"\t"<< -4.0 <<"\t"<< 10.0 <<"\t"<< 1  <<"\t"<< 0  <<"\t"<< -3.0 	 <<"\t"<< 10.0   <<"\t"<<"#log_avgrec   ##"<<endl;
+   	mfs<< 1.0  		 <<"\t"<< -4.0 <<"\t"<< 10.0 <<"\t"<< 1  <<"\t"<< 0  <<"\t"<< -3.0   <<"\t"<< 10.0   <<"\t"<<"#log_recinit  ##"<<endl;
+   	mfs<< 0.03764649 <<"\t"<< 0.01 <<"\t"<< 0.99 <<"\t"<< 4  <<"\t"<< 3  <<"\t"<<  5.98  <<"\t"<< 155.98 <<"\t"<<"#rho          ##"<<endl;
+   	mfs<< 10.4909967 <<"\t"<< 0.01 <<"\t"<< 10.0 <<"\t"<< 3  <<"\t"<< 4  <<"\t"<<  4.01  <<"\t"<< 2.01   <<"\t"<<"#sigma_r      ##"<<endl;
+	//mfs<< 0.9805792  <<"\t"<<  -3 <<"\t"<< 5.0  <<"\t"<< 1  <<"\t"<< 1  <<"\t"<<  1.2 	 <<"\t"<<  0.4   <<"\t"<<"#log_ro   ##"<<endl;
+   	//mfs<< 0.862 	 <<"\t"<<  0.2 <<"\t"<< 1.0  <<"\t"<< 2  <<"\t"<< 3  <<"\t"<<  9.909 <<"\t"<< 2.959  <<"\t"<<"#steepness    ##"<<endl;
+   	//mfs<< -1.537117  <<"\t"<< -4.0 <<"\t"<< 0.0  <<"\t"<< -3 <<"\t"<< 1  <<"\t"<< -1.609 <<"\t"<< 0.1    <<"\t"<<"#log_m g&b    ##"<<endl;
+   	//mfs<< 2.0  		 <<"\t"<< -4.0 <<"\t"<< 10.0 <<"\t"<< 4  <<"\t"<< 0  <<"\t"<< -3.0 	 <<"\t"<< 10.0   <<"\t"<<"#log_avgrec   ##"<<endl;
+   	//mfs<< 1.0  		 <<"\t"<< -4.0 <<"\t"<< 10.0 <<"\t"<< 4  <<"\t"<< 0  <<"\t"<< -3.0   <<"\t"<< 10.0   <<"\t"<<"#log_recinit  ##"<<endl;
+   	//mfs<< 0.03764649 <<"\t"<< 0.01 <<"\t"<< 0.99 <<"\t"<< 4  <<"\t"<< 3  <<"\t"<<  5.98  <<"\t"<< 155.98 <<"\t"<<"#rho          ##"<<endl;
+   	//mfs<< 10.4909967 <<"\t"<< 0.01 <<"\t"<< 10.0 <<"\t"<< 1  <<"\t"<< 4  <<"\t"<<  4.01  <<"\t"<< 2.01   <<"\t"<<"#sigma_r      ##"<<endl;
+   	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## CONTROL PARAMETERS FOR AGE/SIZE COMPOSITION DATA FOR na_gears                        ##"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## Likelihood type for each gear:														  ##"<< endl;
+	mfs<<"##     -1 : multivariate logistic (dmvlogistic) 										  ##"<< endl;
+	mfs<<"##     -2 : multinomial, sample size based on input data 								  ##"<< endl;
+	mfs<<"##     -3 : logistic_normal, no autocorrelation, AR1, AR2. 							  ##"<< endl;
+	mfs<<"##     -4 : logistic_normal, AR1 														  ##"<< endl;
+	mfs<<"##     -5 : logistic_normal, AR2 														  ##"<< endl;
+	mfs<<"##     -6 : multinomial with estimated effective samples size (log_age_tau2 phz >0) 	  ##"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## Number of columns == na_gears." << endl;
+	mfs<<" 1 "	 <<"\t"<< " 2 " 	<<"\t"<< "## • Gear Index"<<endl;
+   	mfs<<" 1 "	 <<"\t"<< " 1 "  	<<"\t"<< "## • Likelihood type"<<endl;
+   	mfs<<"0.000" <<"\t"<< "0.000"	<<"\t"<< "## • Minimum proportion for aggregation & tail compression"<<endl;
+   	mfs<<"0.0000"<<"\t"<< "0.0000" 	<<"\t"<< "## • Small constant to add to comps & renormalize"<<endl;
+   	mfs<<" 1 "	 <<"\t"<< " 1 " 	<<"\t"<< "## • phase for log_age_tau2 estimation. "<<endl;
+   	mfs<<" 2 "	 <<"\t"<< " 2 " 	<<"\t"<< "## • phase for phi1 estimation: bounded (-1,1) AR1 "<<endl;
+   	mfs<<"-2 "	 <<"\t"<< "-2 " 	<<"\t"<< "## • phase for phi2 estimation: bounded (0,1)  AR2 "<<endl;
+   	mfs<<"-2 "	 <<"\t"<< "-2 " 	<<"\t"<< "## • phase for degrees of freedom for student T. "<<endl;
+   	mfs<<"-12345" <<"\t"<<  "## • int check (-12345)"<<endl;
+   	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## SELECTIVITY CONTROLS                                                                 ##"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## - Each gear must have at least one selectivity and retention curve.					"<< endl;
+	mfs<<"## - Use a -ve phase with the gear index to mirror another gear.  Note 					"<< endl;
+	mfs<<"##   that if you mirror another gear, it must have the same sel type and                  "<< endl;
+	mfs<<"##   age and year nodes so that the arrays are the same shape & block years.				"<< endl;
+	mfs<<"##																						"<< endl;
+	mfs<<"## • Index       = gear index for selectivity curve.										"<< endl;
+	mfs<<"## • sel_type    = type of selectivity function (see Legend). 							"<< endl;
+	mfs<<"## • sel_mu      = mean age/length 50% selectivity. 										"<< endl;
+	mfs<<"## • sel_sd      = std in 50% SELECTIVITY 												"<< endl;
+	mfs<<"## • sex_dep     = 0 -> no;  1 -> offset for sex 2. 										"<< endl;
+	mfs<<"## • size_nodes  = # of nodes for age/size cubic spline. 									"<< endl;
+	mfs<<"## • year_nodes  = # of nodes for time varying bicubic spline. 							"<< endl;
+	mfs<<"## • phz_mirror  = phase of estimation (-ve phase to mirror selextivity index) 			"<< endl;
+	mfs<<"## • lam1        = penalty weight for 2nd differences (w = 1/(2•sig^2)). 					"<< endl;
+	mfs<<"## • lam2        = penalty weight for dome-shaped selectivity. 							"<< endl;
+	mfs<<"## • lam3        = penalty weight for time-varying selectivity. 							"<< endl;
+	mfs<<"## • start_block = year index for first year of selectivity curve.						"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## sel_nBlocks    ret_nBlocks      ## Gear Description.						"<< endl;
+	mfs<<" 2 " <<"\t"<< " 1 " <<"\t"<< "## Commercial retained 					"<< endl;
+    mfs<<" 1 " <<"\t"<< " 0 " <<"\t"<< "## survey retained    					"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;					
+	mfs<<"## Selectivity P(capture of all size/age)													"<< endl;
+	mfs<<"## slx_dControls																			"<< endl;				
+	mfs<<"## • index for sex (0=both, 1=female, 2=male)												"<< endl;
+	mfs<<"##        sel   sel  sel       age    year  phz or                    start  end        ##"<< endl;
+	mfs<<"## Index  type  mu   sd   sex  nodes  nodes mirror lam1  lam2  lam3 | block  block      ##"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+    mfs<<"1" <<"\t"<<"4" <<"\t"<<"3.5" <<"\t"<<"0.45" <<"\t"<<"0" <<"\t"<<"7" <<"\t"<<"1" <<"\t"<<"2" <<"\t"<<"150.0" <<"\t"<<"1.0" <<"\t"<<"1.0" <<"\t"<<"71" <<"\t"<<"91"<<endl;
+    mfs<<"1" <<"\t"<<"4" <<"\t"<<"3.5" <<"\t"<<"0.45" <<"\t"<<"0" <<"\t"<<"7" <<"\t"<<"1" <<"\t"<<"2" <<"\t"<<"150.0" <<"\t"<<"1.0" <<"\t"<<"1.0" <<"\t"<<"92" <<"\t"<<ii<<endl;
+    mfs<<"2" <<"\t"<<"2" <<"\t"<<"1.5" <<"\t"<<"0.45" <<"\t"<<"0" <<"\t"<<"4" <<"\t"<<"5" <<"\t"<<"2" <<"\t"<<"200.0" <<"\t"<<"50.0"<<"\t"<<"50.0"<<"\t"<<"71" <<"\t"<<ii<<endl;
+    mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## Retention P(retaining size/age)													 	"<< endl;														
+	mfs<<"## ret_dControls																			"<< endl;
+	mfs<<"## • index for sex (0=both, 1=female, 2=male)												"<< endl;
+	mfs<<"##        sel   sel  sel       age    year  phz or                    start  end        ##"<< endl;
+	mfs<<"## Index  type  mu   sd   sex  nodes  nodes mirror lam1  lam2  lam3 | block  block      ##"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+  	mfs<<"-1"<<"\t"<<"2"<<"\t"<<"10"<<"\t"<<"2.0"<<"\t"<<"1"<<"\t"<<"0"<<"\t"<<"0"<<"\t"<<"-2"<<"\t"<<"0.0"<<"\t"<<"0.0"<<"\t"<<"0.0"<<"\t"<<syr<<"\t"<<ii <<endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## LEGEND FOR SELECTIVITY TYPES (sel_type)                                              ##"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## sel  | No.        | 																	"<< endl;
+	mfs<<"## type | parameters | Description 														"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"##   1  |   2        | • Logistic curve with mean and standard dev at age = p(50%) 		"<< endl;
+	mfs<<"##   2  | (nages-1)  | • Age-specific selectivity coefficients for (sage):(nage-1) 		"<< endl;
+	mfs<<"##   3  | age_nodes  | • Age-specific coefficients based on cubic-spline interpolation 	"<< endl;
+	mfs<<"##   4  | n*age_nodes| • Annual age-specific coeffs using cubic-spline interpolation 		"<< endl;
+	mfs<<"##   5  | nyr*nage   | • Bicubic spline interpolation over time & age. 					"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## TO BE DEPRECATED															 "<< endl;	
+	mfs<<"## ------------------------------------------------------------------------- ##"<< endl;
+	mfs<<"## SELECTIVITY PARAMETERS Columns for gear                                   ##"<< endl;
+	mfs<<"## OPTIONS FOR SELECTIVITY (isel_type):                                      ##"<< endl;
+	mfs<<"##      1) logistic selectivity parameters                                   ##"<< endl;
+	mfs<<"##      2) selectivity coefficients                                          ##"<< endl;
+	mfs<<"##      3) a constant cubic spline with age-nodes                            ##"<< endl;
+	mfs<<"##      4) a time varying cubic spline with age-nodes                        ##"<< endl;
+	mfs<<"##      5) a time varying bicubic spline with age & year nodes.              ##"<< endl;
+	mfs<<"##      6) fixed logistic (set isel_type=6, and estimation phase to -1)      ##"<< endl;
+	mfs<<"##      7) logistic function of body weight.                                 ##"<< endl;
+	mfs<<"##      8) logistic with weight deviations (3 parameters)                    ##"<< endl;
+	mfs<<"##      11) logistic selectivity with 2 parameters based on mean length      ##"<< endl;
+	mfs<<"##      12) length-based selectivity coefficients with spline interpolation  ##"<< endl;
+	mfs<<"##      sig=0.05 0.10 0.15 0.20 0.30 0.40 0.50                               ##"<< endl;
+	mfs<<"##      wt =200. 50.0 22.2 12.5 5.56 3.12 2.00                               ##"<< endl;
+	mfs<<"## ------------------------------------------------------------------------- ##"<< endl;
+  	mfs<<"5   "<<"\t"<<" 2   "<<"\t"<<"        # 1  -selectivity type ivector(isel_type) for gear"<< endl;
+  	mfs<<"2.5 "<<"\t"<<" 2.5 "<<"\t"<<"        # 2  -Age/length at 50% selectivity (logistic)"<< endl;
+  	mfs<<"0.45"<<"\t"<<" 0.45"<<"\t"<<"        # 3  -STD at 50% selectivity (logistic)"<< endl;
+  	mfs<<"4   "<<"\t"<<" 5   "<<"\t"<<"        # 4  -No. of age nodes for each gear (0=ignore)"<< endl;
+  	mfs<<"5   "<<"\t"<<" 5   "<<"\t"<<"        # 5  -No. of year nodes for 2d spline(0=ignore)"<< endl;
+  	mfs<<"1   "<<"\t"<<" 1   "<<"\t"<<"        # 6  -Phase of estimation (-1 for fixed)"<< endl;
+  	mfs<<"150 "<<"\t"<<" 150 "<<"\t"<<"     # 7  -Penalty wt for 2nd differences w=1/(2*sig^2)"<< endl;
+  	mfs<<"2.00"<<"\t"<<" 2.00"<<"\t"<<"  # 8  -Penalty wt for dome-shaped w=1/(2*sig^2)"<< endl;
+  	mfs<<"12.5"<<"\t"<<" 12.5"<<"\t"<<"    # 9  -Penalty wt for time-varying selectivity"<< endl;
+  	mfs<<"1   "<<"\t"<<" 1   "<<"\t"<<"       # 10 -n_sel_blocks (number of selex blocks)"<< endl;
+	mfs<<"## ------------------------------------------------------------------------- ##"<< endl;
+	mfs<<"## Start year of each time block: 1 row for each gear 						 "<< endl;
+	mfs<<"71 "<< endl;
+	mfs<<"71 "<< endl;
+	mfs<<"##"<< endl;
+	mfs<<"##"<< endl;
+	mfs<<"##"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## TIME VARYING NATURAL MORTALIIY RATES                                                 ##"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## TYPE: "<< endl;
+	mfs<<"##      0 = constant natural mortality "<< endl;
+	mfs<<"##      1 = Random walk (deviates constrained by variance in M) "<< endl;
+	mfs<<"##      2 = Cubic Spline (deviates constrined by nodes & node-placement)"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ## "<< endl;
+    mfs<<"0"<< endl;
+	mfs<<"## Phase of estimation"<< endl;
+	mfs<<"  -3"<< endl;
+	mfs<<"## STDEV in m_dev for Random walk"<< endl;
+	mfs<<"  0.01"<< endl;
+	mfs<<"## Number of nodes for cubic spline"<< endl;
+	mfs<<"  0"<< endl;
+	mfs<<"## Year position of the knots (vector must be equal to the number of nodes)"<< endl;
+  	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## ABUNDANCE OBSERVATION MODELS 															"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## QTYPE:"<< endl;
+	mfs<<"##    0 = FIXED SURVEY Q (specify log(mean) for prior log(mean))"<< endl;
+	mfs<<"##    1 = CONSTANT Q     (use MLE for q and optional informative prior)"<< endl;
+	mfs<<"##    2 = RANDOM WALK Q  (use prior mean & sd for penalized random walk)"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"1             # -number of surveys (n_it_nobs) 											"<< endl;
+	mfs<<" 2            # -QTYPE (see legend above)													"<< endl;
+	mfs<<" 0            # -prior log(mean)															"<< endl;
+	mfs<<" 0.1            # -prior sd (set to 0 for uniformative prior)								"<< endl;
+	mfs<<" 1            # -Estimation Phase 														"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## OTHER MISCELANEOUS CONTROLS                                                          ##"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"0           # 1  -verbose ADMB output (0=off, 1=on)"<< endl;
+	mfs<<"1           # 2  -recruitment model (1=beverton-holt, 2=ricker)"<< endl;
+	mfs<<"0.100       # 3  -std in observed catches in first phase."<< endl;
+	mfs<<"0.0707      # 4  -std in observed catches in last phase."<< endl;
+	mfs<<"0           # 5  -Assume unfished in first year (0=FALSE, 1=TRUE)"<< endl;
+	mfs<<"0.00        # 6  -Minimum proportion to consider in age-proportions for dmvlogistic"<< endl;
+	mfs<<"0.20        # 7  -Mean fishing mortality for regularizing the estimates of Ft"<< endl;
+	mfs<<"0.10        # 8  -std in mean fishing mortality in first phase"<< endl;
+	mfs<<"2.00        # 9  -std in mean fishing mortality in last phase"<< endl;
+	mfs<<"-3          # 10 -DEPRECATED phase for estimating m_deviations (use -1 to turn off mdevs)"<< endl;
+	mfs<<"0.1         # 11 -DEPRECATED std in deviations for natural mortality"<< endl;
+	mfs<<"12          # 12 -DEPRECATED number of estimated nodes for deviations in natural mortality"<< endl;
+	mfs<<"0.00        # 13 -fraction of total mortality that takes place prior to spawning"<< endl;
+	mfs<<"0           # 14 -number of prospective years to add to syr. "<< endl;
+	mfs<<"0           # 15 -switch for IFD distribution in selectivity simulations"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## MARKER FOR END OF CONTROL FILE (eofc)"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"999"<< endl;
+
 
 FUNCTION void write_iscam_data_file(const int& ii,const int& svy)
 
