@@ -21,6 +21,12 @@
 60
 #ngroup
 20
+#nlen
+24
+#inilen
+14
+#lenstp
+2
 #nations
 2
 #border
@@ -59,6 +65,8 @@
 0.3
 #to
 -0.5
+#cvl
+0.1
 #survey month
 8
 #survey nobs
