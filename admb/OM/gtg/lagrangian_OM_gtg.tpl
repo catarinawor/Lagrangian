@@ -138,6 +138,8 @@ DATA_SECTION
 	// accessory quantities and counters
 	//===================================
 	
+	int nrep_yr;
+	int nproj_yr;
 	int ntstp;
 	int ststp;
 	int tmon;
@@ -174,9 +176,12 @@ DATA_SECTION
 			}
 		}
 		
+		nrep_yr = rep_yr-syr+1;
+       	nproj_yr = proj_yr-syr+1;
+
 		tmon = nmon-smon+1;
 		ststp =	tmon * (nyr-syr+1);
-		ntstp = tmon * (proj_yr-syr+1);
+		ntstp = tmon * nproj_yr;
 		age.fill_seqadd(sage,1);
 		len.fill_seqadd(inilen,lenstp);
 		areas.fill_seqadd(sarea,1);
@@ -232,6 +237,7 @@ DATA_SECTION
 
 	END_CALCS
 
+		
 	 	ivector indyr(1,ntstp);
  		ivector indmonth(1,ntstp);
 		ivector indnatarea(sarea,narea);
@@ -251,7 +257,10 @@ DATA_SECTION
 		
 	
 
-       LOC_CALCS		
+       LOC_CALCS
+
+       			
+
        			int aa =0;
        			
        			for(int y=syr;y<=proj_yr;y++)		
@@ -310,7 +319,7 @@ DATA_SECTION
        					TotEffyear_rep(n)(ia)= TotEffyear(n)(nyr);
        				}
 
-       				for(int i=rep_yr*nmon+1;i<=ntstp;i++)
+       				for(int i=nrep_yr*nmon+1;i<=ntstp;i++)
        				{
 
        					if(TotEffmonth(n)(indmonth(i))>0.0)
@@ -443,8 +452,8 @@ PRELIMINARY_CALCS_SECTION
 	initialization();
 	incidence_functions();
 	calc_first_year();
-	//cout<<"chegou aqui?"<<endl;
 	move_grow_die();
+	cout<<"chegou aqui?"<<endl;
 	
 	run_projections();
 	
@@ -810,7 +819,7 @@ FUNCTION calc_first_year
 		tB(1) += Nage(g)(1)(sage,nage)*Wage(g)(1)(sage,nage);
 		tBage(1)(sage,nage) += elem_prod(Nage(g)(1)(sage,nage),Wage(g)(1)(sage,nage));
 		totB(g)(1)(sage,nage) = elem_prod(Nage(g)(1)(sage,nage),Wage(g)(1)(sage,nage));
-		yNage(1)(sage,nage) += Nage(g)(1)(sage,nage);
+		yNage(syr)(sage,nage) += Nage(g)(1)(sage,nage);
 	}
 
 	
@@ -845,7 +854,8 @@ FUNCTION move_grow_die
 	catl.fill("{100000000,100000000}");
 
 
-	for(int ie=2;ie<=(rep_yr*tmon);ie++)
+
+	for(int ie=2;ie<=(nrep_yr*tmon);ie++)
 	{
 		calc_numbers_at_age(ie, 0.0);		
 			
@@ -853,10 +863,11 @@ FUNCTION move_grow_die
 		calc_effarea(ie,ie,catl);
 		calc_catage(ie);
 		calc_catlen(ie);
-		//cout<<"chegou aqui??"<<endl;
-		//cout<<"i is "<<i<<endl;
+		
+		//cout<<"ie is "<<indyr(ie)<<endl;
 
 	}
+		
 
 	int p;
  	p=1;
@@ -864,12 +875,14 @@ FUNCTION move_grow_die
  	int svyr;
  	svyr = 1;
 
-	for(int i=rep_yr*tmon+1;i<=ststp;i++){
-		
+	for(int i=nrep_yr*tmon+1;i<=ststp;i++){
 		calc_numbers_at_age(i,wt(indyr(i)));
 		
-
-		//cout<<"maxPos "<<maxPos<<endl;
+		
+		//cout<<"indyr(i) "<<indyr(i)<<endl;
+		//cout<<"(i) "<<(i)<<endl;
+		//cout<<"indmonth(i) "<<indmonth(i)<<endl;
+		
 		calc_position(i);
 	
 		calc_effarea(i,i,catl);		
@@ -881,7 +894,7 @@ FUNCTION move_grow_die
 
 		if(indmonth(i)==nmon){
 			//survey calculations
-
+			
 			if(surv_yrs(svyr)==indyr(i)){
 				
 				survey_data(svyr);
@@ -896,6 +909,7 @@ FUNCTION move_grow_die
 
 
 	//cout<<"Ok after move_grow_die"<<endl;
+
 
 FUNCTION void clean_catage(const int& ii)
 	
@@ -949,9 +963,8 @@ FUNCTION dvar_vector calcmaxpos()
 FUNCTION void catage_comm(const int& ii)
 
 	
-	//for(int i=rep_yr*nmon+1;i<=ntstp;i++)
-	//{
-	for(int i=ii*tmon-tmon+1;i<=ii*tmon;i++)
+	
+	for(int i=(ii-syr+1)*tmon-tmon+1;i<=(ii-syr+1)*tmon;i++)
 	{
 		
 		for(int n=1;n<=fisharea;n++)
@@ -974,15 +987,15 @@ FUNCTION void catage_comm(const int& ii)
 		
 		comm_obsCatage(ii)(sage,nage) = rmvlogistic(pa,tau_c,seed+ii);	
 		totcatch(ii) = 	sum(tot_comm_obsCatage(ii)(sage,nage));	
-		Ut(ii) = totcatch(ii)/tB(ii*tmon-(nmon-smon));
-		ytB(ii) = tB(ii*tmon-(nmon-smon));
+		Ut(ii) = totcatch(ii)/tB((ii-syr+1)*tmon-(nmon-smon));
+		ytB(ii) = tB((ii-syr+1)*tmon-(nmon-smon));
 
 FUNCTION void catlen_comm(const int& ii)
 
 	
 	//for(int i=rep_yr*nmon+1;i<=ntstp;i++)
 	//{
-	for(int i=ii*tmon-tmon+1;i<=ii*tmon;i++)
+	for(int i=(ii-syr+1)*tmon-tmon+1;i<=(ii-syr+1)*tmon;i++)
 	{
 		
 		for(int n=1;n<=fisharea;n++)
@@ -1005,9 +1018,8 @@ FUNCTION void catlen_comm(const int& ii)
 		
 		tot_comm_obsCatLen(ii)(1,nlen) = rmvlogistic(pl,tau_l,seed+ii);	
 		totcatchLen(ii) = 	sum(tot_comm_obsCatLen(ii)(1,nlen));	
-		UtLen(ii) = totcatchLen(ii)/tB(ii*tmon-(nmon-smon));
-		//ytB(ii) = tB(ii*tmon-(nmon-smon));
-
+		UtLen(ii) = totcatchLen(ii)/tB((ii-syr+1)*tmon-(nmon-smon));
+		
 FUNCTION void calc_wt_comm(const int& ii)
    
 	//this is wrong! need to fix it!
@@ -1023,7 +1035,7 @@ FUNCTION void calc_wt_comm(const int& ii)
 	{    
 		for(im = smon; im<=nmon;im++)
 		{
-   			totwtcat(sage,nage) += elem_prod(CatageG(g)((ii-1)*tmon+im)(sage,nage),Wage(g)(im)(sage,nage));
+   			totwtcat(sage,nage) += elem_prod(CatageG(g)(((ii-syr+1)-1)*tmon+im)(sage,nage),Wage(g)(im)(sage,nage));
 		}
    	}
 
@@ -1034,7 +1046,7 @@ FUNCTION void calc_wt_comm(const int& ii)
 FUNCTION  void survey_data(const int& ii)
 		
 		int ind_sv;
-		ind_sv = surv_yrs(ii)*(tmon)-(nmon-surv_mon);
+		ind_sv = (surv_yrs(ii)-syr+1)*(tmon)-(nmon-surv_mon);
 		
 		//if(indmonth(ind_sv)==surv_mon)
        	//{	
@@ -1060,7 +1072,7 @@ FUNCTION  void survey_data(const int& ii)
 FUNCTION  void survey_dataLen(const int& ii)
 		
 		int ind_sv;
-		ind_sv = surv_yrs(ii)*(tmon)-(nmon-surv_mon);
+		ind_sv = (surv_yrs(ii)-syr+1)*(tmon)-(nmon-surv_mon);
 		
 		
        		survB(ii)=sum(VulBage(ind_sv)(sage,nage))* mfexp(epsilon(ii));
@@ -1359,7 +1371,7 @@ FUNCTION run_projections
 		//maxPos.initialize();		
 		//calcmaxpos();
 
-		//cout<<"maxPos "<<maxPos<<endl;
+		cout<<"chegou aqui? "<<endl;
 		calc_position(ii);
 	
 		calc_effarea(ii,ststp,catlim);
@@ -1382,6 +1394,8 @@ FUNCTION run_projections
 			catlen_comm(indyr(ii));
 			calc_wt_comm(indyr(ii));
 			run_stock_assessment(indyr(ii),svyr-1);
+
+			exit(1);
 		}
 		
 
@@ -1390,6 +1404,8 @@ FUNCTION run_projections
 	}
 
 	calc_spr();
+
+
 
 
 FUNCTION save_OMrep
@@ -1560,7 +1576,7 @@ FUNCTION output_dat
 FUNCTION void output_datSA(const int& ii,const int& svy)
 
 	int tmpts;
-	tmpts = ii*tmon;
+	tmpts = (ii-syr+1)*tmon;
 
 	int tot_tmppcat;
 	ivector tmppcat(1,fisharea);
@@ -1695,9 +1711,9 @@ FUNCTION void write_iscam_ctl_file(const int& ii,const int& svy)
 	mfs<<"##        sel   sel  sel       age    year  phz or                    start  end        ##"<< endl;
 	mfs<<"## Index  type  mu   sd   sex  nodes  nodes mirror lam1  lam2  lam3 | block  block      ##"<< endl;
 	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
-    mfs<<"1" <<"\t"<<"4" <<"\t"<<"3.5" <<"\t"<<"0.45" <<"\t"<<"0" <<"\t"<<"7" <<"\t"<<"1" <<"\t"<<"2" <<"\t"<<"150.0" <<"\t"<<"1.0" <<"\t"<<"1.0" <<"\t"<<"71" <<"\t"<<"91"<<endl;
-    mfs<<"1" <<"\t"<<"4" <<"\t"<<"3.5" <<"\t"<<"0.45" <<"\t"<<"0" <<"\t"<<"7" <<"\t"<<"1" <<"\t"<<"2" <<"\t"<<"150.0" <<"\t"<<"1.0" <<"\t"<<"1.0" <<"\t"<<"92" <<"\t"<<ii<<endl;
-    mfs<<"2" <<"\t"<<"2" <<"\t"<<"1.5" <<"\t"<<"0.45" <<"\t"<<"0" <<"\t"<<"4" <<"\t"<<"5" <<"\t"<<"2" <<"\t"<<"200.0" <<"\t"<<"50.0"<<"\t"<<"50.0"<<"\t"<<"71" <<"\t"<<ii<<endl;
+    mfs<<"1" <<"\t"<<"4" <<"\t"<<"3.5" <<"\t"<<"0.45" <<"\t"<<"0" <<"\t"<<"7" <<"\t"<<"1" <<"\t"<<"2" <<"\t"<<"150.0" <<"\t"<<"1.0" <<"\t"<<"1.0" <<"\t"<<rep_yr <<"\t"<<"1999"<<endl;
+    mfs<<"1" <<"\t"<<"4" <<"\t"<<"3.5" <<"\t"<<"0.45" <<"\t"<<"0" <<"\t"<<"7" <<"\t"<<"1" <<"\t"<<"2" <<"\t"<<"150.0" <<"\t"<<"1.0" <<"\t"<<"1.0" <<"\t"<<"1999" <<"\t"<<ii<<endl;
+    mfs<<"2" <<"\t"<<"2" <<"\t"<<"1.5" <<"\t"<<"0.45" <<"\t"<<"0" <<"\t"<<"4" <<"\t"<<"5" <<"\t"<<"2" <<"\t"<<"200.0" <<"\t"<<"50.0"<<"\t"<<"50.0"<<"\t"<<rep_yr <<"\t"<<ii<<endl;
     mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
 	mfs<<"## Retention P(retaining size/age)													 	"<< endl;														
 	mfs<<"## ret_dControls																			"<< endl;
@@ -1747,8 +1763,8 @@ FUNCTION void write_iscam_ctl_file(const int& ii,const int& svy)
   	mfs<<"1   "<<"\t"<<" 1   "<<"\t"<<"       # 10 -n_sel_blocks (number of selex blocks)"<< endl;
 	mfs<<"## ------------------------------------------------------------------------- ##"<< endl;
 	mfs<<"## Start year of each time block: 1 row for each gear 						 "<< endl;
-	mfs<<"71 "<< endl;
-	mfs<<"71 "<< endl;
+	mfs<<rep_yr<< endl;
+	mfs<<rep_yr<< endl;
 	mfs<<"##"<< endl;
 	mfs<<"##"<< endl;
 	mfs<<"##"<< endl;
