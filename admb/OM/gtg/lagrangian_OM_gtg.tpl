@@ -281,7 +281,7 @@ DATA_SECTION
        			ntmp(fisharea+1) = narea;
        			indfisharea(narea) = fisharea;
 
-       			cout<<"Ok after indfisharea calcs"<< endl;
+       			//cout<<"Ok after indfisharea calcs"<< endl;
 
        			//calc for indnatarea
        			ntmp1(1) = sarea;
@@ -386,6 +386,7 @@ PARAMETER_SECTION
 	matrix Effarea(1,ntstp,sarea,narea);
  	matrix tnage(1,ntstp,sage,nage);
  	matrix tBage(1,ntstp,sage,nage);
+ 	matrix ywa(syr,proj_yr,sage,nage);
 
 
  	matrix Watage_comm(rep_yr+1,proj_yr,sage,nage);
@@ -439,9 +440,10 @@ PARAMETER_SECTION
 PRELIMINARY_CALCS_SECTION
 
 	read_catlim();
-	incidence_functions();
 	initialization();
-	cout<<"chegou aqui?"<<endl;
+	incidence_functions();
+	calc_first_year();
+	//cout<<"chegou aqui?"<<endl;
 	move_grow_die();
 	
 	run_projections();
@@ -523,7 +525,7 @@ FUNCTION incidence_functions
 
   	
 	
-	cout<<"Ok after incidence_functions"<<endl;  
+	//cout<<"Ok after incidence_functions"<<endl;  
 
 FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt)
 
@@ -561,6 +563,7 @@ FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt)
             	
             		
             		yNage(indyr(ii))(sage,nage) += Nage(g)(ii)(sage,nage);
+
             		//cout<<"Nage(g)(ii)(sage) "<<Nage(g)(ii)(sage)<<endl;
             		//exit(1);
 
@@ -676,8 +679,11 @@ FUNCTION void calc_catage(const int& ii)
 
 		int a,r,g;
 		
+		
+
 		for(int r=sarea;r<=narea;r++)
 		{
+
 
 			CatchNatAge(ii)(indfisharea(r))(sage-2) = ii;
 			CatchNatAge(ii)(indfisharea(r))(sage-1) = indfisharea(r);
@@ -693,8 +699,6 @@ FUNCTION void calc_catage(const int& ii)
 				CatchNatAge(ii)(indfisharea(r))(a) += CatchAreaAge(ii)(r)(a);
 			}
 
-		
-
 			Catage(ii)(sage,nage) += CatchAreaAge(ii)(r)(sage,nage);
 			
 			yCatchNatAge(indyr(ii))(indfisharea(r))(sage-2) = indyr(ii);
@@ -705,10 +709,12 @@ FUNCTION void calc_catage(const int& ii)
 			yCatchStateAge(indyr(ii))(indnatarea(r))(sage-1) = indnatarea(r);
 			yCatchStateAge(indyr(ii))(indnatarea(r))(sage,nage) += CatchAreaAge(ii)(r)(sage,nage);
 			
-			yCatchtotalage(indyr(ii))(sage,nage) += CatchAreaAge(ii)(r)(sage,nage);
+			
+			//totcat(sage,nage) += CatageG(g)(ii+(im-1))(sage,nage);
 
 		}
-		cout<<"Ok after calc_catage"<<endl;
+		yCatchtotalage(indyr(ii))(sage,nage) += Catage(ii)(sage,nage);
+		
 
 
 FUNCTION void calc_catlen(const int& ii)
@@ -742,11 +748,10 @@ FUNCTION void calc_catlen(const int& ii)
 			yCatchStateLen(indyr(ii))(indnatarea(r))(1,nlen) += CatchAreaLen(ii)(r)(1,nlen);
 			
 			yCatchtotalLen(indyr(ii))(1,nlen) += CatchAreaLen(ii)(r)(1,nlen);
-			cout<<"area is "<< r <<endl;
-
+			
 		}
 
-		cout<<"Ok after calc_catLen"<<endl;
+		//cout<<"Ok after calc_catLen"<<endl;
 
 
 
@@ -757,8 +762,30 @@ FUNCTION initialization
  	CatchAreaAge.initialize();
  	CatchNatAge.initialize();
  	Nage.initialize();
+ 	tB.initialize();
+ 	tBage.initialize();
+ 	tnage.initialize();
+ 	wa.initialize();
+ 	tVBarea.initialize();
+ 	NAreaAge.initialize();
+ 	NAreaLen.initialize();
 
- 	
+ 	CatageG.initialize();
+ 	Catage.initialize();
+ 	yNage.initialize();
+ 	yFatage.initialize();
+ 	CatchAreaLen.initialize();
+ 	CatchAreaAge.initialize();
+ 	CatchAreaAgeG.initialize();
+ 	yCatchtotalage.initialize();
+ 	yCatchtotalLen.initialize();
+ 	yCatchNatAge.initialize();
+ 	yCatchStateAge.initialize();
+ 	yCatchNatLen.initialize();
+ 	yCatchStateLen.initialize();
+
+
+FUNCTION calc_first_year  	
 
  	for(int g=1;g<=ngroup;g++)
 	{
@@ -774,8 +801,6 @@ FUNCTION initialization
 		}
 		Nage(g)(1)(nage) /= (1.-mfexp(-za(nage)));
 
-		
-		cout<<"g is "<<g<<endl;
 
 		VulB(g)(1)(sage-2) = 1;         		          	
         VulB(g)(1)(sage-1) = g;
@@ -799,10 +824,10 @@ FUNCTION initialization
 	calc_effarea(1,1,catl);
 	
 	calc_catage(1);
-	cout<<"chegou?"<<endl;
+	//cout<<"chegou?"<<endl;
 	calc_catlen(1);
 
-	cout<<"Ok after initialization"<<endl;
+	//cout<<"Ok after initialization"<<endl;
  
 
 FUNCTION move_grow_die
@@ -985,22 +1010,27 @@ FUNCTION void catlen_comm(const int& ii)
 
 FUNCTION void calc_wt_comm(const int& ii)
    
-
+	//this is wrong! need to fix it!
    int im,g;
   
    dvar_vector totwtcat(sage,nage);
+   
+   totwtcat.initialize();
+   
+
 
     for(g=1;g<=ngroup;g++)
 	{    
-		for(im = nmon; im<=nmon;im++)
+		for(im = smon; im<=nmon;im++)
 		{
-   			totwtcat(sage,nage) += elem_prod(CatageG(g)(ii+(im-1))(sage,nage),Wage(g)(im)(sage,nage));
+   			totwtcat(sage,nage) += elem_prod(CatageG(g)((ii-1)*tmon+im)(sage,nage),Wage(g)(im)(sage,nage));
 		}
    	}
 
    	Watage_comm(ii)(sage,nage) = elem_div(totwtcat(sage,nage),yCatchtotalage(ii)(sage,nage));
-
-
+   	
+   	
+   
 FUNCTION  void survey_data(const int& ii)
 		
 		int ind_sv;
@@ -1025,7 +1055,7 @@ FUNCTION  void survey_data(const int& ii)
        	//}	
 	
 			
-    cout<<"Ok after survey_data"<< endl;
+    //cout<<"Ok after survey_data"<< endl;
 
 FUNCTION  void survey_dataLen(const int& ii)
 		
@@ -1050,7 +1080,7 @@ FUNCTION  void survey_dataLen(const int& ii)
       	
 	
 			
-    cout<<"Ok after survey_dataLen"<< endl;
+    //cout<<"Ok after survey_dataLen"<< endl;
 
 
 FUNCTION void calc_length_comps(const int& ii)
@@ -1110,9 +1140,10 @@ FUNCTION void calc_length_comps(const int& ii)
 	
 		wa(sage,nage) += Wage(g)(1)(sage,nage)*prop_ng(g);
 
+
+
 		
 	}
-
 
 
 FUNCTION calc_selectivity
@@ -1143,13 +1174,21 @@ FUNCTION calc_selectivity
 
 FUNCTION calc_spr	
 
-	int i, ii, a;
+	int i, ii, a, g;
 
 	
 	dvector lz(sage,nage);
 	
 	
 	for(ii=syr; ii<=proj_yr;ii++){
+
+		
+		dvar_vector ypropg(1,ngroup);
+
+		for(g=1; g<=ngroup; g++){
+			ypropg(g) =  sum(Nage(g)((ii-1)*tmon+1)(sage,nage))/sum(yNage(ii)(sage,nage));
+			ywa(ii)(sage,nage) += Wage(g)(1)(sage,nage)*ypropg(g);
+		}
 
 
 		yFatage(ii)(sage,nage) = elem_div(yCatchtotalage(ii)(sage,nage),yNage(ii)(sage,nage));
@@ -1162,15 +1201,13 @@ FUNCTION calc_spr
 		lz(nage) /= value(1.-mfexp(-m-yFatage(ii)(nage)));
 
 
-		phie(ii)=elem_prod(lz,fa)*wa;
+		phie(ii)=elem_prod(lz,fa)*ywa(ii);
 		spr(ii)=phie(ii)/phiE;
 
 	
 	}
 
-	
-	
-	cout<<"Ok after calculating SPR"<<endl;
+	//cout<<"Ok after calculating SPR"<<endl;
 
 
 FUNCTION void run_stock_assessment(const int& ii,const int& svy)
@@ -1209,7 +1246,6 @@ FUNCTION void run_stock_assessment(const int& ii,const int& svy)
             write_iscam_data_file(ii,svy);
             write_iscam_ctl_file(ii,svy);
 
-            
 
             #if defined __APPLE__ || defined __linux
             // cout<<m_est_fmsy<<endl;
@@ -1408,6 +1444,10 @@ FUNCTION output_true
 	ofs<<"minPos" << endl << minPos <<endl;
 	ofs<<"varPos" << endl << varPos <<endl;
 	ofs<<"PosX" << endl << PosX <<endl;	
+	ofs<<"wa" << endl << wa <<endl;	
+	ofs<<"ywa" << endl << ywa <<endl;	
+	ofs<<"Wage" << endl << Wage <<endl;	
+	ofs<<"Lage" << endl << Lage <<endl;	
 	ofs<<"SB" << endl << SB <<endl;
 	ofs<<"tB" << endl << tB <<endl;
 	ofs<<"Ut" << endl << Ut <<endl;

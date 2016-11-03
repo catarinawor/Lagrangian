@@ -1476,3 +1476,28 @@ mydat<-data.frame(parameter=rep(c("mo","cvPos","maxPos50","maxPossd"),each=100),
 plot(mydat)
 points(true_pars[c(2,3,4,1)],col="red",pch=16)
 
+
+#===================================================================================
+rm(list=ls()); 
+
+library(plyr)
+library(data.table)
+library(ggplot2)
+library(reshape2)
+library(animation)
+library(ggmap)
+#if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")
+setwd("/Users/catarinawor/Documents/Lagrangian/")
+source("R/read.admb.R")
+
+
+
+sim <- read.rep("admb/OM/gtg/lagrangian_OM_gtg.rep")
+
+nomes <- names(sim)
+
+plot(sim$wa)
+
+matplot(sim$ywa)
+
+
