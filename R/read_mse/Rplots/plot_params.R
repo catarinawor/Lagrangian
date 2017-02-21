@@ -6,9 +6,8 @@
 # code adapted from iSCAM stuff (Martell et al)
 #==============================================
 #for testing delete, when done
-M<-SAdat
 
-length(M)
+
 
 source("/Users/catarinawor/Documents/Lagrangian/R/read_mse/Rplots/calc_quantile.R")
 

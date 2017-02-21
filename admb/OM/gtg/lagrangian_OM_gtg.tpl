@@ -1395,6 +1395,7 @@ FUNCTION run_projections
 			calc_wt_comm(indyr(ii));
 			run_stock_assessment(indyr(ii),svyr-1);
 
+			cout<<"e aqui? "<<endl;
 			exit(1);
 		}
 		

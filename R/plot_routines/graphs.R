@@ -14,7 +14,7 @@ library(animation)
 library(ggmap)
 #if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")
 setwd("/Users/catarinawor/Documents/Lagrangian/")
-source("read.admb.R")
+source("R/read.admb.R")
 
 
 
@@ -299,10 +299,10 @@ text(2, 49.5,"Canada", col="blue", font=2)
 
 #=======================================================================
 #Simulation evaluation graphs
-
+setwd("/Users/catarinawor/Documents/Lagrangian/admb/OM/simple")
 sim <- read.rep("lagrangian_OM.rep")
 
-
+sim$tau_c
 nomes <- names(sim)
 
 true_pars <- c(sim$"mo",sim$"cvPos",sim$"maxPos50",sim$"maxPossd")  
@@ -310,14 +310,14 @@ true_pars <- c(sim$"mo",sim$"cvPos",sim$"maxPos50",sim$"maxPossd")
 
 
 #parameter estimates
-.SIMDIRS   <- c("/Users/catarinawor/Documents/Lagrangian/SimResult_5areas_tau1",
-  "/Users/catarinawor/Documents/Lagrangian/SimResult_5areas_tau1_delta2",
-  "/Users/catarinawor/Documents/Lagrangian/SimResult_3areas_tau1",
-  "/Users/catarinawor/Documents/Lagrangian/SimResult_3areas_tau1_delta2",
-  "/Users/catarinawor/Documents/Lagrangian/SimResult_5areas_tau04",
-  "/Users/catarinawor/Documents/Lagrangian/SimResult_5areas_tau04_delta2",
-  "/Users/catarinawor/Documents/Lagrangian/SimResult_3areas_tau04",
-  "/Users/catarinawor/Documents/Lagrangian/SimResult_3areas_tau04_delta2")
+.SIMDIRS   <- c("/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_5areas_tau1",
+  "/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_5areas_tau1_delta2",
+  "/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_3areas_tau1",
+  "/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_3areas_tau1_delta2",
+  "/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_5areas_tau04",
+  "/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_5areas_tau04_delta2",
+  "/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_3areas_tau04",
+  "/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_3areas_tau04_delta2")
 
 .SIMNAME<-list(length(.SIMDIRS))
 
