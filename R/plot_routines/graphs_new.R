@@ -12,7 +12,7 @@ library(animation)
 library(ggmap)
 
 #if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")
-setwd("/Users/catarinawor/Documents/Lagrangian/")
+setwd("/Users/catarinawor/Documents/Lagrangian/R")
 source("read.admb.R")
 
 sim_gtg <- read.rep("lagrangian_OM_gtg.rep") 

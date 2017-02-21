@@ -13,14 +13,14 @@ library(reshape2)
 library(animation)
 library(ggmap)
 #if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")
-setwd("/Users/catarinawor/Documents/Lagrangian/")
+setwd("/Users/catarinawor/Documents/Lagrangian")
 source("R/read.admb.R")
 
 
 
-sim <- read.rep("lagrangian_OM.rep")
+sim <- read.rep("admb/OM/simple/lagrangian_OM.rep")
 #sim_gtg <- read.rep("lagrangian_OM_gtg.rep")
-est <- read.rep("lagrangian_est.rep")
+est <- read.rep("admb/mov_est/simple/lagrangian_est.rep")
 
 
 nomes <- names(sim)
