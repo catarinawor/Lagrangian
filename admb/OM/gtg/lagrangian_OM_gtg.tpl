@@ -453,9 +453,9 @@ PRELIMINARY_CALCS_SECTION
 	incidence_functions();
 	calc_first_year();
 	move_grow_die();
-	cout<<"chegou aqui?"<<endl;
 	
-	run_projections();
+	
+	//run_projections();
 	
 	output_true();
 

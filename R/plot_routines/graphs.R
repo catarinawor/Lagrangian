@@ -381,8 +381,8 @@ setwd("/Users/catarinawor/Documents/hake/Thesis/figs/chap2")
 pdf("single_version_simeval.pdf", width=14, height=7)
 par(mfcol=c(2,4))
 for( i in 1:length(.SIMDIRS)){
-  boxplot(pbias[[i]],names=c(expression("t"[0]),expression("cv"),expression("a"[50]),
-    expression("sd"["X"["max"]])),ylim=c(-10,10),main=titulos[i],cex.axis=1.5,
+  boxplot(pbias[[i]],names=c(expression("t"[0]),expression("CV"),expression("a"[50]),
+    expression(sigma["X"["max"]])),ylim=c(-10,10),main=titulos[i],cex.axis=1.5,
     cex.lab=2,cex.main=2,cex=1.6)
   abline(h=0)
   text(4, y = 8, labels = nrow(pbias[[i]]), cex=2)
@@ -473,9 +473,9 @@ library(ggmap)
 
 #if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")
 setwd("/Users/catarinawor/Documents/Lagrangian/")
-source("read.admb.R")
+source("R/read.admb.R")
 
-sim_gtg <- read.rep("lagrangian_OM_gtg.rep")
+sim_gtg <- read.rep("admb/OM/gtg/lagrangian_OM_gtg.rep")
 #est_gtg <- read.rep("lagrangian_est_gtg.rep")
 
 
@@ -614,14 +614,14 @@ indpar<-c(1,2,3,4)
 #========================================================================
 
 
-.SIMDIRSGTG   <- c("/Users/catarinawor/Documents/Lagrangian/SimResult_gtg_5areas_tau1",
-                   "/Users/catarinawor/Documents/Lagrangian/SimResult_gtg_5areas_tau1_delta2",
-                   "/Users/catarinawor/Documents/Lagrangian/SimResult_gtg_3areas_tau1",
-                   "/Users/catarinawor/Documents/Lagrangian/SimResult_gtg_3areas_tau1_delta2",
-                   "/Users/catarinawor/Documents/Lagrangian/SimResult_gtg_5areas_tau04",
-                   "/Users/catarinawor/Documents/Lagrangian/SimResult_gtg_5areas_tau04_delta2",
-                   "/Users/catarinawor/Documents/Lagrangian/SimResult_gtg_3areas_tau04",
-                   "/Users/catarinawor/Documents/Lagrangian/SimResult_gtg_3areas_tau04_delta2")
+.SIMDIRSGTG   <- c("/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_5areas_tau1",
+                   "/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_5areas_tau1_delta2",
+                   "/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_3areas_tau1",
+                   "/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_3areas_tau1_delta2",
+                   "/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_5areas_tau04",
+                   "/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_5areas_tau04_delta2",
+                   "/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_3areas_tau04",
+                   "/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_3areas_tau04_delta2")
 
 
 

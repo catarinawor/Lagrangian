@@ -234,6 +234,8 @@ DATA_SECTION
 		
 		if( eof != 999 )
 		{
+			cout<< "minPos is: "<<minPos <<endl;
+			cout<< "effPwr is: "<<effPwr <<endl;
 			cout<< "Error reading data.\n Fix it."<<endl;
 			cout<< "eof is: "<<eof<<endl;
 			ad_exit(1);
@@ -396,7 +398,7 @@ FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt )
 		VulB(ii) = elem_prod(elem_prod(Nage(ii),va),wa);
 		SB(ii) = elem_prod(Nage(ii),fa)*wa/2.0;
 
-		//cout<<"OK after calc_numbers_at_age"<<endl;		
+		cout<<"OK after calc_numbers_at_age"<<endl;		
 
 FUNCTION void calc_effarea(const int& ii,const int& ie)
 

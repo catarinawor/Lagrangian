@@ -116,6 +116,7 @@ DATA_SECTION
 			cout<<"Error reading data.\n Fix it."<<endl;
 			cout<< "eof is: "<<eof<<endl;
 			cout<< "surv_yrs is "<<surv_yrs<<endl;
+			cout<< "effPwr is "<<effPwr<<endl;
 			ad_exit(1);
 		}
 
@@ -392,12 +393,14 @@ PRELIMINARY_CALCS_SECTION
 		
 		move_grow_die();
 	
-		run_projections();
+		//run_projections();
 	
 		output_true();
+		output_pin();
+		output_dat();
 
 		
-		save_OMrep();
+		//save_OMrep();
 		
 	
 		exit(1);
@@ -1130,8 +1133,8 @@ FUNCTION calc_catlim
 	cout<< "catlim" << endl << catlim<< endl;
 	//cout<< "seltotal_SA" << endl << seltotal_SA<< endl;
 
-	ofstream afs("catlim.txt");
-	afs<<"catlim" << endl << catlim <<endl;
+	//ofstream afs("catlim.txt");
+	//afs<<"catlim" << endl << catlim <<endl;
 
 
 
@@ -1318,7 +1321,7 @@ FUNCTION output_dat
 	afs<<"# fecundity at age " << endl << fa <<endl;
 	afs<<"# vulnerability at age " << endl << va <<endl;
 	afs<<"# minPos "<< endl << minPos <<endl;
-	afs<<"# Total effort by country and year " << endl << TotEffyear_rep <<endl;
+	afs<<"# Total effort by country and year " << endl << TotEffyear_rep<<endl;
 	afs<<"# Total effort by country and month " << endl << TotEffmonth <<endl;
 	afs<<"# effPwr"<< endl << effPwr <<endl;
 	afs<<"# dMinP " << endl << 0.1e-15 <<endl;
