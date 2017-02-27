@@ -110,7 +110,7 @@ DATA_SECTION
 
 	init_vector effPwr(sarea,narea);
 
-	init_vector wt(rep_yr+1,proj_yr);
+	//init_vector wt(rep_yr+1,proj_yr);
 
 	init_int satype;
 
@@ -151,6 +151,8 @@ DATA_SECTION
    	ivector nationareas(1,nations);
    	
    	vector epsilon(1,surv_nobs);
+	vector wt(syr,nyr);
+
 
    	int n_rg;
    	!!n_rg  = (narea-sarea+1) * ngroup;
@@ -229,8 +231,8 @@ DATA_SECTION
 			nationareas(nations)=narea-sarea+1 - sum(nationareas(1,nations-1));
 			
 			random_number_generator rng(seed);
-			//wt.fill_randn(rng);
-			//wt*=sigR;
+			wt.fill_randn(rng);
+			wt*=sigR;
 
 			epsilon.fill_randn(rng);
 			epsilon*=0.2;
@@ -458,8 +460,11 @@ PRELIMINARY_CALCS_SECTION
 	//run_projections();
 	
 	output_true();
+	output_pin();
+	output_dat();
 
-	save_OMrep();
+
+	//save_OMrep();
 	
 	exit(1);
 
@@ -633,7 +638,7 @@ FUNCTION void calc_effarea(const int& ii,const int& ia,const dvar_vector& ctlim)
 	for(int r= sarea; r<=narea; r++)
 	{
 		if(sum(yCatchNatAge(indyr(ii))(indnatarea(r))(sage,nage))<ctlim(indnatarea(r))){
-			tmp1(r)= (pow(tVBarea(ii)(r)+0.0000001,fbeta)/(totVBnation(ii)(indnatarea(r))+0.01)) * effPwr(r);
+			tmp1(r)= (pow(tVBarea(ii)(r)+0.00001,fbeta)/(totVBnation(ii)(indnatarea(r))+0.01)) * effPwr(r);
 			tmp2(r) = tmp1(r)*TotEffyear(indfisharea(r))(indyr(ia));
 			Effarea(ii)(r) = tmp2(r)*TotEffmonth(indfisharea(r))(indmonth(ii));
 		}else{
@@ -862,7 +867,7 @@ FUNCTION move_grow_die
 		calc_position(ie);
 		calc_effarea(ie,ie,catl);
 		calc_catage(ie);
-		calc_catlen(ie);
+		//calc_catlen(ie);
 		
 		//cout<<"ie is "<<indyr(ie)<<endl;
 
@@ -888,23 +893,23 @@ FUNCTION move_grow_die
 		calc_effarea(i,i,catl);		
 
 		calc_catage(i);
-		calc_catlen(i);
+		//calc_catlen(i);
 
 		clean_catage(i);
 
-		if(indmonth(i)==nmon){
+		//if(indmonth(i)==nmon){
 			//survey calculations
 			
-			if(surv_yrs(svyr)==indyr(i)){
+		//	if(surv_yrs(svyr)==indyr(i)){
 				
-				survey_data(svyr);
-				svyr +=1;
-			}
+		//		survey_data(svyr);
+		////		svyr +=1;
+		//	}
 
-			catage_comm(indyr(i));	
-			catlen_comm(indyr(i));
-			calc_wt_comm(indyr(i));
-		}
+		//	catage_comm(indyr(i));	
+		//	catlen_comm(indyr(i));
+		//	calc_wt_comm(indyr(i));
+		//}
 	}
 
 
@@ -1524,7 +1529,7 @@ FUNCTION output_pin
 	
 	tmp_mo 		= ceil(randu(rngmo)*(mo+3));
 		
-	ofstream ifs("lagrangian_est.pin");
+	ofstream ifs("../../mov_est/simple/lagrangian_est.pin");
 
 	ifs<<"#log_mo \n "  << log(tmp_mo) <<endl;
 	//ifs<<"#log_mo \n "  << log(mo) <<endl;
@@ -1540,7 +1545,7 @@ FUNCTION output_pin
 FUNCTION output_dat
 
 	//ofstream afs("lagrangian_est_gtg.dat");
-	ofstream afs("lagrangian_est.dat");
+	ofstream afs("../../mov_est/simple/lagrangian_est.dat");
 	afs<<"# syr " << endl << rep_yr+1 <<endl;
 	afs<<"# nyr " << endl << nyr <<endl;
 	afs<<"# sage " << endl << sage <<endl;

@@ -10,22 +10,19 @@
 ## i.e. it does not print it on the terminal.
 ##variables
 
-OM=lagrangian_OM
-SIMDAT=lagrangian_OM.dat
+OM=lagrangian_OM_gtg
+SIMDAT=lagrangian_OM_gtg.dat
 SEED = ../../seed.txt
 LAST := 3
 
-
-rom: $(OM) $(SIMDAT)  $(SEED) 
+rom: $(OM) $(SIMDAT)  $(SEED) compiOM
 	./$(OM) -ind $(SIMDAT) 
 
-all: 
-	compiOM rom 
+all: $(rom) $(SIMDAT) $(compiOM)
+	rom 
 
 compiOM: $(OM)
 	admb $(OM)
-
-
 
 
 

@@ -52,9 +52,7 @@ DATA_SECTION
 	init_number fe;
 	init_number q;
 	init_number fbeta;
-	init_number sigR;	
-
-	
+	init_number sigR;
 
 
 	
@@ -100,7 +98,7 @@ DATA_SECTION
 
 	init_vector effPwr(sarea,narea);
 
-	init_vector wt(rep_yr+1,proj_yr);
+	//init_vector wt(rep_yr+1,proj_yr);
 
 	init_int satype;
 
@@ -116,6 +114,7 @@ DATA_SECTION
 			cout<<"Error reading data.\n Fix it."<<endl;
 			cout<< "eof is: "<<eof<<endl;
 			cout<< "surv_yrs is "<<surv_yrs<<endl;
+			cout<< "effPwr is "<<effPwr<<endl;
 			cout<< "effPwr is "<<effPwr<<endl;
 			ad_exit(1);
 		}
@@ -135,7 +134,7 @@ DATA_SECTION
    	vector areas(sarea,narea);
    	ivector fishingr(1,fisharea);
    	ivector nationareas(1,nations);
-   	//vector wt(syr,nyr);
+   	vector wt(syr,nyr);
    	//vector wtsim(syr,rep_yr);
 
 
@@ -194,8 +193,8 @@ DATA_SECTION
 
 			random_number_generator rng(seed);
 			
-			//wt.fill_randn(rng);
-			//wt*=sigR;
+			wt.fill_randn(rng);
+			wt*=sigR;
 
 			epsilon.fill_randn(rng);
 			epsilon*=0.2;
@@ -387,7 +386,7 @@ PRELIMINARY_CALCS_SECTION
 	//{
 		// • initial run -  no stock assessment
 		//case 1:    
-		read_catlim();
+		
 		incidence_functions();
 		initialization();
 		
@@ -526,14 +525,14 @@ FUNCTION void calc_effarea(const int& ii,const int& ia, const dvar_vector& ctlim
 
 		for(int rr= sarea; rr<=narea; rr++)
 		{
-       		if(sum(yCatchNatAge(indyr(ii))(indnatarea(rr))(sage,nage))<ctlim(indnatarea(rr))){
+       		//if(sum(yCatchNatAge(indyr(ii))(indnatarea(rr))(sage,nage))<ctlim(indnatarea(rr))){
 
 				tmp1(rr)= (pow(VBarea(ii)(rr)+0.00001,fbeta)/(totVBnation(ii,indnatarea(rr))+0.01)) * effPwr(rr);
 				tmp2(rr) = tmp1(rr)*TotEffyear(indfisharea(rr))(indyr(ia));
 				Effarea(ii)(rr) = tmp2(rr)*TotEffmonth(indfisharea(rr))(indmonth(ii));
-			}else{
-				Effarea(ii)(rr) = 0.0;
-			}
+			//}else{
+			//	Effarea(ii)(rr) = 0.0;
+			//}
 
 		}
 		
@@ -639,7 +638,7 @@ FUNCTION move_grow_die
 
 	for(int ie=2;ie<=(rep_yr*tmon);ie++)
 	{ 
-		calc_numbers_at_age(ie,0.0);
+		calc_numbers_at_age(ie,wt(indyr(ie)));
 
 		maxPos.initialize();		
 		calcmaxpos();
@@ -1145,7 +1144,7 @@ FUNCTION output_true
 	
 	ofstream ofs("lagrangian_OM.rep");
 
-	ofs<<"OM type" << endl << "gtg" <<endl;
+	ofs<<"OM type" << endl << "simple" <<endl;
 	ofs<<"seed" << endl << seed <<endl;
 	ofs<<"mo" << endl << mo <<endl;
 	ofs<<"tau_c" << endl << tau_c<<endl;
@@ -1247,7 +1246,7 @@ FUNCTION output_pin
 	//ifs<<"# maxPos50 \n" << log(maxPos50) <<endl;
 	ifs<<"# maxPossd \n"<< log(guess_maxPossd(ceil(randu(rngmaxPossd)*7))) <<endl;
 	//ifs<<"# maxPossd \n"<< log(maxPossd) <<endl;
-	ifs<<"#wt \n" << wt*err <<endl;
+	ifs<<"#wt \n" << wt(rep_yr+1,nyr)*err <<endl;
 
 
 FUNCTION output_pin_SA
