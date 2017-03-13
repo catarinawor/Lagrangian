@@ -10,20 +10,20 @@
 ## i.e. it does not print it on the terminal.
 ##variables
 
-DIROM=/Users/catarinawor/Documents/Lagrangian/admb/OM/simple/
+DIROM=/Users/catarinawor/Documents/Lagrangian/admb/OM/gtg/
 DIREXEC=/Users/catarinawor/Documents/Lagrangian/admb/mov_est/simple/
 EXEC=lagrangian_est
 DAT=mov_est/simple/lagrangian_est.dat
-OM=lagrangian_OM
-SIMDAT=OM/simple/lagrangian_OM.dat
+OM=lagrangian_OM_gtg
+SIMDAT=OM/simple/lagrangian_OM_gtg.dat
 SEED = seed.txt
-LAST := 10
+LAST := 100
 SADIR= /Users/catarinawor/Documents/iSCAM/examples/hakelag/DATA
 
 
 NUMBERS := $(shell seq 1 ${LAST})
 
-RDATA ='source(file.path("..","simeval/SimResult_5areas_tau1","simRun.r"))'
+RDATA ='source(file.path("..","simeval/SimResult_gtg_3areas_tau1","simRun.r"))'
 
 RDATASA ='source(file.path("../","Lagrangian/","RunSA.r"))' 
 

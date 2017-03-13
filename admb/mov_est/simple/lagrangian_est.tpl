@@ -645,10 +645,10 @@ FUNCTION calc_obj_func
 		}
 		
 		cout<<"nlvec is"<<nlvec<<endl;
-		//cout<<"maxPos50 is "<<maxPos50<<endl;
-		//cout<<"maxPossd is "<<maxPossd<<endl;
-		//cout<<"cvPos is "<<cvPos<<endl;
-		//cout<<"mo is "<<mo<<endl;
+		cout<<"maxPos50 is "<<maxPos50<<endl;
+		cout<<"maxPossd is "<<maxPossd<<endl;
+		cout<<"cvPos is "<<cvPos<<endl;
+		cout<<"mo is "<<mo<<endl;
 	//exit(1);
 
 	
