@@ -448,8 +448,12 @@ FUNCTION incidence_functions
 
 	m_tsp = m/nmon;
 	za 	= m_tsp+va*fe;
-	//cout<<"Ok after incidence_functions"<< endl;
+
+	maxPos.initialize();
+	calcmaxpos();
+	varPos = maxPos*cvPos;
 	
+	//cout<<"Ok after incidence_functions"<< endl;
 FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt)
 
 
@@ -461,7 +465,7 @@ FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt)
             														//mfexp(wt(indyr(ii))
             	Nage(ii)(sage) = (So*SB(ii-nmon)/(1.+beta*SB(ii-nmon)))*(mfexp(expwt*err));
 
-            	for(int a = sage+1;a<=nage;a++)
+            	for(int a = sage+1;a<nage;a++)
             	{
             		
 					propBarea.initialize();
@@ -470,7 +474,8 @@ FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt)
 					{		
 						propBarea(rr) = (cnorm(areas(rr)+0.5,PosX(ii-1),varPos)-cnorm(areas(rr)-0.5,PosX(ii-1),varPos))(a-sage);	
 					}
-
+					//cout<<" propBarea "<<(propBarea)<<endl;
+					//cout<<" sum of propBarea "<<sum(propBarea)<<endl;
 					Nage(ii)(a) = (Nage(ii-1)(a-1)*propBarea)*mfexp(-(m_tsp+q*Effarea(ii-1)*va(a-1))) +
 								  Nage(ii-1)(a-1)*(1-sum(propBarea))*mfexp(-(m_tsp));
 
@@ -539,10 +544,14 @@ FUNCTION void calc_effarea(const int& ii,const int& ia, const dvar_vector& ctlim
 
 FUNCTION void calc_position(const int& ii)
 
-		varPos = maxPos*cvPos;
+		
 
-		PosX(ii) = minPos + (maxPos - minPos) * (0.5+0.5*sin(indmonth(ii)*PI/6 - mo*PI/6)); 
-
+		PosX(ii) = minPos + (maxPos - minPos) * (0.5+0.5*sin(indmonth(ii)*PI/6. - mo*PI/6. -PI/2.)); 
+		//cout<<"PosX(ii)"<<PosX(ii)<<endl;cout<<"PosX(ii)"<<PosX(ii)<<endl;
+		//cout<<"month " <<indmonth(ii) <<" "<<(0.5+0.5*sin(indmonth(ii)*PI/6. - mo*PI/6. -PI/2.))<<endl;
+		//cout<<"(maxPos - minPos) " <<(maxPos - minPos)<<endl;
+		//cout<<"(maxPos ) " <<(maxPos )<<endl;
+		
 		//VBarea(ii,sarea) = VulB(ii)* (cnorm(areas(sarea)+0.5,PosX(ii),varPos) - cnorm(areas(sarea)-0.5,PosX(ii),varPos));
 		//cout<<"onde é?"<<endl;
 		//cout<<"ii is "<<ii<<endl;
@@ -612,9 +621,10 @@ FUNCTION initialization
 	SB(1) = elem_prod(Nage(1),fa)*wa/2;
 	yNage(1)(sage,nage)= Nage(1)(sage,nage);
 
-	maxPos.initialize();
+
+
 	tB(1) = Nage(1)*wa;
-	calcmaxpos();
+
 	calc_position(1);
 
 	dvar_vector catl(1,nations);
@@ -636,12 +646,10 @@ FUNCTION move_grow_die
 	dvar_vector catl(1,nations);
 	catl.fill("{100000000,100000000}");
 
+
 	for(int ie=2;ie<=(rep_yr*tmon);ie++)
 	{ 
 		calc_numbers_at_age(ie,wt(indyr(ie)));
-
-		maxPos.initialize();		
-		calcmaxpos();
 
 		//cout<<"maxPos "<<maxPos<<endl;
 		calc_position(ie);
@@ -665,9 +673,6 @@ FUNCTION move_grow_die
 		
 		calc_numbers_at_age(i,wt(indyr(i)));
 		
-
-		maxPos.initialize();		
-		calcmaxpos();
 
 		//cout<<"maxPos "<<maxPos<<endl;
 		calc_position(i);
@@ -818,8 +823,8 @@ FUNCTION calc_length_comps
 FUNCTION dvar_vector calcmaxpos()
 	
 	maxPos(sage,nage) = 1./(1.+mfexp(-(age-maxPos50)/maxPossd));
-	maxPos(sage,nage) *= (narea-sarea);
-	maxPos(sage,nage) += sarea;			
+	maxPos(sage,nage) *= (narea-minPos(sage));
+	maxPos(sage,nage) += minPos(sage);			
 	//cout<<"age"<<age<<endl;
 	//cout<<"maxPos"<<maxPos<<endl;
 	

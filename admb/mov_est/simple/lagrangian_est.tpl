@@ -52,7 +52,8 @@ DATA_SECTION
 	init_vector minPos(sage,nage);
 	
 
-	init_matrix TotEffyear(1,fisharea,syr,nyr);
+	init_number Fmult;
+	init_matrix pTotEffyear(1,fisharea,syr,nyr);
 	init_matrix TotEffmonth(1,fisharea,smon,nmon);
 
 	init_vector effPwr(sarea,narea);
@@ -180,6 +181,11 @@ DATA_SECTION
        					indmonth(aa) = ii;
        				}
        			}
+
+       			for(int n=1;n<=fisharea;n++)
+       			{
+       				TotEffyear(n)(syr,nyr) = Fmult* pTotEffyear(n)(syr,nyr);
+       			}   
 
        			ntmp(1) = sarea;
        			
@@ -432,7 +438,7 @@ FUNCTION void calc_position(const int& ii)
 
 	varPos = maxPos*cvPos;
 
-	PosX(ii) = minPos + (maxPos - minPos) * (0.5+0.5*sin(indmonth(ii)*PI/6 - mo*PI/6)); 
+	PosX(ii) = minPos + (maxPos - minPos) * (0.5+0.5*sin(indmonth(ii)*PI/6. - mo*PI/6.-PI/2.)); 
 
 	
 

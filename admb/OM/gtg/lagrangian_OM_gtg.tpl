@@ -39,9 +39,9 @@ DATA_SECTION
 
 	init_int ngroup;
 
-	init_int nlen;
-	init_int inilen;
-	init_int lenstp;
+	//init_int nlen;
+	//init_int inilen;
+	//init_int lenstp;
 
 
 	init_int nations;
@@ -63,9 +63,9 @@ DATA_SECTION
 	init_number sigR;		
 	
 	init_number tau_c; 
-	init_number tau_l; 
+	//init_number tau_l; 
 	init_number tau_survey;		
-	init_number tau_surveyl;		
+	//init_number tau_surveyl;		
 	init_number err;
 
 	//======================
@@ -74,9 +74,10 @@ DATA_SECTION
 	init_vector Linf(1,ngroup);
 	init_number vbk;
 	init_number to;
-	init_number cvl;
-	init_number awt;
-	init_number bwt;
+	
+	//init_number cvl;
+	//init_number awt;
+	//init_number bwt;
 
 
 
@@ -98,7 +99,7 @@ DATA_SECTION
 	//init_vector maxPossd(1,ngroup);			
 	//init_vector cvPos(1,ngroup); 
 
-
+	init_vector wa(sage,nage);
 	init_vector fa(sage,nage);
 	init_vector va(sage,nage);
 	init_vector minPos(sage,nage);
@@ -145,7 +146,7 @@ DATA_SECTION
 	int tmon;
 
    	vector age(sage,nage);
-   	vector len(1,nlen);
+   	//vector len(1,nlen);
     vector areas(sarea,narea);
    	ivector fishingr(1,fisharea);
    	ivector nationareas(1,nations);
@@ -185,7 +186,7 @@ DATA_SECTION
 		ststp =	tmon * (nyr-syr+1);
 		ntstp = tmon * nproj_yr;
 		age.fill_seqadd(sage,1);
-		len.fill_seqadd(inilen,lenstp);
+		//len.fill_seqadd(inilen,lenstp);
 		areas.fill_seqadd(sarea,1);
 		nationareas.initialize();
 		fishingr.initialize();
@@ -252,7 +253,7 @@ DATA_SECTION
 
 		imatrix pmat(1,fisharea,1,ntstp);
 		matrix TotEffyear(1,fisharea,syr,nyr);
-		matrix TotEffyear_rep(1,fisharea,rep_yr+1,proj_yr);
+		//matrix TotEffyear_rep(1,fisharea,rep_yr+1,proj_yr);
 
 		number delta;
 		vector Xini(1,ngroup);
@@ -261,9 +262,7 @@ DATA_SECTION
 
        LOC_CALCS
 
-       			
-
-       			int aa =0;
+      			int aa =0;
        			
        			for(int y=syr;y<=proj_yr;y++)		
        			{
@@ -311,15 +310,15 @@ DATA_SECTION
        			pmat.initialize();
        			for(int n=1;n<=fisharea;n++)
        			{
-       				for(int ii=rep_yr+1;ii<=nyr;ii++)
-       				{
-       					TotEffyear_rep(n)(ii)= TotEffyear(n)(ii);
-       				}
+       				//for(int ii=rep_yr+1;ii<=nyr;ii++)
+       				//{
+       				//	TotEffyear_rep(n)(ii)= TotEffyear(n)(ii);
+       				//}
 
-       				for(int ia=nyr+1;ia<=proj_yr;ia++)
-       				{
-       					TotEffyear_rep(n)(ia)= TotEffyear(n)(nyr);
-       				}
+       				//for(int ia=nyr+1;ia<=proj_yr;ia++)
+       				//{
+       				//	TotEffyear_rep(n)(ia)= TotEffyear(n)(nyr);
+       				//}
 
        				for(int i=nrep_yr*nmon+1;i<=ntstp;i++)
        				{
@@ -357,15 +356,15 @@ PARAMETER_SECTION
 
 	//derived quantities
 	number kappa;
-	number So;
-	number Bo
-	number beta;
 	number phiE;
+	number So;
+	number Bo;
+	number beta;
 
 	number m_tsp;
 	
 	vector lxo(sage,nage);
-	vector wa(sage,nage);
+	//vector wa(sage,nage);
 	vector za(sage,nage);
 	vector SB(1,ntstp);
 	vector tB(1,ntstp);
@@ -388,15 +387,15 @@ PARAMETER_SECTION
 
 
 	matrix Catage(1,ntstp,sage,nage);
-	matrix Catlen(1,ntstp,1,nlen);
+	//matrix Catlen(1,ntstp,1,nlen);
 	matrix Fatage(1,ntstp,sage,nage);
  	matrix meanPosX(1,ntstp,sage-1,nage);
  	matrix tVBarea(1,ntstp,sarea,narea);
 	matrix totVBnation(1,ntstp,1,nations);
-	matrix VulBage(1,ntstp,sage,nage);
+	//matrix VulBage(1,ntstp,sage,nage);
 	matrix Effarea(1,ntstp,sarea,narea);
  	matrix tnage(1,ntstp,sage,nage);
- 	matrix tBage(1,ntstp,sage,nage);
+ 	//matrix tBage(1,ntstp,sage,nage);
  	//matrix ywa(syr,proj_yr,sage,nage);
 
 
@@ -417,8 +416,8 @@ PARAMETER_SECTION
  		
 	3darray Nage(1,ngroup,1,ntstp,sage-2,nage); 
  	3darray VulB(1,ngroup,1,ntstp,sage-2,nage);
- 	3darray Lage(1,ngroup,smon,nmon,sage-2,nage); 
- 	3darray Wage(1,ngroup,smon,nmon,sage-2,nage); 
+ 	//3darray Lage(1,ngroup,smon,nmon,sage-2,nage); 
+ 	//3darray Wage(1,ngroup,smon,nmon,sage-2,nage); 
  	3darray CatageG(1,ngroup,1,ntstp,sage,nage);
  	//3darray Lstd(1,ngroup,1,ntstp,sage,nage); 
  	
@@ -430,7 +429,7 @@ PARAMETER_SECTION
  	3darray NAreaAge(1,ntstp,sarea,narea,sage,nage);
  	//3darray NAreaLen(1,ntstp,sarea,narea,1,nlen);
  	3darray CatchAreaAge(1,ntstp,sarea,narea,sage,nage);
- 	3darray CatchAreaLen(1,ntstp,sarea,narea,1,nlen);
+ 	//3darray CatchAreaLen(1,ntstp,sarea,narea,1,nlen);
  	3darray CatchNatAge(1,ntstp,1,fisharea,sage-2,nage);
  	//3darray CatchNatLen(1,ntstp,1,fisharea,1-2,nlen);
  	//3darray EffNatAge(1,fisharea,1,ntstp,sage-2,nage);
@@ -462,6 +461,7 @@ PRELIMINARY_CALCS_SECTION
 	output_true();
 	output_pin();
 	output_dat();
+	output_gtgdat();
 
 
 	//save_OMrep();
@@ -489,6 +489,13 @@ FUNCTION dvar_vector calc_InitPos_gtg()
 	
 	dvector inimu(sage,nage);
 	dvector Xtemp(1,ngroup);
+
+	maxPos.initialize();
+	calcmaxpos();
+	
+	varPos=maxPos*cvPos;
+	varPosg=sqrt((varPos*varPos)/(ngroup*ngroup*4));
+
 	
 	Xtemp(1)=value(Xini(1)*varPos(sage));
 	inimu.initialize();
@@ -516,9 +523,9 @@ FUNCTION incidence_functions
 
 	calc_InitPos_gtg();
 
-	for(int im=smon;im<=nmon;im++){
-		calc_length_comps(im);
-	}
+	//for(int im=smon;im<=nmon;im++){
+	//	calc_length_comps(im);
+	//}
 
 	
 
@@ -528,16 +535,15 @@ FUNCTION incidence_functions
 	Bo 		= kappa/So*Ro;
 	beta 	= (kappa-1)/Bo;
 
+	//cout<<"kappa "<<kappa<<endl;
+	//cout<<"phiE "<<phiE <<endl;
+	//cout<<"lxo "<<lxo <<endl;
+	//cout<<"wa "<<wa <<endl;
 
 	m_tsp = m/nmon;
 	za 	= m_tsp+va*fe;
 
-	maxPos.initialize();
-	calcmaxpos();
-	varPos=maxPos*cvPos;
-	varPosg=sqrt((varPos*varPos)/(ngroup*ngroup*4));
-
-  	
+	
 	
 	//cout<<"Ok after incidence_functions"<<endl;  
 
@@ -557,7 +563,7 @@ FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt)
             		
             		Nage(g)(ii)(sage) =(So*SB(ii-nmon)/(1.+beta*SB(ii-nmon)))*mfexp(expwt*err)* prop_ng(g);//*1.0/dg;
 
-            		for(int a = sage+1;a<=nage;a++)
+            		for(int a = sage+1;a<nage;a++)
             		{
             		
 						propBarea.initialize();
@@ -607,19 +613,19 @@ FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt)
         	VulB(g)(ii)(sage-2) = ii;
         	VulB(g)(ii)(sage-1) = g;
 	
-			VulB(g)(ii)(sage,nage) = elem_prod(elem_prod(Nage(g)(ii)(sage,nage),va),Wage(g)(indmonth(ii))(sage,nage));
-			VulBage(ii)(sage,nage) += VulB(g)(ii)(sage,nage);
+			VulB(g)(ii)(sage,nage) = elem_prod(elem_prod(Nage(g)(ii)(sage,nage),va),wa);
+			//VulBage(ii)(sage,nage) += VulB(g)(ii)(sage,nage);
 
 			tnage(ii)(sage,nage) += Nage(g)(ii)(sage,nage);
-			tB(ii) += Nage(g)(ii)(sage,nage)*Wage(g)(indmonth(ii))(sage,nage);
-			tBage(ii)(sage,nage) += elem_prod(Nage(g)(ii)(sage,nage),Wage(g)(indmonth(ii))(sage,nage));
-			totB(g)(ii)(sage,nage) = elem_prod(Nage(g)(ii)(sage,nage),Wage(g)(indmonth(ii))(sage,nage));
+			tB(ii) += Nage(g)(ii)(sage,nage)*wa(sage,nage);
+			//tBage(ii)(sage,nage) += elem_prod(Nage(g)(ii)(sage,nage),wa(sage,nage));
+			totB(g)(ii)(sage,nage) = elem_prod(Nage(g)(ii)(sage,nage),wa(sage,nage));
 			
 
 
 	}
 	
-	SB(ii) = tBage(ii)*fa/2.0;
+	SB(ii) = elem_prod(tnage(ii),fa)*wa/2.0;
 
 
 	//cout<<"Ok after calc_numbers_at_age"<<endl;
@@ -651,7 +657,7 @@ FUNCTION void calc_effarea(const int& ii,const int& ia)
 FUNCTION void calc_position(const int& ii)
 
 
-	meanPosX(ii)(sage,nage) = minPos + (maxPos - minPos) * (0.5+0.5*sin(indmonth(ii)*PI/6 - mo*PI/6)); 
+	meanPosX(ii)(sage,nage) = minPos + (maxPos - minPos) * (0.5+0.5*sin(indmonth(ii)*PI/6. - mo*PI/6. -PI/2.)); 
 
 
 	int g, r, ig, b;
@@ -778,9 +784,8 @@ FUNCTION initialization
  	CatchNatAge.initialize();
  	Nage.initialize();
  	tB.initialize();
- 	tBage.initialize();
+ 	//tBage.initialize();
  	tnage.initialize();
- 	wa.initialize();
  	tVBarea.initialize();
  	
  	//NAreaLen.initialize();
@@ -789,7 +794,7 @@ FUNCTION initialization
  	Catage.initialize();
  	//yNage.initialize();
  	//yFatage.initialize();
- 	CatchAreaLen.initialize();
+ 	//CatchAreaLen.initialize();
  	CatchAreaAge.initialize();
  	CatchAreaAgeG.initialize();
  	//yCatchtotalage.initialize();
@@ -808,7 +813,7 @@ FUNCTION calc_first_year
 		Nage(g)(1)(sage-2)=1;
 	
 			
-		Nage(g)(1)(sage) =(So*Bo/(1+beta*Bo))* prop_ng(g);
+		Nage(g)(1)(sage) =(So*Bo/(1.+beta*Bo))* prop_ng(g);
 
         for(int a=sage+1 ; a <= nage ; a++)
 		{
@@ -819,17 +824,17 @@ FUNCTION calc_first_year
 
 		VulB(g)(1)(sage-2) = 1;         		          	
         VulB(g)(1)(sage-1) = g;
-		VulB(g)(1)(sage,nage) = elem_prod(elem_prod(Nage(g)(1)(sage,nage),va),Wage(g)(1)(sage,nage));
+		VulB(g)(1)(sage,nage) = elem_prod(elem_prod(Nage(g)(1)(sage,nage),va),wa(sage,nage));
 	
 		tnage(1)(sage,nage) += Nage(g)(1)(sage,nage);
-		tB(1) += Nage(g)(1)(sage,nage)*Wage(g)(1)(sage,nage);
-		tBage(1)(sage,nage) += elem_prod(Nage(g)(1)(sage,nage),Wage(g)(1)(sage,nage));
-		totB(g)(1)(sage,nage) = elem_prod(Nage(g)(1)(sage,nage),Wage(g)(1)(sage,nage));
+		tB(1) += Nage(g)(1)(sage,nage)*wa(sage,nage);
+		//tBage(1)(sage,nage) += elem_prod(Nage(g)(1)(sage,nage),wa);
+		totB(g)(1)(sage,nage) = elem_prod(Nage(g)(1)(sage,nage),wa(sage,nage));
 		//yNage(syr)(sage,nage) += Nage(g)(1)(sage,nage);
 	}
 
 	
-	SB(1) = tBage(1)(sage,nage)*fa/2.0;
+	SB(1) = elem_prod(tnage(1),fa)*wa/2.0;
 
 	
 	calc_position(1);
@@ -850,11 +855,11 @@ FUNCTION move_grow_die
 		//if varps and mu are time varying need to move these to inside the loop
 		//calc_InitPos_gtg();
 		
-		maxPos.initialize();		
-		calcmaxpos();
+		//maxPos.initialize();		
+		//calcmaxpos();
 		
-		varPos=maxPos*cvPos;
-		varPosg=sqrt((varPos*varPos)/(ngroup*ngroup*4));
+		//varPos=maxPos*cvPos;
+		//varPosg=sqrt((varPos*varPos)/(ngroup*ngroup*4));
 
 	dvar_vector catl(1,nations);
 	catl.fill("{100000000,100000000}");
@@ -914,7 +919,7 @@ FUNCTION move_grow_die
 	}
 
 
-	//cout<<"Ok after move_grow_die"<<endl;
+	cout<<"Ok after move_grow_die"<<endl;
 
 
 FUNCTION void clean_catage(const int& ii)
@@ -957,8 +962,8 @@ FUNCTION dvar_vector calcmaxpos()
 	
 		 					
 		maxPos(sage,nage) = 1./(1.+mfexp(-(age-maxPos50)/maxPossd));
-		maxPos(sage,nage) *= (narea-sarea);
-		maxPos(sage,nage) += sarea;		
+		maxPos(sage,nage) *= (narea-minPos(sage));
+		maxPos(sage,nage) += minPos(sage);		
 	
 		return(maxPos);
 		
@@ -1101,22 +1106,22 @@ FUNCTION dvar_vector calcmaxpos()
     //cout<<"Ok after survey_dataLen"<< endl;
 
 
-FUNCTION void calc_length_comps(const int& ii)
+	//FUNCTION void calc_length_comps(const int& ii)
 	
-	int g,a, b ;
+	//int g,a, b ;
 
 	//cout<<"ii is "<<ii<<endl;
 
-	for(int g=1;g<=ngroup;g++)
-	{
-		dvector ag(sage,nage);
+	//for(int g=1;g<=ngroup;g++)
+	//{
+	//	dvector ag(sage,nage);
 		//ag = ((indmonth(ii)-1)/tmon);
 		//ag += age;
-		ag = age;
-		Lage(g)(indmonth(ii))(sage-1) = ii;
-		Lage(g)(indmonth(ii))(sage-1) = g;
-		Lage(g)(indmonth(ii))(sage,nage) = Linf(g)*(1.- exp(-vbk*(ag-to)));
-		Wage(g)(indmonth(ii))(sage,nage) = awt*pow(Lage(g)(indmonth(ii))(sage,nage),bwt);
+	//	ag = age;
+	//	Lage(g)(indmonth(ii))(sage-1) = ii;
+	//	Lage(g)(indmonth(ii))(sage-1) = g;
+	//	Lage(g)(indmonth(ii))(sage,nage) = Linf(g)*(1.- exp(-vbk*(ag-to)));
+	//	Wage(g)(indmonth(ii))(sage,nage) = awt*pow(Lage(g)(indmonth(ii))(sage,nage),bwt);
 
 		
 		//Lstd(g)(ii)(sage,nage) = Lage(g)(ii)(sage,nage)*cvl;  		  //std for length at age
@@ -1158,12 +1163,12 @@ FUNCTION void calc_length_comps(const int& ii)
 		
 	
 		//wa(sage,nage) += Wage(g)(1)(sage,nage)*prop_ng(g);
-		wa(sage,nage) = Wage(1)(1)(sage,nage);
+	//	wa(sage,nage) = Wage(1)(1)(sage,nage);
 
 
 
 		
-	}
+	//}
 	
 	
 
@@ -1470,11 +1475,11 @@ FUNCTION output_true
 	ofs<<"maxPos" << endl << maxPos <<endl;
 	ofs<<"minPos" << endl << minPos <<endl;
 	ofs<<"varPos" << endl << varPos <<endl;
-	ofs<<"PosX" << endl << PosX <<endl;	
+	//ofs<<"PosX" << endl << PosX <<endl;	
 	ofs<<"wa" << endl << wa <<endl;	
 	//ofs<<"ywa" << endl << ywa <<endl;	
-	ofs<<"Wage" << endl << Wage <<endl;	
-	ofs<<"Lage" << endl << Lage <<endl;	
+	//ofs<<"Wage" << endl << Wage <<endl;	
+	//ofs<<"Lage" << endl << Lage <<endl;	
 	ofs<<"SB" << endl << SB <<endl;
 	ofs<<"tB" << endl << tB <<endl;
 	//ofs<<"Ut" << endl << Ut <<endl;
@@ -1575,7 +1580,45 @@ FUNCTION output_dat
 	afs<<"# fecundity at age " << endl << fa <<endl;
 	afs<<"# vulnerability at age " << endl << va <<endl;
 	afs<<"# minPos "<< endl << minPos <<endl;
-	afs<<"# Total effort by country and year " << endl << TotEffyear_rep <<endl;
+	afs<<"# Fmult "<< endl << Fmult <<endl;
+	afs<<"# Total effort by country and year " << endl << trans(trans(pTotEffyear).sub(rep_yr+1,nyr))  <<endl;
+	afs<<"# Total effort by country and month " << endl << TotEffmonth <<endl;
+	afs<<"# effPwr"<< endl << effPwr <<endl;	
+	afs<<"# dMinP " << endl << 0.1e-13<<endl;
+	afs<<"# tstp month area catage " << endl << obsCatchNatAge <<endl;	
+	afs<<"# eof " << endl << 999 <<endl;
+
+
+FUNCTION output_gtgdat
+
+	
+	ofstream afs("../../mov_est/gtg/lagrangian_est_gtg.dat");
+	afs<<"# syr " << endl << rep_yr+1 <<endl;
+	afs<<"# nyr " << endl << nyr <<endl;
+	afs<<"# sage " << endl << sage <<endl;
+	afs<<"# nage " << endl << nage <<endl;
+	afs<<"# smon " << endl << smon <<endl;
+	afs<<"# nmon " << endl << nmon <<endl;
+	afs<<"# sarea " << endl << sarea <<endl;
+	afs<<"# narea " << endl << narea <<endl;
+	afs<<"# ngroup " << endl << ngroup <<endl; //gtg
+	afs<<"# nations " << endl << nations <<endl;
+	afs<<"# border " << endl << border <<endl;	
+	afs<<"# fisharea " << endl << fisharea <<endl;
+	afs<<"# fishbound " << endl << fishbound <<endl;	
+	afs<<"# Ro " << endl << Ro <<endl;
+	afs<<"# h " << endl << h <<endl;
+	afs<<"# m " << endl << m <<endl;
+	afs<<"# fe " << endl << fe <<endl;
+	afs<<"# q " << endl << q <<endl;
+	afs<<"# fbeta " << endl << fbeta <<endl;
+	afs<<"# sigR " << endl << sigR <<endl;	
+	afs<<"# weight at age " << endl << wa <<endl;
+	afs<<"# fecundity at age " << endl << fa <<endl;
+	afs<<"# vulnerability at age " << endl << va <<endl;
+	afs<<"# minPos "<< endl << minPos <<endl;
+	afs<<"# Fmult "<< endl << Fmult <<endl;
+	afs<<"# Total effort by country and year " << endl << trans(trans(pTotEffyear).sub(rep_yr+1,nyr)) <<endl;
 	afs<<"# Total effort by country and month " << endl << TotEffmonth <<endl;
 	afs<<"# effPwr"<< endl << effPwr <<endl;	
 	afs<<"# dMinP " << endl << 0.1e-13<<endl;
@@ -1584,56 +1627,56 @@ FUNCTION output_dat
 
 
 
-FUNCTION void output_datSA(const int& ii,const int& svy)
+	//FUNCTION void output_datSA(const int& ii,const int& svy)
 
-	int tmpts;
-	tmpts = (ii-syr+1)*tmon;
-
-	int tot_tmppcat;
-	ivector tmppcat(1,fisharea);
-
-	for(int n=1;n<=fisharea;n++){
-		 tmppcat(n)= sum(pmat(n)(1,tmpts));
-	}
-	 tot_tmppcat = sum(tmppcat);
-
-	 
-	ofstream mfs("../../stock_assessment/lagrangian_SA.dat");
-	mfs<<"# syr " << endl << rep_yr+1 <<endl;
-	mfs<<"# nyr " << endl << ii <<endl;
-	mfs<<"# sage " << endl << sage <<endl;
-	mfs<<"# nage " << endl << nage <<endl;
-	mfs<<"# smon " << endl << smon <<endl;
-	mfs<<"# nmon " << endl << nmon <<endl;
-	mfs<<"# sarea " << endl << sarea <<endl;
-	mfs<<"# narea " << endl << narea <<endl;
-	mfs<<"# fisharea " << endl << fisharea <<endl;
-	mfs<<"# fishbound " << endl << fishbound <<endl;
-	mfs<<"# nations " << endl << nations <<endl;
-	mfs<<"# border " << endl << border <<endl;
-	mfs<<"# m " << endl << m <<endl;
-	mfs<<"# fe " << endl << fe <<endl;
-	mfs<<"# q " << endl << q <<endl;
-	mfs<<"# fbeta " << endl << fbeta <<endl;
-	mfs<<"# sigR " << endl << sigR <<endl;
-	mfs<<"# weight at age " << endl << wa <<endl;
-	mfs<<"# fecundity at age " << endl << fa <<endl;
-	mfs<<"# vulnerability at age " << endl << va <<endl;
-	mfs<<"# minPos "<< endl << minPos <<endl;
-	mfs<<"# Fmult "<< endl << Fmult <<endl;
-	mfs<<"# Total effort by country and year " << endl << trans(trans(TotEffyear_rep).sub(rep_yr+1,ii)) <<endl;
-	mfs<<"# Total effort by country and month " << endl << TotEffmonth <<endl;
-	mfs<<"# effPwr"<< endl << effPwr <<endl;
-	mfs<<"# dMinP " << endl << 0.1e-15 <<endl;
-	mfs<<"# tstp month area catage " << endl << (obsCatchNatAge).sub(1,tot_tmppcat)<<endl;	
-	mfs<<"# nItNobs " << endl << svy <<endl;
-	mfs<<"## iyr     index(it) gear area group sex log(SE) log(PE)   timing" << endl;
-	for(int l=1;l<=svy;l++){
-		//  	iyr     		index(it) 	log(SE)  	log(PE)   	timing
-		mfs<<surv_yrs(l) <<"\t"<< survB(l) <<"\t" << 0.2<<"\t"<< 0.01<<"\t"<< surv_mon <<endl;
-	}
-	mfs<<"# eof " << endl << 999 <<endl;
-
+	//	int tmpts;
+	//	tmpts = (ii-syr+1)*tmon;
+	//
+	//	int tot_tmppcat;
+	//	ivector tmppcat(1,fisharea);
+	//
+	//	for(int n=1;n<=fisharea;n++){
+	//		 tmppcat(n)= sum(pmat(n)(1,tmpts));
+	//	}
+	//	 tot_tmppcat = sum(tmppcat);
+	//
+	//	 
+	//	ofstream mfs("../../stock_assessment/lagrangian_SA.dat");
+	//	mfs<<"# syr " << endl << rep_yr+1 <<endl;
+	//	mfs<<"# nyr " << endl << ii <<endl;
+	//	mfs<<"# sage " << endl << sage <<endl;
+	//	mfs<<"# nage " << endl << nage <<endl;
+	//	mfs<<"# smon " << endl << smon <<endl;
+	//	mfs<<"# nmon " << endl << nmon <<endl;
+	//	mfs<<"# sarea " << endl << sarea <<endl;
+	//	mfs<<"# narea " << endl << narea <<endl;
+	//	mfs<<"# fisharea " << endl << fisharea <<endl;
+	//	mfs<<"# fishbound " << endl << fishbound <<endl;
+	//	mfs<<"# nations " << endl << nations <<endl;
+	//	mfs<<"# border " << endl << border <<endl;
+	//	mfs<<"# m " << endl << m <<endl;
+	//	mfs<<"# fe " << endl << fe <<endl;
+	//	mfs<<"# q " << endl << q <<endl;
+	//	mfs<<"# fbeta " << endl << fbeta <<endl;
+	//	mfs<<"# sigR " << endl << sigR <<endl;
+	//	mfs<<"# weight at age " << endl << wa <<endl;
+	//	mfs<<"# fecundity at age " << endl << fa <<endl;
+	//	mfs<<"# vulnerability at age " << endl << va <<endl;
+	//	mfs<<"# minPos "<< endl << minPos <<endl;
+	//	mfs<<"# Fmult "<< endl << Fmult <<endl;
+	//	mfs<<"# Total effort by country and year " << endl << trans(trans(TotEffyear_rep).sub(rep_yr+1,ii)) <<endl;
+	//	mfs<<"# Total effort by country and month " << endl << TotEffmonth <<endl;
+	//	mfs<<"# effPwr"<< endl << effPwr <<endl;
+	//	mfs<<"# dMinP " << endl << 0.1e-15 <<endl;
+	//	mfs<<"# tstp month area catage " << endl << (obsCatchNatAge).sub(1,tot_tmppcat)<<endl;	
+	//	mfs<<"# nItNobs " << endl << svy <<endl;
+	//	mfs<<"## iyr     index(it) gear area group sex log(SE) log(PE)   timing" << endl;
+	//	for(int l=1;l<=svy;l++){
+	//		//  	iyr     		index(it) 	log(SE)  	log(PE)   	timing
+	//		mfs<<surv_yrs(l) <<"\t"<< survB(l) <<"\t" << 0.2<<"\t"<< 0.01<<"\t"<< surv_mon <<endl;
+	//	}
+	//	mfs<<"# eof " << endl << 999 <<endl;
+	//
 
 	//FUNCTION void write_iscam_ctl_file(const int& ii,const int& svy)
 	//
