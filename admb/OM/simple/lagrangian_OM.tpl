@@ -352,7 +352,6 @@ PARAMETER_SECTION
  	matrix VulB(1,ntstp,sage,nage);
 	
 	matrix Catage(1,ntstp,sage,nage);
-	matrix Fatage(1,ntstp,sage,nage);
  	matrix PosX(1,ntstp,sage,nage);
  	//matrix Effage(1,ntstp,sage,nage);
  	matrix VBarea(1,ntstp,sarea,narea);
@@ -873,9 +872,9 @@ FUNCTION calc_spr
 		lz.initialize();
 		lz(sage) = 1.;
 		for(a=sage+1; a<=nage;a++){
-			lz(a)= value(lz(a-1)*mfexp(-m-yFatage(ii)(a-1)));
+			lz(a)= value(lz(a-1)*mfexp(-m)*(1-yFatage(ii)(a-1)));
 		}
-		lz(nage) /= value(1.-mfexp(-m-yFatage(ii)(nage)));
+		lz(nage) /= value(1.-(mfexp(-m)*(1-yFatage(ii)(nage))));
 
 
 		phie(ii)=elem_prod(lz,fa)*wa;
@@ -1203,7 +1202,6 @@ FUNCTION output_true
 	ofs<<"yCatchNatAge"<< endl << yCatchNatAge <<endl;
 	ofs<<"yCatchStateAge"<< endl << yCatchStateAge <<endl;
 	ofs<<"yNage"<< endl << yNage <<endl;
-	ofs<<"Fatage"<< endl << Fatage <<endl;
 	ofs<<"yFatage"<< endl << yFatage <<endl;
 	ofs<<"spr"<< endl <<spr <<endl;
 	ofs<<"phie"<< endl <<phie <<endl;
@@ -1740,8 +1738,8 @@ REPORT_SECTION
 TOP_OF_MAIN_SECTION
 	time(&start);
 	arrmblsize = 50000000;
-	gradient_structure::set_GRADSTACK_BUFFER_SIZE(1.e7);
-	gradient_structure::set_CMPDIF_BUFFER_SIZE(1.e7);
+	gradient_structure::set_GRADSTACK_BUFFER_SIZE(1.e5);
+	gradient_structure::set_CMPDIF_BUFFER_SIZE(1.e3);
 	gradient_structure::set_MAX_NVAR_OFFSET(5000);
 	gradient_structure::set_NUM_DEPENDENT_VARIABLES(5000);
  
