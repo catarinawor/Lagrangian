@@ -776,7 +776,9 @@ FUNCTION burn_in
 
 FUNCTION move_grow_die
 
-
+	int p;
+       
+	p=1;
 
 	for(int i=itsp;i<=ntstp;i++)
 	{
@@ -813,14 +815,14 @@ FUNCTION move_grow_die
 
 FUNCTION void clean_catage(const int& ii,const int& pp,const int& nn)
 	
+	
 
        			predCatchNatAge(pp)(sage-3) = ii;
        			predCatchNatAge(pp)(sage-2) = indmonth(ii);
 				predCatchNatAge(pp)(sage-1) = nn;
        			predCatchNatAge(pp)(sage,nage) = CatchNatAge(ii)(nn)(sage,nage);
 				
-
-			
+	
 
 	//cout<<"Ok after clean_catage"<<endl;
 
@@ -984,7 +986,7 @@ TOP_OF_MAIN_SECTION
 	time(&start);
 	arrmblsize = 10000000000;
 	gradient_structure::set_GRADSTACK_BUFFER_SIZE(1.e9);
-	gradient_structure::set_CMPDIF_BUFFER_SIZE(1.e3);
+	gradient_structure::set_CMPDIF_BUFFER_SIZE(1.e9);
 	gradient_structure::set_MAX_NVAR_OFFSET(50000);
 	gradient_structure::set_NUM_DEPENDENT_VARIABLES(50000);
 	gradient_structure::set_MAX_DLINKS(40000);
