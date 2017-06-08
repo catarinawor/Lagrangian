@@ -9,19 +9,36 @@
 
 
 
-x <- seq(1,24,length.out=100)
+x <- seq(1,24,by=0.1)
 tt<-1:12
 y <- 30+(60-30)*(0.5+0.5*sin(x*2*pi/length(tt)-2*pi/length(tt)-pi/2))
-par(bty="l",yaxs="i")
-plot(x,y,type="l", ylab="X spatial gradient ", xlab="Time",lwd=3,
- xaxp=c(1,24,23) )
-arrows(x[99],y[99],x[100]
-	,y[100],length=0.1,lwd=3,xaxp=c(1,24,23))
-arrows(x[1],y[1],x[1]
-	,y[4],length=0.0,lwd=3,xaxp=c(1,24,23))
-text(x=x[1], y = y[5], labels = expression(paste("t"[0])))
 
+setwd("/Users/catarinawor/Documents/hake/Lag_Model_paper")
+pdf("sin_diagram.pdf", width=12,height=6)
+par(bty="l",yaxs="i",las=1)
+plot(x,y,type="l", ylab=" ", xlab="",lwd=3,
+	ylim=c(28,62),axes=FALSE)
+mtext("X spatial gradient", side=2,las=0, font=2,cex=1.5)
+arrows(22.5,45,24,45,length=0.1,lwd=3)
+text(x=23.5, y = 46, labels = "Time", font=2,cex=1.5)
+arrows(x[length(x)-1],y[length(x)-1],x[length(x)]
+     ,y[length(x)],length=0.1,lwd=3,xaxp=c(1,24,23))
+axis(1,pos=45,xaxp=c(1,24,23),hadj=.1)
+axis(2,pos=1,font=2)
+arrows(1,45,1.1,45.5,length=0.0,lwd=3,col="gray50")
+text(x=1.15, y = 46, labels = expression(paste("t"[0])),font=2,cex=1.5)
+arrows(13,45,13,45.5,length=0.0,lwd=3,col="gray50")
+text(x=13.0, y = 46, labels = expression(paste("t"[0])), font=2,cex=1.5)
+arrows(7,60.5,7,45.,length=0.0,lwd=3,col="gray50")
+text(x=7.1, y = 61, labels = expression(paste("X"[max])), font=2,cex=1.5)
+arrows(10,45,10,45.5,length=0.0,lwd=3,col="gray50")
+text(x=10.2, y = 46, labels = expression(paste("X"[mid])), font=2,cex=1.5)
+arrows(13,30,13,45,length=0.0,lwd=3,col="gray50")
+text(x=13.1, y = 29, labels = expression(paste("X"[min])), font=2,cex=1.5)
+arrows(16,45,16,45.5,length=0.0,lwd=3,col="gray50")
+text(x=15.7, y = 46, labels = expression(paste("X"[mid])), font=2,cex=1.5)
+arrows(19,60.5,19,45,length=0.0,lwd=3,col="gray50")
+text(x=19.1, y = 61, labels = expression(paste("X"[max])), font=2,cex=1.5)
+dev.off()
 
 ?text
-?par
-?arrows

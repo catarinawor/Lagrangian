@@ -360,7 +360,7 @@ PRELIMINARY_CALCS_SECTION
 
 PROCEDURE_SECTION
 
-	cout<<"nlvec is"<<nlvec<<endl;
+	
 
 	initialization();
 	incidence_functions();
@@ -373,11 +373,23 @@ PROCEDURE_SECTION
 	
 	calc_obj_func();
 
-FUNCTION dvar_vector cnorm(const double& x, const dvar_vector& mu, const dvar_vector& sd)
+FUNCTION double cnorm(const double& x, const dvariable& mu, const dvariable& sd)
+
+	double rst;
+	double stx;
+
+	stx = value(x-mu/sd);
+
+	rst = cumd_norm(stx);
+	
+
+	return(rst);
+
+
+FUNCTION dvar_vector cnorm2(const double& x, const dvar_vector& mu, const dvar_vector& sd)
 
 	dvar_vector rst(sage,nage);
 	dvar_vector stx(sage,nage);
-
 
 	for(int a= sage; a<= nage; a++)
 	{
@@ -405,11 +417,13 @@ FUNCTION  calc_InitPos_gtg
 
 	inimu.initialize();
 
-	prop_ng(1) = cnorm(Xtemp(1),inimu,varPos)(sage)-cnorm(Xtemp(1)-1,inimu,varPos)(sage);
+	prop_ng(1) = cnorm(Xtemp(1),inimu(sage),varPos(sage))-cnorm(Xtemp(1)-1,inimu(sage),varPos(sage));
+	
+
 	for(int g=2; g<=ngroup ;g++)
 	{
 		Xtemp(g)=value(Xini(g)*varPos(sage));
-		prop_ng(g) = cnorm(Xtemp(g),inimu,varPos)(sage)-cnorm(Xtemp(g-1),inimu,varPos)(sage);
+		prop_ng(g) = cnorm(Xtemp(g)+0.5,inimu(sage),varPos(sage))-cnorm(Xtemp(g)-0.5,inimu(sage),varPos(sage));
 	}
 
 	prop_ng = prop_ng/sum(prop_ng);
@@ -427,8 +441,9 @@ FUNCTION  calc_InitPos_gtg
 	 	}
 	}
 
+	
 
-	cout<<"Ok after calc_InitPos_gtg"<<endl;
+	//cout<<"Ok after calc_InitPos_gtg"<<endl;
 
 
 
@@ -468,6 +483,7 @@ FUNCTION initialization
 FUNCTION incidence_functions
 	
 	lxo(sage)=1.;
+
 	for(int a = sage+1; a<= nage; a++){
 		lxo(a) = lxo(a-1)*mfexp(-m);
 	}	
@@ -491,7 +507,7 @@ FUNCTION incidence_functions
 	
 
 	
-	cout<<"Ok after incidence_functions"<<endl;
+	//cout<<"Ok after incidence_functions"<<endl;
 	
 
 	
@@ -528,7 +544,7 @@ FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt )
 			
 						for(int rr =sarea; rr<=narea; rr++)
 						{		
-							propBarea(rr) = (cnorm(areas(rr)+0.5,PosX(g)(nmon),varPosg)-cnorm(areas(rr)-0.5,PosX(g)(nmon),varPosg))(a-sage);	
+							propBarea(rr) = cnorm(areas(rr)+0.5,PosX(g)(nmon)(a),varPosg(a))-cnorm(areas(rr)-0.5,PosX(g)(nmon)(a),varPosg(a));	
 						}
 
 						Nage(g)(ii)(a) = Nage(g)(ii-1)(a-1)*propBarea*mfexp(-(m_tsp+q*Effarea(ii-1)*va(a-1))) +
@@ -552,7 +568,7 @@ FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt )
 			
 						for(int rr =sarea; rr<=narea; rr++)
 						{		
-							propBarea(rr) = (cnorm(areas(rr)+0.5,PosX(g)(indmonth(ii)-1),varPosg)-cnorm(areas(rr)-0.5,PosX(g)(indmonth(ii)-1),varPosg))(a-sage+1);	
+							propBarea(rr) = cnorm(areas(rr)+0.5,PosX(g)(indmonth(ii)-1)(a),varPosg(a))-cnorm(areas(rr)-0.5,PosX(g)(indmonth(ii)-1)(a),varPosg(a));	
 						}
 
             			Nage(g)(ii)(a) = Nage(g)(ii-1)(a)*propBarea*mfexp(-(m_tsp+q*Effarea(ii-1)*va(a)))+
@@ -624,8 +640,8 @@ FUNCTION void calc_position(const int& ii)
 		
 		
 		
-		VBarea(g)(ii)(r) = VulB(g)(ii)(sage,nage) * (cnorm(areas(r)+0.5,PosX(g)(indmonth(ii)),varPosg)-cnorm(areas(r)-0.5,PosX(g)(indmonth(ii)),varPosg));
-		NAreaAgeG(ig)(ii)(sage,nage) = elem_prod(Nage(g)(ii)(sage,nage),(cnorm(areas(r)+0.5,PosX(g)(indmonth(ii)),varPosg)-cnorm(areas(r)-0.5,PosX(g)(indmonth(ii)),varPosg)));
+		VBarea(g)(ii)(r) = VulB(g)(ii)(sage,nage) * (cnorm2(areas(r)+0.5,PosX(g)(indmonth(ii)),varPosg)-cnorm2(areas(r)-0.5,PosX(g)(indmonth(ii)),varPosg));
+		NAreaAgeG(ig)(ii)(sage,nage) = elem_prod(Nage(g)(ii)(sage,nage),(cnorm2(areas(r)+0.5,PosX(g)(indmonth(ii)),varPosg)-cnorm2(areas(r)-0.5,PosX(g)(indmonth(ii)),varPosg)));
 	
 		//NAreaAge(ii)(r) += elem_prod(Nage(g)(ii)(sage,nage),(cnorm(areas(r)+0.5,PosX(g)(ii),varPosg)-cnorm(areas(r)-0.5,PosX(g)(ii),varPosg)));
 		tVBarea(ii)(r) += VBarea(g)(ii)(r);		
@@ -634,7 +650,7 @@ FUNCTION void calc_position(const int& ii)
 		propVBarea(ig)(ii)(sage-3) = ii;
 		propVBarea(ig)(ii)(sage-2) = g;
 		propVBarea(ig)(ii)(sage-1) = r;
-		propVBarea(ig)(ii)(sage,nage) =  elem_prod(VulB(g)(ii)(sage,nage), (cnorm(areas(r)+0.5,PosX(g)(indmonth(ii)),varPosg)-cnorm(areas(r)-0.5,PosX(g)(indmonth(ii)),varPosg)));
+		propVBarea(ig)(ii)(sage,nage) =  elem_prod(VulB(g)(ii)(sage,nage), (cnorm2(areas(r)+0.5,PosX(g)(indmonth(ii)),varPosg)-cnorm2(areas(r)-0.5,PosX(g)(indmonth(ii)),varPosg)));
 			
 		
 	
@@ -661,6 +677,11 @@ FUNCTION void calc_catage(const int& ii)
 		g = n_group(ig);
 		r = n_area(ig);
 
+		dvar_vector tmpc1(sage,nage);
+		dvar_vector tmpc2(sage,nage);
+
+		tmpc1.initialize();
+		tmpc2.initialize();
 
 		CatchAreaAgeG(ig)(ii)(sage-3)= ii;
 		CatchAreaAgeG(ig)(ii)(sage-2)= g;
@@ -670,24 +691,17 @@ FUNCTION void calc_catage(const int& ii)
 		CatchNatAge(ii)(indfisharea(r))(sage-1) = indfisharea(r);
 
 
-		for(int a = sage; a<=nage;a++)
-		{
-					
-			//CatchAreaAge(ii)(r)(a) = q*Effarea(ii)(r)*va(a)/(q*Effarea(ii)(r)*va(a)+m_tsp)*(1-mfexp(-(q*Effarea(ii)(r)*va(a)+m_tsp)))*NAreaAge(ii)(r)(a);
-				
-			CatchAreaAgeG(ig)(ii)(a) = q*Effarea(ii)(r)*va(a)/(q*Effarea(ii)(r)*va(a)+m_tsp)*(1-mfexp(-(q*Effarea(ii)(r)*va(a)+m_tsp)))*NAreaAgeG(ig)(ii)(a);		
-			//CatageG(g)(ii)(a) += CatchAreaAgeG(ig)(ii)(a);
-				
-				
-			CatchNatAge(ii)(indfisharea(r))(a) += CatchAreaAgeG(ig)(ii)(a);
+		tmpc1 =elem_div(q*Effarea(ii)(r)*va,q*Effarea(ii)(r)*va+m_tsp);
+		tmpc2 =elem_prod(tmpc1,(1-mfexp(-(q*Effarea(ii)(r)*va+m_tsp))));
 
-			
-		}
+		CatchAreaAgeG(ig)(ii)(sage,nage) = elem_prod(tmpc2,NAreaAgeG(ig)(ii)(sage,nage));		
+		CatchNatAge(ii)(indfisharea(r))(sage,nage) += CatchAreaAgeG(ig)(ii)(sage,nage);
 
+		
 		//cout<<"CatchNatAge(ii)(indfisharea(r))(a)"<<CatchNatAge(ii)(indfisharea(r))(sage,nage)<<endl;
 		
 		//Catage(ii)(sage,nage) += CatchAreaAgeG(ig)(ii)(sage,nage);
-	}
+		}
 
 		
 			
@@ -722,7 +736,7 @@ FUNCTION calc_first_year
 		Nage(g)(1)(sage-2)=1;
 	
 			
-		Nage(g)(1)(sage) =(So*Bo/(1.+beta*Bo))* prop_ng(g);
+		Nage(g)(1)(sage,nage) =(So*Bo/(1.+beta*Bo))* prop_ng(g);
 
 
         for(int a=sage+1 ; a <= nage ; a++)
@@ -751,7 +765,7 @@ FUNCTION calc_first_year
 	
 	calc_effarea(1,itsp);
 	
-	cout<<"Ok after calc_first_year"<<endl;
+	//cout<<"Ok after calc_first_year"<<endl;
 
 FUNCTION burn_in
 
@@ -802,7 +816,7 @@ FUNCTION move_grow_die
        		}	
 		}
 
-		//cout<< "i is "<<i << endl;
+		//tmpc2cout<< "i is "<<i << endl;
 		
 	} 
 
@@ -851,7 +865,7 @@ FUNCTION calc_obj_func
 
 	//double tau_c;
 
-	cout<<"pcat"<<pcat<<endl;
+	
 	nlvec.initialize();
 	
 	
