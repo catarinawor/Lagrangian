@@ -454,7 +454,6 @@ PRELIMINARY_CALCS_SECTION
 	incidence_functions();
 	calc_first_year();
 	move_grow_die();
-	cout<<"aqui"<<endl;
 	
 	
 	//run_projections();
@@ -579,7 +578,7 @@ FUNCTION incidence_functions
 
 	
 	
-	cout<<"Ok after incidence_functions"<<endl;  
+	//cout<<"Ok after incidence_functions"<<endl;  
 
 FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt)
 
@@ -712,8 +711,8 @@ FUNCTION void calc_position(const int& ii)
 		NAreaAgeG(ig)(ii)(sage-2)= g;
 		NAreaAgeG(ig)(ii)(sage-1)= r;
 		
-		PosX(g)(ii)(sage-1) = g;
-		PosX(g)(ii)(sage,nage) =  Xini(g)*varPos+meanPosX(sage,nage);
+		PosX(g)(indmonth(ii))(sage-1) = g;
+		PosX(g)(indmonth(ii))(sage,nage) =  Xini(g)*varPos+meanPosX(sage,nage);
 		
 
 		
@@ -728,6 +727,7 @@ FUNCTION void calc_position(const int& ii)
 		propVBarea(ig)(ii)(sage-1) = r;
 		propVBarea(ig)(ii)(sage,nage) =  elem_prod(VulB(g)(ii)(sage,nage), (cnorm2(areas(r)+0.5,PosX(g)(indmonth(ii))(sage,nage),varPosg)-cnorm2(areas(r)-0.5,PosX(g)(indmonth(ii))(sage,nage),varPosg)));
 			
+
 		//for(b=1;b<=nlen;b++)
 		//{
 		//		NAreaLen(ii)(r)(b) += elem_prod(Nage(g)(ii)(sage,nage),(cnorm(areas(r)+0.5,PosX(g)(ii),varPosg)-cnorm(areas(r)-0.5,PosX(g)(ii),varPosg)))*P_la(g)(indmonth(ii))(b)(sage,nage);
@@ -739,16 +739,17 @@ FUNCTION void calc_position(const int& ii)
 
 FUNCTION void calc_catage(const int& ii)
 
-		int a,ig,r,g;
+		int ig,r,g;
 		
 		
 
-		
+		//There is a bug here
 
 	for(int ig=1;ig<=n_rg;ig++)
 	{
 		g = n_group(ig);
 		r = n_area(ig);
+
 
 		dvar_vector tmpc1(sage,nage);
 		dvar_vector tmpc2(sage,nage);
@@ -768,10 +769,11 @@ FUNCTION void calc_catage(const int& ii)
 		tmpc2 =elem_prod(tmpc1,(1-mfexp(-(q*Effarea(ii)(r)*va+m_tsp))));
 
 		CatchAreaAgeG(ig)(ii)(sage,nage) = elem_prod(tmpc2,NAreaAgeG(ig)(ii)(sage,nage));		
-		CatchNatAge(ii)(indfisharea(r))(sage,nage) += CatchAreaAgeG(ig)(ii)(sage,nage);
+		CatchNatAge(ii)(indfisharea(r))(sage,nage) += CatchAreaAgeG(ig)(ii)(sage,nage)+0.0000001;
 
 		
-			}
+	}
+		
 			//yCatchNatAge(indyr(ii))(indfisharea(r))(sage-2) = indyr(ii);
 			//yCatchNatAge(indyr(ii))(indfisharea(r))(sage-1) = indfisharea(r);
 			//yCatchNatAge(indyr(ii))(indfisharea(r))(sage,nage) += CatchAreaAge(ii)(r)(sage,nage);			
@@ -927,7 +929,6 @@ FUNCTION move_grow_die
 	for(int ie=2;ie<=(nrep_yr*tmon);ie++)
 	{
 		calc_numbers_at_age(ie,0.0 );	//wt(indyr(ie))	
-			
 		calc_position(ie);
 		calc_effarea(ie,ie);
 		calc_catage(ie);
@@ -943,6 +944,8 @@ FUNCTION move_grow_die
 
  	int svyr;
  	svyr = 1;
+
+
 
 	for(int i=nrep_yr*tmon+1;i<=ststp;i++){
 		calc_numbers_at_age(i,wt(indyr(i)));
@@ -977,7 +980,7 @@ FUNCTION move_grow_die
 	}
 
 
-	cout<<"Ok after move_grow_die"<<endl;
+	//cout<<"Ok after move_grow_die"<<endl;
 
 
 FUNCTION void clean_catage(const int& ii)
@@ -997,7 +1000,7 @@ FUNCTION void clean_catage(const int& ii)
 		for(int n=1;n<=fisharea;n++)
 		{
 							
-			if((TotEffmonth(n)(indmonth(ii)))>0)
+			if(value(sum(CatchNatAge(ii)(n)(sage,nage)))>0)
        		{
        			
        			dvector pa(nage,sage);
@@ -1007,7 +1010,7 @@ FUNCTION void clean_catage(const int& ii)
        			obsCatchNatAge(p)(sage-2) = indmonth(ii);
 				obsCatchNatAge(p)(sage-1) = n;
 				
-				pa = value((CatchNatAge(ii)(n)(sage,nage))/sum(CatchNatAge(ii)(n)(sage,nage)+0.01))+0.000001;
+				pa = value((CatchNatAge(ii)(n)(sage,nage))/sum(CatchNatAge(ii)(n)(sage,nage)));
 				obsCatchNatAge(p)(sage,nage) = rmvlogistic(pa,tau_c,seed+ii);
 				p++;	
 			}	
@@ -1584,23 +1587,24 @@ FUNCTION output_pin
 	
 	double tmp_mo;
 
-	
+	dvector guess_mo(1,6);
 	dvector guess_cvPos(1,6);
 	dvector guess_maxPos50(1,10);
 	dvector guess_maxPossd(1,8);
 
-	
+	guess_mo.fill_seqadd(1,1);
 	guess_cvPos.fill_seqadd(0.05,0.05);
 	guess_maxPos50.fill_seqadd(3,0.5);
 	guess_maxPossd.fill_seqadd(0.5,0.5);
 
 	
-	tmp_mo 		= ceil(randu(rngmo)*(mo+3));
+	tmp_mo 		= ceil(randu(rngmo)*(mo)+mo);
 		
-	ofstream ifs("../../mov_est/simple/lagrangian_est.pin");
+	ofstream ifs("../../mov_est/gtg/lagrangian_est_gtg.pin");
 
-	ifs<<"#log_mo \n "  << log(tmp_mo) <<endl;
-	//ifs<<"#log_mo \n "  << log(mo) <<endl;
+	//ifs<<"#log_mo \n "  << log(guess_mo(ceil(randu(rngmo)*5)))<<endl;
+	//ifs<<"#log_mo \n "  << log(tmp_mo) <<endl;
+	ifs<<"#mo \n "  << (tmp_mo) <<endl;
 	ifs<<"#cvPos \n" << log(guess_cvPos(ceil(randu(rngcvPos)*5))) <<endl;	
 	//ifs<<"#cvPos \n" << log(cvPos) <<endl;	
 	ifs<<"# maxPos50 \n" << log(guess_maxPos50(ceil(randu(rngmaxPos50)*9))) <<endl;

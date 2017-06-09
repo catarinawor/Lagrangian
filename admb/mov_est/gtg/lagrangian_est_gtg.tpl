@@ -267,11 +267,10 @@ PARAMETER_SECTION
 	//estimable parameters
 	//=================================
 
-	init_number log_mo;
-	
-	init_number log_cvPos;
-	init_number log_maxPos50;
-	init_number log_maxPossd;
+	init_bounded_number mo(1,6,1);
+	init_bounded_number log_cvPos(-3,-1.3,1);
+	init_bounded_number log_maxPos50(1.00,2.1,2);
+	init_bounded_number log_maxPossd(-0.7,1.609438,2);
 	init_vector wt(syr,nyr,-1);
 
 	objective_function_value f;
@@ -290,7 +289,7 @@ PARAMETER_SECTION
 
 	number m_tsp;
 	
-	number mo;
+	//number mo;
 	number maxPos50;
 	number maxPossd;
 	number cvPos;
@@ -503,7 +502,7 @@ FUNCTION incidence_functions
 	maxPos50 = mfexp(log_maxPos50);
 	maxPossd = mfexp(log_maxPossd);
 	cvPos 	 = mfexp(log_cvPos);
-	mo 	= mfexp(log_mo);
+	//mo 	= mfexp(log_mo);
 	
 
 	
@@ -890,7 +889,7 @@ FUNCTION calc_obj_func
 				//O(i) = (obsCatchNatAge(ii)(sage,nage)+0.1e-30)/sum(obsCatchNatAge(ii)(sage,nage)+0.1e-5);
 				//P(i) = (predCatchNatAge(ii)(sage,nage)+0.1e-30)/sum(predCatchNatAge(ii)(sage,nage)+0.1e-5);
 				O(i) = (obsCatchNatAge(ii)(sage,nage))/sum(obsCatchNatAge(ii)(sage,nage));
-				P(i) = (predCatchNatAge(ii)(sage,nage))/sum(predCatchNatAge(ii)(sage,nage)+0.01)+0.000001;
+				P(i) = (predCatchNatAge(ii)(sage,nage))/sum(predCatchNatAge(ii)(sage,nage));
 				ii++;
 				//cout<<"O("<<i<<")"<<O(i)<<endl;
 				//cout<<"P("<<i<<")"<<P(i)<<endl;
@@ -907,11 +906,15 @@ FUNCTION calc_obj_func
 	//output_true();
 	//exit(1);
 
-	cout<<"nlvec is"<<nlvec<<endl;
+	//cout<<"nlvec is"<<nlvec<<endl;
 	//f=sum(nlvec)+sum(npvec);
-	f=sum(nlvec)/1000;
+	f=sum(nlvec);//100000000;
 
 	cout<<"f is"<<f<<endl;
+	cout<<"maxPos50 is "<<maxPos50<<endl;
+	cout<<"maxPossd is "<<maxPossd<<endl;
+	cout<<"cvPos is "<<cvPos<<endl;
+	cout<<"mo is "<<mo<<endl;
 	
 
 
