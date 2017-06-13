@@ -440,7 +440,7 @@ FUNCTION void calc_effarea(const int& ii,const int& ie)
 
 FUNCTION void calc_position(const int& ii)
 
-	varPos = maxPos*cvPos;
+	
 
 	PosX(ii) = minPos + (maxPos - minPos) * (0.5+0.5*sin(indmonth(ii)*PI/6. - mo*PI/6.-PI/2.)); 
 
@@ -501,6 +501,7 @@ FUNCTION incidence_functions
 
 	maxPos.initialize();
 	calcmaxpos();
+	varPos = maxPos*cvPos;
 	
 	
 
@@ -658,7 +659,7 @@ FUNCTION calc_obj_func
 
 	
 	//f=sum(nlvec)+sum(npvec);
-	f=sum(nlvec)/10000;
+	f=sum(nlvec);
 	
 
 

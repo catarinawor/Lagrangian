@@ -64,7 +64,7 @@ DATA_SECTION
 	
 	init_number tau_c; 
 	//init_number tau_l; 
-	init_number tau_survey;		
+	//init_number tau_survey;		
 	//init_number tau_surveyl;		
 	init_number err;
 
@@ -151,7 +151,7 @@ DATA_SECTION
    	ivector fishingr(1,fisharea);
    	ivector nationareas(1,nations);
    	
-   	vector epsilon(1,surv_nobs);
+   	//vector epsilon(1,surv_nobs);
 	vector wt(syr,nyr);
 
 
@@ -235,8 +235,8 @@ DATA_SECTION
 			wt.fill_randn(rng);
 			wt*=sigR;
 
-			epsilon.fill_randn(rng);
-			epsilon*=0.2;
+			//epsilon.fill_randn(rng);
+			//epsilon*=0.2;
 
 	END_CALCS
 
@@ -368,7 +368,7 @@ PARAMETER_SECTION
 	vector za(sage,nage);
 	vector SB(1,ntstp);
 	vector tB(1,ntstp);
-	vector survB(1,surv_nobs);
+	//vector survB(1,surv_nobs);
 	
 	vector maxPos(sage,nage);
 	vector varPos(sage,nage);
@@ -769,7 +769,7 @@ FUNCTION void calc_catage(const int& ii)
 		tmpc2 =elem_prod(tmpc1,(1-mfexp(-(q*Effarea(ii)(r)*va+m_tsp))));
 
 		CatchAreaAgeG(ig)(ii)(sage,nage) = elem_prod(tmpc2,NAreaAgeG(ig)(ii)(sage,nage));		
-		CatchNatAge(ii)(indfisharea(r))(sage,nage) += CatchAreaAgeG(ig)(ii)(sage,nage)+0.0000001;
+		CatchNatAge(ii)(indfisharea(r))(sage,nage) += CatchAreaAgeG(ig)(ii)(sage,nage);//+0.0000001;
 
 		
 	}
@@ -1002,7 +1002,9 @@ FUNCTION void clean_catage(const int& ii)
 							
 			if(value(sum(CatchNatAge(ii)(n)(sage,nage)))>0)
        		{
-       			
+       			cout<< "ii is: "<<ii<<endl;
+       			cout<< "n is: "<<n<<endl;
+       			cout<< "catch is: "<<sum(CatchNatAge(ii)(n)(sage,nage))<<endl;
        			dvector pa(nage,sage);
        			pa.initialize();
 
@@ -1010,14 +1012,17 @@ FUNCTION void clean_catage(const int& ii)
        			obsCatchNatAge(p)(sage-2) = indmonth(ii);
 				obsCatchNatAge(p)(sage-1) = n;
 				
-				pa = value((CatchNatAge(ii)(n)(sage,nage))/sum(CatchNatAge(ii)(n)(sage,nage)));
+				//pa = value((CatchNatAge(ii)(n)(sage,nage))/sum(CatchNatAge(ii)(n)(sage,nage)));
+				pa = value((CatchNatAge(ii)(n)(sage,nage))/(sum(CatchNatAge(ii)(n)(sage,nage))))+0.00000001;
+				
+				
 				obsCatchNatAge(p)(sage,nage) = rmvlogistic(pa,tau_c,seed+ii);
 				p++;	
 			}	
 		}
 	
 
-	//cout<<"Ok after clean_catage"<<endl;
+	cout<<"Ok after clean_catage"<<endl;
 	
 FUNCTION dvar_vector calcmaxpos()
 	
