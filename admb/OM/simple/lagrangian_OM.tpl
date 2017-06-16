@@ -143,12 +143,13 @@ DATA_SECTION
    		LOC_CALCS	
 
 			tmon = nmon-smon+1;
-			ststp =	tmon * (nyr-syr+1);
-			ntstp = tmon * (rep_yr-syr+1);
+			ststp =	tmon * (rep_yr-syr+1);
+			ntstp = tmon * (nyr-syr+1);
 			age.fill_seqadd(sage,1);
 			areas.fill_seqadd(sarea,1);
 			nationareas.initialize();
 			fishingr.initialize();
+
 
 			dvector natmp1(1,fisharea);
 			dvector natmp2(1,nations);
@@ -211,11 +212,12 @@ DATA_SECTION
 		int tot_pcat;
 		imatrix pmat(1,fisharea,1,ntstp);
 		matrix TotEffyear(1,fisharea,syr,nyr);
-		matrix TotEffyear_rep(1,fisharea,rep_yr+1,rep_yr);
+		matrix TotEffyear_rep(1,fisharea,rep_yr+1,nyr);
 
        LOC_CALCS		
        			int aa =0;
        			
+
        			for(int y=syr;y<=nyr;y++)		
        			{
 
@@ -226,6 +228,8 @@ DATA_SECTION
        					indmonth(aa) = ii;
        				}
        			} 
+
+
 
        			for(int n=1;n<=fisharea;n++)
        			{
@@ -241,6 +245,8 @@ DATA_SECTION
        				indfisharea(ntmp(n),ntmp(n+1)-1)=n;
        			}
 
+
+       			
        			ntmp(fisharea+1) = narea;
        			indfisharea(narea) = fisharea;
 
@@ -258,7 +264,7 @@ DATA_SECTION
        			ntmp1(nations+1) = narea;
        			indnatarea(narea) = nations;
 
-       			//cout<<"Ok after indnatarea calcs"<< endl;
+       			
 
        			pcat.initialize();
        			pmat.initialize();
@@ -274,7 +280,7 @@ DATA_SECTION
        				//	TotEffyear_rep(n)(ia)= TotEffyear(n)(nyr);
        				//}
 
-
+       			
        				for(int i=rep_yr*nmon+1;i<=ntstp;i++)
        				{
        					if(TotEffmonth(n)(indmonth(i))>0.0)
@@ -392,6 +398,8 @@ PRELIMINARY_CALCS_SECTION
 		//case 1:    
 		
 		incidence_functions();
+		//cout<<"chegou aqui??"<<endl;
+
 		initialization();
 		
 		move_grow_die();
@@ -434,7 +442,6 @@ FUNCTION dvar_vector cnorm(const double& x, const dvar_vector& mu, const dvar_ve
 
 FUNCTION incidence_functions
 
-	maxPos.initialize();
 	
 	lxo(sage)=1.;
 	for(int a = sage+1; a<= nage; a++){
@@ -674,7 +681,7 @@ FUNCTION move_grow_die
  	int svyr;
  	svyr = 1;
 
-	for(int i=rep_yr*tmon+1;i<=ststp;i++){
+	for(int i=rep_yr*tmon+1;i<=ntstp;i++){
 		
 		calc_numbers_at_age(i,wt(indyr(i)));
 		
@@ -1179,7 +1186,7 @@ FUNCTION output_true
 	ofs<<"maxPos" << endl << maxPos <<endl;
 	ofs<<"minPos" << endl << minPos <<endl;
 	ofs<<"varPos" << endl << varPos <<endl;
-	ofs<<"PosX" << endl << PosX <<endl;	
+	//ofs<<"PosX" << endl << PosX <<endl;	
 	ofs<<"SB" << endl << SB <<endl;
 	ofs<<"tB" << endl << tB <<endl;
 	ofs<<"Ut" << endl << Ut <<endl;
