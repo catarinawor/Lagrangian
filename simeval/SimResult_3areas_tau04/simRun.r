@@ -6,8 +6,8 @@
 #it's staurday and I'm too lazy to write a makefile
 #
 #==============================================
-setwd("/Users/catarinawor/Documents/Lagrangian/")
-source("R/read.admb.R")
+setwd(getwd())
+source("../R/read.admb.R")
 
 
 
@@ -45,10 +45,10 @@ readOutput <- function(dir)
 
 
 
-	seed<-scan("admb/seed.txt")	
+	seed<-scan("../admb/seed.txt")	
 	file.name <- paste("simest",seed,".Rdata",sep="")
-	sims<-readOutput("/Users/catarinawor/Documents/Lagrangian/admb/")
-	setwd("/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_3areas_tau04")
+	sims<-readOutput("../admb/")
+	setwd(getwd())
 	save(sims,file=file.name)
 
 

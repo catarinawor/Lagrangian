@@ -6,8 +6,8 @@
 #it's staurday and I'm too lazy to write a makefile
 #
 #==============================================
-setwd("/Users/catarinawor/Documents/Lagrangian/")
-source("read.admb.R")
+setwd(getwd())
+source("../R/read.admb.R")
 
 
 
@@ -34,10 +34,10 @@ read.pin <- function(fn)
 readOutput <- function(dir)
 {
 	setwd(dir)
-	sim <- read.rep("lagrangian_OM.rep")
-	est <- read.rep("lagrangian_est.rep")
-	par <- read.fit("lagrangian_est")
-	guess <- read.pin("lagrangian_est.pin")
+	sim <- read.rep("OM/simple/lagrangian_OM.rep")
+	est <- read.rep("mov_est/simple/lagrangian_est.rep")
+	par <- read.fit("mov_est/simple/lagrangian_est")
+	guess <- read.pin("mov_est/simple/lagrangian_est.pin")
 	seed<- scan("seed.txt")
 	C <- list(sim,est,par,seed,guess)
 	return( C );
@@ -45,10 +45,10 @@ readOutput <- function(dir)
 
 
 
-	seed<-scan("seed.txt")	
+	seed<-scan("../admb/seed.txt")	
 	file.name <- paste("simest",seed,".Rdata",sep="")
-	sims<-readOutput("/Users/catarinawor/Documents/Lagrangian/")
-	setwd("/Users/catarinawor/Documents/Lagrangian/SimResult_3areas_tau1_delta2")
+	sims<-readOutput("../admb/")
+	setwd(getwd())
 	save(sims,file=file.name)
 
 
