@@ -17,7 +17,7 @@ DAT=mov_est/simple/lagrangian_est.dat
 OM=lagrangian_OM_gtg
 SIMDAT=OM/simple/lagrangian_OM_gtg.dat
 SEED = seed.txt
-LAST := 100
+LAST := 2
 SADIR= /Users/catarinawor/Documents/iSCAM/examples/hakelag/DATA
 
 
