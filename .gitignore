@@ -3,5 +3,6 @@
 *.rep
 *.std
 *.log 
+*.Rdata
 environ/environTS.R
 environ/PDO.csv
