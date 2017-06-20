@@ -273,8 +273,8 @@ PARAMETER_SECTION
 	//estimable parameters
 	//=================================
 
-	init_bounded_number mo(0.5,6,1);
-	init_bounded_number log_cvPos(-3,-1.3,1);
+	init_bounded_number mo(0.5,6,2);
+	init_bounded_number log_cvPos(-3,-1.3,2);
 	init_bounded_number log_maxPos50(1.00,2.1,1);
 	init_bounded_number log_maxPossd(-0.7,1.609438,1);
 	init_vector wt(syr,nyr,-1);
@@ -383,7 +383,7 @@ FUNCTION double cnorm(const double& x, const dvariable& mu, const dvariable& sd)
 	double rst;
 	double stx;
 
-	stx = value(x-mu/sd);
+	stx = value((x-mu)/sd);
 
 	rst = cumd_norm(stx);
 	
@@ -548,7 +548,7 @@ FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt )
             		
             		Nage(g)(ii)(sage) =(So*SB(ii-nmon)/(1.+beta*SB(ii-nmon)))*mfexp(expwt)* prop_ng(g);//*1.0/dg;
 
-            		for(int a = sage+1;a<=nage;a++)
+            		for(int a = sage+1;a<nage;a++)
             		{
             		
 						propBarea.initialize();
@@ -558,15 +558,17 @@ FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt )
 							propBarea(rr) = cnorm(areas(rr)+0.5,PosX(g)(nmon)(a-1),varPosg(a-1))-cnorm(areas(rr)-0.5,PosX(g)(nmon)(a-1),varPosg(a-1));	
 						}
 
+						
 						Nage(g)(ii)(a) = Nage(g)(ii-1)(a-1)*propBarea*mfexp(-(m_tsp+q*Effarea(ii-1)*va(a-1))) +
 								  Nage(g)(ii-1)(a-1)*(1.0-sum(propBarea))*mfexp(-(m_tsp));
 					}
 
+				
+
 					Nage(g)(ii)(nage) = sum(elem_div(elem_prod((Nage(g)(ii-1)(nage-1)*propBarea),mfexp(-(m_tsp+q*Effarea(ii-1)*va(nage-1)))),
             					(1.0-mfexp(-(m_tsp+q*Effarea(ii-1)*va(nage))))))+
-            					(Nage(g)(ii-1)(nage-1)*(1.0-sum(propBarea))*mfexp(-m_tsp))/(1.0-mfexp(-m_tsp));
+            					(Nage(g)(ii-1)(nage-1)*(1.0-sum(propBarea))*mfexp(-m_tsp))/(1.-mfexp(-m_tsp));
             	
-            		
             		//exit(1);
 
             	break;
@@ -943,7 +945,7 @@ FUNCTION calc_obj_func
 
 	//cout<<"nlvec is"<<nlvec<<endl;
 	//f=sum(nlvec)+sum(npvec);
-	f=sum(nlvec);//100000000;
+	f=sum(nlvec)/10000;//100000000;
 
 	cout<<"f is"<<f<<endl;
 	cout<<"maxPos50 is "<<maxPos50<<endl;

@@ -481,7 +481,7 @@ FUNCTION double cnorm(const dvariable x, const dvariable& mu, const dvariable& s
 	double rst;
 	double stx;
 
-	stx = value(x-mu/sd);
+	stx = value((x-mu)/sd);
 
 	rst = cumd_norm(stx);
 	
@@ -623,6 +623,9 @@ FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt)
 							propBarea(rr) = cnorm(areas(rr)+0.5,PosX(g)(nmon)(a-1),varPosg(a-1))-cnorm(areas(rr)-0.5,PosX(g)(nmon)(a-1),varPosg(a-1));	
 						}
 
+						dvariable psarea;
+						psarea=cnorm(areas(narea)+0.5,PosX(g)(nmon)(a-1),varPosg(a-1))-cnorm(areas(sarea)-0.5,PosX(g)(nmon)(a-1),varPosg(a-1));
+
 						
 						Nage(g)(ii)(a) = Nage(g)(ii-1)(a-1)*propBarea*mfexp(-(m_tsp+q*Effarea(ii-1)*va(a-1))) +
 								  Nage(g)(ii-1)(a-1)*(1.0-sum(propBarea))*mfexp(-(m_tsp));
@@ -655,6 +658,11 @@ FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt)
 							propBarea(rr) = cnorm(areas(rr)+0.5,PosX(g)(indmonth(ii)-1)(a),varPosg(a))-cnorm(areas(rr)-0.5,PosX(g)(indmonth(ii)-1)(a),varPosg(a));	
 						}
 
+						//cout<<"aqui?? "<<endl;
+						dvariable psarea;
+						psarea=cnorm(areas(narea)+0.5,PosX(g)(nmon)(a),varPosg(a))-cnorm(areas(sarea)-0.5,PosX(g)(nmon)(a),varPosg(a));
+
+						
             			Nage(g)(ii)(a) = Nage(g)(ii-1)(a)*propBarea*mfexp(-(m_tsp+q*Effarea(ii-1)*va(a)))+
             						  	 Nage(g)(ii-1)(a)*(1.0-sum(propBarea))*mfexp(-(m_tsp));
             		}
