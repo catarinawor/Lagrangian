@@ -273,8 +273,8 @@ PARAMETER_SECTION
 	//estimable parameters
 	//=================================
 
-	init_bounded_number mo(0.5,6,2);
-	init_bounded_number log_cvPos(-3,-1.3,2);
+	init_bounded_number mo(0.5,6,1);
+	init_bounded_number log_cvPos(-3,-1.3,1);
 	init_bounded_number log_maxPos50(1.00,2.1,1);
 	init_bounded_number log_maxPossd(-0.7,1.609438,1);
 	init_vector wt(syr,nyr,-1);
@@ -945,7 +945,7 @@ FUNCTION calc_obj_func
 
 	//cout<<"nlvec is"<<nlvec<<endl;
 	//f=sum(nlvec)+sum(npvec);
-	f=sum(nlvec)/10000;//100000000;
+	f=sum(nlvec)/100;//100000000;
 
 	cout<<"f is"<<f<<endl;
 	cout<<"maxPos50 is "<<maxPos50<<endl;
@@ -960,7 +960,7 @@ FUNCTION calc_obj_func
 
 FUNCTION dvar_vector calcmaxpos()
 	
-		maxPos(sage,nage) = 1./(1.+mfexp(-(age-maxPos50/maxPossd)));
+		maxPos(sage,nage) = 1./(1.+mfexp(-(age-maxPos50)/maxPossd));
 		maxPos(sage,nage) *= (narea-minPos(sage));
 		maxPos(sage,nage) += minPos(sage);		
 
