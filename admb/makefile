@@ -23,7 +23,7 @@ SADIR= /Users/catarinawor/Documents/iSCAM/examples/hakelag/DATA
 
 NUMBERS := $(shell seq 1 ${LAST})
 
-RDATA ='source(file.path("..","simeval/SimResult_gtg_3areas_tau1","simRun.r"))'
+RDATA ='source(file.path("..","simeval/SimResult_gtg_5areas_tau04","simRun.r"))'
 
 RDATASA ='source(file.path("../","Lagrangian/","RunSA.r"))' 
 
