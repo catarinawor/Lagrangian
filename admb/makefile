@@ -11,9 +11,9 @@
 ##variables
 
 DIROM=OM/gtg/
-DIREXEC=mov_est/simple/
-EXEC=lagrangian_est
-DAT=mov_est/simple/lagrangian_est.dat
+DIREXEC=mov_est/gtg/
+EXEC=lagrangian_est_gtg
+DAT=mov_est/gtg/lagrangian_est_gtg.dat
 OM=lagrangian_OM_gtg
 SIMDAT=OM/simple/lagrangian_OM_gtg.dat
 SEED = seed.txt
