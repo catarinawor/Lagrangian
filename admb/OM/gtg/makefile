@@ -15,7 +15,7 @@ SIMDAT=lagrangian_OM_gtg.dat
 SEED = ../../seed.txt
 LAST := 3
 
-rom: $(OM) $(SIMDAT)  $(SEED) 
+rom: $(OM) $(SIMDAT)  
 	./$(OM) -ind $(SIMDAT) 
 
 all: $(rom) $(SIMDAT) $(compiOM)
