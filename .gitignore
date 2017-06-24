@@ -6,3 +6,4 @@
 *.Rdata
 environ/environTS.R
 environ/PDO.csv
+seed.txt
