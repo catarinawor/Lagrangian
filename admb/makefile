@@ -10,8 +10,8 @@
 ## i.e. it does not print it on the terminal.
 ##variables
 
-DIROM=/Users/catarinawor/Documents/Lagrangian/admb/OM/gtg/
-DIREXEC=/Users/catarinawor/Documents/Lagrangian/admb/mov_est/simple/
+DIROM=OM/gtg/
+DIREXEC=mov_est/simple/
 EXEC=lagrangian_est
 DAT=mov_est/simple/lagrangian_est.dat
 OM=lagrangian_OM_gtg
