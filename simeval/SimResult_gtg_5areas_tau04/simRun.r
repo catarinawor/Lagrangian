@@ -7,7 +7,7 @@
 #
 #==============================================
 setwd(getwd())
-source("../R/read.admb.R")
+source("../../R/read.admb.R")
 
 
 read.pin <- function(fn)
@@ -43,10 +43,10 @@ readOutput <- function(dir)
 }
 
 
-	seed<-scan("../admb/seed.txt")	
+	seed<-scan("../../admb/seed.txt")	
 	file.name <- paste("simest",seed,".Rdata",sep="")
-	sims<-readOutput("../admb/")
-	setwd(getwd())
+	sims<-readOutput("../../admb/")
+	setwd("../simeval/SimResult_gtg_5areas_tau04/")
 	save(sims,file=file.name)
 
 
