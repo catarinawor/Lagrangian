@@ -5,7 +5,7 @@
 
 
 counter=1
-while [ $counter -le 10 ]
+while [ $counter -le 3 ]
 do
 	  cd OM/gtg 
 	./lagrangian_OM_gtg
