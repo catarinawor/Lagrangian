@@ -1270,7 +1270,7 @@ FUNCTION output_pin
 	//ifs<<"# maxPos50 \n" << log(maxPos50) <<endl;
 	ifs<<"# maxPossd \n"<< log(guess_maxPossd(ceil(randu(rngmaxPossd)*7))) <<endl;
 	//ifs<<"# maxPossd \n"<< log(maxPossd) <<endl;
-	ifs<<"# Fmult \n" << log(Fmult) <<endl;
+	ifs<<"# Fmult \n" << log(Fmult*0.7) <<endl;
 	ifs<<"#wt \n" << wt(rep_yr+1,nyr)*err <<endl;
 
 
