@@ -52,7 +52,7 @@ DATA_SECTION
 	init_vector minPos(sage,nage);
 	
 
-	init_number Fmult;
+	//init_number Fmult;
 	init_matrix pTotEffyear(1,fisharea,syr,nyr);
 	init_matrix TotEffmonth(1,fisharea,smon,nmon);
 
@@ -99,7 +99,7 @@ DATA_SECTION
 		//	}
 		//}
 
-			ntstp = (nmon-smon+1) * (nyr-(syr-20)+1);
+			ntstp = (nmon-smon+1) * (nyr-(syr-70)+1);
 
 			age.fill_seqadd(sage,1);
 			areas.fill_seqadd(sarea,1);
@@ -166,16 +166,18 @@ DATA_SECTION
 		int tot_pcat;
 		int itsp;
 
+		
+
 		imatrix pmat(1,fisharea,1,ntstp);
-		matrix TotEffyear(1,fisharea,syr,nyr);
+		
 		
 
        LOC_CALCS
 
-       			itsp = (nmon-smon +1)*20+1;		
+       			itsp = (nmon-smon +1)*70+1;		
        			int aa =0;
        			
-       			for(int y=syr-20;y<=nyr;y++)		
+       			for(int y=syr-70;y<=nyr;y++)		
        			{
        				for(int ii=smon;ii<=nmon;ii++)
        				{
@@ -185,10 +187,10 @@ DATA_SECTION
        				}
        			}
 
-       			for(int n=1;n<=fisharea;n++)
-       			{
-       				TotEffyear(n)(syr,nyr) = Fmult* pTotEffyear(n)(syr,nyr);
-       			}   
+       			//for(int n=1;n<=fisharea;n++)
+       			//{
+       			//	TotEffyear(n)(syr,nyr) = Fmult* pTotEffyear(n)(syr,nyr);
+       			//}   
 
        			ntmp(1) = sarea;
        			
@@ -238,6 +240,8 @@ DATA_SECTION
 
 	init_matrix obsCatchNatAge(1,tot_pcat,sage-3,nage);
 
+	init_vector yCatchtotalobs(syr,nyr);
+
 	init_int eof;
 	
 	
@@ -245,7 +249,7 @@ DATA_SECTION
 		
 		if( eof != 999 )
 		{
-			cout<< "nations is: "<<nations <<endl;
+			cout<< "pTotEffyear is: "<<pTotEffyear <<endl;
 			cout<< "effPwr is: "<<effPwr <<endl;
 			cout<< "Error reading data.\n Fix it."<<endl;
 			cout<< "eof is: "<<eof<<endl;
@@ -269,12 +273,14 @@ PARAMETER_SECTION
 	init_bounded_number log_cvPos(-3,-1.3);
 	init_bounded_number log_maxPos50(1.00,2.1);
 	init_bounded_number log_maxPossd(-0.7,1.609438);
+	init_bounded_number log_Fmult(-2.3,2.3,2);
 	//init_number log_mo;
 	//init_number log_cvPos7
 	//init_number log_maxPos50;
 	//init_number log_maxPossd;
 
 	init_bounded_vector wt(syr,nyr,-3.0,3.0,-1);
+
 
 
 	objective_function_value f;
@@ -295,6 +301,7 @@ PARAMETER_SECTION
 	number maxPos50;
 	number maxPossd;
 	number cvPos;
+	number Fmult;
 
 	//vector wt(syr,nyr);
 
@@ -312,12 +319,14 @@ PARAMETER_SECTION
 	
 	vector nlvec(1,fisharea);
 	vector npvec(1,1);
+	vector yCatchtotal(syr,nyr);
 
-	matrix NationVulB(1,ntstp,1,nations);
+	matrix NationVulB(1,ntstp,1,nations)
 	matrix Nage(1,ntstp,sage,nage);
  	matrix VulB(1,ntstp,sage,nage);
  	matrix PosX(1,ntstp,sage,nage);
  	matrix VBarea(1,ntstp,sarea,narea);
+ 	matrix TotEffyear(1,fisharea,syr,nyr);
  	
  	//matrix propVBarea(1,ntstp,sarea,narea);
  	matrix Effarea(1,ntstp,sarea,narea);
@@ -469,6 +478,9 @@ FUNCTION void calc_catage(const int& ii)
 				CatchNatAge(ii)(indfisharea(r))(a)+= CatchAreaAge(ii)(r)(a);
 			}
 
+			yCatchtotal(indyr(ii)) += sum(CatchAreaAge(ii)(r)(sage,nage));
+
+
 		}
 
 		//cout<<"OK after calc_catage"<<endl;
@@ -498,10 +510,22 @@ FUNCTION incidence_functions
 	maxPossd = mfexp(log_maxPossd);
 	cvPos 	 = mfexp(log_cvPos);
 	mo 	= mfexp(log_mo);
+	Fmult = mfexp(log_Fmult);
 
 	maxPos.initialize();
 	calcmaxpos();
 	varPos = maxPos*cvPos;
+
+	for(int n=1;n<=fisharea;n++)
+    {
+    	TotEffyear(n)(syr,nyr) = Fmult* pTotEffyear(n)(syr,nyr);
+    }  
+    //cout<<"TotEffyear"<<TotEffyear<<endl;
+
+	//exit(1);
+
+
+
 	
 	
 
@@ -649,28 +673,84 @@ FUNCTION calc_obj_func
 			nlvec(n) =  dmvlogistic(O,P,nu,tau_c,dMinP);
 
 		}
+
+
+		dvar_vector eta(syr,nyr);
+		dvar_vector nlcat(1,1);
+
+
+		for(int i = syr; i<= nyr; i++)
+		{
+			eta(i)=log(yCatchtotalobs(i)) - log(yCatchtotal(i));
+			nlcat(1) += dnorm(eta(i),0.0,0.05);
 		
-		cout<<"nlvec is"<<nlvec<<endl;
-		cout<<"maxPos50 is "<<maxPos50<<endl;
-		cout<<"maxPossd is "<<maxPossd<<endl;
-		cout<<"cvPos is "<<cvPos<<endl;
-		cout<<"mo is "<<mo<<endl;
+		}
+
+		
+		
+
 	//exit(1);
 
 	
 	//f=sum(nlvec)+sum(npvec);
-	f=sum(nlvec);
-	
+	f=sum(nlvec)+sum(nlcat);
 
+		cout<<"f is"<<f<<endl;
+		cout<<"maxPos50 is "<<maxPos50<<endl;
+		cout<<"maxPossd is "<<maxPossd<<endl;
+		cout<<"cvPos is "<<cvPos<<endl;
+		cout<<"mo is "<<mo<<endl;
+		cout<<"Fmult is "<<Fmult<<endl;
+
+		//output_true();	
+	//exit(1);
 
 FUNCTION dvar_vector calcmaxpos()
 
 	maxPos(sage,nage) = 1./(1.+mfexp(-(age-maxPos50)/maxPossd));
-	maxPos(sage,nage) *= (narea-sarea);
-	maxPos(sage,nage) += sarea;
+	maxPos(sage,nage) *= (narea-minPos(sage));
+	maxPos(sage,nage) += minPos(sage);			
 
 			
 	return(maxPos);
+
+FUNCTION output_true
+	
+	ofstream ofs("firstrun.rep");
+
+	ofs<<"mo" << endl << mo <<endl;
+	ofs<<"maxPos50" << endl << maxPos50 <<endl;
+	ofs<<"maxPossd" << endl << maxPossd <<endl;
+	ofs<<"cvPos" << endl << cvPos <<endl;
+	ofs<<"syr" << endl << syr <<endl;
+	ofs<<"nyr" << endl << nyr <<endl;
+	ofs<<"sage" << endl << sage <<endl;
+	ofs<<"nage" << endl << nage <<endl;
+	ofs<<"tau_c" << endl << tau_c<<endl;
+	ofs<<"smon" << endl << smon <<endl;
+	ofs<<"nmon" << endl << nmon <<endl;
+	ofs<<"sarea" << endl << sarea <<endl;
+	ofs<<"narea" << endl << narea <<endl;
+	ofs<<"nations" << endl << nations <<endl;
+	ofs<<"maxPos" << endl << maxPos <<endl;
+	ofs<<"minPos" << endl << minPos <<endl;
+	ofs<<"varPos" << endl << varPos <<endl;
+	//ofs<<"PosX" << endl << PosX <<endl;	
+	ofs<<"SB" << endl << SB <<endl;
+	ofs<<"Nage" << endl << Nage <<endl;
+	ofs<<"VBarea" << endl << VBarea <<endl;
+	ofs<<"EffNatAge" << endl << EffNatAge <<endl;
+	ofs<<"Effarea"<< endl << Effarea <<endl;
+	ofs<<"predCatchNatAge"<< endl << predCatchNatAge<<endl;
+	ofs<<"CatchNatAge"<< endl << CatchNatAge<<endl;
+	ofs<<"CatchAreaAge"<< endl << CatchAreaAge<<endl;
+	ofs<<"indyr"<< endl << indyr<<endl;
+	ofs<<"indmonth"<< endl << indmonth<<endl;
+	ofs<<"indnatarea"<< endl << indnatarea<<endl;
+	//ofs<<"propVBarea"<< endl << propVBarea <<endl;
+
+
+
 
 
 REPORT_SECTION

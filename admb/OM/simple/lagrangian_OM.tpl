@@ -235,6 +235,7 @@ DATA_SECTION
        			{
        				TotEffyear(n)(syr,nyr) = Fmult* pTotEffyear(n)(syr,nyr);
        			}
+       			
 
        			//calc for indfisharea
        			ntmp(1) = sarea;
@@ -272,7 +273,7 @@ DATA_SECTION
        			{
        				for(int ii=rep_yr+1;ii<=nyr;ii++)
        				{
-       					TotEffyear_rep(n)(ii)= TotEffyear(n)(ii);
+       					TotEffyear_rep(n)(ii)= pTotEffyear(n)(ii);
        				}
 
        				//for(int ia=nyr+1;ia<=proj_yr;ia++)
@@ -357,6 +358,7 @@ PARAMETER_SECTION
 	vector phie(syr,nyr)
 
 	vector catlim(1,nations);
+	vector yCatchtotal(syr,nyr);
 	
 
 	matrix Nage(1,ntstp,sage,nage);
@@ -463,11 +465,10 @@ FUNCTION incidence_functions
 	maxPos.initialize();
 	calcmaxpos();
 	varPos = maxPos*cvPos;
-	
+
+
 	//cout<<"Ok after incidence_functions"<< endl;
 FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt)
-
-
 		
 		dvar_vector propBarea(sarea,narea);
 		
@@ -608,7 +609,12 @@ FUNCTION void calc_catage(const int& ii)
 			yCatchStateAge(indyr(ii))(indnatarea(r))(sage,nage) += CatchAreaAge(ii)(r)(sage,nage);
 			
 			yCatchtotalage(indyr(ii))(sage,nage) += CatchAreaAge(ii)(r)(sage,nage);
+			yCatchtotal(indyr(ii)) += sum(CatchAreaAge(ii)(r)(sage,nage));
+			
+
 		}
+
+
 		//cout<<"Ok after calc_catage"<< endl;
 
 
@@ -756,6 +762,7 @@ FUNCTION void clean_catage(const int& ii)
 	
 	
 	//cout<<"Ok after clean_catage"<< endl;
+
 
 
 	//FUNCTION void catage_comm(const int& ii)
@@ -1210,6 +1217,7 @@ FUNCTION output_true
 	ofs<<"selnation"<< endl << selnation <<endl;
 	ofs<<"seltotal"<< endl << seltotal <<endl;
 	ofs<<"yCatchtotalage"<< endl << yCatchtotalage <<endl;
+	ofs<<"yCatchtotal"<< endl << yCatchtotal <<endl;
 	ofs<<"yCatchNatAge"<< endl << yCatchNatAge <<endl;
 	ofs<<"yCatchStateAge"<< endl << yCatchStateAge <<endl;
 	ofs<<"yNage"<< endl << yNage <<endl;
@@ -1217,6 +1225,8 @@ FUNCTION output_true
 	ofs<<"spr"<< endl <<spr <<endl;
 	ofs<<"phie"<< endl <<phie <<endl;
 	ofs<<"phiE"<< endl <<phiE <<endl;
+
+
 
 
 	
@@ -1260,7 +1270,9 @@ FUNCTION output_pin
 	//ifs<<"# maxPos50 \n" << log(maxPos50) <<endl;
 	ifs<<"# maxPossd \n"<< log(guess_maxPossd(ceil(randu(rngmaxPossd)*7))) <<endl;
 	//ifs<<"# maxPossd \n"<< log(maxPossd) <<endl;
+	ifs<<"# Fmult \n" << log(Fmult) <<endl;
 	ifs<<"#wt \n" << wt(rep_yr+1,nyr)*err <<endl;
+
 
 
 FUNCTION output_pin_SA
@@ -1334,12 +1346,13 @@ FUNCTION output_dat
 	afs<<"# fecundity at age " << endl << fa <<endl;
 	afs<<"# vulnerability at age " << endl << va <<endl;
 	afs<<"# minPos "<< endl << minPos <<endl;
-	afs<<"# Fmult "<< endl <<Fmult <<endl;
+	//afs<<"# Fmult "<< endl <<Fmult <<endl;
 	afs<<"# Total effort by country and year " << endl << TotEffyear_rep<<endl;
 	afs<<"# Total effort by country and month " << endl << TotEffmonth <<endl;
 	afs<<"# effPwr"<< endl << effPwr <<endl;
 	afs<<"# dMinP " << endl << 0.1e-15 <<endl;
 	afs<<"# tstp month area catage " << endl << obsCatchNatAge <<endl;	
+	afs<<"# yCatchtotal"<< endl << yCatchtotal(rep_yr+1,nyr) <<endl;
 	afs<<"# eof " << endl << 999 <<endl;
 	
 FUNCTION void output_ctlSA(const int& i)
