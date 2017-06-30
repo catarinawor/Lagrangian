@@ -99,7 +99,7 @@ DATA_SECTION
 		//	}
 		//}
 
-			ntstp = (nmon-smon+1) * (nyr-(syr-20)+1);
+			ntstp = (nmon-smon+1) * (nyr-(syr-70)+1);
 
 			age.fill_seqadd(sage,1);
 			areas.fill_seqadd(sarea,1);
@@ -172,10 +172,10 @@ DATA_SECTION
 
        LOC_CALCS
 
-       			itsp = (nmon-smon +1)*20+1;		
+       			itsp = (nmon-smon +1)*70+1;		
        			int aa =0;
        			
-       			for(int y=syr-20;y<=nyr;y++)		
+       			for(int y=syr-70;y<=nyr;y++)		
        			{
        				for(int ii=smon;ii<=nmon;ii++)
        				{
@@ -650,7 +650,7 @@ FUNCTION calc_obj_func
 
 		}
 		
-		cout<<"nlvec is"<<nlvec<<endl;
+		cout<<"nlvec is"<<sum(nlvec)<<endl;
 		cout<<"maxPos50 is "<<maxPos50<<endl;
 		cout<<"maxPossd is "<<maxPossd<<endl;
 		cout<<"cvPos is "<<cvPos<<endl;

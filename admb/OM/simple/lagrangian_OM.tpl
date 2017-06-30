@@ -1252,7 +1252,7 @@ FUNCTION output_pin
 	
 	ofstream ifs("../../mov_est/simple/lagrangian_est.pin");
 
-	ifs<<"#log_mo \n "  << log(mo) <<endl;
+	ifs<<"#log_mo \n "  << ceil(randu(rngmo)*6) <<endl;
 	//ifs<<"#log_mo \n "  << log(mo) <<endl;
 	ifs<<"#cvPos \n" << log(guess_cvPos(ceil(randu(rngcvPos)*5))) <<endl;	
 	//ifs<<"#cvPos \n" << log(cvPos) <<endl;	
