@@ -650,16 +650,16 @@ FUNCTION calc_obj_func
 
 		}
 		
-		cout<<"nlvec is"<<sum(nlvec)<<endl;
-		cout<<"maxPos50 is "<<maxPos50<<endl;
-		cout<<"maxPossd is "<<maxPossd<<endl;
-		cout<<"cvPos is "<<cvPos<<endl;
-		cout<<"mo is "<<mo<<endl;
+		//cout<<"nlvec is"<<sum(nlvec)<<endl;
+		//cout<<"maxPos50 is "<<maxPos50<<endl;
+		//cout<<"maxPossd is "<<maxPossd<<endl;
+		//cout<<"cvPos is "<<cvPos<<endl;
+		//cout<<"mo is "<<mo<<endl;
 	//exit(1);
 
 	
 	//f=sum(nlvec)+sum(npvec);
-	f=sum(nlvec);
+	f=sum(nlvec)/100;
 	
 
 
