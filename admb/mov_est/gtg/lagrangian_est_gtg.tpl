@@ -945,9 +945,9 @@ FUNCTION calc_obj_func
 
 	//cout<<"nlvec is"<<nlvec<<endl;
 	//f=sum(nlvec)+sum(npvec);
-	f=sum(nlvec)/100;//100000000;
+	f=sum(nlvec)/10000;//100000000;
 
-	//cout<<"f is"<<f<<endl;
+	cout<<"f is"<<f<<endl;
 	//cout<<"maxPos50 is "<<maxPos50<<endl;
 	//cout<<"maxPossd is "<<maxPossd<<endl;
 	//cout<<"cvPos is "<<cvPos<<endl;

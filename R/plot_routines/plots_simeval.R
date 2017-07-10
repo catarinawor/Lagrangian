@@ -111,14 +111,17 @@ indpar<-c(1,2,3,4)
 
 
 
-.SIMDIRSGTG   <- c("/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_5areas_tau1",
-                   "/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_5areas_tau1_delta2",
-                   "/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_3areas_tau1",
-                   "/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_3areas_tau1_delta2",
-                   "/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_5areas_tau04",
-                   "/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_5areas_tau04_delta2",
-                   "/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_3areas_tau04",
-                   "/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_3areas_tau04_delta2")
+
+.SIMDIRSGTG   <- c(
+                   #"/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_3areas_tau04",
+                   #"/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_3areas_tau04_delta2",
+                   #"/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_3areas_tau1",
+                   "/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_3areas_tau1_delta2" #,
+                   #"/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_5areas_tau1",
+                   #"/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_5areas_tau1_delta2",
+                   #"/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_5areas_tau04",
+                   #"/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_5areas_tau04_delta2",
+                   )
 
 
 
@@ -156,32 +159,35 @@ for( i in 1:length(.SIMDIRSGTG)){
     tmp_initvals[j,]<-exp(unlist(sims[[5]][1:4]))
    }
 
-  tmp_estn<- tmp_estn[tmp_maxgrad<=1.0000e-03,]
-  tmp_pbias<- tmp_pbias[tmp_maxgrad<=1.0000e-03,]
+  tmp_estn<- tmp_estn[tmp_maxgrad<=1.0000e-00,]
+  tmp_pbias<- tmp_pbias[tmp_maxgrad<=1.0000e-00,]
   
   estn_gtg[[i]]<-tmp_estn
   pbias_gtg[[i]]<-tmp_pbias
   maxgrad_gtg[[i]]<-tmp_maxgrad
-  initvals_gtg[[i]]<-tmp_initvals[tmp_maxgrad<=1.0000e-04,]
-  initvals_bad_gtg[[i]]<-tmp_initvals[tmp_maxgrad>1.0000e-04,]
+  initvals_gtg[[i]]<-tmp_initvals[tmp_maxgrad<=1.0000e-00,]
+  initvals_bad_gtg[[i]]<-tmp_initvals[tmp_maxgrad>1.0000e-00,]
 
 
 }
 
 indAyr<-rep(1:3,1200)[2161:3600]
-titulos<-c("5 areas, tau=1.0, B = 1.0","5 areas, tau= 1.0, B = 2.0",
-"3 areas, tau=1.0, B = 1.0","3 areas, tau=1.0, B = 2.0",
-"5 areas, tau=0.4, B = 1.0","5 areas, tau= 0.4, B = 2.0",
-"3 areas, tau=0.4, B = 1.0","3 areas, tau=0.4, B = 2.0")
+titulos<-c(
+  #"5 areas, tau=1.0, B = 1.0","5 areas, tau= 1.0, B = 2.0",
+#"3 areas, tau=1.0, B = 1.0",
+  "3 areas, tau=1.0, B = 2.0"#,
+#"5 areas, tau=0.4, B = 1.0","5 areas, tau= 0.4, B = 2.0",
+#"3 areas, tau=0.4, B = 1.0","3 areas, tau=0.4, B = 2.0"
+  )
 
 
 #setwd("/Users/catarinawor/Documents/hake/Thesis/figs")
 #setwd("/Users/catarinawor/Documents/hake/JTC_talk")
 #pdf("quatroscn.pdf")
 
-setwd("/Users/catarinawor/Documents/hake/Thesis/figs/chap2")
-pdf("GTG_version_simeval.pdf", width=14, height=7)
-par(mfcol=c(2,4))
+#setwd("/Users/catarinawor/Documents/hake/Thesis/figs/chap2")
+#pdf("GTG_version_simeval.pdf", width=14, height=7)
+#par(mfcol=c(2,4))
 for( i in 1:length(.SIMDIRSGTG)){
   boxplot(pbias_gtg[[i]],names= c(expression("t"[0]),expression("CV"),expression("a"[50]),
     expression(sigma["X"["max"]])),ylim=c(-50,60),main=titulos[i],
@@ -189,8 +195,8 @@ for( i in 1:length(.SIMDIRSGTG)){
   abline(h=0)
   text(4, y = -28, labels = nrow(pbias_gtg[[i]]),cex=2)
 }
-mtext("Relative Error", 2, line = -2, outer = TRUE, font=2)
-dev.off()
+#mtext("Relative Error", 2, line = -2, outer = TRUE, font=2)
+#dev.off()
 
 
 
