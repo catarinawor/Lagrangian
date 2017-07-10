@@ -5,7 +5,7 @@
 
 
 counter=1
-while [ $counter -le 3 ]
+while [ $counter -le 100 ]
 do
 	  cd OM/gtg 
 	./lagrangian_OM_gtg
@@ -13,7 +13,7 @@ do
 	cd ../../mov_est/gtg/
 	./lagrangian_est_gtg
 	
-	cd ../../../simeval/SimResult_gtg_5areas_tau04
+	cd ../../../simeval/SimResult_gtg_3areas_tau1_delta2
 	
 	#source(simRun.r) | R --vanilla --slave
 	
