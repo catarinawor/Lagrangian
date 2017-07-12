@@ -650,7 +650,8 @@ FUNCTION calc_obj_func
 				//O(i) = (obsCatchNatAge(ii)(sage,nage)+0.1e-30)/sum(obsCatchNatAge(ii)(sage,nage)+0.1e-5);
 				//P(i) = (predCatchNatAge(ii)(sage,nage)+0.1e-30)/sum(predCatchNatAge(ii)(sage,nage)+0.1e-5);
 				O(i) = (obsCatchNatAge(ii)(sage,nage))/sum(obsCatchNatAge(ii)(sage,nage));
-				P(i) = ((predCatchNatAge(ii)(sage,nage))/(sum(predCatchNatAge(ii)(sage,nage))+0.01))+0.000001;
+				P(i) = (predCatchNatAge(ii)(sage,nage)/sum(predCatchNatAge(ii)(sage,nage)))+0.00000001;
+				
 				ii++;
 
 				//cout<<"P("<<i<<")"<<P(i)<<endl;
@@ -675,27 +676,31 @@ FUNCTION calc_obj_func
 		}
 
 
-		dvar_vector eta(syr,nyr);
-		dvar_vector nlcat(1,1);
-
-
-		for(int i = syr; i<= nyr; i++)
-		{
-			eta(i)=log(yCatchtotalobs(i)) - log(yCatchtotal(i));
-			nlcat(1) += dnorm(eta(i),0.0,0.05);
-		
-		}
-
-		
+	//	dvar_vector eta(syr,nyr);
+	//	dvar_vector nlcat(1,1);
+	//	nlcat.initialize();
+	//
+	//	for(int i = syr; i<= nyr; i++)
+	//	{
+	//		eta(i)=log(yCatchtotalobs(i)) - log(yCatchtotal(i));
+	//	
+	//	}
+	//		
+	//if(last_phase()){
+	//	nlcat(1) = norm2(eta);
+	//}else{
+	//	nlcat(1) = 0.0;
+	//}
 		
 
 	//exit(1);
 
 	
 	//f=sum(nlvec)+sum(npvec);
-	f=sum(nlvec)+sum(nlcat);
+	f=sum(nlvec)/10000;//+sum(nlcat)/10000;
 
 		cout<<"f is"<<f<<endl;
+		//cout<<"nlcat is"<<nlcat<<endl;
 		cout<<"maxPos50 is "<<maxPos50<<endl;
 		cout<<"maxPossd is "<<maxPossd<<endl;
 		cout<<"cvPos is "<<cvPos<<endl;
@@ -707,9 +712,10 @@ FUNCTION calc_obj_func
 
 FUNCTION dvar_vector calcmaxpos()
 
+	
 	maxPos(sage,nage) = 1./(1.+mfexp(-(age-maxPos50)/maxPossd));
 	maxPos(sage,nage) *= (narea-minPos(sage));
-	maxPos(sage,nage) += minPos(sage);			
+	maxPos(sage,nage) += minPos(sage);		
 
 			
 	return(maxPos);
@@ -735,7 +741,7 @@ FUNCTION output_true
 	ofs<<"maxPos" << endl << maxPos <<endl;
 	ofs<<"minPos" << endl << minPos <<endl;
 	ofs<<"varPos" << endl << varPos <<endl;
-	//ofs<<"PosX" << endl << PosX <<endl;	
+	ofs<<"VulB" << endl << VulB <<endl;	
 	ofs<<"SB" << endl << SB <<endl;
 	ofs<<"Nage" << endl << Nage <<endl;
 	ofs<<"VBarea" << endl << VBarea <<endl;
@@ -747,7 +753,10 @@ FUNCTION output_true
 	ofs<<"indyr"<< endl << indyr<<endl;
 	ofs<<"indmonth"<< endl << indmonth<<endl;
 	ofs<<"indnatarea"<< endl << indnatarea<<endl;
-	//ofs<<"propVBarea"<< endl << propVBarea <<endl;
+	ofs<<"yCatchtotalobs"<< endl << yCatchtotalobs <<endl;
+	ofs<<"yCatchtotal"<< endl << yCatchtotal <<endl;
+	
+
 
 
 
@@ -759,6 +768,7 @@ REPORT_SECTION
 	REPORT(maxPos50);
 	REPORT(maxPossd);
 	REPORT(cvPos);
+	REPORT(Fmult);
 	REPORT(syr);
 	REPORT(nyr);
 	REPORT(sage);

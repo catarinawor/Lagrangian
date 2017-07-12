@@ -134,6 +134,7 @@ DATA_SECTION
    	ivector fishingr(1,fisharea);
    	ivector nationareas(1,nations);
    	vector wt(syr,nyr);
+   	vector vt(syr,nyr);
    	//vector wtsim(syr,rep_yr);
 
 
@@ -196,6 +197,9 @@ DATA_SECTION
 			wt.fill_randn(rng);
 			wt*=sigR;
 
+			vt.fill_randn(rng);
+			vt*=0.1;
+
 			//epsilon.fill_randn(rng);
 			//epsilon*=0.2;
 
@@ -233,7 +237,7 @@ DATA_SECTION
 
        			for(int n=1;n<=fisharea;n++)
        			{
-       				TotEffyear(n)(syr,nyr) = Fmult* pTotEffyear(n)(syr,nyr);
+       				TotEffyear(n)(syr,nyr) = elem_prod(Fmult* exp(vt(syr,nyr)), pTotEffyear(n)(syr,nyr));
        			}
        			
 
@@ -667,7 +671,7 @@ FUNCTION move_grow_die
 
 	for(int ie=2;ie<=(rep_yr*tmon);ie++)
 	{ 
-		calc_numbers_at_age(ie,wt(indyr(ie)));
+		calc_numbers_at_age(ie,0.0);
 
 		//cout<<"maxPos "<<maxPos<<endl;
 		calc_position(ie);
@@ -699,7 +703,17 @@ FUNCTION move_grow_die
 
 		calc_catage(i);
 
-		clean_catage(i);
+
+		for(int n=1;n<=fisharea;n++)
+		{					
+			if(TotEffmonth(n)(indmonth(i))>0)
+       		{
+					clean_catage(i,p,n);
+					p++;
+       		}	
+		}
+
+		
 
 		//if(indmonth(i)==nmon){
 			//survey calculations
@@ -716,50 +730,31 @@ FUNCTION move_grow_die
 	
 	
 
-FUNCTION void clean_catage(const int& ii)
+FUNCTION void clean_catage(const int& ii,const int& pp,const int& nn)
 	
 	
 	//for(int i=rep_yr*nmon+1;i<=ntstp;i++)
 	//{
-		ivector tmppcat(1,fisharea);
-		for(int n=1;n<=fisharea;n++)
-		{	
-			tmppcat(n)= sum(pmat(n)(1,ii-1));
-		}
-
-		int p;
-			
-		p =sum(tmppcat)+1;
 		
-		for(int n=1;n<=fisharea;n++)
-		{	
-			//	cout<<"p is "<< p<<endl;
-			//	cout<<"n is "<< n<<endl;
-			if(TotEffmonth(n)(indmonth(ii))>0)
-       		{	
-       			//cout<<"indyr(ii) is "<< indyr(ii)<<endl;
-       			//cout<<"indmonth(ii) is "<< indmonth(ii)<<endl;
-       			dvector pa(nage,sage);
-       			pa.initialize();
+		dvector pa(nage,sage);
+       	pa.initialize();		
 
-       			//obsCatchNatAge(p)(sage-4) = indyr(ii);
-       			obsCatchNatAge(p)(sage-3) = ii;
-       			obsCatchNatAge(p)(sage-2) = indmonth(ii);
-				obsCatchNatAge(p)(sage-1) = n;
+       	obsCatchNatAge(pp)(sage-3) = ii;
+       	obsCatchNatAge(pp)(sage-2) = indmonth(ii);
+		obsCatchNatAge(pp)(sage-1) = nn;
+
+
+		
        			
-       			//non-survey option
-				pa = value((CatchNatAge(ii)(n)(sage,nage))/(sum(CatchNatAge(ii)(n)(sage,nage))+0.01))+0.000001;
-				
-				//survey option
-				//pa = elem_prod(Nage(i)(sage,nage),va(sage,nage))
-				
-				obsCatchNatAge(p)(sage,nage) = rmvlogistic(pa,tau_c,seed+ii);
-				//cout<<"obsCatchNatAge(p)(sage,nage) is "<<obsCatchNatAge(p)(sage,nage)<< endl;
 
-				p++;	
-       		}	
-		}
-	
+       			
+       	//non-survey option
+		pa = value(CatchNatAge(ii)(nn)(sage,nage)/(sum(CatchNatAge(ii)(nn)(sage,nage))))+0.0000001;
+				
+		obsCatchNatAge(pp)(sage,nage) = rmvlogistic(pa,tau_c,seed+ii);
+				
+		obsCatchNatAge(pp)(sage,nage) = rmvlogistic(pa,tau_c,seed+ii);
+				
 	
 	//cout<<"Ok after clean_catage"<< endl;
 
@@ -1204,6 +1199,8 @@ FUNCTION output_true
 	ofs<<"VBarea" << endl << VBarea <<endl;
 	ofs<<"propVBarea" << endl << propVBarea <<endl;
 	ofs<<"Effarea"<< endl << Effarea <<endl;
+	ofs<<"TotEffyear" << endl << TotEffyear<<endl;
+	ofs<<"Fmult" << endl << Fmult* exp(vt(syr,nyr))<<endl;
 	//ofs<<"comm_obsCatage"<< endl << comm_obsCatage <<endl;
 	//ofs<<"surv_obsCatage"<< endl << surv_obsCatage <<endl;
 	ofs<<"totVBnation" << endl << totVBnation <<endl;
@@ -1262,14 +1259,15 @@ FUNCTION output_pin
 	
 	ofstream ifs("../../mov_est/simple/lagrangian_est.pin");
 
-	ifs<<"#log_mo \n "  << ceil(randu(rngmo)*6) <<endl;
-	//ifs<<"#log_mo \n "  << log(mo) <<endl;
+	//ifs<<"#log_mo \n "  << ceil(randu(rngmo)*6) <<endl;
+	ifs<<"#log_mo \n "  << log(mo) <<endl;
 	ifs<<"#cvPos \n" << log(guess_cvPos(ceil(randu(rngcvPos)*5))) <<endl;	
 	//ifs<<"#cvPos \n" << log(cvPos) <<endl;	
 	ifs<<"# maxPos50 \n" << log(guess_maxPos50(ceil(randu(rngmaxPos50)*9))) <<endl;
 	//ifs<<"# maxPos50 \n" << log(maxPos50) <<endl;
 	ifs<<"# maxPossd \n"<< log(guess_maxPossd(ceil(randu(rngmaxPossd)*7))) <<endl;
 	//ifs<<"# maxPossd \n"<< log(maxPossd) <<endl;
+	//ifs<<"# Fmult \n" << log(Fmult) <<endl;
 	ifs<<"# Fmult \n" << log(Fmult*0.7) <<endl;
 	ifs<<"#wt \n" << wt(rep_yr+1,nyr)*err <<endl;
 
