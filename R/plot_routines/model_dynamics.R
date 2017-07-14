@@ -130,3 +130,144 @@ setwd("/Users/catarinawor/Documents/hake/Lag_Model_paper")
 ggsave(file="Figure1.pdf")
 
 ############need to run with  effort ############
+
+
+setwd("/Users/catarinawor/Documents/Lagrangian/R")
+source("read.admb.R")
+
+sim <- read.rep("../admb/OM/simple/lagrangian_OM.rep")
+sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")
+
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+names(sim)
+dim(sim$propVBarea)
+head(sim$propVBarea)
+ 
+
+simvb<-(cbind(data.frame(time=sim$propVBarea[,1],
+  area=sim$propVBarea[,2],
+  type="single"),
+  sim$propVBarea[,3:ncol(sim$propVBarea)]))
+
+
+
+names(simvb)[4:ncol(simvb)]<-paste("A",sim$sage:sim$nage, sep="")
+
+head(simvb)
+molsimvb<-melt(simvb, id.vars=list("area", "time", "type"))
+head(molsimvb)
+
+
+names(sim_gtg)
+
+gtgvb<-cbind(data.frame(time=sim_gtg$propVBarea[,1],
+  group=sim_gtg$propVBarea[,2],
+  area=sim_gtg$propVBarea[,3],  
+  type="multiple"),
+  sim_gtg$propVBarea[,4:ncol(sim_gtg$propVBarea)])
+
+names(gtgvb)[5:ncol(gtgvb)]<-paste("A",sim_gtg$sage:sim_gtg$nage, sep="")
+head(gtgvb)
+
+ngtgvb<-aggregate(gtgvb[,5:ncol(gtgvb)], by=list(gtgvb$time,gtgvb$area,gtgvb$type), sum)
+
+head(ngtgvb)
+
+names(ngtgvb)[1]<-"time"
+names(ngtgvb)[2]<-"area"
+names(ngtgvb)[3]<-"type"
+
+molgtgvb<-melt(ngtgvb, id.vars=list("area", "time", "type"))
+head(molgtgvb)
+
+df1<-rbind(molgtgvb,molsimvb)
+
+df2<-df1[df1$variable=="A1"|df1$variable=="A5",]
+
+
+
+df2$time2<-meses[indmonth[df2$time]]
+
+df2<-df2[df2$time>1188,]
+summary(df2)
+df2<-arrange(transform(df2,Month=factor(time2,levels=meses)),Month)
+
+df2$age<-as.factor(as.numeric(df2$variable))
+#df2$values<-df2$value#/max(df2$value)
+df2$values<-df2$value/max(df2$value)
+
+#df2$values[df2$variable=="A1"]<-df2$value[df2$variable=="A1"]/max(df2$value[df2$variable=="A1"])
+#df2$values[df2$variable=="A5"]<-df2$value[df2$variable=="A5"]/max(df2$value[df2$variable=="A5"])
+
+
+#df2$values[df2$variable=="A2"&df2$type=="gtg"]<-df2$value[df2$variable=="A2"&df2$type=="gtg"]/max(df2$value[df2$variable=="A2"&df2$type=="gtg"])
+#df2$values[df2$variable=="A2"&df2$type=="simple"]<-df2$value[df2$variable=="A2"&df2$type=="simple"]/max(df2$value[df2$variable=="A2"&df2$type=="simple"])
+
+#df2$values[df2$variable=="A5"&df2$type=="gtg"]<-df2$value[df2$variable=="A5"&df2$type=="gtg"]/max(df2$value[df2$variable=="A5"&df2$type=="gtg"])
+#df2$values[df2$variable=="A5"&df2$type=="simple"]<-df2$value[df2$variable=="A5"&df2$type=="simple"]/max(df2$value[df2$variable=="A5"&df2$type=="simple"])
+
+
+
+names(sim)
+sim$Effarea
+dim(sim$Effarea)
+head(sim$Effarea)
+
+effsim<-melt(sim$Effarea)
+
+summary(effsim)
+
+names(effsim)[1]<-"time"
+names(effsim)[2]<-"area"
+names(effsim)[3]<-"values"
+
+summary(effsim)
+
+effsim$area<-as.numeric(effsim$area)+29
+summary(effsim$area)
+effsim$dat<-"effort"
+effsim$type<-"single"
+
+
+effgtg<-melt(sim_gtg$Effarea)
+
+
+names(effgtg)[1]<-"time"
+names(effgtg)[2]<-"area"
+names(effgtg)[3]<-"values"
+
+
+
+effgtg$area<-as.numeric(effgtg$area)+29
+effgtg$dat<-"effort"
+effgtg$type<-"multiple"
+
+summary(effgtg)
+ 
+Eff<-rbind(effsim,effgtg)
+Eff<-Eff[Eff$time>1188,]
+
+Eff$time2<-meses[indmonth[Eff$time]]
+Eff$values<-Eff$values/max(Eff$values)
+
+Eff<-arrange(transform(Eff,Month=factor(time2,levels=meses)),Month)
+summary(Eff)
+
+
+p<-ggplot(df2, aes(x=area,y=values))
+p<-p+geom_line(aes(color=type, lty=age),alpha=0.8, size=1.)
+p<-p+facet_wrap(~Month, ncol =3)
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),alpha=0.8,stat = "identity", position=position_dodge())
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())
+p <- p + scale_color_grey("model") + scale_fill_grey("model")
+p <- p + scale_linetype_manual(breaks=c("1","5"), values=c(3,1))
+p <- p + ylab("Relative Biomass/Effort")
+p <- p + xlab("Latitude (areas)")
+p
+setwd("/Users/catarinawor/Documents/hake/Lag_Model_paper")
+ggsave(file="Figure2.pdf")
+
+?geom_bar
+

@@ -49,7 +49,7 @@ DATA_SECTION
 	init_vector va(sage,nage);
 	init_vector minPos(sage,nage);
 	
-	init_number Fmult;
+	//init_number Fmult;
 	init_matrix pTotEffyear(1,fisharea,syr,nyr);
 	init_matrix TotEffmonth(1,fisharea,smon,nmon);
 
@@ -160,7 +160,7 @@ DATA_SECTION
 		int tot_pcat;
 
 		imatrix pmat(1,fisharea,1,ntstp);
-		matrix TotEffyear(1,fisharea,syr,nyr);
+		//matrix TotEffyear(1,fisharea,syr,nyr);
 		
 		
 
@@ -184,10 +184,10 @@ DATA_SECTION
        			}
        		}
 
-       		for(int n=1;n<=fisharea;n++)
-       		{
-       			TotEffyear(n)(syr,nyr) = Fmult* pTotEffyear(n)(syr,nyr);
-       		}      			
+       		//for(int n=1;n<=fisharea;n++)
+       		//{
+       		//	TotEffyear(n)(syr,nyr) = Fmult* pTotEffyear(n)(syr,nyr);
+       		//}      			
 
 
        		//calc for indfisharea
@@ -256,7 +256,7 @@ DATA_SECTION
 		if( eof != 999 )
 		{
 			cout<< "Error reading data.\n Fix it."<<endl;
-			cout<< "eof is: "<<eof<<endl;
+			cout<< "minPos is: "<<minPos<<endl;
 			cout<< "eof is: "<<eof<<endl;
 			ad_exit(1);
 		}
@@ -277,6 +277,7 @@ PARAMETER_SECTION
 	init_bounded_number log_cvPos(-3,-1.3,1);
 	init_bounded_number log_maxPos50(1.00,2.1,1);
 	init_bounded_number log_maxPossd(-0.7,1.609438,1);
+	init_bounded_number log_Fmult(-2.3,2.3,2);
 	init_vector wt(syr,nyr,-1);
 
 	objective_function_value f;
@@ -299,6 +300,8 @@ PARAMETER_SECTION
 	number maxPos50;
 	number maxPossd;
 	number cvPos;
+	number Fmult;
+
 
 	//vector wt(syr,nyr);
 
@@ -331,6 +334,7 @@ PARAMETER_SECTION
 	matrix totVBnation(1,ntstp,1,nations);
 	
 	matrix Effarea(1,ntstp,sarea,narea);
+	matrix TotEffyear(1,fisharea,syr,nyr);
  	
 
 	
@@ -520,8 +524,12 @@ FUNCTION incidence_functions
 	maxPossd = mfexp(log_maxPossd);
 	cvPos 	 = mfexp(log_cvPos);
 	//mo 	= mfexp(log_mo);
+	Fmult = mfexp(log_Fmult);
 	
-
+	for(int n=1;n<=fisharea;n++)
+    {
+    	TotEffyear(n)(syr,nyr) = Fmult* pTotEffyear(n)(syr,nyr);
+    }  
 	
 	//cout<<"Ok after incidence_functions"<<endl;
 	
@@ -945,13 +953,13 @@ FUNCTION calc_obj_func
 
 	//cout<<"nlvec is"<<nlvec<<endl;
 	//f=sum(nlvec)+sum(npvec);
-	f=sum(nlvec)/10000;//100000000;
+	f=sum(nlvec);//10000;//100000000;
 
 	cout<<"f is"<<f<<endl;
-	//cout<<"maxPos50 is "<<maxPos50<<endl;
-	//cout<<"maxPossd is "<<maxPossd<<endl;
-	//cout<<"cvPos is "<<cvPos<<endl;
-	//cout<<"mo is "<<mo<<endl;
+	cout<<"maxPos50 is "<<maxPos50<<endl;
+	cout<<"maxPossd is "<<maxPossd<<endl;
+	cout<<"cvPos is "<<cvPos<<endl;
+	cout<<"mo is "<<mo<<endl;
 	
 	//output_true();
 	//exit(1);
@@ -1013,6 +1021,7 @@ REPORT_SECTION
 	REPORT(maxPos50);
 	REPORT(maxPossd);
 	REPORT(cvPos);
+	REPORT(Fmult);
 	REPORT(syr);
 	REPORT(nyr);
 	REPORT(sage);

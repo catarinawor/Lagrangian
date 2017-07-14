@@ -135,6 +135,7 @@ DATA_SECTION
    	ivector nationareas(1,nations);
    	vector wt(syr,nyr);
    	vector vt(syr,nyr);
+   	vector wx(syr,nyr);
    	//vector wtsim(syr,rep_yr);
 
 
@@ -199,6 +200,9 @@ DATA_SECTION
 
 			vt.fill_randn(rng);
 			vt*=0.1;
+
+			wx.fill_randn(rng);
+			wx*=0.1;
 
 			//epsilon.fill_randn(rng);
 			//epsilon*=0.2;
@@ -467,7 +471,7 @@ FUNCTION incidence_functions
 	za 	= m_tsp+va*fe;
 
 	maxPos.initialize();
-	calcmaxpos();
+	calcmaxpos(wx(1));
 	varPos = maxPos*cvPos;
 
 
@@ -549,7 +553,7 @@ FUNCTION void calc_effarea(const int& ii,const int& ia)
 		{
        		//if(sum(yCatchNatAge(indyr(ii))(indnatarea(rr))(sage,nage))<ctlim(indnatarea(rr))){
 
-				tmp1(rr)= (pow(VBarea(ii)(rr)+0.00001,fbeta)/(totVBnation(ii,indnatarea(rr))+0.01)) * effPwr(rr);
+				tmp1(rr)= (pow(VBarea(ii)(rr)+0.00001,fbeta)/(totVBnation(ii,indnatarea(rr)))) * effPwr(rr);
 				tmp2(rr) = tmp1(rr)*TotEffyear(indfisharea(rr))(indyr(ia));
 				Effarea(ii)(rr) = tmp2(rr)*TotEffmonth(indfisharea(rr))(indmonth(ii));
 			//}else{
@@ -577,8 +581,8 @@ FUNCTION void calc_position(const int& ii)
 		{
 			VBarea(ii)(r) = VulB(ii)* (cnorm(areas(r)+0.5,PosX(ii),varPos)-cnorm(areas(r)-0.5,PosX(ii),varPos));
 			NAreaAge(ii)(r) = elem_prod(Nage(ii)(sage,nage),(cnorm(areas(r)+0.5,PosX(ii),varPos)-cnorm(areas(r)-0.5,PosX(ii),varPos)));
+			
 		
-
 			propVBarea(ii)(r)(sage-2) = ii;
 			propVBarea(ii)(r)(sage-1) = r;
 			propVBarea(ii)(r)(sage,nage) =  elem_prod(VulB(ii)(sage,nage),(cnorm(areas(r)+0.5,PosX(ii),varPos)-cnorm(areas(r)-0.5,PosX(ii),varPos)));
@@ -669,8 +673,9 @@ FUNCTION move_grow_die
 	//catl.fill("{100000000,100000000}");
 
 
-	for(int ie=2;ie<=(rep_yr*tmon);ie++)
+	for(int ie=2;ie<=(rep_yr*tmon);ie++)	
 	{ 
+		calcmaxpos(wx(indyr(ie)));
 		calc_numbers_at_age(ie,0.0);
 
 		//cout<<"maxPos "<<maxPos<<endl;
@@ -692,6 +697,9 @@ FUNCTION move_grow_die
  	svyr = 1;
 
 	for(int i=rep_yr*tmon+1;i<=ntstp;i++){
+
+		calcmaxpos(wx(indyr(i)));
+
 		
 		calc_numbers_at_age(i,wt(indyr(i)));
 		
@@ -832,9 +840,9 @@ FUNCTION void clean_catage(const int& ii,const int& pp,const int& nn)
 
 
 	
-FUNCTION dvar_vector calcmaxpos()
+FUNCTION dvar_vector calcmaxpos(const dvariable& expwx)
 	
-	maxPos(sage,nage) = 1./(1.+mfexp(-(age-maxPos50)/maxPossd));
+	maxPos(sage,nage) = 1./(1.+mfexp(-(age-maxPos50)/maxPossd))*exp(expwx);
 	maxPos(sage,nage) *= (narea-minPos(sage));
 	maxPos(sage,nage) += minPos(sage);			
 	//cout<<"age"<<age<<endl;

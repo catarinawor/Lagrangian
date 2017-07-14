@@ -14,10 +14,10 @@ DATA_SECTION
 	int seed;
 
 	LOC_CALCS
-		ifstream ifs( "../../seed.txt" ); // if this file is available
+		ifstream ifs( "seed.txt" ); // if this file is available
 		ifs>>seed; //read in the seed
 		seed += 10; // add 1 to the seed
-		ofstream ofs( "../../seed.txt" ); //put out to seed.txt
+		ofstream ofs( "seed.txt" ); //put out to seed.txt
 		ofs<<seed<<endl; //the new value of the seed
 		cout<<"seed"<<seed<<endl;
 	END_CALCS
@@ -153,6 +153,8 @@ DATA_SECTION
    	
    	//vector epsilon(1,surv_nobs);
 	vector wt(syr,nyr);
+	vector vt(syr,nyr);
+   	vector wx(syr,nyr);
 
 
    	int n_rg;
@@ -235,6 +237,12 @@ DATA_SECTION
 		random_number_generator rng(seed);
 		wt.fill_randn(rng);
 		wt*=sigR;
+
+		vt.fill_randn(rng);
+		vt*=0.1;
+
+		wx.fill_randn(rng);
+		wx*=0.1;
 		//epsilon.fill_randn(rng);
 		//epsilon*=0.2;
 
@@ -276,8 +284,10 @@ DATA_SECTION
 
        		for(int n=1;n<=fisharea;n++)
        		{
-       			TotEffyear(n)(syr,nyr) = Fmult* pTotEffyear(n)(syr,nyr);
-       		}      			
+       			TotEffyear(n)(syr,nyr) = elem_prod(Fmult* exp(vt(syr,nyr)), pTotEffyear(n)(syr,nyr));
+       		}
+       			
+   			
 
        		//calc for indfisharea
        		ntmp(1) = sarea;
@@ -425,6 +435,7 @@ PARAMETER_SECTION
  	
 	
  	3darray VBarea(1,ngroup,1,ntstp,sarea,narea);
+
  	//3darray totB(1,ngroup,1,ntstp,sage,nage);
  	
  	3darray PosX(1,ngroup,smon,nmon,sage-1,nage);
@@ -513,7 +524,7 @@ FUNCTION calc_InitPos_gtg
 
 
 	maxPos.initialize();
-	calcmaxpos();
+	calcmaxpos(wx(syr));
 	
 	varPos=maxPos*cvPos;
 	varPosg=sqrt((varPos*varPos)/(ngroup*ngroup*4));
@@ -706,7 +717,7 @@ FUNCTION void calc_effarea(const int& ii,const int& ia)
 	for(int r= sarea; r<=narea; r++)
 	{
 		//if(sum(yCatchNatAge(indyr(ii))(indnatarea(r))(sage,nage))<ctlim(indnatarea(r))){
-			tmp1(r)= (pow(tVBarea(ii)(r)+0.00001,fbeta)/(totVBnation(ii)(indnatarea(r))+0.01)) * effPwr(r);
+			tmp1(r)= (pow(tVBarea(ii)(r)+0.00001,fbeta)/(totVBnation(ii)(indnatarea(r)))) * effPwr(r);
 			tmp2(r) = tmp1(r)*TotEffyear(indfisharea(r))(indyr(ia));
 			Effarea(ii)(r) = tmp2(r)*TotEffmonth(indfisharea(r))(indmonth(ii));
 		//}else{
@@ -736,6 +747,7 @@ FUNCTION void calc_position(const int& ii)
 		NAreaAgeG(ig)(ii)(sage-3)= ii;
 		NAreaAgeG(ig)(ii)(sage-2)= g;
 		NAreaAgeG(ig)(ii)(sage-1)= r;
+
 		
 		PosX(g)(indmonth(ii))(sage-1) = g;
 		PosX(g)(indmonth(ii))(sage,nage) =  Xini(g)*varPos+meanPosX(sage,nage);
@@ -971,6 +983,7 @@ FUNCTION move_grow_die
 
 	for(int ie=2;ie<=ststp;ie++)
 	{
+		calcmaxpos(wx(indyr(ie)));
 		calc_numbers_at_age(ie,0.0 );	//wt(indyr(ie))	
 		calc_position(ie);
 		calc_effarea(ie,ie);
@@ -991,6 +1004,8 @@ FUNCTION move_grow_die
 
 
 	for(int i=ststp+1;i<=ntstp;i++){
+
+		calcmaxpos(wx(indyr(i)));
 		calc_numbers_at_age(i,wt(indyr(i)));
 		
 		
@@ -1056,10 +1071,12 @@ FUNCTION void clean_catage(const int& ii,const int& pp,const int& nn)
 
 	//cout<<"Ok after clean_catage"<<endl;
 	
-FUNCTION dvar_vector calcmaxpos()
+
+
+FUNCTION dvar_vector calcmaxpos(const dvariable& expwx)
 	
 		 					
-		maxPos(sage,nage) = 1./(1.+mfexp(-(age-maxPos50)/maxPossd));
+		maxPos(sage,nage) = (1./(1.+mfexp(-(age-maxPos50)/maxPossd)))*mfexp(expwx);
 		maxPos(sage,nage) *= (narea-minPos(sage));
 		maxPos(sage,nage) += minPos(sage);		
 	
@@ -1648,6 +1665,7 @@ FUNCTION output_pin
 	//ifs<<"# maxPos50 \n" << log(maxPos50) <<endl;
 	ifs<<"# maxPossd \n"<< log(guess_maxPossd(ceil(randu(rngmaxPossd)*7))) <<endl;
 	//ifs<<"# maxPossd \n"<< log(maxPossd) <<endl;
+	ifs<<"# Fmult \n"<< log(Fmult*0.7) <<endl;
 	ifs<<"#wt \n" << wt(rep_yr+1,nyr)*err <<endl;
 
 
@@ -1679,7 +1697,7 @@ FUNCTION output_dat
 	afs<<"# fecundity at age " << endl << fa <<endl;
 	afs<<"# vulnerability at age " << endl << va <<endl;
 	afs<<"# minPos "<< endl << minPos <<endl;
-	afs<<"# Fmult "<< endl << Fmult <<endl;
+	//afs<<"# Fmult "<< endl << Fmult <<endl;
 	afs<<"# Total effort by country and year " << endl << trans(trans(pTotEffyear).sub(rep_yr+1,nyr))  <<endl;
 	afs<<"# Total effort by country and month " << endl << TotEffmonth <<endl;
 	afs<<"# effPwr"<< endl << effPwr <<endl;	
@@ -1716,7 +1734,7 @@ FUNCTION output_gtgdat
 	afs<<"# fecundity at age " << endl << fa <<endl;
 	afs<<"# vulnerability at age " << endl << va <<endl;
 	afs<<"# minPos "<< endl << minPos <<endl;
-	afs<<"# Fmult "<< endl << Fmult <<endl;
+	//afs<<"# Fmult "<< endl << Fmult <<endl;
 	afs<<"# Total effort by country and year " << endl << trans(trans(pTotEffyear).sub(rep_yr+1,nyr)) <<endl;
 	afs<<"# Total effort by country and month " << endl << TotEffmonth <<endl;
 	afs<<"# effPwr"<< endl << effPwr <<endl;	
