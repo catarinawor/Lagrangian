@@ -48,7 +48,8 @@
 #sigR
 0.6
 #tau_c
-1.0
+#1.0
+0.4
 #tau_survey
 #1.0
 #err

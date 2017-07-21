@@ -240,7 +240,7 @@ DATA_SECTION
 
 	init_matrix obsCatchNatAge(1,tot_pcat,sage-3,nage);
 
-	init_vector yCatchtotalobs(syr,nyr);
+	init_vector yYieldtotalobs(syr,nyr);
 
 	init_int eof;
 	
@@ -268,7 +268,7 @@ PARAMETER_SECTION
 	//estimable parameters
 	//=================================
 
-	init_bounded_number log_mo(0,1.94591);
+	init_bounded_number log_mo(-0.6931472,1.94591);
 	//
 	init_bounded_number log_cvPos(-3,-1.3);
 	init_bounded_number log_maxPos50(1.00,2.1);
@@ -318,8 +318,8 @@ PARAMETER_SECTION
 	//vector varPos(sage,nage);
 	
 	vector nlvec(1,fisharea);
-	vector npvec(1,1);
-	vector yCatchtotal(syr,nyr);
+	vector nlcat(1,1);
+	vector yYieldtotal(syr,nyr);
 
 	matrix NationVulB(1,ntstp,1,nations)
 	matrix Nage(1,ntstp,sage,nage);
@@ -351,6 +351,9 @@ PROCEDURE_SECTION
 	
 	
 	calc_obj_func();
+	//output_true();
+	//exit(1);
+
 
 FUNCTION dvar_vector cnorm(const double& x, const dvar_vector& mu, const dvar_vector& sd)
 
@@ -478,7 +481,7 @@ FUNCTION void calc_catage(const int& ii)
 				CatchNatAge(ii)(indfisharea(r))(a)+= CatchAreaAge(ii)(r)(a);
 			}
 
-			yCatchtotal(indyr(ii)) += sum(CatchAreaAge(ii)(r)(sage,nage));
+			yYieldtotal(indyr(ii)) += CatchAreaAge(ii)(r)(sage,nage)*wa;
 
 
 		}
@@ -531,7 +534,7 @@ FUNCTION incidence_functions
 
 FUNCTION initialization
 	
-
+	yYieldtotal.initialize();
 	NAreaAge.initialize();
  	CatchAreaAge.initialize();
  	CatchNatAge.initialize();
@@ -623,7 +626,7 @@ FUNCTION calc_obj_func
 	//double tau_c;
 
 	nlvec.initialize();
-	npvec.initialize();
+	nlcat.initialize();
 	
 	
 	
@@ -676,31 +679,32 @@ FUNCTION calc_obj_func
 		}
 
 
-	//	dvar_vector eta(syr,nyr);
-	//	dvar_vector nlcat(1,1);
-	//	nlcat.initialize();
-	//
-	//	for(int i = syr; i<= nyr; i++)
-	//	{
-	//		eta(i)=log(yCatchtotalobs(i)) - log(yCatchtotal(i));
-	//	
-	//	}
-	//		
-	//if(last_phase()){
-	//	nlcat(1) = norm2(eta);
-	//}else{
-	//	nlcat(1) = 0.0;
-	//}
+		dvar_vector eta(syr,nyr);
+		eta.initialize();
+		//dvar_vector nlcat(1,1);
+		//nlcat.initialize();
+	
+		for(int i = syr; i<= nyr; i++)
+		{
+			eta(i)=(log(yYieldtotalobs(i)) - log(yYieldtotal(i)));
+		
+		}
+			
+	if(last_phase()){
+		nlcat(1) = norm2(eta);
+	}else{
+		nlcat(1) = 0.0;
+	}
 		
 
 	//exit(1);
 
 	
 	//f=sum(nlvec)+sum(npvec);
-	f=sum(nlvec)/10000;//+sum(nlcat)/10000;
+	f=sum(nlvec)/10000+sum(nlcat);
 
 		cout<<"f is"<<f<<endl;
-		//cout<<"nlcat is"<<nlcat<<endl;
+		cout<<"nlcat is"<<nlcat<<endl;
 		cout<<"maxPos50 is "<<maxPos50<<endl;
 		cout<<"maxPossd is "<<maxPossd<<endl;
 		cout<<"cvPos is "<<cvPos<<endl;
@@ -753,8 +757,8 @@ FUNCTION output_true
 	ofs<<"indyr"<< endl << indyr<<endl;
 	ofs<<"indmonth"<< endl << indmonth<<endl;
 	ofs<<"indnatarea"<< endl << indnatarea<<endl;
-	ofs<<"yCatchtotalobs"<< endl << yCatchtotalobs <<endl;
-	ofs<<"yCatchtotal"<< endl << yCatchtotal <<endl;
+	ofs<<"yYieldtotalobs"<< endl << yYieldtotalobs <<endl;
+	ofs<<"yYieldtotal"<< endl << yYieldtotal <<endl;
 	
 
 
@@ -791,6 +795,9 @@ REPORT_SECTION
 	REPORT(indyr);
 	REPORT(indmonth);
 	REPORT(indnatarea);
+	REPORT(yYieldtotalobs);
+	REPORT(yYieldtotal);
+	
 
 
 

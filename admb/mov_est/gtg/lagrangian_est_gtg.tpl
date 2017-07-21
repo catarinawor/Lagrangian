@@ -248,6 +248,9 @@ DATA_SECTION
 
 	init_matrix obsCatchNatAge(1,tot_pcat,sage-3,nage);
 
+
+	init_vector yYieldtotalobs(syr,nyr);
+
 	init_int eof;
 	
 	
@@ -314,6 +317,7 @@ PARAMETER_SECTION
 	vector varPos(sage,nage);
 	vector varPosg(sage,nage);
 	vector prop_ng(1,ngroup);
+	vector yYieldtotal(syr,nyr);
 
 	//matrix SBg(1,ntstp,1,ngroup);
 	//matrix tBg(1,ntstp,1,ngroup);
@@ -475,6 +479,7 @@ FUNCTION initialization
 			
 	Nage.initialize();
  	VulB.initialize();
+ 	yYieldtotal.initialize();
  	//CatageG.initialize();
  	
  	VBarea.initialize();
@@ -723,6 +728,7 @@ FUNCTION void calc_catage(const int& ii)
 		CatchAreaAgeG(ig)(ii)(sage,nage) = elem_prod(tmpc2,NAreaAgeG(ig)(ii)(sage,nage));		
 		CatchNatAge(ii)(indfisharea(r))(sage,nage) += CatchAreaAgeG(ig)(ii)(sage,nage);
 
+		yYieldtotal(indyr(ii)) += CatchNatAge(ii)(indfisharea(r))(sage,nage)*wa;
 		
 		//cout<<"CatchNatAge(ii)(indfisharea(r))(a)"<<CatchNatAge(ii)(indfisharea(r))(sage,nage)<<endl;
 		
@@ -946,20 +952,37 @@ FUNCTION calc_obj_func
 			//cout<<"chegou??"<<endl;
 
 		}
+
+		dvar_vector eta(syr,nyr);
+		eta.initialize();
+		dvar_vector nlcat(1,1);
+		nlcat.initialize();
+	
+		for(int i = syr; i<= nyr; i++)
+		{
+			eta(i)=(log(yYieldtotalobs(i)) - log(yYieldtotal(i)));
 		
+		}
+			
+	if(last_phase()){
+		nlcat(1) = norm2(eta);
+	}else{
+		nlcat(1) = 0.0;
+	}
 	//cout<<"Nage is"<<Nage<<endl;
 	//output_true();
 	//exit(1);
 
 	//cout<<"nlvec is"<<nlvec<<endl;
 	//f=sum(nlvec)+sum(npvec);
-	f=sum(nlvec);//10000;//100000000;
+	f=sum(nlvec)/100000+sum(nlcat);
 
 	cout<<"f is"<<f<<endl;
 	cout<<"maxPos50 is "<<maxPos50<<endl;
 	cout<<"maxPossd is "<<maxPossd<<endl;
 	cout<<"cvPos is "<<cvPos<<endl;
 	cout<<"mo is "<<mo<<endl;
+	cout<<"Fmult is "<<Fmult<<endl;
 	
 	//output_true();
 	//exit(1);
@@ -1011,6 +1034,9 @@ FUNCTION output_true
 	ofs<<"indnatarea"<< endl << indnatarea<<endl;
 	//ofs<<"propVBarea"<< endl << propVBarea <<endl;
 	ofs<<"propVBarea"<< endl << propVBarea <<endl;
+	ofs<<"yYieldtotalobs"<< endl << yYieldtotalobs <<endl;
+	ofs<<"yYieldtotal"<< endl << yYieldtotal <<endl;
+	
 
 
 
@@ -1043,6 +1069,9 @@ REPORT_SECTION
 	REPORT(indyr);
 	REPORT(indmonth);
 	REPORT(indnatarea);
+	REPORT(yYieldtotalobs);
+	REPORT(yYieldtotal);
+	
 
 
 

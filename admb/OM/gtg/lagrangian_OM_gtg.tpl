@@ -16,7 +16,7 @@ DATA_SECTION
 	LOC_CALCS
 		ifstream ifs( "seed.txt" ); // if this file is available
 		ifs>>seed; //read in the seed
-		seed += 10; // add 1 to the seed
+		seed += 1; // add 1 to the seed
 		ofstream ofs( "seed.txt" ); //put out to seed.txt
 		ofs<<seed<<endl; //the new value of the seed
 		cout<<"seed"<<seed<<endl;
@@ -386,6 +386,7 @@ PARAMETER_SECTION
 	vector varPos(sage,nage);
 	vector varPosg(sage,nage);
 	vector prop_ng(1,ngroup);
+	vector yYieldtotal(syr,nyr);
 
 	//vector ytB(rep_yr+1,proj_yr);
 	//vector totcatch(rep_yr+1,nyr);
@@ -808,7 +809,7 @@ FUNCTION void calc_catage(const int& ii)
 
 		CatchAreaAgeG(ig)(ii)(sage,nage) = elem_prod(tmpc2,NAreaAgeG(ig)(ii)(sage,nage));		
 		CatchNatAge(ii)(indfisharea(r))(sage,nage) += CatchAreaAgeG(ig)(ii)(sage,nage);//+0.0000001;
-
+		yYieldtotal(indyr(ii)) += CatchNatAge(ii)(indfisharea(r))(sage,nage)*wa;
 		
 	}
 		
@@ -877,6 +878,7 @@ FUNCTION initialization
  	//CatchAreaAge.initialize();
  	VBarea.initialize();
  	PosX.initialize();
+ 	yYieldtotal.initialize();
 
 
  	CatchNatAge.initialize();
@@ -1638,6 +1640,7 @@ FUNCTION output_pin
 	random_number_generator rngcvPos(seed);
 	random_number_generator rngmaxPos50(seed);
 	random_number_generator rngmaxPossd(seed);
+	random_number_generator rngFmult(seed);
 	
 	double tmp_mo;
 
@@ -1645,12 +1648,14 @@ FUNCTION output_pin
 	dvector guess_cvPos(1,6);
 	dvector guess_maxPos50(1,10);
 	dvector guess_maxPossd(1,8);
+	dvector guess_Fmult(1,10);
+
 
 	guess_mo.fill_seqadd(1,1);
 	guess_cvPos.fill_seqadd(0.05,0.05);
 	guess_maxPos50.fill_seqadd(3,0.5);
 	guess_maxPossd.fill_seqadd(0.5,0.5);
-
+	guess_Fmult.fill_seqadd(2.6,0.1);
 	
 	tmp_mo 		= ceil(randu(rngmo)*(mo)+mo);
 		
@@ -1665,7 +1670,8 @@ FUNCTION output_pin
 	//ifs<<"# maxPos50 \n" << log(maxPos50) <<endl;
 	ifs<<"# maxPossd \n"<< log(guess_maxPossd(ceil(randu(rngmaxPossd)*7))) <<endl;
 	//ifs<<"# maxPossd \n"<< log(maxPossd) <<endl;
-	ifs<<"# Fmult \n"<< log(Fmult*0.7) <<endl;
+	//ifs<<"# Fmult \n"<< log(Fmult*0.7) <<endl;
+	ifs<<"# Fmult \n" << log(guess_Fmult(ceil(randu(rngFmult)*9))) <<endl;
 	ifs<<"#wt \n" << wt(rep_yr+1,nyr)*err <<endl;
 
 
@@ -1703,6 +1709,7 @@ FUNCTION output_dat
 	afs<<"# effPwr"<< endl << effPwr <<endl;	
 	afs<<"# dMinP " << endl << 0.1e-13<<endl;
 	afs<<"# tstp month area catage " << endl << obsCatchNatAge <<endl;	
+	afs<<"# yYieldtotal"<< endl << yYieldtotal(rep_yr+1,nyr) <<endl;
 	afs<<"# eof " << endl << 999 <<endl;
 
 
@@ -1740,6 +1747,7 @@ FUNCTION output_gtgdat
 	afs<<"# effPwr"<< endl << effPwr <<endl;	
 	afs<<"# dMinP " << endl << 0.1e-13<<endl;
 	afs<<"# tstp month area catage " << endl << obsCatchNatAge <<endl;	
+	afs<<"# yYieldtotal"<< endl << yYieldtotal(rep_yr+1,nyr) <<endl;
 	afs<<"# eof " << endl << 999 <<endl;
 
 
