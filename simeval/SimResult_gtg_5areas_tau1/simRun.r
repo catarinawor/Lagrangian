@@ -38,14 +38,14 @@ readOutput <- function(dir)
 	est <- read.rep("mov_est/gtg/lagrangian_est_gtg.rep")
 	par <- read.fit("mov_est/gtg/lagrangian_est_gtg")
 	guess <- read.pin("mov_est/gtg/lagrangian_est_gtg.pin")
-	seed<- scan("seed.txt")
+	seed<- scan("OM/gtg/seed.txt")
 	C <- list(sim,est,par,seed,guess)
 	return( C );
 }
 
 
 
-	seed<-scan("../../admb/OM/gtg/seed.txt")	
+	seed<-scan("../../admb/OM/gtg/seed.txt")		
 	file.name <- paste("simest",seed,".Rdata",sep="")
 	sims<-readOutput("../../admb/")
 	setwd("../simeval/SimResult_5areas_tau1/")
