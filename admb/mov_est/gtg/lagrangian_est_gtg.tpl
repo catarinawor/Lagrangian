@@ -277,8 +277,9 @@ PARAMETER_SECTION
 	//=================================
 
 	init_bounded_number mo(0.5,6,1);
-	init_bounded_number log_cvPos(-3,-1.3,1);
-	init_bounded_number log_maxPos50(1.00,2.1,1);
+
+	init_bounded_number log_cvPos(-3,-0.7,1);
+	init_bounded_number log_maxPos50(0.00,2.1,1);
 	init_bounded_number log_maxPossd(-0.7,1.609438,1);
 	init_bounded_number log_Fmult(-2.3,2.3,2);
 	init_vector wt(syr,nyr,-1);

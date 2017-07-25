@@ -1653,9 +1653,11 @@ FUNCTION output_pin
 
 	guess_mo.fill_seqadd(1,1);
 	guess_cvPos.fill_seqadd(0.05,0.05);
-	guess_maxPos50.fill_seqadd(3,0.5);
+	guess_maxPos50.fill_seqadd(1.5,0.5);
 	guess_maxPossd.fill_seqadd(0.5,0.5);
 	guess_Fmult.fill_seqadd(2.6,0.1);
+
+
 	
 	tmp_mo 		= ceil(randu(rngmo)*(mo)+mo);
 		
