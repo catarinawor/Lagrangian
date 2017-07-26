@@ -1081,8 +1081,8 @@ REPORT_SECTION
 TOP_OF_MAIN_SECTION
 	time(&start);
 	arrmblsize = 10000000000;
-	gradient_structure::set_GRADSTACK_BUFFER_SIZE(1.e10);
-	gradient_structure::set_CMPDIF_BUFFER_SIZE(1.e10);
+	gradient_structure::set_GRADSTACK_BUFFER_SIZE(2.e9);
+	gradient_structure::set_CMPDIF_BUFFER_SIZE(2.e9);
 	gradient_structure::set_MAX_NVAR_OFFSET(50000);
 	gradient_structure::set_NUM_DEPENDENT_VARIABLES(50000);
 	gradient_structure::set_MAX_DLINKS(40000);
