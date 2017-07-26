@@ -1064,7 +1064,7 @@ FUNCTION void clean_catage(const int& ii,const int& pp,const int& nn)
 				obsCatchNatAge(pp)(sage-1) = nn;
 				
 				//pa = value((CatchNatAge(ii)(n)(sage,nage))/sum(CatchNatAge(ii)(n)(sage,nage)));
-				pa = value(CatchNatAge(ii)(nn)(sage,nage)/(sum(CatchNatAge(ii)(nn)(sage,nage))))+0.0000001;
+				pa = value(CatchNatAge(ii)(nn)(sage,nage)/(sum(CatchNatAge(ii)(nn)(sage,nage))));
 				
 				
 			 	obsCatchNatAge(pp)(sage,nage) = rmvlogistic(pa,tau_c,seed+ii);

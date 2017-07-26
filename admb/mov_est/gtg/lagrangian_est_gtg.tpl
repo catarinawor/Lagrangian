@@ -934,7 +934,7 @@ FUNCTION calc_obj_func
 				//O(i) = (obsCatchNatAge(ii)(sage,nage)+0.1e-30)/sum(obsCatchNatAge(ii)(sage,nage)+0.1e-5);
 				//P(i) = (predCatchNatAge(ii)(sage,nage)+0.1e-30)/sum(predCatchNatAge(ii)(sage,nage)+0.1e-5);
 				O(i) = (obsCatchNatAge(ii)(sage,nage))/sum(obsCatchNatAge(ii)(sage,nage));
-				P(i) = (predCatchNatAge(ii)(sage,nage)/sum(predCatchNatAge(ii)(sage,nage)))+0.00000001;
+				P(i) = (predCatchNatAge(ii)(sage,nage)/sum(predCatchNatAge(ii)(sage,nage)));
 				ii++;
 				//cout<<"O("<<i<<")"<<O(i)<<endl;
 				//cout<<"P("<<i<<")"<<P(i)<<endl;
@@ -965,7 +965,7 @@ FUNCTION calc_obj_func
 		}
 			
 	if(last_phase()){
-		nlcat(1) = norm2(eta);
+		nlcat(1) = norm2(eta)/100;
 	}else{
 		nlcat(1) = 0.0;
 	}
@@ -975,7 +975,7 @@ FUNCTION calc_obj_func
 
 	cout<<"nlvec is"<<nlvec<<endl;
 	//f=sum(nlvec)+sum(npvec);
-	f=sum(nlvec)/1000000+sum(nlcat);
+	f=sum(nlvec)/100000+sum(nlcat);
 
 	cout<<"nlcat is"<<nlcat<<endl;
 
