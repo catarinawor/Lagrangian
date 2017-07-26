@@ -1651,7 +1651,7 @@ FUNCTION output_pin
 	dvector guess_Fmult(1,10);
 
 
-	guess_mo.fill_seqadd(1,1);
+	guess_mo.fill_seqadd(0.5,0.5);
 	guess_cvPos.fill_seqadd(0.05,0.05);
 	guess_maxPos50.fill_seqadd(1.5,0.5);
 	guess_maxPossd.fill_seqadd(0.5,0.5);
@@ -1663,9 +1663,9 @@ FUNCTION output_pin
 		
 	ofstream ifs("../../mov_est/gtg/lagrangian_est_gtg.pin");
 
-	//ifs<<"#log_mo \n "  << log(guess_mo(ceil(randu(rngmo)*5)))<<endl;
+	ifs<<"#log_mo \n "  << log(guess_mo(ceil(randu(rngmo)*5)))<<endl;
 	//ifs<<"#log_mo \n "  << log(tmp_mo) <<endl;
-	ifs<<"#mo \n "  << (mo) <<endl;
+	//ifs<<"#mo \n "  << (mo) <<endl;
 	ifs<<"#cvPos \n" << log(guess_cvPos(ceil(randu(rngcvPos)*5))) <<endl;	
 	//ifs<<"#cvPos \n" << log(cvPos) <<endl;	
 	ifs<<"# maxPos50 \n" << log(guess_maxPos50(ceil(randu(rngmaxPos50)*9))) <<endl;

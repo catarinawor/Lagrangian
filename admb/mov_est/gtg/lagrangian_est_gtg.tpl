@@ -276,8 +276,8 @@ PARAMETER_SECTION
 	//estimable parameters
 	//=================================
 
-	init_bounded_number mo(0.5,6,1);
-
+	//init_bounded_number mo(0.5,6,1);
+	init_bounded_number log_mo(-0.6931472,1.25);
 	init_bounded_number log_cvPos(-3,-0.7,1);
 	init_bounded_number log_maxPos50(0.00,2.1,1);
 	init_bounded_number log_maxPossd(-0.7,1.609438,1);
@@ -290,8 +290,7 @@ PARAMETER_SECTION
 	//derived quantities
 	//=================================
 
-	vector nlvec(1,fisharea);
-
+	
 	number kappa;
 	number phiE;
 	number So;
@@ -300,7 +299,7 @@ PARAMETER_SECTION
 
 	number m_tsp;
 	
-	//number mo;
+	number mo;
 	number maxPos50;
 	number maxPossd;
 	number cvPos;
@@ -529,7 +528,7 @@ FUNCTION incidence_functions
 	maxPos50 = mfexp(log_maxPos50);
 	maxPossd = mfexp(log_maxPossd);
 	cvPos 	 = mfexp(log_cvPos);
-	//mo 	= mfexp(log_mo);
+	mo 	= mfexp(log_mo);
 	Fmult = mfexp(log_Fmult);
 	
 	for(int n=1;n<=fisharea;n++)
@@ -902,9 +901,9 @@ FUNCTION void clean_catage(const int& ii,const int& pp,const int& nn)
 
 FUNCTION calc_obj_func
 
-	//double tau_c;
 
-	
+	dvar_vector nlvec(1,fisharea);
+
 	nlvec.initialize();
 	
 	
@@ -966,7 +965,7 @@ FUNCTION calc_obj_func
 		}
 			
 	if(last_phase()){
-		nlcat(1) = norm2(eta)/1000;
+		nlcat(1) = norm2(eta);
 	}else{
 		nlcat(1) = 0.0;
 	}
@@ -974,7 +973,7 @@ FUNCTION calc_obj_func
 	//output_true();
 	//exit(1);
 
-	//cout<<"nlvec is"<<nlvec<<endl;
+	cout<<"nlvec is"<<nlvec<<endl;
 	//f=sum(nlvec)+sum(npvec);
 	f=sum(nlvec)/100000+sum(nlcat);
 
@@ -1082,11 +1081,11 @@ REPORT_SECTION
 TOP_OF_MAIN_SECTION
 	time(&start);
 	arrmblsize = 10000000000;
-	gradient_structure::set_GRADSTACK_BUFFER_SIZE(1.e9);
-	gradient_structure::set_CMPDIF_BUFFER_SIZE(1.e9);
+	gradient_structure::set_GRADSTACK_BUFFER_SIZE(1.e12);
+	gradient_structure::set_CMPDIF_BUFFER_SIZE(1.e12);
 	gradient_structure::set_MAX_NVAR_OFFSET(50000);
-	gradient_structure::set_NUM_DEPENDENT_VARIABLES(50000);
-	gradient_structure::set_MAX_DLINKS(40000);
+	gradient_structure::set_NUM_DEPENDENT_VARIABLES(500000);
+	gradient_structure::set_MAX_DLINKS(400000);
  
 
 GLOBALS_SECTION
