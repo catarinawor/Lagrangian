@@ -975,7 +975,7 @@ FUNCTION calc_obj_func
 
 	cout<<"nlvec is"<<nlvec<<endl;
 	//f=sum(nlvec)+sum(npvec);
-	f=sum(nlvec)/100000+sum(nlcat);
+	f=sum(nlvec)/1000000+sum(nlcat);
 
 	cout<<"nlcat is"<<nlcat<<endl;
 
