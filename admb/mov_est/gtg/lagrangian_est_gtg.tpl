@@ -967,7 +967,7 @@ FUNCTION calc_obj_func
 	if(last_phase()){
 		nlcat(1) = norm2(eta);
 	}else{
-		nlcat(1) = norm2(eta);
+		nlcat(1) = 0.0;
 	}
 	//cout<<"Nage is"<<Nage<<endl;
 	//output_true();
