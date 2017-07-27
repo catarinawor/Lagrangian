@@ -965,7 +965,7 @@ FUNCTION calc_obj_func
 		}
 			
 	if(last_phase()){
-		nlcat(1) = norm2(eta)/100;
+		nlcat(1) = norm2(eta);
 	}else{
 		nlcat(1) = 0.0;
 	}
@@ -975,7 +975,7 @@ FUNCTION calc_obj_func
 
 	cout<<"nlvec is"<<nlvec<<endl;
 	//f=sum(nlvec)+sum(npvec);
-	f=sum(nlvec)/10000+sum(nlcat);
+	f=sum(nlvec)/1000000+sum(nlcat);
 
 	cout<<"nlcat is"<<nlcat<<endl;
 
