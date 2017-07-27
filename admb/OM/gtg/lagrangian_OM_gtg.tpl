@@ -154,7 +154,7 @@ DATA_SECTION
    	//vector epsilon(1,surv_nobs);
 	vector wt(syr,nyr);
 	vector vt(syr,nyr);
-   	vector wx(syr,syr);
+   	vector wx(syr,nyr);
 
 
    	int n_rg;
@@ -984,8 +984,8 @@ FUNCTION move_grow_die
 
 	for(int ie=2;ie<=ststp;ie++)
 	{
-		//calcmaxpos(wx(indyr(ie)));
-		calcmaxpos(wx(syr));
+		calcmaxpos(wx(indyr(ie)));
+		//calcmaxpos(wx(syr));
 		calc_numbers_at_age(ie,0.0 );	//wt(indyr(ie))	
 		calc_position(ie);
 		calc_effarea(ie,ie);
@@ -1007,8 +1007,8 @@ FUNCTION move_grow_die
 
 	for(int i=ststp+1;i<=ntstp;i++){
 
-		//calcmaxpos(wx(indyr(i)));
-		calcmaxpos(wx(syr));
+		calcmaxpos(wx(indyr(i)));
+		//calcmaxpos(wx(syr));
 		calc_numbers_at_age(i,wt(indyr(i)));
 		
 		
@@ -1650,14 +1650,14 @@ FUNCTION output_pin
 	dvector guess_mo(1,6);
 	dvector guess_cvPos(1,6);
 	dvector guess_maxPos50(1,10);
-	dvector guess_maxPossd(1,8);
+	dvector guess_maxPossd(1,6);
 	dvector guess_Fmult(1,10);
 
 
 	guess_mo.fill_seqadd(0.5,0.5);
 	guess_cvPos.fill_seqadd(0.05,0.05);
 	guess_maxPos50.fill_seqadd(1.5,0.5);
-	guess_maxPossd.fill_seqadd(0.5,0.5);
+	guess_maxPossd.fill_seqadd(1.0,0.25);
 	guess_Fmult.fill_seqadd(2.6,0.1);
 
 
@@ -1673,7 +1673,7 @@ FUNCTION output_pin
 	//ifs<<"#cvPos \n" << log(cvPos) <<endl;	
 	ifs<<"# maxPos50 \n" << log(guess_maxPos50(ceil(randu(rngmaxPos50)*9))) <<endl;
 	//ifs<<"# maxPos50 \n" << log(maxPos50) <<endl;
-	ifs<<"# maxPossd \n"<< log(guess_maxPossd(ceil(randu(rngmaxPossd)*7))) <<endl;
+	ifs<<"# maxPossd \n"<< log(guess_maxPossd(ceil(randu(rngmaxPossd)*5))) <<endl;
 	//ifs<<"# maxPossd \n"<< log(maxPossd) <<endl;
 	//ifs<<"# Fmult \n"<< log(Fmult) <<endl;
 	ifs<<"# Fmult \n" << log(guess_Fmult(ceil(randu(rngFmult)*9))) <<endl;
