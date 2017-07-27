@@ -281,7 +281,7 @@ PARAMETER_SECTION
 	init_bounded_number log_cvPos(-3,-0.7,1);
 	init_bounded_number log_maxPos50(0.00,2.1,1);
 	init_bounded_number log_maxPossd(-0.7,1.609438,1);
-	init_bounded_number log_Fmult(-2.3,2.3,2);
+	init_bounded_number log_Fmult(-2.3,2.3,1);
 	init_vector wt(syr,nyr,-1);
 
 	objective_function_value f;
@@ -967,7 +967,7 @@ FUNCTION calc_obj_func
 	if(last_phase()){
 		nlcat(1) = norm2(eta)/1000;
 	}else{
-		nlcat(1) = 0.0;
+		nlcat(1) = norm2(eta)/1000;
 	}
 	//cout<<"Nage is"<<Nage<<endl;
 	//output_true();
