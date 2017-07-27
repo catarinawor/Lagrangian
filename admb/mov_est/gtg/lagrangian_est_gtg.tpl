@@ -99,8 +99,8 @@ DATA_SECTION
 		}
 
 		tmon = nmon-smon+1;
-		ntstp = tmon * (nyr-(syr-30)+1);
-		itsp = tmon*30+1;
+		ntstp = tmon * (nyr-(syr-70)+1);
+		itsp = tmon*70+1;
 
 		age.fill_seqadd(sage,1);
 		areas.fill_seqadd(sarea,1);
@@ -174,7 +174,7 @@ DATA_SECTION
        				
        		int aa =0;
        			
-       		for(int y=syr-30;y<=nyr;y++)		
+       		for(int y=syr-70;y<=nyr;y++)		
        		{
        			for(int ii=smon;ii<=nmon;ii++)
        			{
@@ -241,7 +241,7 @@ DATA_SECTION
 			}	
 
 			//cout<<"Xini is "<<Xini<<endl;	
-			//cout<<"chegou aqui??"<<endl;
+			
 			//exit(1);
        		
 	END_CALCS
@@ -632,12 +632,12 @@ FUNCTION void calc_effarea(const int& ii,const int& ie)
 	tmp2.initialize();
 
 	for(int n=1; n<=nations;n++){
-       totVBnation(ii,n) = sum(pow(tVBarea(ii)(ntmp1(n),ntmp1(n+1)-1.0)+0.00001,fbeta));		 
+       totVBnation(ii,n) = sum(pow(tVBarea(ii)(ntmp1(n),ntmp1(n+1)-1.0)+1e-30,fbeta));		 
 	}
 
 	for(int r= sarea; r<=narea; r++)
 	{
-			tmp1(r)= (pow(tVBarea(ii)(r)+0.00001,fbeta)/(totVBnation(ii)(indnatarea(r))+0.01)) * effPwr(r);
+			tmp1(r)= (pow(tVBarea(ii)(r)+1e-30,fbeta)/(totVBnation(ii)(indnatarea(r)))) * effPwr(r);
 			tmp2(r) = tmp1(r)*TotEffyear(indfisharea(r))(indyr(ie));
 			Effarea(ii)(r) = tmp2(r)*TotEffmonth(indfisharea(r))(indmonth(ii));
 	}
@@ -671,8 +671,8 @@ FUNCTION void calc_position(const int& ii)
 		
 		
 		
-		VBarea(g)(ii)(r) = VulB(g)(ii)(sage,nage) * (cnorm2(areas(r)+0.5,PosX(g)(indmonth(ii)),varPosg)-cnorm2(areas(r)-0.5,PosX(g)(indmonth(ii)),varPosg));
-		NAreaAgeG(ig)(ii)(sage,nage) = elem_prod(Nage(g)(ii)(sage,nage),(cnorm2(areas(r)+0.5,PosX(g)(indmonth(ii)),varPosg)-cnorm2(areas(r)-0.5,PosX(g)(indmonth(ii)),varPosg)));
+		VBarea(g)(ii)(r) = VulB(g)(ii)(sage,nage) * (cnorm2(areas(r)+0.5,PosX(g)(indmonth(ii))(sage,nage),varPosg)-cnorm2(areas(r)-0.5,PosX(g)(indmonth(ii))(sage,nage),varPosg));
+		NAreaAgeG(ig)(ii)(sage,nage) = elem_prod(Nage(g)(ii)(sage,nage),(cnorm2(areas(r)+0.5,PosX(g)(indmonth(ii))(sage,nage),varPosg)-cnorm2(areas(r)-0.5,PosX(g)(indmonth(ii))(sage,nage),varPosg)));
 	
 		//NAreaAge(ii)(r) += elem_prod(Nage(g)(ii)(sage,nage),(cnorm(areas(r)+0.5,PosX(g)(ii),varPosg)-cnorm(areas(r)-0.5,PosX(g)(ii),varPosg)));
 		tVBarea(ii)(r) += VBarea(g)(ii)(r);		
@@ -681,7 +681,7 @@ FUNCTION void calc_position(const int& ii)
 		propVBarea(ig)(ii)(sage-3) = ii;
 		propVBarea(ig)(ii)(sage-2) = g;
 		propVBarea(ig)(ii)(sage-1) = r;
-		propVBarea(ig)(ii)(sage,nage) =  elem_prod(VulB(g)(ii)(sage,nage), (cnorm2(areas(r)+0.5,PosX(g)(indmonth(ii)),varPosg)-cnorm2(areas(r)-0.5,PosX(g)(indmonth(ii)),varPosg)));
+		propVBarea(ig)(ii)(sage,nage) =  elem_prod(VulB(g)(ii)(sage,nage), (cnorm2(areas(r)+0.5,PosX(g)(indmonth(ii))(sage,nage),varPosg)-cnorm2(areas(r)-0.5,PosX(g)(indmonth(ii))(sage,nage),varPosg)));
 			
 		
 	

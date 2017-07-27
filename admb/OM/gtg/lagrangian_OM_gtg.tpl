@@ -284,7 +284,8 @@ DATA_SECTION
 
        		for(int n=1;n<=fisharea;n++)
        		{
-       			TotEffyear(n)(syr,nyr) = elem_prod(Fmult* exp(vt(syr,nyr)), pTotEffyear(n)(syr,nyr));
+       			//TotEffyear(n)(syr,nyr) = Fmult* pTotEffyear(n)(syr,nyr);
+       			TotEffyear(n)(syr,nyr) = elem_prod(Fmult* exp(vt(syr,nyr)-(0.1*0.1/2)), pTotEffyear(n)(syr,nyr));
        		}
        			
    			
@@ -670,10 +671,7 @@ FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt)
 							propBarea(rr) = cnorm(areas(rr)+0.5,PosX(g)(indmonth(ii)-1)(a),varPosg(a))-cnorm(areas(rr)-0.5,PosX(g)(indmonth(ii)-1)(a),varPosg(a));	
 						}
 
-						//cout<<"aqui?? "<<endl;
-						dvariable psarea;
-						psarea=cnorm(areas(narea)+0.5,PosX(g)(nmon)(a),varPosg(a))-cnorm(areas(sarea)-0.5,PosX(g)(nmon)(a),varPosg(a));
-
+						//cout<<"aqui?? "<<endl
 						
             			Nage(g)(ii)(a) = Nage(g)(ii-1)(a)*propBarea*mfexp(-(m_tsp+q*Effarea(ii-1)*va(a)))+
             						  	 Nage(g)(ii-1)(a)*(1.0-sum(propBarea))*mfexp(-(m_tsp));
@@ -712,13 +710,13 @@ FUNCTION void calc_effarea(const int& ii,const int& ia)
 	tmp2.initialize();
 
 	for(int n=1; n<=nations;n++){
-       totVBnation(ii,n) = sum(pow(tVBarea(ii)(ntmp1(n),ntmp1(n+1)-1.0)+0.00001,fbeta));		 
+       totVBnation(ii,n) = sum(pow(tVBarea(ii)(ntmp1(n),ntmp1(n+1)-1.0)+1e-30,fbeta));		 
 	}
 
 	for(int r= sarea; r<=narea; r++)
 	{
 		//if(sum(yCatchNatAge(indyr(ii))(indnatarea(r))(sage,nage))<ctlim(indnatarea(r))){
-			tmp1(r)= (pow(tVBarea(ii)(r)+0.00001,fbeta)/(totVBnation(ii)(indnatarea(r)))) * effPwr(r);
+			tmp1(r)= (pow(tVBarea(ii)(r)+1e-30,fbeta)/(totVBnation(ii)(indnatarea(r)))) * effPwr(r);
 			tmp2(r) = tmp1(r)*TotEffyear(indfisharea(r))(indyr(ia));
 			Effarea(ii)(r) = tmp2(r)*TotEffmonth(indfisharea(r))(indmonth(ii));
 		//}else{
@@ -809,6 +807,7 @@ FUNCTION void calc_catage(const int& ii)
 
 		CatchAreaAgeG(ig)(ii)(sage,nage) = elem_prod(tmpc2,NAreaAgeG(ig)(ii)(sage,nage));		
 		CatchNatAge(ii)(indfisharea(r))(sage,nage) += CatchAreaAgeG(ig)(ii)(sage,nage);//+0.0000001;
+		
 		yYieldtotal(indyr(ii)) += CatchNatAge(ii)(indfisharea(r))(sage,nage)*wa;
 		
 	}
@@ -960,7 +959,7 @@ FUNCTION calc_first_year
 	
 	calc_effarea(1,1);
 	
-	calc_catage(1);
+	//calc_catage(1);
 	//cout<<"chegou?"<<endl;
 	//calc_catlen(1);
 
@@ -989,7 +988,7 @@ FUNCTION move_grow_die
 		calc_numbers_at_age(ie,0.0 );	//wt(indyr(ie))	
 		calc_position(ie);
 		calc_effarea(ie,ie);
-		calc_catage(ie);
+		//calc_catage(ie);
 		//calc_catlen(ie);
 		
 		//cout<<"ie is "<<indyr(ie)<<endl;
@@ -1079,6 +1078,7 @@ FUNCTION dvar_vector calcmaxpos(const dvariable& expwx)
 	
 		 					
 		maxPos(sage,nage) = (1./(1.+mfexp(-(age-maxPos50)/maxPossd)))*mfexp(expwx);
+		//maxPos(sage,nage) = (1./(1.+mfexp(-(age-maxPos50)/maxPossd)));
 		maxPos(sage,nage) *= (narea-minPos(sage));
 		maxPos(sage,nage) += minPos(sage);		
 	
@@ -1663,9 +1663,9 @@ FUNCTION output_pin
 		
 	ofstream ifs("../../mov_est/gtg/lagrangian_est_gtg.pin");
 
-	ifs<<"#log_mo \n "  << log(guess_mo(ceil(randu(rngmo)*5)))<<endl;
-	//ifs<<"#log_mo \n "  << log(tmp_mo) <<endl;
-	//ifs<<"#mo \n "  << (mo) <<endl;
+	//ifs<<"#log_mo \n "  << log(guess_mo(ceil(randu(rngmo)*5)))<<endl;
+	ifs<<"#log_mo \n "  << log(tmp_mo) <<endl;
+	//ifs<<"#mo \n "  << log(mo) <<endl;
 	ifs<<"#cvPos \n" << log(guess_cvPos(ceil(randu(rngcvPos)*5))) <<endl;	
 	//ifs<<"#cvPos \n" << log(cvPos) <<endl;	
 	ifs<<"# maxPos50 \n" << log(guess_maxPos50(ceil(randu(rngmaxPos50)*9))) <<endl;
@@ -1703,7 +1703,7 @@ FUNCTION output_dat
 	afs<<"# sigR " << endl << sigR <<endl;	
 	afs<<"# weight at age " << endl << wa <<endl;
 	afs<<"# fecundity at age " << endl << fa <<endl;
-	afs<<"# vulnerability at age " << endl << va <<endl;
+	afs<<"# vulnerability at age " << endl << va << endl;
 	afs<<"# minPos "<< endl << minPos <<endl;
 	//afs<<"# Fmult "<< endl << Fmult <<endl;
 	afs<<"# Total effort by country and year " << endl << trans(trans(pTotEffyear).sub(rep_yr+1,nyr))  <<endl;
