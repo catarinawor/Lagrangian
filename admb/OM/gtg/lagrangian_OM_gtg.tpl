@@ -154,7 +154,7 @@ DATA_SECTION
    	//vector epsilon(1,surv_nobs);
 	vector wt(syr,nyr);
 	vector vt(syr,nyr);
-   	vector wx(syr,nyr);
+   	vector wx(syr,syr);
 
 
    	int n_rg;
@@ -984,7 +984,8 @@ FUNCTION move_grow_die
 
 	for(int ie=2;ie<=ststp;ie++)
 	{
-		calcmaxpos(wx(indyr(ie)));
+		//calcmaxpos(wx(indyr(ie)));
+		calcmaxpos(wx(syr));
 		calc_numbers_at_age(ie,0.0 );	//wt(indyr(ie))	
 		calc_position(ie);
 		calc_effarea(ie,ie);
@@ -1006,7 +1007,8 @@ FUNCTION move_grow_die
 
 	for(int i=ststp+1;i<=ntstp;i++){
 
-		calcmaxpos(wx(indyr(i)));
+		//calcmaxpos(wx(indyr(i)));
+		calcmaxpos(wx(syr));
 		calc_numbers_at_age(i,wt(indyr(i)));
 		
 		
@@ -1078,7 +1080,7 @@ FUNCTION dvar_vector calcmaxpos(const dvariable& expwx)
 	
 		 					
 		//maxPos(sage,nage) = (1./(1.+mfexp(-(age-maxPos50)/maxPossd)))*mfexp(expwx-0.1*0.1/2);
-		maxPos(sage,nage) = (1./(1.+mfexp(-(age-maxPos50*mfexp(expwx))/maxPossd)));
+		maxPos(sage,nage) = (1./(1.+mfexp(-(age-maxPos50)/maxPossd)))*mfexp(expwx);
 		//maxPos(sage,nage) = (1./(1.+mfexp(-(age-maxPos50)/maxPossd)));
 		maxPos(sage,nage) *= (narea-minPos(sage));
 		maxPos(sage,nage) += minPos(sage);		
