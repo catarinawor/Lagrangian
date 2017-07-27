@@ -964,11 +964,11 @@ FUNCTION calc_obj_func
 		
 		}
 			
-	if(last_phase()){
-		nlcat(1) = norm2(eta)/1000;
-	}else{
-		nlcat(1) = norm2(eta)/1000;
-	}
+	//if(last_phase()){
+	//	nlcat(1) = norm2(eta)/1000;
+	//}else{
+		nlcat(1) = norm2(eta)/100;
+	//}
 	//cout<<"Nage is"<<Nage<<endl;
 	//output_true();
 	//exit(1);
