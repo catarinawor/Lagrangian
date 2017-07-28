@@ -12,9 +12,9 @@ do
 	./lagrangian_OM
 	
 	cd ../../mov_est/simple/
-	./lagrangian_estlog
+	./lagrangian_est
 	
-	cd ../../../simeval/SimResult_3areas_tau04_delta2/
+	cd ../../../simeval/SimResult_3areas_tau04/
 	
 	#source(simRun.r, chdir = TRUE) | R --vanilla --slave
 	
