@@ -268,11 +268,11 @@ PARAMETER_SECTION
 	//estimable parameters
 	//=================================
 
-	init_bounded_number log_mo(-0.6931472,1.94591);
+	init_bounded_number log_mo(-0.6931472,1.25);
 	//
 	init_bounded_number log_cvPos(-3,-0.7);
 	init_bounded_number log_maxPos50(0.00,2.1);
-	init_bounded_number log_maxPossd(-0.7,1.609438);
+	init_bounded_number log_maxPossd(-0.7,1.09);
 	init_bounded_number log_Fmult(-2.3,2.3,2);
 	//init_number log_mo;
 	//init_number log_cvPos7
@@ -433,7 +433,7 @@ FUNCTION void calc_effarea(const int& ii,const int& ie)
 		
 
 		for(int n=1; n<=nations;n++){
-       		NationVulB(ii,n) = sum(pow(VBarea(ii)(ntmp1(n),ntmp1(n+1)-1.0)+0.00001,fbeta));
+       		NationVulB(ii,n) = sum(pow(VBarea(ii)(ntmp1(n),ntmp1(n+1)-1.0)+1e-30,fbeta));
        	}
 
 
@@ -442,7 +442,7 @@ FUNCTION void calc_effarea(const int& ii,const int& ie)
 		{
 			
 			//tmp1(rr)= pow((VBarea(ii)(rr)/(NationVulB(ii)(indnatarea(rr))+0.01))+0.0000001,fbeta) * effPwr(rr);	
-			tmp1(rr)= (pow(VBarea(ii)(rr)+0.00001,fbeta)/(NationVulB(ii,indnatarea(rr))+0.01)) * effPwr(rr);	
+			tmp1(rr)= (pow(VBarea(ii)(rr)+1e-30,fbeta)/(NationVulB(ii,indnatarea(rr)))) * effPwr(rr);	
 			tmp2(rr) = tmp1(rr)*TotEffyear(indfisharea(rr))(indyr(ie));
 			Effarea(ii)(rr) = tmp2(rr)*TotEffmonth(indfisharea(rr))(indmonth(ii));
 
@@ -691,7 +691,7 @@ FUNCTION calc_obj_func
 		}
 			
 	if(last_phase()){
-		nlcat(1) = norm2(eta)/1000;
+		nlcat(1) = norm2(eta)/100;
 	}else{
 		nlcat(1) = 0.0;
 	}

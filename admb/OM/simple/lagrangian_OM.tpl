@@ -241,7 +241,7 @@ DATA_SECTION
 
        			for(int n=1;n<=fisharea;n++)
        			{
-       				TotEffyear(n)(syr,nyr) = elem_prod(Fmult* exp(vt(syr,nyr)), pTotEffyear(n)(syr,nyr));
+       				TotEffyear(n)(syr,nyr) = elem_prod(Fmult* exp(vt(syr,nyr)-(0.1*0.1/2)), pTotEffyear(n)(syr,nyr));
        				//TotEffyear(n)(syr,nyr) = Fmult* pTotEffyear(n)(syr,nyr);
        			}
        			
@@ -547,7 +547,7 @@ FUNCTION void calc_effarea(const int& ii,const int& ia)
 
 		
 		for(int n=1; n<=nations;n++){
-       		totVBnation(ii,n) = sum(pow(VBarea(ii)(ntmp1(n),ntmp1(n+1)-1.0) +0.00001,fbeta));
+       		totVBnation(ii,n) = sum(pow(VBarea(ii)(ntmp1(n),ntmp1(n+1)-1.0) +1e-30,fbeta));
        	}
 
 
@@ -555,7 +555,7 @@ FUNCTION void calc_effarea(const int& ii,const int& ia)
 		{
        		//if(sum(yCatchNatAge(indyr(ii))(indnatarea(rr))(sage,nage))<ctlim(indnatarea(rr))){
 
-				tmp1(rr)= (pow(VBarea(ii)(rr)+0.00001,fbeta)/(totVBnation(ii,indnatarea(rr)))) * effPwr(rr);
+				tmp1(rr)= (pow(VBarea(ii)(rr)+1e-30,fbeta)/(totVBnation(ii,indnatarea(rr)))) * effPwr(rr);
 				tmp2(rr) = tmp1(rr)*TotEffyear(indfisharea(rr))(indyr(ia));
 				Effarea(ii)(rr) = tmp2(rr)*TotEffmonth(indfisharea(rr))(indmonth(ii));
 			//}else{
@@ -1250,16 +1250,16 @@ FUNCTION output_pin
 	
 	double tmp_mo;
 	
-	
+	dvector guess_mo(1,6);
 	dvector guess_cvPos(1,6);
 	dvector guess_maxPos50(1,10);
-	dvector guess_maxPossd(1,8);
+	dvector guess_maxPossd(1,6);
 	dvector guess_Fmult(1,10);
 
-	
+	guess_mo.fill_seqadd(0.5,0.5);
 	guess_cvPos.fill_seqadd(0.05,0.05);
 	guess_maxPos50.fill_seqadd(1.5,0.5);
-	guess_maxPossd.fill_seqadd(0.5,0.5);
+	guess_maxPossd.fill_seqadd(1.0,0.25);
 	guess_Fmult.fill_seqadd(2.6,0.1);
 
 
@@ -1277,10 +1277,10 @@ FUNCTION output_pin
 	//ifs<<"# maxPossd \n"<< log(maxPossd) <<endl;
 	//ifs<<"# Fmult \n" << log(Fmult)<<endl;
 
-	ifs<<"#log_mo \n "  << log(ceil(randu(rngmo)*6)) <<endl;
+	ifs<<"#log_mo \n "  << log(guess_mo(ceil(randu(rngmo)*5)))<<endl;
 	ifs<<"#cvPos \n" << log(guess_cvPos(ceil(randu(rngcvPos)*5))) <<endl;	
 	ifs<<"# maxPos50 \n" << log(guess_maxPos50(ceil(randu(rngmaxPos50)*9))) <<endl;
-	ifs<<"# maxPossd \n"<< log(guess_maxPossd(ceil(randu(rngmaxPossd)*7))) <<endl;
+	ifs<<"# maxPossd \n"<< log(guess_maxPossd(ceil(randu(rngmaxPossd)*5))) <<endl;
 	ifs<<"# Fmult \n" << log(guess_Fmult(ceil(randu(rngFmult)*9))) <<endl;
 	ifs<<"#wt \n" << wt(rep_yr+1,nyr)*err <<endl;
 

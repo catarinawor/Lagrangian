@@ -1666,8 +1666,8 @@ FUNCTION output_pin
 		
 	ofstream ifs("../../mov_est/gtg/lagrangian_est_gtg.pin");
 
-	//ifs<<"#log_mo \n "  << log(guess_mo(ceil(randu(rngmo)*5)))<<endl;
-	ifs<<"#log_mo \n "  << log(tmp_mo) <<endl;
+	ifs<<"#log_mo \n "  << log(guess_mo(ceil(randu(rngmo)*5)))<<endl;
+	//ifs<<"#log_mo \n "  << log(tmp_mo) <<endl;
 	//ifs<<"#mo \n "  << log(mo) <<endl;
 	ifs<<"#cvPos \n" << log(guess_cvPos(ceil(randu(rngcvPos)*5))) <<endl;	
 	//ifs<<"#cvPos \n" << log(cvPos) <<endl;	
