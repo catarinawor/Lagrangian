@@ -5,6 +5,7 @@
 
 
 counter=1
+
 while [ $counter -le 100 ]
 do
 	  cd OM/gtg 
@@ -22,7 +23,7 @@ do
 	
 	cd ../../admb
 	
-	((counter++))
+	counter=$(( $counter + 1 ))
 
  done
 
