@@ -436,7 +436,7 @@ PARAMETER_SECTION
  	//3darray Lstd(1,ngroup,1,ntstp,sage,nage); 
  	
 	
- 	3darray VBarea(1,ngroup,1,ntstp,sarea,narea);
+ 	//3darray VBarea(1,ngroup,1,ntstp,sarea,narea);
 
  	//3darray totB(1,ngroup,1,ntstp,sage,nage);
  	
@@ -753,17 +753,17 @@ FUNCTION void calc_position(const int& ii)
 		
 
 		
-		VBarea(g)(ii)(r) = VulB(g)(ii)(sage,nage) * (cnorm2(areas(r)+0.5,PosX(g)(indmonth(ii))(sage,nage),varPosg)-cnorm2(areas(r)-0.5,PosX(g)(indmonth(ii))(sage,nage),varPosg));
+		//VBarea(g)(ii)(r) = VulB(g)(ii)(sage,nage) * (cnorm2(areas(r)+0.5,PosX(g)(indmonth(ii))(sage,nage),varPosg)-cnorm2(areas(r)-0.5,PosX(g)(indmonth(ii))(sage,nage),varPosg));
 		NAreaAgeG(ig)(ii)(sage,nage) = elem_prod(Nage(g)(ii)(sage,nage),(cnorm2(areas(r)+0.5,PosX(g)(indmonth(ii))(sage,nage),varPosg)-cnorm2(areas(r)-0.5,PosX(g)(indmonth(ii))(sage,nage),varPosg)));
 	
 		//NAreaAge(ii)(r) += elem_prod(Nage(g)(ii)(sage,nage),(cnorm(areas(r)+0.5,PosX(g)(ii),varPosg)-cnorm(areas(r)-0.5,PosX(g)(ii),varPosg)));
-		tVBarea(ii)(r) += VBarea(g)(ii)(r);		
 
 		propVBarea(ig)(ii)(sage-3) = ii;
 		propVBarea(ig)(ii)(sage-2) = g;
 		propVBarea(ig)(ii)(sage-1) = r;
 		propVBarea(ig)(ii)(sage,nage) =  elem_prod(VulB(g)(ii)(sage,nage), (cnorm2(areas(r)+0.5,PosX(g)(indmonth(ii))(sage,nage),varPosg)-cnorm2(areas(r)-0.5,PosX(g)(indmonth(ii))(sage,nage),varPosg)));
 			
+		tVBarea(ii)(r) += sum(propVBarea(ig)(ii)(sage,nage));		
 
 		//for(b=1;b<=nlen;b++)
 		//{
@@ -875,7 +875,8 @@ FUNCTION initialization
  	VulB.initialize();
 	//NAreaAge.initialize();
  	//CatchAreaAge.initialize();
- 	VBarea.initialize();
+ 	//VBarea.initialize();
+
  	PosX.initialize();
  	yYieldtotal.initialize();
 
@@ -1544,9 +1545,9 @@ FUNCTION dvar_vector calcmaxpos(const dvariable& expwx)
 
 
 
-FUNCTION save_OMrep
+//FUNCTION save_OMrep
 
-	system("cd ../../../R/read_mse && make readROM");
+	//system("cd ../../../R/read_mse && make readROM");
 	// Terminal year of projection.
    
 
@@ -1608,7 +1609,7 @@ FUNCTION output_true
 	//ofs<<"survB" << endl << survB <<endl;
 	ofs<<"VulB" << endl << VulB <<endl;
 	ofs<<"Nage" << endl << Nage <<endl;
-	ofs<<"VBarea" << endl << VBarea <<endl;
+	//ofs<<"VBarea" << endl << VBarea <<endl;
 	ofs<<"Effarea"<< endl << Effarea <<endl;
 	//ofs<<"comm_obsCatage"<< endl << comm_obsCatage <<endl;
 	//ofs<<"surv_obsCatage"<< endl << surv_obsCatage <<endl;
@@ -1649,14 +1650,14 @@ FUNCTION output_pin
 	double tmp_mo;
 
 	dvector guess_mo(1,6);
-	dvector guess_cvPos(1,6);
+	dvector guess_cvPos(1,9);
 	dvector guess_maxPos50(1,10);
 	dvector guess_maxPossd(1,6);
 	dvector guess_Fmult(1,10);
 
 
 	guess_mo.fill_seqadd(0.5,0.5);
-	guess_cvPos.fill_seqadd(0.05,0.05);
+	guess_cvPos.fill_seqadd(0.06,0.01);
 	guess_maxPos50.fill_seqadd(1.5,0.5);
 	guess_maxPossd.fill_seqadd(1.0,0.25);
 	guess_Fmult.fill_seqadd(2.6,0.1);
@@ -1670,7 +1671,7 @@ FUNCTION output_pin
 	ifs<<"#log_mo \n "  << log(guess_mo(ceil(randu(rngmo)*5)))<<endl;
 	//ifs<<"#log_mo \n "  << log(tmp_mo) <<endl;
 	//ifs<<"#mo \n "  << log(mo) <<endl;
-	ifs<<"#cvPos \n" << log(guess_cvPos(ceil(randu(rngcvPos)*5))) <<endl;	
+	ifs<<"#cvPos \n" << log(guess_cvPos(ceil(randu(rngcvPos)*8))) <<endl;	
 	//ifs<<"#cvPos \n" << log(cvPos) <<endl;	
 	ifs<<"# maxPos50 \n" << log(guess_maxPos50(ceil(randu(rngmaxPos50)*9))) <<endl;
 	//ifs<<"# maxPos50 \n" << log(maxPos50) <<endl;
@@ -2117,8 +2118,8 @@ FUNCTION output_gtgdat
 
 REPORT_SECTION
 
-	REPORT(VBarea);
-	REPORT(Effarea);
+	//REPORT(VBarea);
+	//REPORT(Effarea);
 
 
 

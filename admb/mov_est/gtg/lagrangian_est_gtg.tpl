@@ -350,7 +350,7 @@ PARAMETER_SECTION
  	3darray VulB(1,ngroup,1,ntstp,sage-2,nage);
  	//3darray CatageG(1,ngroup,itsp,ntstp,sage,nage);
 	
- 	3darray VBarea(1,ngroup,1,ntstp,sarea,narea);
+ 	//3darray VBarea(1,ngroup,1,ntstp,sarea,narea);
  	//3darray totB(1,ngroup,1,ntstp,sage,nage);
 	3darray PosX(1,ngroup,smon,nmon,sage-1,nage);
  	
@@ -482,7 +482,7 @@ FUNCTION initialization
  	yYieldtotal.initialize();
  	//CatageG.initialize();
  	
- 	VBarea.initialize();
+ 	//VBarea.initialize();
  	PosX.initialize();
 
 
@@ -671,11 +671,10 @@ FUNCTION void calc_position(const int& ii)
 		
 		
 		
-		VBarea(g)(ii)(r) = VulB(g)(ii)(sage,nage) * (cnorm2(areas(r)+0.5,PosX(g)(indmonth(ii))(sage,nage),varPosg)-cnorm2(areas(r)-0.5,PosX(g)(indmonth(ii))(sage,nage),varPosg));
+		//VBarea(g)(ii)(r) = VulB(g)(ii)(sage,nage) * (cnorm2(areas(r)+0.5,PosX(g)(indmonth(ii))(sage,nage),varPosg)-cnorm2(areas(r)-0.5,PosX(g)(indmonth(ii))(sage,nage),varPosg));
 		NAreaAgeG(ig)(ii)(sage,nage) = elem_prod(Nage(g)(ii)(sage,nage),(cnorm2(areas(r)+0.5,PosX(g)(indmonth(ii))(sage,nage),varPosg)-cnorm2(areas(r)-0.5,PosX(g)(indmonth(ii))(sage,nage),varPosg)));
 	
 		//NAreaAge(ii)(r) += elem_prod(Nage(g)(ii)(sage,nage),(cnorm(areas(r)+0.5,PosX(g)(ii),varPosg)-cnorm(areas(r)-0.5,PosX(g)(ii),varPosg)));
-		tVBarea(ii)(r) += VBarea(g)(ii)(r);		
 
 
 		propVBarea(ig)(ii)(sage-3) = ii;
@@ -683,6 +682,7 @@ FUNCTION void calc_position(const int& ii)
 		propVBarea(ig)(ii)(sage-1) = r;
 		propVBarea(ig)(ii)(sage,nage) =  elem_prod(VulB(g)(ii)(sage,nage), (cnorm2(areas(r)+0.5,PosX(g)(indmonth(ii))(sage,nage),varPosg)-cnorm2(areas(r)-0.5,PosX(g)(indmonth(ii))(sage,nage),varPosg)));
 			
+		tVBarea(ii)(r) += sum(propVBarea(ig)(ii)(sage,nage));		
 		
 	
 	}
@@ -965,7 +965,7 @@ FUNCTION calc_obj_func
 		}
 			
 	if(last_phase()){
-		nlcat(1) = norm2(eta)/100;
+		nlcat(1) = norm2(eta)/1000;
 	}else{
 		nlcat(1) = 0.0;
 	}
@@ -1027,7 +1027,7 @@ FUNCTION output_true
 	ofs<<"SB" << endl << SB <<endl;
 	ofs<<"VulB" << endl << VulB <<endl;
 	ofs<<"Nage" << endl << Nage <<endl;
-	ofs<<"VBarea" << endl << VBarea <<endl;
+	//ofs<<"VBarea" << endl << VBarea <<endl;
 	ofs<<"Effarea"<< endl << Effarea <<endl;
 	ofs<<"CatchNatAge"<< endl << CatchNatAge<<endl;
 	//ofs<<"CatchAreaAge"<< endl << CatchAreaAge<<endl;
@@ -1064,7 +1064,7 @@ REPORT_SECTION
 	REPORT(varPos);
 	REPORT(SB);
 	REPORT(Nage);
-	REPORT(VBarea);
+	//REPORT(VBarea);
 	REPORT(Effarea);
 	REPORT(CatchNatAge);
 	//REPORT(CatchAreaAge);
