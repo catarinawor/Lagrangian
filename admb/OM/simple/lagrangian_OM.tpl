@@ -1207,7 +1207,7 @@ FUNCTION output_true
 	ofs<<"propVBarea" << endl << propVBarea <<endl;
 	ofs<<"Effarea"<< endl << Effarea <<endl;
 	ofs<<"TotEffyear" << endl << TotEffyear<<endl;
-	ofs<<"Fmult" << endl << Fmult* exp(vt(syr,nyr))<<endl;
+	ofs<<"Fmult" << endl << Fmult* exp(vt(syr,nyr)-(0.1*0.1/2))<<endl;
 	//ofs<<"Fmult" << endl << Fmult<<endl;
 	//ofs<<"comm_obsCatage"<< endl << comm_obsCatage <<endl;
 	//ofs<<"surv_obsCatage"<< endl << surv_obsCatage <<endl;
