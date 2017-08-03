@@ -965,7 +965,7 @@ FUNCTION calc_obj_func
 		}
 			
 	if(last_phase()){
-		nlcat(1) = norm2(eta)/10;
+		nlcat(1) = norm2(eta)/100;
 	}else{
 		nlcat(1) = 0.0;
 	}
