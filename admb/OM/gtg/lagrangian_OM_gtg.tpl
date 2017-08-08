@@ -242,7 +242,7 @@ DATA_SECTION
 		vt*=0.1;
 
 		wx.fill_randn(rng);
-		wx*=0.1;
+		wx*=0.08;
 		//epsilon.fill_randn(rng);
 		//epsilon*=0.2;
 
@@ -526,7 +526,7 @@ FUNCTION calc_InitPos_gtg
 
 
 	maxPos.initialize();
-	calcmaxpos(wx(syr));
+	calcmaxpos(0.0);
 	
 	varPos=maxPos*cvPos;
 	varPosg=sqrt((varPos*varPos)/(ngroup*ngroup*4));
@@ -985,7 +985,7 @@ FUNCTION move_grow_die
 
 	for(int ie=2;ie<=ststp;ie++)
 	{
-		calcmaxpos(wx(indyr(ie)));
+		calcmaxpos(0.0);
 		//calcmaxpos(wx(syr));
 		calc_numbers_at_age(ie,0.0 );	//wt(indyr(ie))	
 		calc_position(ie);
@@ -1081,7 +1081,7 @@ FUNCTION dvar_vector calcmaxpos(const dvariable& expwx)
 	
 		 					
 		//maxPos(sage,nage) = (1./(1.+mfexp(-(age-maxPos50)/maxPossd)))*mfexp(expwx-0.1*0.1/2);
-		maxPos(sage,nage) = (1./(1.+mfexp(-(age-maxPos50)/maxPossd)))*mfexp(expwx);
+		maxPos(sage,nage) = (1./(1.+mfexp(-(age-maxPos50)/maxPossd)));//*mfexp(expwx)
 		//maxPos(sage,nage) = (1./(1.+mfexp(-(age-maxPos50)/maxPossd)));
 		maxPos(sage,nage) *= (narea-minPos(sage));
 		maxPos(sage,nage) += minPos(sage);		
@@ -1680,6 +1680,7 @@ FUNCTION output_pin
 	//ifs<<"# Fmult \n"<< log(Fmult) <<endl;
 	ifs<<"# Fmult \n" << log(guess_Fmult(ceil(randu(rngFmult)*9))) <<endl;
 	ifs<<"#wt \n" << wt(rep_yr+1,nyr)*err <<endl;
+	//ifs<<"#wx \n" << wx(rep_yr+1,nyr)*0.0 <<endl;
 
 
 FUNCTION output_dat

@@ -281,7 +281,7 @@ PARAMETER_SECTION
 	init_bounded_number log_cvPos(-3,-0.7,1);
 	init_bounded_number log_maxPos50(0.00,2.1,1);
 	init_bounded_number log_maxPossd(-0.7,1.09,1);
-	init_bounded_number log_Fmult(-2.3,2.3,1);
+	init_bounded_number log_Fmult(-2.3,2.3,2);
 	init_vector wt(syr,nyr,-1);
 
 	objective_function_value f;
@@ -965,7 +965,7 @@ FUNCTION calc_obj_func
 		}
 			
 	if(last_phase()){
-		nlcat(1) = norm2(eta);
+		nlcat(1) = norm2(eta)/100;
 	}else{
 		nlcat(1) = 0.0;
 	}
@@ -975,7 +975,7 @@ FUNCTION calc_obj_func
 
 	cout<<"nlvec is"<<nlvec<<endl;
 	//f=sum(nlvec)+sum(npvec);
-	f=sum(nlvec)/100000+sum(nlcat);
+	f=sum(nlvec)/1.e+6+sum(nlcat);
 
 	cout<<"nlcat is"<<nlcat<<endl;
 
@@ -988,6 +988,7 @@ FUNCTION calc_obj_func
 	
 	//output_true();
 	//exit(1);
+
 
 
 
@@ -1083,9 +1084,9 @@ TOP_OF_MAIN_SECTION
 	arrmblsize = 10000000000;
 	gradient_structure::set_GRADSTACK_BUFFER_SIZE(2.e9);
 	gradient_structure::set_CMPDIF_BUFFER_SIZE(2.e9);
-	gradient_structure::set_MAX_NVAR_OFFSET(50000);
-	gradient_structure::set_NUM_DEPENDENT_VARIABLES(50000);
-	gradient_structure::set_MAX_DLINKS(40000);
+	//gradient_structure::set_MAX_NVAR_OFFSET(50000);
+	//gradient_structure::set_NUM_DEPENDENT_VARIABLES(50000);
+	//gradient_structure::set_MAX_DLINKS(40000);
  
 
 GLOBALS_SECTION
