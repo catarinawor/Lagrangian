@@ -1081,7 +1081,7 @@ FUNCTION dvar_vector calcmaxpos(const dvariable& expwx)
 	
 		 					
 		//maxPos(sage,nage) = (1./(1.+mfexp(-(age-maxPos50)/maxPossd)))*mfexp(expwx-0.1*0.1/2);
-		maxPos(sage,nage) = (1./(1.+mfexp(-(age-maxPos50)/maxPossd)));//*mfexp(expwx)
+		maxPos(sage,nage) = (1./(1.+mfexp(-(age-maxPos50)/maxPossd)))*mfexp(expwx);//*mfexp(expwx)
 		//maxPos(sage,nage) = (1./(1.+mfexp(-(age-maxPos50)/maxPossd)));
 		maxPos(sage,nage) *= (narea-minPos(sage));
 		maxPos(sage,nage) += minPos(sage);		

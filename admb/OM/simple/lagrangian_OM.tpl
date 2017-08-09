@@ -202,7 +202,7 @@ DATA_SECTION
 			vt*=0.1;
 
 			wx.fill_randn(rng);
-			wx*=0.1;
+			wx*=0.08;
 
 			//epsilon.fill_randn(rng);
 			//epsilon*=0.2;
@@ -473,7 +473,7 @@ FUNCTION incidence_functions
 	za 	= m_tsp+va*fe;
 
 	maxPos.initialize();
-	calcmaxpos(wx(1));
+	calcmaxpos(0.0);
 	varPos = maxPos*cvPos;
 
 
@@ -679,7 +679,7 @@ FUNCTION move_grow_die
 
 	for(int ie=2;ie<=(rep_yr*tmon);ie++)	
 	{ 
-		calcmaxpos(wx(indyr(ie)));
+		calcmaxpos(0.0);
 		calc_numbers_at_age(ie,0.0);
 
 		//cout<<"maxPos "<<maxPos<<endl;

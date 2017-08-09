@@ -281,7 +281,7 @@ PARAMETER_SECTION
 	init_bounded_number log_cvPos(-3,-0.7,1);
 	init_bounded_number log_maxPos50(0.00,2.1,1);
 	init_bounded_number log_maxPossd(-0.7,1.09,1);
-	init_bounded_number log_Fmult(-2.3,2.3,2);
+	init_bounded_number log_Fmult(-2.3,2.3,1);
 	init_vector wt(syr,nyr,-1);
 
 	objective_function_value f;
@@ -373,16 +373,15 @@ PRELIMINARY_CALCS_SECTION
 PROCEDURE_SECTION
 
 	
-
+	
 	initialization();
 	incidence_functions();
 	calc_InitPos_gtg();
 	
 	calc_first_year();
 	burn_in();
+
 	move_grow_die();
-
-
 	
 	calc_obj_func();
 
@@ -802,12 +801,15 @@ FUNCTION calc_first_year
 
 FUNCTION burn_in
 
-	
+	dvariable temp;
 
 	for(int i=2;i<=itsp-1;i++)
 	{
 		//calc_InitPos_gtg();
+		
 		calc_numbers_at_age(i,0.0);	
+		
+
 
 
 		calc_position(i);	
@@ -817,7 +819,7 @@ FUNCTION burn_in
 		//cout<<"i is "<<i<<endl;
 	}
 	
- 
+ 		
  	
 
 
@@ -965,7 +967,8 @@ FUNCTION calc_obj_func
 		}
 			
 	if(last_phase()){
-		nlcat(1) = norm2(eta)/100;
+		nlcat(1) = dnorm(eta,0.1);
+		//norm2(eta);
 	}else{
 		nlcat(1) = 0.0;
 	}
@@ -975,7 +978,7 @@ FUNCTION calc_obj_func
 
 	cout<<"nlvec is"<<nlvec<<endl;
 	//f=sum(nlvec)+sum(npvec);
-	f=sum(nlvec)/1.e+6+sum(nlcat);
+	f=sum(nlvec)/1.e+6+sum(nlcat)/1.e+5;
 
 	cout<<"nlcat is"<<nlcat<<endl;
 
@@ -1081,7 +1084,7 @@ REPORT_SECTION
 
 TOP_OF_MAIN_SECTION
 	time(&start);
-	arrmblsize = 10000000000;
+	arrmblsize = 1000000000;
 	gradient_structure::set_GRADSTACK_BUFFER_SIZE(2.e9);
 	gradient_structure::set_CMPDIF_BUFFER_SIZE(2.e9);
 	//gradient_structure::set_MAX_NVAR_OFFSET(50000);

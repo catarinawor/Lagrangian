@@ -273,7 +273,7 @@ PARAMETER_SECTION
 	init_bounded_number log_cvPos(-3,-0.7);
 	init_bounded_number log_maxPos50(0.00,2.1);
 	init_bounded_number log_maxPossd(-0.7,1.09);
-	init_bounded_number log_Fmult(-2.3,2.3,2);
+	init_bounded_number log_Fmult(-2.3,2.3,1);
 	//init_number log_mo;
 	//init_number log_cvPos7
 	//init_number log_maxPos50;
@@ -691,7 +691,7 @@ FUNCTION calc_obj_func
 		}
 			
 	if(last_phase()){
-		nlcat(1) = norm2(eta)/100;
+		nlcat(1) = dnorm(eta,0.1);
 	}else{
 		nlcat(1) = 0.0;
 	}
@@ -701,7 +701,7 @@ FUNCTION calc_obj_func
 
 	
 	//f=sum(nlvec)+sum(npvec);
-	f=sum(nlvec)/100000+sum(nlcat);
+	f=sum(nlvec)/1.e+5+sum(nlcat)/1.e+3;
 
 		cout<<"f is"<<f<<endl;
 		cout<<"nlcat is"<<nlcat<<endl;
