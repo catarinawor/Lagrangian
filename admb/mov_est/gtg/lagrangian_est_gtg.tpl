@@ -373,17 +373,37 @@ PRELIMINARY_CALCS_SECTION
 PROCEDURE_SECTION
 
 	
+	double temp;
+	cout <<"temp1 "<< temp << endl;
 	
 	initialization();
+
+	temp=gradient_structure::totalbytes(); 
+	cout <<"temp2 "<< temp << endl;
+
+
+	
+	
+
 	incidence_functions();
 	calc_InitPos_gtg();
+
 	
 	calc_first_year();
+	
+
+	
+
 	burn_in();
+
+	
+	
 
 	move_grow_die();
 	
 	calc_obj_func();
+
+	exit(1);
 
 FUNCTION double cnorm(const double& x, const dvariable& mu, const dvariable& sd)
 
@@ -542,7 +562,8 @@ FUNCTION incidence_functions
 
 FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt )
 	
-	dvar_vector propBarea(sarea,narea);
+	dvector propBarea(sarea,narea);
+	propBarea.initialize();
 	dvar_vector tnage(sage,nage);
 
 	tnage.initialize();
@@ -563,7 +584,7 @@ FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt )
             		for(int a = sage+1;a<nage;a++)
             		{
             		
-						propBarea.initialize();
+						propBarea *=0.0;
 			
 						for(int rr =sarea; rr<=narea; rr++)
 						{		
@@ -589,7 +610,7 @@ FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt )
 
             		for(int a = sage;a<=nage;a++)
             		{
-            			propBarea.initialize();
+            			propBarea *=0.0;
 			
 						for(int rr =sarea; rr<=narea; rr++)
 						{		
@@ -801,8 +822,8 @@ FUNCTION calc_first_year
 
 FUNCTION burn_in
 
-	dvariable temp;
-
+	
+	
 	for(int i=2;i<=itsp-1;i++)
 	{
 		//calc_InitPos_gtg();
@@ -810,6 +831,7 @@ FUNCTION burn_in
 		calc_numbers_at_age(i,0.0);	
 		
 
+			
 
 
 		calc_position(i);	
@@ -829,7 +851,7 @@ FUNCTION move_grow_die
        
 	p=1;
 
-	
+	double temp;
 
 	for(int i=itsp;i<=ntstp;i++)
 	{
@@ -854,9 +876,13 @@ FUNCTION move_grow_die
 		}
 		//cout<< "i is "<<i << endl;
 
-		
+	cout <<"temp3 "<< temp << endl;	
+
+	temp=gradient_structure::totalbytes(); 
+	
 		
 	} 
+	cout <<"temp4 "<< temp << endl;
 
 	//cout<<"aqui??"<<endl;
 

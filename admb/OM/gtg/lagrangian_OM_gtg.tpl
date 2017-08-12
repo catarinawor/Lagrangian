@@ -466,9 +466,11 @@ PRELIMINARY_CALCS_SECTION
 
 	//read_catlim();
 	initialization();
+
 	incidence_functions();
 	calc_InitPos_gtg();
 
+	//cout<<"aqui??"<<endl;
 	calc_first_year();
 	move_grow_die();
 	
