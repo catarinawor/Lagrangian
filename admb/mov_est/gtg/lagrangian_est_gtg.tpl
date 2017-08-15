@@ -865,7 +865,11 @@ FUNCTION move_grow_die
 		}
 		//cout<< "i is "<<i << endl;
 
-
+	
+	
+		
+	} 
+	
 
 	//cout<<"aqui??"<<endl;
 
