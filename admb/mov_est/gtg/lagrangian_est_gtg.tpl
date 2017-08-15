@@ -373,16 +373,9 @@ PRELIMINARY_CALCS_SECTION
 PROCEDURE_SECTION
 
 	
-	double temp;
-	cout <<"temp1 "<< temp << endl;
-	
 	initialization();
 
-	temp=gradient_structure::totalbytes(); 
-	cout <<"temp2 "<< temp << endl;
 
-
-	
 	
 
 	incidence_functions();
@@ -403,7 +396,7 @@ PROCEDURE_SECTION
 	
 	calc_obj_func();
 
-	exit(1);
+
 
 FUNCTION double cnorm(const double& x, const dvariable& mu, const dvariable& sd)
 
@@ -448,9 +441,6 @@ FUNCTION  calc_InitPos_gtg
 
 	
 	
-	//Xtemp=value(Xini);
-
-	//cout<<"Xtemp"<<Xtemp<<endl;
 	
 	dif=(Xini(2)-Xini(1))/2.;
 
@@ -458,8 +448,7 @@ FUNCTION  calc_InitPos_gtg
 
 	prop_ng(1) = cumd_norm(value(Xini(1)+dif))-cumd_norm(value(Xini(1)-dif));
 	
-	//cout<<"dif"<<dif<<endl;
-
+	
 	for(int g=2; g<=ngroup ;g++)
 	{
 		prop_ng(g) =cumd_norm(value(Xini(g)+dif))-cumd_norm(value(Xini(g)-dif));

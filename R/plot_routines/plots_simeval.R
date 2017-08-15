@@ -115,11 +115,11 @@ indpar<-c(1,2,3,4)
 .SIMDIRSGTG   <- c(
                    #"/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_3areas_tau04",
                    #"/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_3areas_tau04_delta2",
-                   #"/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_3areas_tau1",
-                   "/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_3areas_tau1_delta2" #,
+                   #"/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_3areas_tau1" #,
+                   #"/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_3areas_tau1_delta2" #,
                    #"/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_5areas_tau1",
                    #"/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_5areas_tau1_delta2",
-                   #"/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_5areas_tau04",
+                   "/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_5areas_tau04" #,
                    #"/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_5areas_tau04_delta2",
                    )
 
