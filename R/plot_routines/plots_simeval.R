@@ -117,7 +117,7 @@ indpar<-c(1,2,3,4)
                    #"/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_3areas_tau04_delta2",
                    #"/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_3areas_tau1" #,
                    #"/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_3areas_tau1_delta2" #,
-                   #"/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_5areas_tau1",
+                   "/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_5areas_tau1",
                    #"/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_5areas_tau1_delta2",
                    "/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_5areas_tau04" #,
                    #"/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_5areas_tau04_delta2",
@@ -173,10 +173,12 @@ for( i in 1:length(.SIMDIRSGTG)){
 
 indAyr<-rep(1:3,1200)[2161:3600]
 titulos<-c(
-  #"5 areas, tau=1.0, B = 1.0","5 areas, tau= 1.0, B = 2.0",
+  "5 areas, tau=1.0, B = 1.0",
+  #"5 areas, tau= 1.0, B = 2.0",
 #"3 areas, tau=1.0, B = 1.0",
-  "3 areas, tau=1.0, B = 2.0"#,
-#"5 areas, tau=0.4, B = 1.0","5 areas, tau= 0.4, B = 2.0",
+ # "3 areas, tau=1.0, B = 2.0"#,
+"5 areas, tau=0.4, B = 1.0" #,
+  #"5 areas, tau= 0.4, B = 2.0",
 #"3 areas, tau=0.4, B = 1.0","3 areas, tau=0.4, B = 2.0"
   )
 

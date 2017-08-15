@@ -840,7 +840,7 @@ FUNCTION move_grow_die
        
 	p=1;
 
-	double temp;
+	
 
 	for(int i=itsp;i<=ntstp;i++)
 	{
@@ -865,13 +865,7 @@ FUNCTION move_grow_die
 		}
 		//cout<< "i is "<<i << endl;
 
-	cout <<"temp3 "<< temp << endl;	
 
-	temp=gradient_structure::totalbytes(); 
-	
-		
-	} 
-	cout <<"temp4 "<< temp << endl;
 
 	//cout<<"aqui??"<<endl;
 
