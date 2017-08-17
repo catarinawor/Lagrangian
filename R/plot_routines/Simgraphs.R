@@ -121,11 +121,19 @@ dev.off()
 #=========================================================================
 #gtg
 setwd("/Users/catarinawor/Documents/Lagrangian/admb/OM/gtg")
-gtg <- read.rep("lagrangian_OM_gtg.rep")
+#gtg <- read.rep("lagrangian_OM_gtg.rep")
 
 
 #parameter estimates
-.SIMDIRS   <- c("/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_5areas_tau1")
+.SIMDIRS   <- c("/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_5areas_tau1_delta2")
+
+
+
+  "/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_5areas_tau1")
+,
+  #"/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_5areas_tau04"
+  "/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_5areas_tau1_delta2")
+
 
 .SIMNAME<-list(length(.SIMDIRS))
 
@@ -159,20 +167,23 @@ for( i in 1:length(.SIMDIRS)){
     tmp_initvals[j,]<-exp(unlist(sims[[5]][1:5]))
    }
 
-  tmp_estn<- tmp_estn[tmp_maxgrad<=1.0000e-01,]
-  tmp_pbias<- tmp_pbias[tmp_maxgrad<=1.0000e-01,]
+  tmp_estn<- tmp_estn[tmp_maxgrad<=1.,]
+  tmp_pbias<- tmp_pbias[tmp_maxgrad<=1.,]
   
   estn[[i]]<-tmp_estn
   pbias[[i]]<-tmp_pbias
   maxgrad[[i]]<-tmp_maxgrad
-  initvals[[i]]<-tmp_initvals[tmp_maxgrad<=1.0000e-01,]
-  initvals_bad[[i]]<-tmp_initvals[tmp_maxgrad>1.0000e-01,]
+  initvals[[i]]<-tmp_initvals[tmp_maxgrad<=1.,]
+  initvals_bad[[i]]<-tmp_initvals[tmp_maxgrad>1.,]
 
 
 }
 
 
-titulos<-c("5 areas, tau=1.0, B = 1.0")
+titulos<-c("5 areas, tau=0.4, B = 1.0")
+,
+  "5 areas, tau=1.0, B = 1.0",
+  "5 areas, tau=1.0, B = 2.0")
 
 #setwd("/Users/catarinawor/Documents/hake/Thesis/figs/chap2")
 #setwd("/Users/catarinawor/Documents/hake/JTC_talk")
@@ -187,6 +198,13 @@ for( i in 1:length(.SIMDIRS)){
 }
 mtext("% Bias", 2, line = -2, outer = TRUE, font=2)
 #dev.off()
+
+
+
+
+
+
+
 
 
 

@@ -1576,6 +1576,7 @@ FUNCTION output_true
 	ofs<<"maxPos50" << endl << maxPos50 <<endl;
 	ofs<<"maxPossd" << endl << maxPossd <<endl;
 	ofs<<"cvPos" << endl << cvPos <<endl;
+	ofs<<"fbeta " << endl << fbeta <<endl;
 	ofs<<"Fmult" << endl <<  Fmult* exp(vt(syr,nyr)-(0.1*0.1/2)) <<endl;
 	ofs<<"syr" << endl << syr <<endl;
 	ofs<<"nyr" << endl << nyr <<endl;

@@ -99,13 +99,13 @@ rm(list=ls());
 setwd("/Users/catarinawor/Documents/Lagrangian/")
 source("R/read.admb.R")
 
-sim_gtg <- read.rep("admb/OM/gtg/lagrangian_OM_gtg.rep")
+#sim_gtg <- read.rep("admb/OM/gtg/lagrangian_OM_gtg.rep")
 #est_gtg <- read.rep("lagrangian_est_gtg.rep")
 
 
 
 
-true_pars_gtg <- c(sim_gtg$"mo",sim_gtg$"cvPos",sim_gtg$"maxPos50",sim_gtg$"maxPossd")
+#true_pars_gtg <- c(sim_gtg$"mo",sim_gtg$"cvPos",sim_gtg$"maxPos50",sim_gtg$"maxPossd")
 
 indpar<-c(1,2,3,4)
 
@@ -159,7 +159,7 @@ for( i in 1:length(.SIMDIRSGTG)){
     tmp_initvals[j,]<-exp(unlist(sims[[5]][1:4]))
    }
 
-  tmp_estn<- tmp_estn[tmp_maxgrad<=1.0000e-00,]
+  tmp_estn<- tmp_estn[tmp_maxgrad<=1.0000,]
   tmp_pbias<- tmp_pbias[tmp_maxgrad<=1.0000e-00,]
   
   estn_gtg[[i]]<-tmp_estn
