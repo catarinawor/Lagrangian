@@ -14,7 +14,7 @@ do
 	cd ../../mov_est/gtg/
 	./lagrangian_est_gtg
 	
-	cd ../../../simeval/SimResult_gtg_3areas_tau04_delta2
+	cd ../../../simeval/SimResult_gtg_3areas_tau1
 	
 	#source(simRun.r, chdir = TRUE) | R --vanilla --slave
 	
