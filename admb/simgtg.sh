@@ -14,7 +14,7 @@ do
 	cd ../../mov_est/gtg/
 	./lagrangian_est_gtg 1>"$counter-est.log"  2>"$counter-est-error.log"
 	
-	cd ../../../simeval/SimResult_gtg_3areas_tau1_delta2
+	cd ../../../simeval/SimResult_gtg_5areas_tau04_delta2
 	
 	#source(simRun.r, chdir = TRUE) | R --vanilla --slave
 	
