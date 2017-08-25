@@ -12,7 +12,7 @@ do
 	./lagrangian_OM_gtg
 	
 	cd ../../mov_est/gtg/
-	./lagrangian_est_gtg 1>"$counter-est.log"  2>"$counter-est-error.log"
+	./lagrangian_est_gtg
 	
 	cd ../../../simeval/SimResult_gtg_5areas_tau04_delta2
 	
