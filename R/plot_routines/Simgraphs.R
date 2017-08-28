@@ -121,14 +121,17 @@ dev.off()
 
 
 #=============================================================
-#simple
+#gtg
 
 #parameter estimates
-.SIMDIRS   <- c("/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_3areas_tau04",
-                "/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_3areas_tau04_delta2",
-                "/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_3areas_tau1",
-                "/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_5areas_tau04"#,
-                
+.SIMDIRS   <- c("/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_3areas_tau04",
+                "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_3areas_tau04_delta2",
+               # "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_3areas_tau1",
+                "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_3areas_tau1_delta2",
+                #"/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_5areas_tau04",
+                #"/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_5areas_tau04_delta2",
+               "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_5areas_tau1",
+               "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_5areas_tau1_delta2"              
   )
 
 
@@ -155,7 +158,7 @@ for( i in 1:length(.SIMDIRS)){
   for( j in 1:length(.SIMNAME[[i]])){
     load(.SIMNAME[[i]][j])
 
-    true_pars <- c(sims[[1]]$"mo",sims[[1]]$"cvPos",sims[[1]]$"maxPos50",sims[[1]]$"maxPossd",mean(sims[[1]]$Fmult-(.1*.1/2)))  
+    true_pars <- c(sims[[1]]$"mo",sims[[1]]$"cvPos",sims[[1]]$"maxPos50",sims[[1]]$"maxPossd",mean(sims[[1]]$Fmult))  
 
 
     #parameters
@@ -179,20 +182,26 @@ for( i in 1:length(.SIMDIRS)){
 
 
 titulos<-c("3 areas, tau=0.4, B = 1.0",
-  "3 areas, tau=0.4, B = 2.0",
-  "3 areas, tau=1.0, B = 1.0",
-  "5 areas, tau=0.4, B = 1.0")
+            "3 areas, tau=0.4, B = 2.0",
+           # "3 areas, tau=1.0, B = 1.0",
+            "3 areas, tau=1.0, B = 2.0",
+          #"5 areas, tau=0.4, B = 1.0",  
+         #  "5 areas, tau=0.4, B = 2.0",
+            "5 areas, tau=1.0, B = 1.0",
+           "5 areas, tau=1.0, B = 2.0"
+  )
 
 #setwd("/Users/catarinawor/Documents/hake/Thesis/figs/chap2")
 #setwd("/Users/catarinawor/Documents/hake/JTC_talk")
 #pdf("single_version_simeval.pdf", width=14, height=7)
-par(mfcol=c(1,4))
+par(mfcol=c(2,3))
 for( i in 1:length(.SIMDIRS)){
   boxplot(pbias[[i]],names=c(expression("t"[0]),expression("CV"),expression("a"[50]),
     expression(sigma["X"["max"]]),expression("q")),ylim=c(-50,50),main=titulos[i],cex.axis=1.5,
     cex.lab=2,cex.main=2,cex=1.6)
   abline(h=0)
-  text(4, y = 8, labels = nrow(pbias[[i]]), cex=2)
+ # text(4, y = 8, labels = nrow(pbias[[i]]), cex=2)
+  text(4, y = 35, labels = i, cex=2)
 }
 mtext("% Bias", 2, line = -2, outer = TRUE, font=2)
 #dev.off()
@@ -202,26 +211,20 @@ mtext("% Bias", 2, line = -2, outer = TRUE, font=2)
 
 
 
-
-
-
-
-
-#=========================================================================
+#=============================================================
 #gtg
-setwd("/Users/catarinawor/Documents/Lagrangian/admb/OM/gtg")
-#gtg <- read.rep("lagrangian_OM_gtg.rep")
-
 
 #parameter estimates
-.SIMDIRS   <- c("/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_5areas_tau1_delta2")
+.SIMDIRS   <- c("/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_3areas_tau04",
+                "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_3areas_tau04_delta2",
+                "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_3areas_tau1",
+                "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_3areas_tau1_delta2",
+                "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_5areas_tau04"#,
+               # "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_5areas_tau04_delta2"#,
+               #"/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_5areas_tau1",
+               #"/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_5areas_tau1_delta2"              
+  )
 
-
-
-  "/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_5areas_tau1")
-,
-  #"/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_5areas_tau04"
-  "/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_gtg_5areas_tau1_delta2")
 
 
 .SIMNAME<-list(length(.SIMDIRS))
@@ -246,7 +249,7 @@ for( i in 1:length(.SIMDIRS)){
   for( j in 1:length(.SIMNAME[[i]])){
     load(.SIMNAME[[i]][j])
 
-    true_pars <- c(sims[[1]]$"mo",sims[[1]]$"cvPos",sims[[1]]$"maxPos50",sims[[1]]$"maxPossd",mean(sims[[1]]$Fmult-(.1*.1/2)))  
+    true_pars <- c(sims[[1]]$"mo",sims[[1]]$"cvPos",sims[[1]]$"maxPos50",sims[[1]]$"maxPossd",mean(sims[[1]]$Fmult))  
 
 
     #parameters
@@ -269,29 +272,196 @@ for( i in 1:length(.SIMDIRS)){
 }
 
 
-titulos<-c("5 areas, tau=0.4, B = 1.0")
-,
-  "5 areas, tau=1.0, B = 1.0",
-  "5 areas, tau=1.0, B = 2.0")
+titulos<-c("3 areas, tau=0.4, B = 1.0",
+            "3 areas, tau=0.4, B = 2.0",
+            "3 areas, tau=1.0, B = 1.0",
+            "3 areas, tau=1.0, B = 2.0",
+            "5 areas, tau=0.4, B = 1.0"#,  
+           #"5 areas, tau=0.4, B = 2.0",
+         #   "5 areas, tau=1.0, B = 1.0",
+         #  "5 areas, tau=1.0, B = 2.0"
+  )
 
 #setwd("/Users/catarinawor/Documents/hake/Thesis/figs/chap2")
 #setwd("/Users/catarinawor/Documents/hake/JTC_talk")
 #pdf("single_version_simeval.pdf", width=14, height=7)
-par(mfcol=c(1,1))
+par(mfcol=c(2,3))
 for( i in 1:length(.SIMDIRS)){
   boxplot(pbias[[i]],names=c(expression("t"[0]),expression("CV"),expression("a"[50]),
     expression(sigma["X"["max"]]),expression("q")),ylim=c(-50,50),main=titulos[i],cex.axis=1.5,
     cex.lab=2,cex.main=2,cex=1.6)
   abline(h=0)
-  text(4, y = 8, labels = nrow(pbias[[i]]), cex=2)
+ # text(4, y = 8, labels = nrow(pbias[[i]]), cex=2)
+  text(4, y = 35, labels = i, cex=2)
 }
 mtext("% Bias", 2, line = -2, outer = TRUE, font=2)
 #dev.off()
 
 
+#===============================================================
+#===============================================================
+#===============================================================
+#come up with an indicator of the impact of biased parameter estimates on movement
+
+.SIMDIRS   <- c(#"/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_3areas_tau04",
+                #"/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_3areas_tau04_delta2",
+               # "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_3areas_tau1",
+                #"/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_3areas_tau1_delta2",
+                #"/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_5areas_tau04",
+                #"/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_5areas_tau04_delta2",
+                # "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_5areas_tau1",
+               "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_5areas_tau1_delta2"              
+  )
 
 
 
+
+ALLDF<-list(length(.SIMDIRS))
+
+for( i in 1:length(.SIMDIRS)){
+  .SIMNAME[[i]]   <- list.files(.SIMDIRS[i],pattern="\\.Rdata", full.name=TRUE)
+  
+  dfall<-NULL
+  
+
+  for( j in 1:length(.SIMNAME[[i]])){
+
+    load(.SIMNAME[[i]][j])
+    
+    names(sims[[1]])
+     dim(sims[[1]]$propVBarea)
+
+   test<-aggregate(sims[[1]]$propVBarea[,4:23],by=list(sims[[1]]$propVBarea[,1],sims[[1]]$propVBarea[,3]),sum)
+
+   dim(test)
+
+    length(apply(test[,3:22],1,sum))
+
+    dfsi<-data.frame(indmonth=sims[[1]]$indmonth[test[,1]],indyr=sims[[1]]$indyr[test[,1]],
+      area=test[,2], VB=apply(test[,3:22],1,sum))
+    summary(dfsi2)
+
+    #dfsi<-cbind(sims[[1]]$indmonth,sims[[1]]$indyr,melt(sims[[1]]$VBarea, value.name="vb"))
+    #names(dfsi)<-c("indmonth", "indyr","tstp","area","vb")
+    dfsi1<-dfsi[dfsi$indyr>71,]
+    dfsi1$area<-as.factor(as.numeric(dfsi1$area)+29)
+   
+    dfsi2<-aggregate(dfsi1$VB,by=list(dfsi1$area,dfsi1$indmonth), median)
+    names(dfsi2)<-c("area", "month","medianvb")
+    dfsi2$type<-"simulated"
+    
+
+    tempsim<-aggregate(sims[[2]]$propVBarea[,4:23],by=list(sims[[1]]$propVBarea[,1],sims[[1]]$propVBarea[,3]),sum)
+
+    names(sims[[2]])
+
+
+    head(sims[[2]]$SB)
+    head(sims[[2]]$Nage)
+
+    dfes<-data.frame(indmonth=sims[[1]]$indmonth[test[,1]],indyr=sims[[1]]$indyr[test[,1]],
+      area=test[,2], VB=apply(test[,3:22],1,sum))
+
+
+
+    cbind(indmonth,indyr,melt(sims[[2]]$VBarea, value.name="vb"))
+    names(dfes)<-c("indmonth", "indyr","tstp","area","vb")
+    dfes1<-dfes[dfes$indyr>71,]
+    dfes1$area<-as.factor(as.numeric(dfes1$area)+29)
+   
+    dfes2<-aggregate(dfes1$vb,by=list(dfes1$area,dfes1$indmonth), median)
+    names(dfes2)<-c("area", "month","medianvb")
+    dfes2$type<-"estimated"
+
+    dfall<-rbind(dfall,dfsi2,dfes2)
+  }
+ALLDF[[i]]<-dfall
+}
+
+
+summary(dfall)
+
+
+p<-ggplot(dfall, aes(x=as.factor(area), y=medianvb, color=type))
+p<-p+geom_boxplot()
+p<-p+geom_vline(xintercept = 49-29)
+p<-p+facet_wrap(~month)
+p<-p+theme_bw(16)
+p
+
+
+
+
+dfe<-cbind(indmonth,indyr,melt(sim$VBarea, value.name="vb"))
+names(dfe)<-c("indmonth", "indyr","tstp","area","vb")
+dfe1<-dfe[dfe$indyr>71,]
+dfe1$area<-as.factor(as.numeric(dfe1$area)+29)
+head(dfe1)
+
+
+aggregate(dfe1$vb,by=list(dfe1$area,dfe1$indmonth), median)
+
+p<-ggplot(dfe1, aes(x=(area), y=vb))
+p<-p+geom_boxplot()
+p<-p+geom_vline(xintercept = 49-29)
+p<-p+facet_wrap(~indmonth)
+p
+
+boxplot(sim$VBarea[which(indmonth==7)[71:100],])
+
+plot(apply(sim$VBarea[which(indmonth==7)[71:100],],2,median),type="l")
+
+
+
+dfe<-melt(sim$VBarea[which(indmonth==7)[71:100],])
+head(dfe)
+
+p<-ggplot(dfe, aes(x=as.numeric(Var2), y=value))
+p<-p+geom_line(aes(color=as.factor(Var1)))
+p
+
+#doing it for a series of simulations
+
+.SIMNAME[[1]]   <- list.files(.SIMDIRS[i],pattern="\\.Rdata", full.name=TRUE)
+  
+  length(sims)
+    length(sims[[1]])
+    names(sims[[1]])
+    length(sims[[2]])
+    names(sims[[2]])
+
+    sims[[1]]$phiE
+
+finaldf<-NULL
+for( j in 1:length(.SIMNAME[[i]])){
+    load(.SIMNAME[[1]][j])
+
+    
+    indmonth<-rep(1:12,100)
+
+    
+
+    for(m in 1:12){
+      tmpsim<-apply(sims[[1]]$"VBarea"[which(indmonth==m)[71:100],1:26],2,median)
+      tmpest<-apply(sims[[2]]$"VBarea"[which(indmonth==m)[71:100],1:26],2,median)
+      
+      tsdf<-data.frame(value=tmpsim, month=m, src="simulated", area=30:55)
+      tedf<-data.frame(value=tmpest, month=m, src="estimated", area=30:55)
+
+      finaldf<-rbind(finaldf,tsdf,tedf)
+    }
+   }
+
+dim(finaldf)
+head(finaldf)
+summary
+
+
+p<-ggplot(finaldf, aes(x=as.factor(area), y=value))
+p<-p+geom_boxplot( aes(color=src, fill=src))
+p<-p+ facet_wrap(~month)
+p<-p+ geom_vline(aes(xintercept=which(30:55==49)))
+p
 
 
 

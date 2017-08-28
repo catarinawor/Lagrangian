@@ -1081,7 +1081,7 @@ REPORT_SECTION
 	REPORT(varPos);
 	REPORT(SB);
 	REPORT(Nage);
-	//REPORT(VBarea);
+	REPORT(propVBarea);
 	REPORT(Effarea);
 	REPORT(CatchNatAge);
 	//REPORT(CatchAreaAge);
