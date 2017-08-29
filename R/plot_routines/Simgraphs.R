@@ -128,7 +128,7 @@ dev.off()
                 "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_3areas_tau04_delta2",
                # "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_3areas_tau1",
                 "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_3areas_tau1_delta2",
-                #"/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_5areas_tau04",
+                "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_5areas_tau04",
                 #"/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_5areas_tau04_delta2",
                "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_5areas_tau1",
                "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_5areas_tau1_delta2"              
@@ -185,7 +185,7 @@ titulos<-c("3 areas, tau=0.4, B = 1.0",
             "3 areas, tau=0.4, B = 2.0",
            # "3 areas, tau=1.0, B = 1.0",
             "3 areas, tau=1.0, B = 2.0",
-          #"5 areas, tau=0.4, B = 1.0",  
+          "5 areas, tau=0.4, B = 1.0",  
          #  "5 areas, tau=0.4, B = 2.0",
             "5 areas, tau=1.0, B = 1.0",
            "5 areas, tau=1.0, B = 2.0"
