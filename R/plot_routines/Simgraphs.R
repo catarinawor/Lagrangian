@@ -129,7 +129,7 @@ dev.off()
                # "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_3areas_tau1",
                 "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_3areas_tau1_delta2",
                 "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_5areas_tau04",
-                #"/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_5areas_tau04_delta2",
+                "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_5areas_tau04_delta2",
                "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_5areas_tau1",
                "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_5areas_tau1_delta2"              
   )
@@ -186,7 +186,7 @@ titulos<-c("3 areas, tau=0.4, B = 1.0",
            # "3 areas, tau=1.0, B = 1.0",
             "3 areas, tau=1.0, B = 2.0",
           "5 areas, tau=0.4, B = 1.0",  
-         #  "5 areas, tau=0.4, B = 2.0",
+           "5 areas, tau=0.4, B = 2.0",
             "5 areas, tau=1.0, B = 1.0",
            "5 areas, tau=1.0, B = 2.0"
   )
@@ -194,14 +194,16 @@ titulos<-c("3 areas, tau=0.4, B = 1.0",
 #setwd("/Users/catarinawor/Documents/hake/Thesis/figs/chap2")
 #setwd("/Users/catarinawor/Documents/hake/JTC_talk")
 #pdf("single_version_simeval.pdf", width=14, height=7)
-par(mfcol=c(2,3))
+gtgscn<-9:16
+
+par(mfcol=c(2,4))
 for( i in 1:length(.SIMDIRS)){
   boxplot(pbias[[i]],names=c(expression("t"[0]),expression("CV"),expression("a"[50]),
     expression(sigma["X"["max"]]),expression("q")),ylim=c(-50,50),main=titulos[i],cex.axis=1.5,
     cex.lab=2,cex.main=2,cex=1.6)
   abline(h=0)
  # text(4, y = 8, labels = nrow(pbias[[i]]), cex=2)
-  text(4, y = 35, labels = i, cex=2)
+  text(4, y = 35, labels = gtgscn[i], cex=2)
 }
 mtext("% Bias", 2, line = -2, outer = TRUE, font=2)
 #dev.off()
