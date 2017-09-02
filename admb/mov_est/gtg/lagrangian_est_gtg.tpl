@@ -1002,8 +1002,7 @@ FUNCTION calc_obj_func
 	cout<<"mo is "<<mo<<endl;
 	cout<<"Fmult is "<<Fmult<<endl;
 	
-	output_true();
-	exit(1);
+	
 
 
 
