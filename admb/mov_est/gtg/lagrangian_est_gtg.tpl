@@ -991,7 +991,7 @@ FUNCTION calc_obj_func
 
 	cout<<"nlvec is"<<nlvec<<endl;
 	//f=sum(nlvec)+sum(npvec);
-	f=sum(nlvec)/1.e+6+sum(nlcat)/1.e+5;
+	f=sum(nlvec)/1.e+6+sum(nlcat)/1.e+4;
 
 	cout<<"nlcat is"<<nlcat<<endl;
 
@@ -1002,8 +1002,8 @@ FUNCTION calc_obj_func
 	cout<<"mo is "<<mo<<endl;
 	cout<<"Fmult is "<<Fmult<<endl;
 	
-	//output_true();
-	//exit(1);
+	output_true();
+	exit(1);
 
 
 
