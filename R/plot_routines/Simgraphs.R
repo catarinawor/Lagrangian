@@ -22,7 +22,16 @@ library(reshape2)
                 "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_5areas_tau04",
                 "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_5areas_tau04_delta2",
                 "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_5areas_tau1",
-                "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_5areas_tau1_delta2"#,
+                "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_5areas_tau1_delta2",
+                #"/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_3areas_tau04",
+                #"/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_3areas_tau04_delta2",
+                #"/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_3areas_tau1",
+                #"/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_3areas_tau1_delta2",
+                "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_5areas_tau04",
+                "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_5areas_tau04_delta2",
+                 "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_5areas_tau1",
+               "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_5areas_tau1_delta2"              
+              
  )
 
 
@@ -73,14 +82,18 @@ for( i in 1:length(.SIMDIRS)){
 
 
 titulos<-c( 
-            expression(paste("3 areas, ", tau," = 0.4, ",lambda," = 1.0")),
-            expression(paste("3 areas, ", tau," = 0.4, ",lambda," = 2.0")),
-            expression(paste("3 areas, ", tau," = 1.0, ",lambda," = 1.0")),
-            expression(paste("3 areas, ", tau," = 1.0, ",lambda," = 2.0")),
-            expression(paste("5 areas, ", tau," = 0.4, ",lambda," = 1.0")),  
-            expression(paste("5 areas, ", tau," = 0.4, ",lambda," = 2.0")),
-            expression(paste("5 areas, ", tau," = 1.0, ",lambda," = 1.0")),
-            expression(paste("5 areas, ", tau," = 1.0, ",lambda," = 2.0"))
+            expression(paste("SG, 3 FG, ", tau," = 0.4, ",lambda," = 1.0")),
+            expression(paste("SG, 3 FG, ", tau," = 0.4, ",lambda," = 2.0")),
+            expression(paste("SG, 3 FG, ", tau," = 1.0, ",lambda," = 1.0")),
+            expression(paste("SG, 3 FG, ", tau," = 1.0, ",lambda," = 2.0")),
+            expression(paste("SG, 5 FG, ", tau," = 0.4, ",lambda," = 1.0")),  
+            expression(paste("SG, 5 FG, ", tau," = 0.4, ",lambda," = 2.0")),
+            expression(paste("SG, 5 FG, ", tau," = 1.0, ",lambda," = 1.0")),
+            expression(paste("SG, 5 FG, ", tau," = 1.0, ",lambda," = 2.0")),
+            expression(paste("MG, 5 FG, ", tau," = 0.4, ",lambda," = 1.0")),  
+            expression(paste("MG, 5 FG, ", tau," = 0.4, ",lambda," = 2.0")),
+            expression(paste("MG, 5 FG, ", tau," = 1.0, ",lambda," = 1.0")),
+            expression(paste("MG, 5 FG, ", tau," = 1.0, ",lambda," = 2.0"))
   )
 
 
@@ -88,20 +101,20 @@ titulos<-c(
 #setwd("/Users/catarinawor/Documents/hake/JTC_talk")
 #pdf("single_version_simeval.pdf", width=14, height=7)
 setwd("/Users/catarinawor/Documents/hake/Lag_Model_paper/")
-pdf("Figure3.pdf", width=14, height=7)
-par(mfcol=c(2,4))
+pdf("Figure3.pdf", width=14, height=10)
+par(mfrow=c(3,4))
 for( i in 1:length(.SIMDIRS)){
   boxplot(pbias[[i]],names=c(expression("t"[0]),expression("CV"),expression("a"[50]),
     expression(sigma["X"["max"]]),expression("q")),ylim=c(-30,30),main=titulos[i],cex.axis=1.5,
-    cex.lab=2,cex.main=2,cex=1.6)
+    cex.lab=2,cex.main=1.8,cex=1.6)
   abline(h=0)
   #text(4.8, y = -65, labels = nrow(pbias[[i]]), cex=2)
   text(4.8, y = 25, labels = paste ("scenario",i), cex=1.2)
 }
-mtext("% relative error", 2, line = -2, outer = TRUE, font=2,las=0)
+mtext("% relative error", 2, line = -1, outer = TRUE, font=2,las=0)
 mtext("Parameter", 1, line = -2, outer = TRUE, font=2)
 dev.off()
-
+?par
 
 
 #=============================================================
@@ -109,92 +122,90 @@ dev.off()
 #gtg
 
 #parameter estimates
-.SIMDIRS   <- c("/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_3areas_tau04",
-                "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_3areas_tau04_delta2",
-                "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_3areas_tau1",
-                "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_3areas_tau1_delta2",
-                "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_5areas_tau04",
-                "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_5areas_tau04_delta2",
-                 "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_5areas_tau1",
-               "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_5areas_tau1_delta2"              
-              
-  )
+#.SIMDIRS   <- c("/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_3areas_tau04",
+#                "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_3areas_tau04_delta2",
+#                "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_3areas_tau1",
+#                "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_3areas_tau1_delta2",
+#                "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_5areas_tau04",
+#                "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_5areas_tau04_delta2",
+#                 "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_5areas_tau1",
+#               "/Volumes/3T_dom media/Catarina/new_simeval_lag/SimResult_gtg_5areas_tau1_delta2"              
+#              
+#  )
 
 
 
-.SIMNAME<-list(length(.SIMDIRS))
-
-estn<-list(length(.SIMDIRS))
-pbias<-list(length(.SIMDIRS))
-maxgrad<-list(length(.SIMDIRS))
-initvals<-list(length(.SIMDIRS))
-initvals_bad<-list(length(.SIMDIRS))
-
-
-
-for( i in 1:length(.SIMDIRS)){
-  .SIMNAME[[i]]   <- list.files(.SIMDIRS[i],pattern="\\.Rdata", full.name=TRUE)
-  
-  tmp_estn<-matrix(NA,nrow=length(.SIMNAME[[i]]),ncol=5)
-  tmp_pbias<-matrix(NA,nrow=length(.SIMNAME[[i]]),ncol=5)
-  tmp_maxgrad<-vector(length=length(.SIMNAME[[i]]))
-  tmp_initvals<-matrix(NA,nrow=length(.SIMNAME[[i]]),ncol=5)
-  
-
-  for( j in 1:length(.SIMNAME[[i]])){
-    load(.SIMNAME[[i]][j])
-
-    true_pars <- c(sims[[1]]$"mo",sims[[1]]$"cvPos",sims[[1]]$"maxPos50",sims[[1]]$"maxPossd",mean(sims[[1]]$Fmult))  
-
-
-    #parameters
-    tmp_estn[j,]<-exp(sims[[3]]$est[1:5])
-    tmp_pbias[j,]<-((tmp_estn[j,]-true_pars)/true_pars)*100
-    tmp_maxgrad[j]<-sims[[3]]$maxgrad
-    tmp_initvals[j,]<-exp(unlist(sims[[5]][1:5]))
-   }
-
-  tmp_estn<- tmp_estn[tmp_maxgrad<=.01,]
-  tmp_pbias<- tmp_pbias[tmp_maxgrad<=.01,]
-  
-  estn[[i]]<-tmp_estn
-  pbias[[i]]<-tmp_pbias
-  maxgrad[[i]]<-tmp_maxgrad
-  initvals[[i]]<-tmp_initvals[tmp_maxgrad<=.01,]
-  initvals_bad[[i]]<-tmp_initvals[tmp_maxgrad>.01,]
-
-
-}
+#.SIMNAME<-list(length(.SIMDIRS))
+#
+#estn<-list(length(.SIMDIRS))
+#pbias<-list(length(.SIMDIRS))
+#maxgrad<-list(length(.SIMDIRS))
+#initvals<-list(length(.SIMDIRS))
+#initvals_bad<-list(length(.SIMDIRS))
+#
+#
+#
+#for( i in 1:length(.SIMDIRS)){
+#  .SIMNAME[[i]]   <- list.files(.SIMDIRS[i],pattern="\\.Rdata", full.name=TRUE)
+#  
+#  tmp_estn<-matrix(NA,nrow=length(.SIMNAME[[i]]),ncol=5)
+#  tmp_pbias<-matrix(NA,nrow=length(.SIMNAME[[i]]),ncol=5)
+#  tmp_maxgrad<-vector(length=length(.SIMNAME[[i]]))
+#  tmp_initvals<-matrix(NA,nrow=length(.SIMNAME[[i]]),ncol=5)
+#  
+#
+#  for( j in 1:length(.SIMNAME[[i]])){
+#    load(.SIMNAME[[i]][j])
+#
+#    true_pars <- c(sims[[1]]$"mo",sims[[1]]$"cvPos",sims[[1]]$"maxPos50",sims[[1]]$"maxPossd",mean(sims[[1]]$Fmult))  
+#
+#
+#    #parameters
+#    tmp_estn[j,]<-exp(sims[[3]]$est[1:5])
+#    tmp_pbias[j,]<-((tmp_estn[j,]-true_pars)/true_pars)*100
+#    tmp_maxgrad[j]<-sims[[3]]$maxgrad
+#    tmp_initvals[j,]<-exp(unlist(sims[[5]][1:5]))
+#   }
+#
+#  tmp_estn<- tmp_estn[tmp_maxgrad<=.01,]
+#  tmp_pbias<- tmp_pbias[tmp_maxgrad<=.01,]
+#  
+#  estn[[i]]<-tmp_estn
+#  pbias[[i]]<-tmp_pbias
+#  maxgrad[[i]]<-tmp_maxgrad
+#  initvals[[i]]<-tmp_initvals[tmp_maxgrad<=.01,]
+#  initvals_bad[[i]]<-tmp_initvals[tmp_maxgrad>.01,]
+#}
 
 
-titulos<-c( 
-            expression(paste("3 areas, ", tau," = 0.4, ",lambda," = 1.0")),
-            expression(paste("3 areas, ", tau," = 0.4, ",lambda," = 2.0")),
-            expression(paste("3 areas, ", tau," = 1.0, ",lambda," = 1.0")),
-            expression(paste("3 areas, ", tau," = 1.0, ",lambda," = 2.0")),
-            expression(paste("5 areas, ", tau," = 0.4, ",lambda," = 1.0")),  
-            expression(paste("5 areas, ", tau," = 0.4, ",lambda," = 2.0")),
-            expression(paste("5 areas, ", tau," = 1.0, ",lambda," = 1.0")),
-            expression(paste("5 areas, ", tau," = 1.0, ",lambda," = 2.0"))
-  )
+#titulos<-c( 
+#            expression(paste("3 areas, ", tau," = 0.4, ",lambda," = 1.0")),
+#            expression(paste("3 areas, ", tau," = 0.4, ",lambda," = 2.0")),
+#            expression(paste("3 areas, ", tau," = 1.0, ",lambda," = 1.0")),
+#            expression(paste("3 areas, ", tau," = 1.0, ",lambda," = 2.0")),
+#            expression(paste("5 areas, ", tau," = 0.4, ",lambda," = 1.0")),  
+#            expression(paste("5 areas, ", tau," = 0.4, ",lambda," = 2.0")),
+#            expression(paste("5 areas, ", tau," = 1.0, ",lambda," = 1.0")),
+#            expression(paste("5 areas, ", tau," = 1.0, ",lambda," = 2.0"))
+#  )
 
 #setwd("/Users/catarinawor/Documents/hake/Thesis/figs/chap2")
 #setwd("/Users/catarinawor/Documents/hake/JTC_talk")
-setwd("/Users/catarinawor/Documents/hake/Lag_Model_paper/")
-pdf("Figure4.pdf", width=14, height=7)
-scnnumbers<-9:16
-par(mfcol=c(2,4))
-for( i in 1:length(.SIMDIRS)){
-  boxplot(pbias[[i]],names=c(expression("t"[0]),expression("CV"),expression("a"[50]),
-    expression(sigma["X"["max"]]),expression("q")),ylim=c(-40,40),main=titulos[i],cex.axis=1.5,
-    cex.lab=2,cex.main=2,cex=1.6)
-  abline(h=0)
-  #text(4.8, y = -25, labels = nrow(pbias[[i]]), cex=2)
-  text(4.8, y = 35, labels = paste ("scenario",scnnumbers[i]), cex=1.2)
-}
-mtext("% relative error", 2, line = -2, outer = TRUE, font=2)
-mtext("Parameter", 1, line = -2, outer = TRUE, font=2)
-dev.off()
+#setwd("/Users/catarinawor/Documents/hake/Lag_Model_paper/")
+#pdf("Figure4.pdf", width=14, height=7)
+#scnnumbers<-9:16
+#par(mfcol=c(2,4))
+#for( i in 1:length(.SIMDIRS)){
+#  boxplot(pbias[[i]],names=c(expression("t"[0]),expression("CV"),expression("a"[50]),
+#    expression(sigma["X"["max"]]),expression("q")),ylim=c(-40,40),main=titulos[i],cex.axis=1.5,
+#    cex.lab=2,cex.main=2,cex=1.6)
+#  abline(h=0)
+#  text(4.8, y = -25, labels = nrow(pbias[[i]]), cex=2)
+#  text(4.8, y = 35, labels = paste ("scenario",scnnumbers[i]), cex=1.2)
+#}
+#mtext("% relative error", 2, line = -2, outer = TRUE, font=2)
+#mtext("Parameter", 1, line = -2, outer = TRUE, font=2)
+#dev.off()
 
 
 #===============================================================
