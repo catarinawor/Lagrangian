@@ -101,18 +101,18 @@ titulos<-c(
 #setwd("/Users/catarinawor/Documents/hake/JTC_talk")
 #pdf("single_version_simeval.pdf", width=14, height=7)
 setwd("/Users/catarinawor/Documents/hake/Lag_Model_paper/")
-pdf("Figure3.pdf", width=14, height=10)
-par(mfrow=c(3,4))
+pdf("Figure5.pdf", width=14, height=10)
+par(mfrow=c(3,4), oma=c(1.6,2.1,1.3,1.1))
 for( i in 1:length(.SIMDIRS)){
   boxplot(pbias[[i]],names=c(expression("t"[0]),expression("CV"),expression("a"[50]),
     expression(sigma["X"["max"]]),expression("q")),ylim=c(-30,30),main=titulos[i],cex.axis=1.5,
-    cex.lab=2,cex.main=1.8,cex=1.6)
+    cex.lab=2,cex.main=1.8,cex=1.6,cex.axis=1.2)
   abline(h=0)
   #text(4.8, y = -65, labels = nrow(pbias[[i]]), cex=2)
-  text(4.8, y = 25, labels = paste ("scenario",i), cex=1.2)
+  text(4.8, y = 25, labels = paste ("scenario",i), cex=1.4)
 }
-mtext("% relative error", 2, line = -1, outer = TRUE, font=2,las=0)
-mtext("Parameter", 1, line = -2, outer = TRUE, font=2)
+mtext("% relative error", 2, line = -1, outer = TRUE, font=2,las=0,cex=1.4)
+mtext("Parameter", 1, line = -2, outer = TRUE, font=2,cex=1.4)
 dev.off()
 ?par
 

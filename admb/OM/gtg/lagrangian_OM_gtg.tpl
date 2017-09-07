@@ -29,7 +29,7 @@ DATA_SECTION
 	init_int syr;
 	init_int nyr;
 	init_int rep_yr;
-	//init_int proj_yr;
+	init_int proj_yr;
 	init_int sage;
 	init_int nage;
 	init_int smon;
@@ -39,9 +39,9 @@ DATA_SECTION
 
 	init_int ngroup;
 
-	//init_int nlen;
-	//init_int inilen;
-	//init_int lenstp;
+	init_int nlen;
+	init_int inilen;
+	init_int lenstp;
 
 
 	init_int nations;
@@ -63,9 +63,9 @@ DATA_SECTION
 	init_number sigR;		
 	
 	init_number tau_c; 
-	//init_number tau_l; 
-	//init_number tau_survey;		
-	//init_number tau_surveyl;		
+	init_number tau_l; 
+	init_number tau_survey;		
+	init_number tau_surveyl;		
 	init_number err;
 
 	//======================
@@ -75,18 +75,19 @@ DATA_SECTION
 	init_number vbk;
 	init_number to;
 	
-	//init_number cvl;
-	//init_number awt;
-	//init_number bwt;
+	init_number cvl;
+	init_number awt;
+	init_number bwt;
 
 
 
 	//======================
 	//Survey input 
 	//======================
-	//init_int surv_mon;
-	//init_int surv_nobs;
-	//init_vector surv_yrs(1,surv_nobs);
+	init_int surv_mon;
+	init_int surv_nobs;
+	init_vector surv_yrs(1,surv_nobs);
+
 
 	//=================================
 	//parameters in estimation model 
@@ -99,19 +100,19 @@ DATA_SECTION
 	//init_vector maxPossd(1,ngroup);			
 	//init_vector cvPos(1,ngroup); 
 
-	init_vector wa(sage,nage);
+	//init_vector wa(sage,nage);
 	init_vector fa(sage,nage);
 	init_vector va(sage,nage);
 	init_vector minPos(sage,nage);
 
-						
+
 	init_number Fmult;
 	init_matrix pTotEffyear(1,fisharea,syr,nyr);
 	init_matrix TotEffmonth(1,fisharea,smon,nmon);
 
 	init_vector effPwr(sarea,narea);
 
-	//init_vector wt(rep_yr+1,proj_yr);
+	init_vector wt(rep_yr+1,proj_yr);
 
 	init_int satype;
 
@@ -140,21 +141,22 @@ DATA_SECTION
 	//===================================
 	
 	int nrep_yr;
-	//int nproj_yr;
+	int nproj_yr;
 	int ntstp;
 	int ststp;
+	int ptstp;
 	int tmon;
 
    	vector age(sage,nage);
-   	//vector len(1,nlen);
+   	vector len(1,nlen);
     vector areas(sarea,narea);
    	ivector fishingr(1,fisharea);
    	ivector nationareas(1,nations);
    	
-   	//vector epsilon(1,surv_nobs);
-	vector wt(syr,nyr);
-	vector vt(syr,nyr);
-   	vector wx(syr,nyr);
+   	vector epsilon(1,surv_nobs);
+	//vector wt(syr,proj_yr);
+	vector vt(syr,proj_yr);
+   	vector wx(syr,proj_yr);
 
 
    	int n_rg;
@@ -165,7 +167,8 @@ DATA_SECTION
 
    	imatrix  pntr_rg(sarea,narea,1,ngroup);
    		
-   	LOC_CALCS				
+   	LOC_CALCS	
+
 
 		int ih,r,g;
 		ih = 0;
@@ -182,14 +185,15 @@ DATA_SECTION
 		}
 		
 		nrep_yr = rep_yr-syr+1;
-       	//nproj_yr = proj_yr-syr+1;
+       	nproj_yr = proj_yr-syr+1;
 
 		tmon = nmon-smon+1;
 		ststp =	tmon * nrep_yr;
 		ntstp = tmon * (nyr-syr+1);
+		ptstp = tmon * (proj_yr-syr+1);
 		
 		age.fill_seqadd(sage,1);
-		//len.fill_seqadd(inilen,lenstp);
+		len.fill_seqadd(inilen,lenstp);
 		areas.fill_seqadd(sarea,1);
 		nationareas.initialize();
 		fishingr.initialize();
@@ -235,22 +239,22 @@ DATA_SECTION
 		nationareas(nations)=narea-sarea+1 - sum(nationareas(1,nations-1));
 			
 		random_number_generator rng(seed);
-		wt.fill_randn(rng);
-		wt*=sigR;
+		//wt.fill_randn(rng);
+		//wt*=sigR;
 
 		vt.fill_randn(rng);
 		vt*=0.1;
 
 		wx.fill_randn(rng);
 		wx*=0.08;
-		//epsilon.fill_randn(rng);
-		//epsilon*=0.2;
+		epsilon.fill_randn(rng);
+		epsilon*=0.2;
 
 	END_CALCS
 
 		
-	 	ivector indyr(1,ntstp);
- 		ivector indmonth(1,ntstp);
+	 	ivector indyr(1,ptstp);
+ 		ivector indmonth(1,ptstp);
 		ivector indnatarea(sarea,narea);
 		ivector indfisharea(sarea,narea);
 		ivector pcat(1,fisharea);
@@ -272,7 +276,7 @@ DATA_SECTION
 
       		int aa =0;
        			
-       		for(int y=syr;y<=nyr;y++)		
+       		for(int y=syr;y<=proj_yr;y++)		
        		{
        			for(int ii=smon;ii<=nmon;ii++)
        			{
@@ -341,6 +345,7 @@ DATA_SECTION
        			}
        		}
 
+   				
        		tot_pcat=sum(pcat);  
 
        		//calc_propg
@@ -352,8 +357,8 @@ DATA_SECTION
 			}
 			//cout<<"Xini is "<<Xini<<endl;	
 
-			//ofstream nfs("catlim.txt");
-			//nfs<<"catlim" << endl << "10000000 10000000" <<endl;
+			ofstream nfs("catlim.txt");
+			nfs<<"catlim" << endl << "10000000 10000000" <<endl;
 			
        			
 	END_CALCS
@@ -377,94 +382,94 @@ PARAMETER_SECTION
 	number m_tsp;
 	
 	vector lxo(sage,nage);
-	//vector wa(sage,nage);
+	vector wa(sage,nage);
 	vector za(sage,nage);
-	vector SB(1,ntstp);
-	//vector tB(1,ntstp);
-	//vector survB(1,surv_nobs);
+	vector SB(1,ptstp);
+	vector tB(1,ptstp);
+	vector survB(1,surv_nobs);
 	
 	vector maxPos(sage,nage);
 	vector varPos(sage,nage);
 	vector varPosg(sage,nage);
 	vector prop_ng(1,ngroup);
-	vector yYieldtotal(syr,nyr);
+	vector yYieldtotal(syr,proj_yr);
 
-	//vector ytB(rep_yr+1,proj_yr);
-	//vector totcatch(rep_yr+1,nyr);
-	//vector totcatchLen(rep_yr+1,proj_yr);
-	//vector Ut(rep_yr+1,nyr);
+	vector ytB(rep_yr+1,proj_yr);
+	vector Yieldtotal(1,ptstp);
+	vector totcatchLen(rep_yr+1,proj_yr);
+	vector Ut(rep_yr+1,nyr);
 	//vector UtLen(rep_yr+1,proj_yr);
 	//vector spr(syr,proj_yr);
 	//vector phie(syr,proj_yr);
 
-	//vector catlim(1,nations);
+	vector catlim(1,nations);
 
 
 	//matrix Catage(1,ntstp,sage,nage);
-	//matrix Catlen(1,ntstp,1,nlen);
+	matrix Catlen(1,ptstp,1,nlen);
 	//matrix Fatage(1,ntstp,sage,nage);
  	//matrix meanPosX(1,ntstp,sage-1,nage);
- 	matrix tVBarea(1,ntstp,sarea,narea);
-	matrix totVBnation(1,ntstp,1,nations);
-	//matrix VulBage(1,ntstp,sage,nage);
-	matrix Effarea(1,ntstp,sarea,narea);
- 	//matrix tnage(1,ntstp,sage,nage);
- 	//matrix tBage(1,ntstp,sage,nage);
+ 	matrix tVBarea(1,ptstp,sarea,narea);
+	matrix totVBnation(1,ptstp,1,nations);
+	matrix VulBage(1,ntstp,sage,nage);
+	matrix Effarea(1,ptstp,sarea,narea);
  	//matrix ywa(syr,proj_yr,sage,nage);
 
 
- 	//matrix Watage_comm(rep_yr+1,proj_yr,sage,nage);
+	matrix yYieldtotalage(syr,proj_yr,sage,nage);
+ 	matrix Watage_comm(rep_yr+1,proj_yr,sage,nage);
  	//matrix tot_comm_obsCatage(rep_yr+1,proj_yr,sage,nage);
  	//matrix tot_comm_obsCatLen(rep_yr+1,proj_yr,1,nlen);
- 	//matrix comm_obsCatage(rep_yr+1,proj_yr,sage,nage);
- 	//matrix surv_obsCatage(1,surv_nobs,sage,nage);
+ 	matrix comm_obsCatage(rep_yr+1,proj_yr,sage,nage);
+ 	matrix comm_obsCatLen(rep_yr+1,proj_yr,1,nlen);
+ 	matrix surv_obsCatage(1,surv_nobs,sage,nage);
  	//matrix surv_obsCatLen(1,surv_nobs,1,nlen);
  	//matrix yNage(syr,proj_yr,sage,nage);
  	//matrix yFatage(syr,proj_yr,sage,nage);
  	//matrix seltotal(syr,proj_yr,sage,nage);
- 	//matrix yCatchtotalage(syr,proj_yr,sage,nage);
- 	//matrix yCatchtotalLen(syr,proj_yr,1,nlen);
+ 	matrix yCatchtotalage(syr,proj_yr,sage,nage);
+ 	matrix yCatchtotalLen(syr,proj_yr,1,nlen);
+ 	matrix yYieldNat(syr,proj_yr,1,fisharea);
 
  	//3darray selfisharea(syr,proj_yr,1,fisharea,sage-2,nage);
  	//3darray selnation(syr,proj_yr,1,nations,sage-2,nage); 	
  		
-	3darray Nage(1,ngroup,1,ntstp,sage-2,nage); 
- 	3darray VulB(1,ngroup,1,ntstp,sage-2,nage);
- 	//3darray Lage(1,ngroup,smon,nmon,sage-2,nage); 
- 	//3darray Wage(1,ngroup,smon,nmon,sage-2,nage); 
+	3darray Nage(1,ngroup,1,ptstp,sage-2,nage); 
+ 	3darray VulB(1,ngroup,1,ptstp,sage-2,nage);
+ 	3darray Lage(1,ngroup,smon,nmon,sage-2,nage); 
+ 	3darray Wage(1,ngroup,smon,nmon,sage-2,nage); 
  	//3darray CatageG(1,ngroup,1,ntstp,sage,nage);
- 	//3darray Lstd(1,ngroup,1,ntstp,sage,nage); 
+ 	3darray Lstd(1,ngroup,1,ntstp,sage,nage); 
  	
 	
- 	//3darray VBarea(1,ngroup,1,ntstp,sarea,narea);
+ 	
 
  	//3darray totB(1,ngroup,1,ntstp,sage,nage);
  	
  	3darray PosX(1,ngroup,smon,nmon,sage-1,nage);
- 	//3darray NAreaAge(1,ntstp,sarea,narea,sage,nage);
  	//3darray NAreaLen(1,ntstp,sarea,narea,1,nlen);
- 	//3darray CatchAreaAge(1,ntstp,sarea,narea,sage,nage);
- 	//3darray CatchAreaLen(1,ntstp,sarea,narea,1,nlen);
- 	3darray CatchNatAge(1,ntstp,1,fisharea,sage-2,nage);
- 	//3darray CatchNatLen(1,ntstp,1,fisharea,1-2,nlen);
+ 	3darray CatchAreaLen(1,ptstp,sarea,narea,1,nlen);
+ 	3darray CatchNatAge(1,ptstp,1,nations,sage-2,nage);
+ 	3darray CatchFGAge(1,ptstp,1,fisharea,sage-2,nage);
+ 	3darray CatchNatLen(1,ptstp,1,fisharea,1-2,nlen);
  	//3darray EffNatAge(1,fisharea,1,ntstp,sage-2,nage);
- 	//3darray yCatchNatAge(syr,proj_yr,1,fisharea,sage-2,nage);
+ 	// yYieldNatAge(syr,proj_yr,1,fisharea,sage-2,nage);
  	//3darray yCatchStateAge(syr,proj_yr,1,nations,sage-2,nage);
 
- 	//3darray yCatchNatLen(syr,proj_yr,1,fisharea,1-2,nlen);
- 	//3darray yCatchStateLen(syr,proj_yr,1,nations,1-2,nlen);
+ 	3darray yCatchNatLen(syr,proj_yr,1,nations,1-2,nlen);
+ 	3darray yCatchFGLen(syr,proj_yr,1,fisharea,1-2,nlen);
  	
- 	3darray NAreaAgeG(1,n_rg,1,ntstp,sage-3,nage);
- 	3darray CatchAreaAgeG(1,n_rg,1,ntstp,sage-3,nage);
- 	3darray propVBarea(1,n_rg,1,ntstp,sage-3,nage);
- 	//4darray P_la(1,ngroup,smon,nmon,1,nlen,sage,nage); 
+ 	3darray NAreaAgeG(1,n_rg,1,ptstp,sage-3,nage);
+ 	3darray CatchAreaAgeG(1,n_rg,1,ptstp,sage-3,nage);
+ 	3darray propVBarea(1,n_rg,1,ptstp,sage-3,nage);
+ 	4darray P_la(1,ngroup,smon,nmon,1,nlen,sage,nage); 
 
-
- 	matrix obsCatchNatAge(1,tot_pcat,sage-3,nage);
+ 	//buscar esse aqui
+ 	matrix obsCatchFGAge(1,tot_pcat,sage-3,nage);
 
 PRELIMINARY_CALCS_SECTION
 
-	//read_catlim();
+	read_catlim();
 	initialization();
 
 	incidence_functions();
@@ -478,9 +483,11 @@ PRELIMINARY_CALCS_SECTION
 	//run_projections();
 	
 	output_true();
-	output_pin();
-	output_dat();
-	output_gtgdat();
+	
+	//STUFF FROM LAGRANGIAN SIMEVAL
+	//output_pin();
+	//output_dat();
+	//output_gtgdat();
 
 
 	//save_OMrep();
@@ -587,9 +594,9 @@ FUNCTION incidence_functions
 	lxo(nage) /= (1. - mfexp(-m)); 
 
 
-	//for(int im=smon;im<=nmon;im++){
-	//	calc_length_comps(im);
-	//}
+	for(int im=smon;im<=nmon;im++){
+		calc_length_comps(im);
+	}
 
 	kappa 	= 4*h/(1-h);
 	phiE	= elem_prod(lxo,fa)*wa;
@@ -612,9 +619,9 @@ FUNCTION incidence_functions
 FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt)
 
 	dvar_vector propBarea(sarea,narea);
-	dvar_vector tnage(sage,nage);
+	//dvar_vector tnage(sage,nage);
 
-	tnage.initialize();
+	//tnage.initialize();
 	
 	for(int g=1;g<=ngroup;g++)
 	{
@@ -687,24 +694,23 @@ FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt)
         	VulB(g)(ii)(sage-2) = ii;
         	VulB(g)(ii)(sage-1) = g;
 	
-			VulB(g)(ii)(sage,nage) = elem_prod(elem_prod(Nage(g)(ii)(sage,nage),va),wa);
-			//VulBage(ii)(sage,nage) += VulB(g)(ii)(sage,nage);
+			VulB(g)(ii)(sage,nage) = elem_prod(elem_prod(Nage(g)(ii)(sage,nage),va),Wage(g)(indmonth(ii))(sage,nage));
+			VulBage(ii)(sage,nage) += VulB(g)(ii)(sage,nage);
 
-			tnage(sage,nage) += Nage(g)(ii)(sage,nage);
-			//tB(ii) += Nage(g)(ii)(sage,nage)*wa(sage,nage);
-			//tBage(ii)(sage,nage) += elem_prod(Nage(g)(ii)(sage,nage),wa(sage,nage));
+			//tnage(sage,nage) += Nage(g)(ii)(sage,nage);
+			SB(ii) += elem_prod(Nage(g)(ii)(sage,nage),fa)*Wage(g)(indmonth(ii))(sage,nage)/2.0;
+			tB(ii) += Nage(g)(ii)(sage,nage)*Wage(g)(indmonth(ii))(sage,nage);
 			//totB(g)(ii)(sage,nage) = elem_prod(Nage(g)(ii)(sage,nage),wa(sage,nage));
 			
 
 
 	}
 	
-	SB(ii) = elem_prod(tnage,fa)*wa/2.0;
 
 
 	//cout<<"Ok after calc_numbers_at_age"<<endl;
 	
-FUNCTION void calc_effarea(const int& ii,const int& ia)
+FUNCTION void calc_effarea(const int& ii,const int& ia, const dvar_vector& ctlim)
 
 	dvar_vector tmp1(sarea,narea);
 	dvar_vector tmp2(sarea,narea);
@@ -717,13 +723,13 @@ FUNCTION void calc_effarea(const int& ii,const int& ia)
 
 	for(int r= sarea; r<=narea; r++)
 	{
-		//if(sum(yCatchNatAge(indyr(ii))(indnatarea(r))(sage,nage))<ctlim(indnatarea(r))){
+		if(yYieldNat(indyr(ii))(indnatarea(r))<ctlim(indnatarea(r))){
 			tmp1(r)= (pow(tVBarea(ii)(r)+1e-30,fbeta)/(totVBnation(ii)(indnatarea(r)))) * effPwr(r);
 			tmp2(r) = tmp1(r)*TotEffyear(indfisharea(r))(indyr(ia));
 			Effarea(ii)(r) = tmp2(r)*TotEffmonth(indfisharea(r))(indmonth(ii));
-		//}else{
-		//	Effarea(ii)(r) = 0.0;
-		//}
+		}else{
+			Effarea(ii)(r) = 0.0;
+		}
 	}
 	//cout<<"Ok after calc_effarea"<<endl;
 
@@ -754,12 +760,8 @@ FUNCTION void calc_position(const int& ii)
 		PosX(g)(indmonth(ii))(sage,nage) =  Xini(g)*varPos+meanPosX(sage,nage);
 		
 
-		
-		//VBarea(g)(ii)(r) = VulB(g)(ii)(sage,nage) * (cnorm2(areas(r)+0.5,PosX(g)(indmonth(ii))(sage,nage),varPosg)-cnorm2(areas(r)-0.5,PosX(g)(indmonth(ii))(sage,nage),varPosg));
 		NAreaAgeG(ig)(ii)(sage,nage) = elem_prod(Nage(g)(ii)(sage,nage),(cnorm2(areas(r)+0.5,PosX(g)(indmonth(ii))(sage,nage),varPosg)-cnorm2(areas(r)-0.5,PosX(g)(indmonth(ii))(sage,nage),varPosg)));
 	
-		//NAreaAge(ii)(r) += elem_prod(Nage(g)(ii)(sage,nage),(cnorm(areas(r)+0.5,PosX(g)(ii),varPosg)-cnorm(areas(r)-0.5,PosX(g)(ii),varPosg)));
-
 		propVBarea(ig)(ii)(sage-3) = ii;
 		propVBarea(ig)(ii)(sage-2) = g;
 		propVBarea(ig)(ii)(sage-1) = r;
@@ -778,7 +780,7 @@ FUNCTION void calc_position(const int& ii)
 
 FUNCTION void calc_catage(const int& ii)
 
-		int ig,r,g;
+		int ig,r,g,n;
 		
 		
 
@@ -800,27 +802,39 @@ FUNCTION void calc_catage(const int& ii)
 		CatchAreaAgeG(ig)(ii)(sage-2)= g;
 		CatchAreaAgeG(ig)(ii)(sage-1)= r;
 
-		CatchNatAge(ii)(indfisharea(r))(sage-2) = ii;
-		CatchNatAge(ii)(indfisharea(r))(sage-1) = indfisharea(r);
+		CatchNatAge(ii)(indnatarea(r))(sage-2) = ii;
+		CatchNatAge(ii)(indnatarea(r))(sage-1) = indnatarea(r);
+
+		CatchFGAge(ii)(indnatarea(r))(sage-2) = ii;
+		CatchFGAge(ii)(indnatarea(r))(sage-1) = indfisharea(r);
+
 
 
 		tmpc1 =elem_div(q*Effarea(ii)(r)*va,q*Effarea(ii)(r)*va+m_tsp);
 		tmpc2 =elem_prod(tmpc1,(1-mfexp(-(q*Effarea(ii)(r)*va+m_tsp))));
 
 		CatchAreaAgeG(ig)(ii)(sage,nage) = elem_prod(tmpc2,NAreaAgeG(ig)(ii)(sage,nage));		
-		CatchNatAge(ii)(indfisharea(r))(sage,nage) += CatchAreaAgeG(ig)(ii)(sage,nage);//+0.0000001;
+		CatchNatAge(ii)(indnatarea(r))(sage,nage) += CatchAreaAgeG(ig)(ii)(sage,nage);//+0.0000001;
+		CatchFGAge(ii)(indfisharea(r))(sage,nage) += CatchAreaAgeG(ig)(ii)(sage,nage);//+0.0000001;
 		
-		yYieldtotal(indyr(ii)) += CatchNatAge(ii)(indfisharea(r))(sage,nage)*wa;
+		yYieldtotal(indyr(ii)) += CatchAreaAgeG(ig)(ii)(sage,nage)*Wage(g)(indmonth(ii))(sage,nage);
+		Yieldtotal(ii) += CatchAreaAgeG(ig)(ii)(sage,nage)*Wage(g)(indmonth(ii))(sage,nage);
+		yYieldtotalage(indyr(ii))(sage,nage) += elem_prod(CatchAreaAgeG(ig)(ii)(sage,nage),Wage(g)(indmonth(ii))(sage,nage));
+		yYieldNat(indyr(ii))(indnatarea(r)) += CatchAreaAgeG(ig)(ii)(sage,nage)*Wage(g)(indmonth(ii))(sage,nage);			
+		
+
 		
 	}
+
 		
-			//yCatchNatAge(indyr(ii))(indfisharea(r))(sage-2) = indyr(ii);
-			//yCatchNatAge(indyr(ii))(indfisharea(r))(sage-1) = indfisharea(r);
-			//yCatchNatAge(indyr(ii))(indfisharea(r))(sage,nage) += CatchAreaAge(ii)(r)(sage,nage);			
+
+	for(int n=1;n<=nations;n++)
+	{
+		yCatchtotalage(indyr(ii))(sage,nage) += CatchNatAge(ii)(n)(sage,nage);
+		
+	}
+	
 			
-			//yCatchStateAge(indyr(ii))(indnatarea(r))(sage-2) = indyr(ii);
-			//yCatchStateAge(indyr(ii))(indnatarea(r))(sage-1) = indnatarea(r);
-			//yCatchStateAge(indyr(ii))(indnatarea(r))(sage,nage) += CatchAreaAge(ii)(r)(sage,nage);
 			
 			
 			//totcat(sage,nage) += CatageG(g)(ii+(im-1))(sage,nage);
@@ -828,46 +842,47 @@ FUNCTION void calc_catage(const int& ii)
 		
 
 		//cout<<"CatchNatAge(ii) is "<<CatchNatAge(ii)<<endl;
-		//yCatchtotalage(indyr(ii))(sage,nage) += Catage(ii)(sage,nage);
+		
 		
 		//cout<<"Ok after calc_catage"<<endl;
 
-	//FUNCTION void calc_catlen(const int& ii)
-	//
-	//		int b,r,g;
-	//		
-	//		for(int r=sarea;r<=narea;r++)
-	//		{
-	//
-	//			CatchNatLen(ii)(indfisharea(r))(1-2) = ii;
-	//			CatchNatLen(ii)(indfisharea(r))(1-1) = indfisharea(r);
-	//			
-	//			for( b = 1; b<=nlen;b++)
-	//			{
-	//				for(g=1;g<=ngroup;g++)
-	//				{
-	//					
-	//					CatchAreaLen(ii)(r)(b) += CatchAreaAgeG(ii)(g)(r)(sage,nage)*P_la(g)(indmonth(ii))( b )( sage,nage );
-	//				}
-	//				CatchNatLen(ii)(indfisharea(r))(b) += CatchAreaLen(ii)(r)(b);
-	//			}
-	//
-	//			Catlen(ii)(1,nlen) += CatchAreaLen(ii)(r)(1,nlen);
-	//			
-	//			yCatchNatLen(indyr(ii))(indfisharea(r))(1-2) = indyr(ii);
-	//			yCatchNatLen(indyr(ii))(indfisharea(r))(1-1) = indfisharea(r);
-	//			yCatchNatLen(indyr(ii))(indfisharea(r))(1,nlen) += CatchAreaLen(ii)(r)(1,nlen);			
-	//			
-	//			yCatchStateLen(indyr(ii))(indnatarea(r))(1-2) = indyr(ii);
-	//			yCatchStateLen(indyr(ii))(indnatarea(r))(1-1) = indnatarea(r);
-	//			yCatchStateLen(indyr(ii))(indnatarea(r))(1,nlen) += CatchAreaLen(ii)(r)(1,nlen);
-	//			
-	//			yCatchtotalLen(indyr(ii))(1,nlen) += CatchAreaLen(ii)(r)(1,nlen);
-	//			
-	//		}
-	//
-	//		//cout<<"Ok after calc_catLen"<<endl;
+FUNCTION void calc_catlen(const int& ii)
+	
+			int ig,r,g,b;
+			
+			for(int ig=1;ig<=n_rg;ig++)
+			{
+				g = n_group(ig);
+				r = n_area(ig);
 
+
+				CatchNatLen(ii)(indfisharea(r))(-1) = ii;
+				CatchNatLen(ii)(indfisharea(r))(0) = indfisharea(r);
+				
+				for( b = 1; b<=nlen;b++)
+				{
+					
+						
+					CatchAreaLen(ii)(r)(b) += CatchAreaAgeG(ig)(ii)(sage,nage)*P_la(g)(indmonth(ii))( b )( sage,nage );
+					
+				}
+				
+				CatchNatLen(ii)(indnatarea(r))(1,nlen) += CatchAreaLen(ii)(r)(1,nlen);
+				Catlen(ii)(1,nlen) += CatchAreaLen(ii)(r)(1,nlen);
+				
+				yCatchFGLen(indyr(ii))(indfisharea(r))(-1) = indyr(ii);
+				yCatchFGLen(indyr(ii))(indfisharea(r))(0) = indfisharea(r);
+				yCatchFGLen(indyr(ii))(indfisharea(r))(1,nlen) += CatchAreaLen(ii)(r)(1,nlen);			
+				
+				yCatchNatLen(indyr(ii))(indnatarea(r))(1-2) = indyr(ii);
+				yCatchNatLen(indyr(ii))(indnatarea(r))(1-1) = indnatarea(r);
+				yCatchNatLen(indyr(ii))(indnatarea(r))(1,nlen) += CatchAreaLen(ii)(r)(1,nlen);
+				
+				yCatchtotalLen(indyr(ii))(1,nlen) += CatchAreaLen(ii)(r)(1,nlen);
+				
+			}
+	
+			//cout<<"Ok after calc_catLen"<<endl;
 
 
 	
@@ -875,23 +890,20 @@ FUNCTION initialization
 			
 	Nage.initialize();
  	VulB.initialize();
-	//NAreaAge.initialize();
- 	//CatchAreaAge.initialize();
- 	//VBarea.initialize();
 
  	PosX.initialize();
  	yYieldtotal.initialize();
+ 	Yieldtotal.initialize();
 
 
  	CatchNatAge.initialize();
+ 	CatchFGAge.initialize();
  	NAreaAgeG.initialize();
  	CatchAreaAgeG.initialize();
  	propVBarea.initialize();
 
  	
- 	//tB.initialize();
- 	//tBage.initialize();
- 	//tnage.initialize();
+ 	tB.initialize();
  	tVBarea.initialize();
  	
  	totVBnation.initialize();
@@ -906,14 +918,12 @@ FUNCTION initialization
  	//Catage.initialize();
  	//yNage.initialize();
  	//yFatage.initialize();
- 	//CatchAreaLen.initialize();
- 	//CatchAreaAge.initialize();
- 	//yCatchtotalage.initialize();
- 	//yCatchtotalLen.initialize();
- 	//yCatchNatAge.initialize();
- 	//yCatchStateAge.initialize();
- 	//yCatchNatLen.initialize();
- 	//yCatchStateLen.initialize();
+ 	CatchAreaLen.initialize();
+ 	yCatchtotalage.initialize();
+ 	yCatchtotalLen.initialize();
+ 	yYieldNat.initialize();
+ 	yCatchNatLen.initialize();
+ 	yCatchFGLen.initialize();
 
 
 FUNCTION calc_first_year  
@@ -921,8 +931,8 @@ FUNCTION calc_first_year
 	
  	//calc_InitPos_gtg();
 
- 	dvar_vector tnage(sage,nage);
- 	tnage.initialize();
+ 	//dvar_vector tnage(sage,nage);
+ 	//tnage.initialize();
 
  	for(int g=1;g<=ngroup;g++)
 	{
@@ -942,25 +952,26 @@ FUNCTION calc_first_year
             		          	
         VulB(g)(1)(sage-2) = 1;
         VulB(g)(1)(sage-1) = g;
-		VulB(g)(1)(sage,nage) = elem_prod(elem_prod(Nage(g)(1)(sage,nage),va),wa);
+		VulB(g)(1)(sage,nage) = elem_prod(elem_prod(Nage(g)(1)(sage,nage),va),Wage(g)(1)(sage,nage));
 	
-		tnage(sage,nage) += Nage(g)(1)(sage,nage);
-		//tB(1) += Nage(g)(1)(sage,nage)*wa;
-		//totB(g)(1)(sage,nage) = elem_prod(Nage(g)(1)(sage,nage),wa);
+		//tnage(sage,nage) += Nage(g)(1)(sage,nage);
+		SB(1) = elem_prod(Nage(g)(1)(sage,nage),fa)*Wage(g)(1)(sage,nage)/2.0;
+		tB(1) += Nage(g)(1)(sage,nage)*Wage(g)(1)(sage,nage);
+		
 	}
 
 	
 
 
 	
-	SB(1) = elem_prod(tnage,fa)*wa/2.0;
+	
 
 	
 	
 	calc_position(1);
 	
 	
-	calc_effarea(1,1);
+	calc_effarea(1,1,catlim);
 	
 	//calc_catage(1);
 	//cout<<"chegou?"<<endl;
@@ -991,7 +1002,7 @@ FUNCTION move_grow_die
 		//calcmaxpos(wx(syr));
 		calc_numbers_at_age(ie,0.0 );	//wt(indyr(ie))	
 		calc_position(ie);
-		calc_effarea(ie,ie);
+		calc_effarea(ie,ie, catlim);
 		//calc_catage(ie);
 		//calc_catlen(ie);
 		
@@ -1003,8 +1014,8 @@ FUNCTION move_grow_die
 	int p;
  	p=1;
 
- 	//int svyr;
- 	//svyr = 1;
+ 	int svyr;
+ 	svyr = 1;
 
 
 
@@ -1021,10 +1032,10 @@ FUNCTION move_grow_die
 		
 		calc_position(i);
 	
-		calc_effarea(i,i);		
+		calc_effarea(i,i,catlim);		
 
 		calc_catage(i);
-		//calc_catlen(i);
+		calc_catlen(i);
 
 		for(int n=1;n<=fisharea;n++)
 		{					
@@ -1036,25 +1047,27 @@ FUNCTION move_grow_die
 		}
 
 
-		//clean_catage(i);
+		
 
-		//if(indmonth(i)==nmon){
+		if(indmonth(i)==nmon){
 			//survey calculations
 			
-		//	if(surv_yrs(svyr)==indyr(i)){
+			if(surv_yrs(svyr)==indyr(i)){
 				
-		//		survey_data(svyr);
-		////		svyr +=1;
-		//	}
+				survey_data(svyr);
+				svyr +=1;
+			}
 
-		//	catage_comm(indyr(i));	
-		//	catlen_comm(indyr(i));
-		//	calc_wt_comm(indyr(i));
-		//}
+			catage_comm(indyr(i));	
+			catlen_comm(indyr(i));
+			calc_wt_comm(indyr(i));
+		}
 	}
 
+	run_projections(p,svyr);
 
-	//cout<<"Ok after move_grow_die"<<endl;
+
+	cout<<"Ok after move_grow_die"<<endl;
 
 
 FUNCTION void clean_catage(const int& ii,const int& pp,const int& nn)
@@ -1063,19 +1076,17 @@ FUNCTION void clean_catage(const int& ii,const int& pp,const int& nn)
 				dvector pa(nage,sage);
        			pa.initialize();		
 
-       			obsCatchNatAge(pp)(sage-3) = ii;
-       			obsCatchNatAge(pp)(sage-2) = indmonth(ii);
-				obsCatchNatAge(pp)(sage-1) = nn;
+       			obsCatchFGAge(pp)(sage-3) = ii;
+       			obsCatchFGAge(pp)(sage-2) = indmonth(ii);
+				obsCatchFGAge(pp)(sage-1) = nn;
 				
-				//pa = value((CatchNatAge(ii)(n)(sage,nage))/sum(CatchNatAge(ii)(n)(sage,nage)));
-				pa = value(CatchNatAge(ii)(nn)(sage,nage)/(sum(CatchNatAge(ii)(nn)(sage,nage))))+0.0000001;
+				pa = value(CatchFGAge(ii)(nn)(sage,nage)/(sum(CatchFGAge(ii)(nn)(sage,nage))))+0.0000001;
 				
-				
-			 	obsCatchNatAge(pp)(sage,nage) = rmvlogistic(pa,tau_c,seed+ii);
+			 	obsCatchFGAge(pp)(sage,nage) = rmvlogistic(pa,tau_c,seed+ii);
 				
 				//cout<<" obsCatchNatAge(pp)(sage,nage) "<<obsCatchNatAge(pp)(sage,nage)<<endl;
 
-	//cout<<"Ok after clean_catage"<<endl;
+	cout<<"Ok after clean_catage"<<endl;
 	
 
 
@@ -1094,111 +1105,103 @@ FUNCTION dvar_vector calcmaxpos(const dvariable& expwx)
 
 
 
-		//FUNCTION void catage_comm(const int& ii)
-		//
-		//	
-		//	
-		//	for(int i=(ii-syr+1)*tmon-tmon+1;i<=(ii-syr+1)*tmon;i++)
-		//	{
-		//		
-		//		for(int n=1;n<=fisharea;n++)
-		//		{
-		//							
-		//			if(TotEffmonth(n)(indmonth(i))>0)
-		//       		{
-		//
-		//       			tot_comm_obsCatage(indyr(i))(sage,nage) += CatchNatAge(i)(n)(sage,nage);
-		//       		}
-		//       		
-		//		}
-		//	}
-		//			dvector pa(sage,nage);
-		//       		pa.initialize();
-		//      
-		//    
-		//		pa = value((tot_comm_obsCatage(ii)(sage,nage))/(sum(tot_comm_obsCatage(ii)(sage,nage))+0.01))+0.000001;			
-		//		//pa = value((tot_comm_obsCatage(ii)(sage,nage))/(sum(tot_comm_obsCatage(ii)(sage,nage))));			
-		//		
-		//		comm_obsCatage(ii)(sage,nage) = rmvlogistic(pa,tau_c,seed+ii);	
-		//		totcatch(ii) = 	sum(tot_comm_obsCatage(ii)(sage,nage));	
-		//		Ut(ii) = totcatch(ii)/tB((ii-syr+1)*tmon-(nmon-smon));
-		//ytB(ii) = tB((ii-syr+1)*tmon-(nmon-smon));
+FUNCTION void catage_comm(const int& ii)
+
+	dvector tmpca(sage,nage);
+      tmpca.initialize();
+	
+	for(int i=(ii-syr+1)*tmon-tmon+1;i<=(ii-syr+1)*tmon;i++)
+	{
 		
-		//FUNCTION void catlen_comm(const int& ii)
-		//
-		//	
-		//	//for(int i=rep_yr*nmon+1;i<=ntstp;i++)
-		//	//{
-		//	for(int i=(ii-syr+1)*tmon-tmon+1;i<=(ii-syr+1)*tmon;i++)
-		//	{
-		//		
-		//		for(int n=1;n<=fisharea;n++)
-		//		{
-		//							
-		//			if(TotEffmonth(n)(indmonth(i))>0)
-		//       		{
-		//
-		//       			tot_comm_obsCatLen(indyr(i))(1,nlen) += CatchNatLen(i)(n)(1,nlen);
-		//       		}
-		//       		
-		//		}
-		//	}
-		//			dvector pl(1,nlen);
-		//       		pl.initialize();
-		//      
-		//    
-		//		pl = value((tot_comm_obsCatLen(ii)(1,nlen))/(sum(tot_comm_obsCatLen(ii)(1,nlen))+0.01))+0.000001;			
-		//		//pa = value((tot_comm_obsCatage(ii)(sage,nage))/(sum(tot_comm_obsCatage(ii)(sage,nage))));			
-		//		
-		//		tot_comm_obsCatLen(ii)(1,nlen) = rmvlogistic(pl,tau_l,seed+ii);	
-		//		totcatchLen(ii) = 	sum(tot_comm_obsCatLen(ii)(1,nlen));	
-		//		UtLen(ii) = totcatchLen(ii)/tB((ii-syr+1)*tmon-(nmon-smon));
-		//		
-	//FUNCTION void calc_wt_comm(const int& ii)
-	//   
-	//	//this is wrong! need to fix it!
-	//   int im,g;
-	//  
-	//   dvar_vector totwtcat(sage,nage);
-	//   
-	//   totwtcat.initialize();
-	//   
-	//
-	//
-	//    for(g=1;g<=ngroup;g++)
-	//	{    
-	//		for(im = smon; im<=nmon;im++)
-	//		{
-	//   			totwtcat(sage,nage) += elem_prod(CatageG(g)(((ii-syr+1)-1)*tmon+im)(sage,nage),Wage(g)(im)(sage,nage));
-	//		}
-	//   	}
-	//
-	//   	Watage_comm(ii)(sage,nage) = elem_div(totwtcat(sage,nage),yCatchtotalage(ii)(sage,nage));
+		for(int n=1 ; n<=nations;n++)
+		{
+							
+			if(TotEffmonth(n)(indmonth(i))>0)
+       		{
+
+       			tmpca(sage,nage) += value(CatchNatAge(i)(n)(sage,nage));
+       		}
+       		
+		}
+	}
+			dvector pa(sage,nage);
+       		pa.initialize();
+      
+    
+		pa = value((tmpca)/(sum(tmpca)))+0.0000001;			
+		//pa = value((tot_comm_obsCatage(ii)(sage,nage))/(sum(tot_comm_obsCatage(ii)(sage,nage))));			
+		
+		comm_obsCatage(ii)(sage,nage) = rmvlogistic(pa,tau_c,seed+ii);	
+		Ut(ii) = Yieldtotal(ii)/tB((ii-syr+1)*tmon-(nmon-smon));
+		ytB(ii) = tB((ii-syr+1)*tmon-(nmon-smon));
+		
+
+
+FUNCTION void catlen_comm(const int& ii)
+
+	
+	//for(int i=rep_yr*nmon+1;i<=ntstp;i++)
+	//{
+
+		dvector tempcl(1,nlen);
+
+	for(int i=(ii-syr+1)*tmon-tmon+1;i<=(ii-syr+1)*tmon;i++)
+	{
+		
+		for(int n=1;n<=fisharea;n++)
+		{
+							
+			if(TotEffmonth(n)(indmonth(i))>0)
+       		{
+
+       			tempcl(1,nlen) += value(CatchNatLen(i)(n)(1,nlen));
+       		}
+       		
+		}
+	}
+			dvector pl(1,nlen);
+       		pl.initialize();
+      
+    
+		pl = value((tempcl(1,nlen))/(sum(tempcl(1,nlen))))+0.000001;			
+		//pa = value((tot_comm_obsCatage(ii)(sage,nage))/(sum(tot_comm_obsCatage(ii)(sage,nage))));			
+		
+		comm_obsCatLen(ii)(1,nlen) = rmvlogistic(pl,tau_l,seed+ii);	
+		totcatchLen(ii) = 	sum(tempcl(1,nlen));	
+		//UtLen(ii) = totcatchLen(ii)/tB((ii-syr+1)*tmon-(nmon-smon));
+		
+
+
+FUNCTION void calc_wt_comm(const int& ii)
+   
+
+   	Watage_comm(ii)(sage,nage) = yYieldtotalage(ii)/yYieldtotal(ii);
    	
    	
    
-	//FUNCTION  void survey_data(const int& ii)
-	//		
-	//		int ind_sv;
-	//		ind_sv = (surv_yrs(ii)-syr+1)*(tmon)-(nmon-surv_mon);
-	//		
-	//		//if(indmonth(ind_sv)==surv_mon)
-	//       	//{	
-	//       		survB(ii)=sum(VulBage(ind_sv)(sage,nage))* mfexp(epsilon(ii));
-	//       		
-	//
-	//       		dvector pp(sage,nage);
-	//       		pp.initialize();
-	//       		for(int n=1;n<=fisharea;n++)
-	//			{    
-	//				pp += value(CatchNatAge(ind_sv)(n)(sage,nage)); 			
-	//				//pp += value((CatchNatAge(ind_sv)(n)(sage,nage))/(sum(CatchNatAge(ind_sv)(n)(sage,nage))+0.01))+0.000001;
-	//			}	
-	//			dvector ppp(nage,sage);
-	//       		ppp.initialize();
-	//       		ppp = ((pp)/(sum(pp)+0.01))+0.000001;
-	//			surv_obsCatage(ii)(sage,nage) = rmvlogistic(ppp,tau_survey,seed+ii);
-       	//}	
+FUNCTION  void survey_data(const int& ii)
+			
+			int ind_sv;
+			ind_sv = (surv_yrs(ii)-syr+1)*(tmon)-(nmon-surv_mon);
+			
+			if(indmonth(ind_sv)==surv_mon)
+	       	{	
+	       		survB(ii)=sum(VulBage(ind_sv)(sage,nage))* mfexp(epsilon(ii));
+	       		
+	
+	       		dvector pp(sage,nage);
+	       		pp.initialize();
+	       		for(int g=1;g<=ngroup;g++)
+				{    
+					//pp += value(CatchNatAge(ind_sv)(n)(sage,nage)); 			
+					pp +=  value(Nage(g)(ind_sv)(sage,nage));
+					//pp += value((CatchNatAge(ind_sv)(n)(sage,nage))/(sum(CatchNatAge(ind_sv)(n)(sage,nage))+0.01))+0.000001;
+				}	
+				dvector ppp(nage,sage);
+	       		ppp.initialize();
+	       		ppp = (pp)/(sum(pp));
+				surv_obsCatage(ii)(sage,nage) = rmvlogistic(ppp,tau_survey,seed+ii);
+       		}	
 	
 			
     //cout<<"Ok after survey_data"<< endl;
@@ -1229,69 +1232,67 @@ FUNCTION dvar_vector calcmaxpos(const dvariable& expwx)
     //cout<<"Ok after survey_dataLen"<< endl;
 
 
-	//FUNCTION void calc_length_comps(const int& ii)
+FUNCTION void calc_length_comps(const int& mi)
 	
-	//int g,a, b ;
+	int g,a, b ;
 
 	//cout<<"ii is "<<ii<<endl;
 
-	//for(int g=1;g<=ngroup;g++)
-	//{
-	//	dvector ag(sage,nage);
-		//ag = ((indmonth(ii)-1)/tmon);
-		//ag += age;
-	//	ag = age;
-	//	Lage(g)(indmonth(ii))(sage-1) = ii;
-	//	Lage(g)(indmonth(ii))(sage-1) = g;
-	//	Lage(g)(indmonth(ii))(sage,nage) = Linf(g)*(1.- exp(-vbk*(ag-to)));
-	//	Wage(g)(indmonth(ii))(sage,nage) = awt*pow(Lage(g)(indmonth(ii))(sage,nage),bwt);
+	for(int g=1;g<=ngroup;g++)
+	{
+		dvector ag(sage,nage);
+		ag = ((mi-1)/tmon);
+		ag += age;
+		ag = age;
+		Lage(g)(mi)(sage-1) = mi;
+		Lage(g)(mi)(sage-1) = g;
+		Lage(g)(mi)(sage,nage) = Linf(g)*(1.- exp(-vbk*(ag-to)));
+		Wage(g)(mi)(sage,nage) = awt*pow(Lage(g)(mi)(sage,nage),bwt);
 
 		
-		//Lstd(g)(ii)(sage,nage) = Lage(g)(ii)(sage,nage)*cvl;  		  //std for length at age
+		Lstd(g)(mi)(sage,nage) = Lage(g)(mi)(sage,nage)*cvl;  		  //std for length at age
 
 
+		dvar_vector z1(1,nlen); 				// intermediate steps for calculating proportion of age at length
+		dvar_vector z2(1,nlen); 				// intermediate steps for calculating proportion of age at length
+		dvar_vector std(sage,nage); 					// std for length at age curve
 
+		std = Lage(g)(mi)(sage,nage)*cvl;
 
-		//dvar_vector z1(1,nlen); 				// intermediate steps for calculating proportion of age at length
-		//dvar_vector z2(1,nlen); 				// intermediate steps for calculating proportion of age at length
-		//dvar_vector std(sage,nage); 					// std for length at age curve
+		 //Calculate proportion of length at age class
 
-		//std = Lage(g)(ii)(sage,nage)*cvl;
+		cout<<"std "<< endl<< std<<endl;
+		cout<<"Lage(g)(ii)(sage,nage) "<< endl<< Lage(g)(mi)(sage,nage)<<endl;
 
-		// Calculate proportion of length at age class
-
-		//cout<<"std "<< endl<< std<<endl;
-		//cout<<"Lage(g)(ii)(sage,nage) "<< endl<< Lage(g)(ii)(sage,nage)<<endl;
-
- 		//for( a = sage; a <= nage; a++ )
-		//{
-		//	z1 = (( len - lenstp * 0.5 )-Lage(g)(ii)(a))/std( a );
-		//	z2 = (( len + lenstp * 0.5 )-Lage(g)(ii)(a))/std( a );
+ 		for( a = sage; a <= nage; a++ )
+		{
+			z1 = (( len - lenstp * 0.5 )-Lage(g)(mi)(a))/std( a );
+			z2 = (( len + lenstp * 0.5 )-Lage(g)(mi)(a))/std( a );
 			
-			//cout<<"lenstp "<< endl<< lenstp<<endl;
-			//cout<<"len "<< endl<< len<<endl;
+		cout<<"lenstp "<< endl<< lenstp<<endl;
+		cout<<"len "<< endl<< len<<endl;
 			
 
-			//cout<<"z1 "<< endl<< z1<<endl;
-			//cout<<"z2 "<< endl<< z2<<endl;
+		cout<<"z1 "<< endl<< z1<<endl;
+		cout<<"z2 "<< endl<< z2<<endl;
 
-			//for( b=1; b<= nlen; b++ )
-			//{
-			//
-			//	P_la(g)(indmonth(ii))( b )( a )=cumd_norm( z2( b ))-cumd_norm( z1( b )); // calculates the proportion of a given age given your length
-			//
-			//}
-		//}
+		for( b=1; b<= nlen; b++ )
+		{
+		
+			P_la(g)(mi)( b )( a )=cumd_norm( z2( b ))-cumd_norm( z1( b )); // calculates the proportion of a given age given your length
+		
+		}
+		}
 
 		
 	
-		//wa(sage,nage) += Wage(g)(1)(sage,nage)*prop_ng(g);
-	//	wa(sage,nage) = Wage(1)(1)(sage,nage);
+		wa(sage,nage) += Wage(g)(1)(sage,nage)*prop_ng(g);
+		//	wa(sage,nage) = Wage(1)(1)(sage,nage);
 
 
 
 		
-	//}
+	}
 	
 	
 
@@ -1360,190 +1361,203 @@ FUNCTION dvar_vector calcmaxpos(const dvariable& expwx)
 	//	//cout<<"Ok after calculating SPR"<<endl;
 	//
 	//
-	//FUNCTION void run_stock_assessment(const int& ii,const int& svy)
-	//		
-	//	cout<<"running stock assessment"<<endl;
-	//
-	//	switch (satype) {
-	//            case 1:  
-	//            //to be deprecated
-	//            //output_pin_SA();
-	//            output_datSA(ii,svy);
-	//            //output_ctlSA(ii);
-	//
-	//            #if defined __APPLE__ || defined __linux
-	//            // cout<<m_est_fmsy<<endl;
-	//            
-	//            system("cd ../../stock_assessment/ && ./lagrangian_SA");
-	//
-	//            #endif
-	//
-	//            #if defined _WIN32 || defined _WIN64
-	//
-	//            system("lagrangian_SS.exe");
-	//
-	//            #endif
-	//
-	//            calc_catlim();
-	//			read_catlim();
-	//
-	//			system("cd ../../../R/read_mse && make");
-	//
-	//            break;
-	//
-	//            case 2:
-	//
-	//            write_iscam_data_file(ii,svy);
-	//            write_iscam_ctl_file(ii,svy);
-	//
-	//
-	//            #if defined __APPLE__ || defined __linux
-	//            // cout<<m_est_fmsy<<endl;
-	//            system("cd /Users/catarinawor/Documents/iSCAM/examples/hakelag/DATA && make clean && make");// && "exec make");
-	//           
-	//            #endif
-	//
-	//            calc_catlim();
-	//			read_catlim();
-	//			
-	//
-	//			system("cd ../../../R/read_mse && make readRdattwo");
-	//
-	//
-	//            //need to figure out how to write the winows version of this
-	//            //#if defined _WIN32 || defined _WIN64
-	//
-	//            //system("lagrangian_SS.exe");
-	//
-	//            //#endif
-	//
-	//
-	//
-	//             break;
-	//
-	//         }
+FUNCTION void run_stock_assessment(const int& ii,const int& svy)
+			
+		cout<<"running stock assessment"<<endl;
+	
+		switch (satype) {
+	            case 1:  
+	            //to be deprecated
+	            //output_pin_SA();
+	            //output_datSA(ii,svy);
+	            //output_ctlSA(ii);
+	
+	            //#if defined __APPLE__ || defined __linux
+	            // cout<<m_est_fmsy<<endl;
+	            
+	            //system("cd ../../stock_assessment/ && ./lagrangian_SA");
+	
+	            //#endif
+	
+	            //#if defined _WIN32 || defined _WIN64
+	
+	            //system("lagrangian_SS.exe");
+	
+	            //#endif
+	
+	            calc_catlim();
+				read_catlim();
+	
+				//system("cd ../../../R/read_mse && make");
+	
+	            break;
+	
+	            case 2:
+	
+	            //write_iscam_data_file(ii,svy);
+	            //write_iscam_ctl_file(ii,svy);
+	
+	
+	            //#if defined __APPLE__ || defined __linux
+	            // cout<<m_est_fmsy<<endl;
+	            //system("cd /Users/catarinawor/Documents/iSCAM/examples/hakelag/DATA && make clean && make");// && "exec make");
+	           
+	            //#endif
+	
+	            calc_catlim();
+				read_catlim();
+				
+	
+				//system("cd ../../../R/read_mse && make readRdattwo");
+	
+	
+	            //need to figure out how to write the winows version of this
+	            //#if defined _WIN32 || defined _WIN64
+	
+	            //system("lagrangian_SS.exe");
+	
+	            //#endif
+	
+	
+	
+	             break;
+	
+	         }
 
 
 
-	//FUNCTION calc_catlim
-	//
-	//	
-	//	//variables
-	//
-	//	double fspr_SA;
-	//	dvar_vector seltotal_SA(sage,nage);
-	//	dvar_vector yNage_SA(sage,nage);
-	//	double Bo_SA;
-	//	double ytB_SA;
-	//	
-	//
-	//	cifstream ifs_cip("../TAC_input.dat");
-	//	
-	//    ifs_cip >> fspr_SA;
-	//    ifs_cip >> seltotal_SA;
-	//    ifs_cip >> yNage_SA;
-	//    ifs_cip >> Bo_SA;
-	//    ifs_cip >> ytB_SA;
-	//
-	//    
-	//    //calculate new catlim
-	//	double BBo;
-	//	dvariable TAC;
-	//	//dvector TACnation(1,nations);
-	//
-	//
-	//	BBo = ytB_SA/Bo_SA;
-	//
-	//
-	//	if(BBo>0.4){
-	//
-	//		TAC = elem_prod(elem_div(fspr_SA*seltotal_SA,fspr_SA*seltotal_SA+m),elem_prod(yNage_SA,(1-mfexp(-fspr_SA*seltotal_SA-m))))*wa; 
-	//		
-	//
-	//	}else{
-	//		
-	//		if(BBo>0.1){
-	//
-	//			double y;
-	//
-	//			y = (BBo-0.1)*100/(0.4-0.1);
-	//
-	//			TAC = y*elem_prod(elem_div(fspr_SA*seltotal_SA,fspr_SA*seltotal_SA+m),elem_prod(yNage_SA,(1-mfexp(-fspr_SA*seltotal_SA-m))))*wa; 
-	//
-	//		}else{
-	//
-	//			TAC = 0;
-	//
-	//		}
-	//	}
-	//
-	//	catlim = TAC * nationTACprop;
-	//	cout<< "catlim" << endl << catlim<< endl;
-	//	//cout<< "seltotal_SA" << endl << seltotal_SA<< endl;
-	//
-	//	ofstream afs("catlim.txt");
-	//	afs<<"catlim" << endl << catlim <<endl;
+FUNCTION calc_catlim
+
+	
+	//variables
+
+	double fspr_SA;
+	dvar_vector seltotal_SA(sage,nage);
+	dvar_vector yNage_SA(sage,nage);
+	double Bo_SA;
+	double ytB_SA;
+	
+
+	cifstream ifs_cip("../TAC_input.dat");
+	
+    ifs_cip >> fspr_SA;
+    ifs_cip >> seltotal_SA;
+    ifs_cip >> yNage_SA;
+    ifs_cip >> Bo_SA;
+    ifs_cip >> ytB_SA;
+
+    
+    //calculate new catlim
+	double BBo;
+	dvariable TAC;
+	//dvector TACnation(1,nations);
+
+
+	BBo = ytB_SA/Bo_SA;
+
+
+	if(BBo>0.4){
+
+		TAC = elem_prod(elem_div(fspr_SA*seltotal_SA,fspr_SA*seltotal_SA+m),elem_prod(yNage_SA,(1-mfexp(-fspr_SA*seltotal_SA-m))))*wa; 
+		
+
+	}else{
+		
+		if(BBo>0.1){
+
+			double y;
+
+			y = (BBo-0.1)*100/(0.4-0.1);
+
+			TAC = y*elem_prod(elem_div(fspr_SA*seltotal_SA,fspr_SA*seltotal_SA+m),elem_prod(yNage_SA,(1-mfexp(-fspr_SA*seltotal_SA-m))))*wa; 
+
+		}else{
+
+			TAC = 0;
+
+		}
+	}
+
+	catlim = TAC * nationTACprop;
+	cout<< "catlim" << endl << catlim<< endl;
+	//cout<< "seltotal_SA" << endl << seltotal_SA<< endl;
+
+	ofstream afs("catlim.txt");
+	afs<<"catlim" << endl << catlim <<endl;
 
 
 
 
 
-	//FUNCTION run_projections
-	//
-	//	int svyr;
-	//	svyr=1;
-	//
-	//	
-	//	for(int ib=syr;ib<=nyr;ib++){
-	//		if(ib==surv_yrs(svyr)) svyr++;
-	//	}
-	//
-	//	catage_comm(nyr);
-	//	run_stock_assessment(nyr,svyr-1);
-	//
-	//
-	//	for(int ii=ststp+1;ii<=ntstp;ii++)
-	//	{ 
-	//
-	//		calc_numbers_at_age(ii,wt(indyr(ii)));
-	//		//maxPos.initialize();		
-	//		//calcmaxpos();
-	//
-	//		cout<<"chegou aqui? "<<endl;
-	//		calc_position(ii);
-	//	
-	//		calc_effarea(ii,ststp,catlim);
-	//
-	//		calc_catage(ii);
-	//		//calc_catlen(ii);
-	//		clean_catage(ii);
-	//
-	//		
-	//
-	//		if(indmonth(ii)==nmon){
-	//			//survey calculations
-	//
-	//			if(surv_yrs(svyr)==indyr(ii)){
-	//				survey_data(svyr);
-	//				svyr +=1;
-	//			}
-	//			
-	//			catage_comm(indyr(ii));
-	//			catlen_comm(indyr(ii));
-	//			calc_wt_comm(indyr(ii));
-	//			run_stock_assessment(indyr(ii),svyr-1);
-	//
-	//			cout<<"e aqui? "<<endl;
-	//			exit(1);
-	//		}
-	//		
-	//
-	//		
-	//		
-	//	}
-	//
-	//	calc_spr();
+FUNCTION void run_projections(const int& pi,const int& svi)
 
+	int svyr;
+	svyr=svi;
+
+	int p;
+	p=pi;
+
+	
+
+	
+	for(int ib=syr;ib<=nyr;ib++){
+		if(ib==surv_yrs(svyr)) svyr++;
+	}
+
+	//catage_comm(nyr);
+	run_stock_assessment(nyr,svyr-1);
+
+
+	for(int ii=ntstp+1;ii<=ptstp;ii++)
+	{ 
+
+		calc_numbers_at_age(ii,wt(indyr(ii)));
+		maxPos.initialize();		
+		calcmaxpos(wx(indyr(ii)));
+
+		cout<<"chegou aqui? "<<endl;
+		calc_position(ii);
+	
+		calc_effarea(ii,ntstp,catlim);
+
+		calc_catage(ii);
+		//calc_catlen(ii);
+		
+		for(int n=1;n<=fisharea;n++)
+		{					
+			if(TotEffmonth(n)(indmonth(ii))>0)
+       		{
+					clean_catage(ii,p,n);
+					p++;
+       		}	
+		}
+		
+
+		
+
+		if(indmonth(ii)==nmon){
+			//survey calculations
+
+			if(surv_yrs(svyr)==indyr(ii)){
+				//survey_data(svyr);
+				svyr +=1;
+			}
+			
+			catage_comm(indyr(ii));
+			catlen_comm(indyr(ii));
+			calc_wt_comm(indyr(ii));
+			run_stock_assessment(indyr(ii),svyr-1);
+
+			cout<<"e aqui? "<<endl;
+			exit(1);
+		}
+		
+
+		
+		
+	}
+
+	//calc_spr();
 
 
 
@@ -1554,12 +1568,12 @@ FUNCTION dvar_vector calcmaxpos(const dvariable& expwx)
    
 
 	
-//FUNCTION read_catlim
-//
-//	cifstream ifs_clm("../TAC_input.dat");
-//
-//	// Terminal year of projection.
-//    ifs_clm >> catlim;
+FUNCTION read_catlim
+
+	cifstream ifs_clm("../TAC_input.dat");
+
+	// Terminal year of projection.
+    ifs_clm >> catlim;
     
 
 
@@ -1581,7 +1595,7 @@ FUNCTION output_true
 	ofs<<"syr" << endl << syr <<endl;
 	ofs<<"nyr" << endl << nyr <<endl;
 	ofs<<"rep_yr" << endl << rep_yr <<endl;
-	//ofs<<"proj_yr" << endl << proj_yr <<endl;
+	ofs<<"proj_yr" << endl << proj_yr <<endl;
 	ofs<<"sage" << endl << sage <<endl;
 	ofs<<"nage" << endl << nage <<endl;
 	ofs<<"ngroup" << endl << ngroup <<endl;
@@ -1603,22 +1617,20 @@ FUNCTION output_true
 	//ofs<<"PosX" << endl << PosX <<endl;	
 	ofs<<"wa" << endl << wa <<endl;	
 	//ofs<<"ywa" << endl << ywa <<endl;	
-	//ofs<<"Wage" << endl << Wage <<endl;	
-	//ofs<<"Lage" << endl << Lage <<endl;	
+	ofs<<"Wage" << endl << Wage <<endl;	
+	ofs<<"Lage" << endl << Lage <<endl;	
 	ofs<<"SB" << endl << SB <<endl;
-	//ofs<<"tB" << endl << tB <<endl;
-	//ofs<<"Ut" << endl << Ut <<endl;
-	//ofs<<"ytB" << endl << ytB <<endl;
-	//ofs<<"survB" << endl << survB <<endl;
+	ofs<<"tB" << endl << tB <<endl;
+	ofs<<"Ut" << endl << Ut <<endl;
+	ofs<<"ytB" << endl << ytB <<endl;
+	ofs<<"survB" << endl << survB <<endl;
 	ofs<<"VulB" << endl << VulB <<endl;
 	ofs<<"Nage" << endl << Nage <<endl;
-	//ofs<<"VBarea" << endl << VBarea <<endl;
 	ofs<<"Effarea"<< endl << Effarea <<endl;
-	//ofs<<"comm_obsCatage"<< endl << comm_obsCatage <<endl;
-	//ofs<<"surv_obsCatage"<< endl << surv_obsCatage <<endl;
+	ofs<<"comm_obsCatage"<< endl << comm_obsCatage <<endl;
+	ofs<<"surv_obsCatage"<< endl << surv_obsCatage <<endl;
 	ofs<<"totVBnation" << endl << totVBnation <<endl;
-	//ofs<<"CatchNatAge"<< endl << CatchNatAge<<endl;
-	//ofs<<"CatchAreaAge"<< endl << CatchAreaAge<<endl;
+	ofs<<"CatchNatAge"<< endl << CatchNatAge<<endl;
 	ofs<<"indyr"<< endl << indyr<<endl;
 	ofs<<"indmonth"<< endl << indmonth<<endl;
 	ofs<<"indnatarea"<< endl << indnatarea<<endl;
@@ -1626,8 +1638,8 @@ FUNCTION output_true
 	//ofs<<"selfisharea"<< endl << selfisharea <<endl;
 	//ofs<<"selnation"<< endl << selnation <<endl;
 	//ofs<<"seltotal"<< endl << seltotal <<endl;
-	//ofs<<"yCatchtotalage"<< endl << yCatchtotalage <<endl;
-	//ofs<<"yCatchNatAge"<< endl << yCatchNatAge <<endl;
+	ofs<<"yCatchtotalage"<< endl << yCatchtotalage <<endl;
+	ofs<<"yYieldNat"<< endl << yYieldNat <<endl;
 	//ofs<<"yCatchStateAge"<< endl << yCatchStateAge <<endl;
 	//ofs<<"yNage"<< endl << yNage <<endl;
 	//ofs<<"Fatage"<< endl << Fatage <<endl;
@@ -1719,7 +1731,7 @@ FUNCTION output_dat
 	afs<<"# Total effort by country and month " << endl << TotEffmonth <<endl;
 	afs<<"# effPwr"<< endl << effPwr <<endl;	
 	afs<<"# dMinP " << endl << 0.1e-13<<endl;
-	afs<<"# tstp month area catage " << endl << obsCatchNatAge <<endl;	
+	afs<<"# tstp month area catage " << endl << obsCatchFGAge <<endl;	
 	afs<<"# yYieldtotal"<< endl << yYieldtotal(rep_yr+1,nyr) <<endl;
 	afs<<"# eof " << endl << 999 <<endl;
 
@@ -1757,7 +1769,7 @@ FUNCTION output_gtgdat
 	afs<<"# Total effort by country and month " << endl << TotEffmonth <<endl;
 	afs<<"# effPwr"<< endl << effPwr <<endl;	
 	afs<<"# dMinP " << endl << 0.1e-13<<endl;
-	afs<<"# tstp month area catage " << endl << obsCatchNatAge <<endl;	
+	afs<<"# tstp month area catage " << endl << obsCatchFGAge <<endl;	
 	afs<<"# yYieldtotal"<< endl << yYieldtotal(rep_yr+1,nyr) <<endl;
 	afs<<"# eof " << endl << 999 <<endl;
 
@@ -2122,7 +2134,6 @@ FUNCTION output_gtgdat
 
 REPORT_SECTION
 
-	//REPORT(VBarea);
 	//REPORT(Effarea);
 
 
