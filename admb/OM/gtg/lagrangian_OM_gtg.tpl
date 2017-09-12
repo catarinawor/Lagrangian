@@ -248,7 +248,7 @@ DATA_SECTION
 		wx.fill_randn(rng);
 		wx*=0.08;
 		epsilon.fill_randn(rng);
-		epsilon*=0.2;
+		epsilon*=0.1;
 
 	END_CALCS
 
@@ -263,7 +263,7 @@ DATA_SECTION
 
 		int tot_pcat;
 
-		imatrix pmat(1,fisharea,1,ntstp);
+		imatrix pmat(1,fisharea,1,ptstp);
 		matrix TotEffyear(1,fisharea,syr,nyr);
 		//matrix TotEffyear_rep(1,fisharea,rep_yr+1,proj_yr);
 
@@ -289,7 +289,7 @@ DATA_SECTION
        		for(int n=1;n<=fisharea;n++)
        		{
        			//TotEffyear(n)(syr,nyr) = Fmult* pTotEffyear(n)(syr,nyr);
-       			TotEffyear(n)(syr,nyr) = elem_prod(Fmult* exp(vt(syr,nyr)-(0.1*0.1/2)), pTotEffyear(n)(syr,nyr));
+       			TotEffyear(n)(syr,nyr) =Fmult* pTotEffyear(n)(syr,nyr); //* exp(vt(syr,nyr))
        		}
        			
    			
@@ -335,7 +335,7 @@ DATA_SECTION
        			//	TotEffyear_rep(n)(ia)= TotEffyear(n)(nyr);
        			//}
 
-       			for(int i=nrep_yr*tmon+1;i<=ntstp;i++)
+       			for(int i=nrep_yr*tmon+1;i<=ptstp;i++)
        			{
        				if(TotEffmonth(n)(indmonth(i))>0.0)
        				{
@@ -358,7 +358,7 @@ DATA_SECTION
 			//cout<<"Xini is "<<Xini<<endl;	
 
 			ofstream nfs("catlim.txt");
-			nfs<<"catlim" << endl << "10000000 10000000" <<endl;
+			nfs<<"#catlim" << endl << "10000000 10000000" <<endl;
 			
        			
 	END_CALCS
@@ -379,6 +379,7 @@ PARAMETER_SECTION
 	number Bo;
 	number beta;
 
+
 	number m_tsp;
 	
 	vector lxo(sage,nage);
@@ -397,10 +398,10 @@ PARAMETER_SECTION
 	vector ytB(rep_yr+1,proj_yr);
 	vector Yieldtotal(1,ptstp);
 	vector totcatchLen(rep_yr+1,proj_yr);
-	vector Ut(rep_yr+1,nyr);
+	vector Ut(rep_yr+1,proj_yr);
 	//vector UtLen(rep_yr+1,proj_yr);
-	//vector spr(syr,proj_yr);
-	//vector phie(syr,proj_yr);
+	vector spr(syr,proj_yr);
+	vector phie(syr,proj_yr);
 
 	vector catlim(1,nations);
 
@@ -411,35 +412,34 @@ PARAMETER_SECTION
  	//matrix meanPosX(1,ntstp,sage-1,nage);
  	matrix tVBarea(1,ptstp,sarea,narea);
 	matrix totVBnation(1,ptstp,1,nations);
-	matrix VulBage(1,ntstp,sage,nage);
+	matrix VulBage(1,ptstp,sage,nage);
 	matrix Effarea(1,ptstp,sarea,narea);
- 	//matrix ywa(syr,proj_yr,sage,nage);
+ 	matrix ywa(syr,proj_yr,sage,nage);
 
 
 	matrix yYieldtotalage(syr,proj_yr,sage,nage);
  	matrix Watage_comm(rep_yr+1,proj_yr,sage,nage);
  	//matrix tot_comm_obsCatage(rep_yr+1,proj_yr,sage,nage);
- 	//matrix tot_comm_obsCatLen(rep_yr+1,proj_yr,1,nlen);
  	matrix comm_obsCatage(rep_yr+1,proj_yr,sage,nage);
  	matrix comm_obsCatLen(rep_yr+1,proj_yr,1,nlen);
  	matrix surv_obsCatage(1,surv_nobs,sage,nage);
  	//matrix surv_obsCatLen(1,surv_nobs,1,nlen);
- 	//matrix yNage(syr,proj_yr,sage,nage);
- 	//matrix yFatage(syr,proj_yr,sage,nage);
- 	//matrix seltotal(syr,proj_yr,sage,nage);
+ 	matrix yNage(syr,proj_yr,sage,nage);
+ 	matrix yFatage(syr,proj_yr,sage,nage);
+ 	matrix seltotal(syr,proj_yr,sage,nage);
  	matrix yCatchtotalage(syr,proj_yr,sage,nage);
  	matrix yCatchtotalLen(syr,proj_yr,1,nlen);
- 	matrix yYieldNat(syr,proj_yr,1,fisharea);
+ 	matrix yYieldNat(syr,proj_yr,1,nations);
 
- 	//3darray selfisharea(syr,proj_yr,1,fisharea,sage-2,nage);
- 	//3darray selnation(syr,proj_yr,1,nations,sage-2,nage); 	
+ 	3darray selfisharea(syr,proj_yr,1,fisharea,sage-2,nage);
+ 	3darray selnation(syr,proj_yr,1,nations,sage-2,nage); 	
  		
 	3darray Nage(1,ngroup,1,ptstp,sage-2,nage); 
  	3darray VulB(1,ngroup,1,ptstp,sage-2,nage);
  	3darray Lage(1,ngroup,smon,nmon,sage-2,nage); 
  	3darray Wage(1,ngroup,smon,nmon,sage-2,nage); 
  	//3darray CatageG(1,ngroup,1,ntstp,sage,nage);
- 	3darray Lstd(1,ngroup,1,ntstp,sage,nage); 
+ 	//3darray Lstd(1,ngroup,1,ntstp,sage,nage); 
  	
 	
  	
@@ -448,35 +448,43 @@ PARAMETER_SECTION
  	
  	3darray PosX(1,ngroup,smon,nmon,sage-1,nage);
  	//3darray NAreaLen(1,ntstp,sarea,narea,1,nlen);
- 	3darray CatchAreaLen(1,ptstp,sarea,narea,1,nlen);
+ 	//3darray CatchAreaLen(1,ptstp,sarea,narea,1,nlen);
  	3darray CatchNatAge(1,ptstp,1,nations,sage-2,nage);
  	3darray CatchFGAge(1,ptstp,1,fisharea,sage-2,nage);
- 	3darray CatchNatLen(1,ptstp,1,fisharea,1-2,nlen);
+ 	3darray CatchNatLen(1,ptstp,1,nations,1-2,nlen);
+ 	3darray CatchFGLen(1,ptstp,1,fisharea,1-2,nlen);
  	//3darray EffNatAge(1,fisharea,1,ntstp,sage-2,nage);
  	// yYieldNatAge(syr,proj_yr,1,fisharea,sage-2,nage);
  	//3darray yCatchStateAge(syr,proj_yr,1,nations,sage-2,nage);
 
  	3darray yCatchNatLen(syr,proj_yr,1,nations,1-2,nlen);
  	3darray yCatchFGLen(syr,proj_yr,1,fisharea,1-2,nlen);
+ 	3darray yCatchNatAge(syr,proj_yr,1,nations,sage-2,nage);
+ 	3darray yCatchFGAge(syr,proj_yr,1,fisharea,sage-2,nage);
  	
  	3darray NAreaAgeG(1,n_rg,1,ptstp,sage-3,nage);
+ 	3darray NAreaLenG(1,n_rg,1,ptstp,1-3,nlen);
  	3darray CatchAreaAgeG(1,n_rg,1,ptstp,sage-3,nage);
+ 	3darray CatchAreaLenG(1,n_rg,1,ptstp,1-3,nlen);
  	3darray propVBarea(1,n_rg,1,ptstp,sage-3,nage);
- 	4darray P_la(1,ngroup,smon,nmon,1,nlen,sage,nage); 
+ 	4darray P_al(1,ngroup,smon,nmon,sage,nage,1-3,nlen); 
 
  	//buscar esse aqui
  	matrix obsCatchFGAge(1,tot_pcat,sage-3,nage);
 
 PRELIMINARY_CALCS_SECTION
 
+
 	read_catlim();
 	initialization();
 
-	incidence_functions();
 	calc_InitPos_gtg();
+	incidence_functions();
 
 	//cout<<"aqui??"<<endl;
+
 	calc_first_year();
+
 	move_grow_die();
 	
 	
@@ -492,7 +500,7 @@ PRELIMINARY_CALCS_SECTION
 
 	//save_OMrep();
 	
-	exit(1);
+	
 
 PROCEDURE_SECTION
 
@@ -531,8 +539,6 @@ FUNCTION calc_InitPos_gtg
 	dvector Xtemp(1,ngroup);
 
 	dvariable dif;
-
-
 
 	maxPos.initialize();
 	calcmaxpos(0.0);
@@ -584,6 +590,7 @@ FUNCTION calc_InitPos_gtg
 	cout<<"ok after calc_InitPos_gtg"<<endl;
 
 
+
 FUNCTION incidence_functions
 
 	
@@ -601,20 +608,23 @@ FUNCTION incidence_functions
 	kappa 	= 4*h/(1-h);
 	phiE	= elem_prod(lxo,fa)*wa;
 	So 		= kappa/phiE;
-	Bo 		= kappa/So*Ro;
+
+	Bo 		= phiE*Ro;
 	beta 	= (kappa-1)/Bo;
 
 	//cout<<"kappa "<<kappa<<endl;
 	//cout<<"phiE "<<phiE <<endl;
 	//cout<<"lxo "<<lxo <<endl;
 	//cout<<"wa "<<wa <<endl;
+	//cout<<"Wage(g)(1)(sage,nage) "<< Wage(1)(1)(sage,nage) <<endl;
+	
 
-	m_tsp = m/nmon;
+	m_tsp = m/tmon;
+
+	//cout<<"m_tsp"<<m_tsp<<endl;
 	za 	= m_tsp+va*fe;
 
-	
-	
-	//cout<<"Ok after incidence_functions"<<endl;  
+	cout<<"Ok after incidence_functions"<<endl;  
 
 FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt)
 
@@ -623,89 +633,105 @@ FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt)
 
 	//tnage.initialize();
 	
-	for(int g=1;g<=ngroup;g++)
-	{
-			Nage(g)(ii)(sage-2)=ii;
-			Nage(g)(ii)(sage-1)=g;	
+	
 			
 			
-			switch (indmonth(ii)){
-            	
-            	case 1:  
-            		
-            		Nage(g)(ii)(sage) =(So*SB(ii-nmon)/(1.+beta*SB(ii-nmon)))*mfexp(expwt*err)* prop_ng(g);//*1.0/dg;
+	switch (indmonth(ii)){
 
-            		for(int a = sage+1;a<nage;a++)
-            		{
-            		
-						propBarea.initialize();
+		
+        case 1:  
+
+
+            for(int g=1;g<=ngroup;g++)
+			{
+				Nage(g)(ii)(sage-2)=ii;
+				Nage(g)(ii)(sage-1)=g;	
+				
+            	Nage(g)(ii)(sage) =(So*SB(ii-nmon)/(1.+beta*SB(ii-nmon)))*mfexp(expwt*err)* prop_ng(g);//*1.0/dg;
+
+            	//cout<<"chegou aqui? "<<endl;
+
+            	for(int a = sage+1;a<nage;a++)
+            	{
+					propBarea.initialize();
 			
-						for(int rr =sarea; rr<=narea; rr++)
-						{		
-							propBarea(rr) = cnorm(areas(rr)+0.5,PosX(g)(nmon)(a-1),varPosg(a-1))-cnorm(areas(rr)-0.5,PosX(g)(nmon)(a-1),varPosg(a-1));	
-						}
-
-						dvariable psarea;
-						psarea=cnorm(areas(narea)+0.5,PosX(g)(nmon)(a-1),varPosg(a-1))-cnorm(areas(sarea)-0.5,PosX(g)(nmon)(a-1),varPosg(a-1));
-
-						
-						Nage(g)(ii)(a) = Nage(g)(ii-1)(a-1)*propBarea*mfexp(-(m_tsp+q*Effarea(ii-1)*va(a-1))) +
-								  Nage(g)(ii-1)(a-1)*(1.0-sum(propBarea))*mfexp(-(m_tsp));
+					for(int rr =sarea; rr<=narea; rr++)
+					{		
+						propBarea(rr) = cnorm(areas(rr)+0.5,PosX(g)(nmon)(a-1),varPosg(a-1))-cnorm(areas(rr)-0.5,PosX(g)(nmon)(a-1),varPosg(a-1));	
 					}
 
-				
-
-					Nage(g)(ii)(nage) = sum(elem_div(elem_prod((Nage(g)(ii-1)(nage-1)*propBarea),mfexp(-(m_tsp+q*Effarea(ii-1)*va(nage-1)))),
-            					(1.0-mfexp(-(m_tsp+q*Effarea(ii-1)*va(nage))))))+
-            					(Nage(g)(ii-1)(nage-1)*(1.0-sum(propBarea))*mfexp(-m_tsp))/(1.-mfexp(-m_tsp));
-            	
-            		//cout<<"propBarea)"<<sum(propBarea)<<endl;
-					
-
-            		//yNage(indyr(ii))(sage,nage) += Nage(g)(ii)(sage,nage);
-
-            		//cout<<"Nage(g)(ii)(sage) "<<Nage(g)(ii)(sage)<<endl;
-            		//exit(1);
-
-            	break;
-            	
-            	default: 
-
-            		for(int a = sage;a<=nage;a++)
-            		{
-            			propBarea.initialize();
-			
-						for(int rr =sarea; rr<=narea; rr++)
-						{		
-							propBarea(rr) = cnorm(areas(rr)+0.5,PosX(g)(indmonth(ii)-1)(a),varPosg(a))-cnorm(areas(rr)-0.5,PosX(g)(indmonth(ii)-1)(a),varPosg(a));	
-						}
-
-						//cout<<"aqui?? "<<endl
+					//dvariable psarea;
+					//psarea=cnorm(areas(narea)+0.5,PosX(g)(nmon)(a-1),varPosg(a-1))-cnorm(areas(sarea)-0.5,PosX(g)(nmon)(a-1),varPosg(a-1));
 						
-            			Nage(g)(ii)(a) = Nage(g)(ii-1)(a)*propBarea*mfexp(-(m_tsp+q*Effarea(ii-1)*va(a)))+
-            						  	 Nage(g)(ii-1)(a)*(1.0-sum(propBarea))*mfexp(-(m_tsp));
-            		}
+					Nage(g)(ii)(a) = Nage(g)(ii-1)(a-1)*propBarea*mfexp(-(m_tsp+q*Effarea(ii-1)*va(a-1))) +
+								     Nage(g)(ii-1)(a-1)*(1.0-sum(propBarea))*mfexp(-(m_tsp));
+				}
+				
+				Nage(g)(ii)(nage) = sum(elem_div(elem_prod((Nage(g)(ii-1)(nage-1)*propBarea),mfexp(-(m_tsp+q*Effarea(ii-1)*va(nage-1)))),
+            					    (1.0-mfexp(-(m_tsp+q*Effarea(ii-1)*va(nage))))))+
+            					    (Nage(g)(ii-1)(nage-1)*(1.0-sum(propBarea))*mfexp(-m_tsp))/(1.-mfexp(-m_tsp));
+            	
+            	//cout<<"propBarea)"<<sum(propBarea)<<endl;
+            	yNage(indyr(ii))(sage,nage) += Nage(g)(ii)(sage,nage);
+				
+            	VulB(g)(ii)(sage-2) = ii;
+        		VulB(g)(ii)(sage-1) = g;
+	
+				VulB(g)(ii)(sage,nage) = elem_prod(elem_prod(Nage(g)(ii)(sage,nage),va),Wage(g)(indmonth(ii))(sage,nage));
+				VulBage(ii)(sage,nage) += VulB(g)(ii)(sage,nage);
+
+				//tnage(sage,nage) += Nage(g)(ii)(sage,nage);
+				SB(ii) += elem_prod(Nage(g)(ii)(sage,nage),fa)*Wage(g)(indmonth(ii))(sage,nage)/2.0;
+				tB(ii) += Nage(g)(ii)(sage,nage)*Wage(g)(indmonth(ii))(sage,nage);
+					//totB(g)(ii)(sage,nage) = elem_prod(Nage(g)(ii)(sage,nage),wa(sage,nage));
+			
+
+			}	
+            calc_empirical_wa(indyr(ii));
+
+            //cout<<"Nage(g)(ii)(sage) "<<Nage(g)(ii)(sage)<<endl;
+            //exit(1);
+
+        break;
+            	
+        default: 
+
+            for(int g=1;g<=ngroup;g++)
+			{
+				Nage(g)(ii)(sage-2)=ii;
+				Nage(g)(ii)(sage-1)=g;	
+
+            	for(int a = sage;a<=nage;a++)
+            	{
+            		propBarea.initialize();
+			
+					for(int rr =sarea; rr<=narea; rr++)
+					{		
+						propBarea(rr) = cnorm(areas(rr)+0.5,PosX(g)(indmonth(ii)-1)(a),varPosg(a))-cnorm(areas(rr)-0.5,PosX(g)(indmonth(ii)-1)(a),varPosg(a));	
+					}
+
+					//cout<<"aqui?? "<<endl
+						
+            		Nage(g)(ii)(a) = Nage(g)(ii-1)(a)*propBarea*mfexp(-(m_tsp+q*Effarea(ii-1)*va(a)))+
+            						 Nage(g)(ii-1)(a)*(1.0-sum(propBarea))*mfexp(-(m_tsp));
+            	}
+
+            	VulB(g)(ii)(sage-2) = ii;
+        		VulB(g)(ii)(sage-1) = g;
+	
+				VulB(g)(ii)(sage,nage) = elem_prod(elem_prod(Nage(g)(ii)(sage,nage),va),Wage(g)(indmonth(ii))(sage,nage));
+				VulBage(ii)(sage,nage) += VulB(g)(ii)(sage,nage);
+
+				//tnage(sage,nage) += Nage(g)(ii)(sage,nage);
+				SB(ii) += elem_prod(Nage(g)(ii)(sage,nage),fa)*Wage(g)(indmonth(ii))(sage,nage)/2.0;
+				tB(ii) += Nage(g)(ii)(sage,nage)*Wage(g)(indmonth(ii))(sage,nage);
+				//totB(g)(ii)(sage,nage) = elem_prod(Nage(g)(ii)(sage,nage),wa(sage,nage));
 			            
-            	break;
         	}
 
-            	
-
-        	VulB(g)(ii)(sage-2) = ii;
-        	VulB(g)(ii)(sage-1) = g;
-	
-			VulB(g)(ii)(sage,nage) = elem_prod(elem_prod(Nage(g)(ii)(sage,nage),va),Wage(g)(indmonth(ii))(sage,nage));
-			VulBage(ii)(sage,nage) += VulB(g)(ii)(sage,nage);
-
-			//tnage(sage,nage) += Nage(g)(ii)(sage,nage);
-			SB(ii) += elem_prod(Nage(g)(ii)(sage,nage),fa)*Wage(g)(indmonth(ii))(sage,nage)/2.0;
-			tB(ii) += Nage(g)(ii)(sage,nage)*Wage(g)(indmonth(ii))(sage,nage);
-			//totB(g)(ii)(sage,nage) = elem_prod(Nage(g)(ii)(sage,nage),wa(sage,nage));
-			
-
-
+        break;    	
+        		
 	}
-	
 
 
 	//cout<<"Ok after calc_numbers_at_age"<<endl;
@@ -721,12 +747,16 @@ FUNCTION void calc_effarea(const int& ii,const int& ia, const dvar_vector& ctlim
        totVBnation(ii,n) = sum(pow(tVBarea(ii)(ntmp1(n),ntmp1(n+1)-1.0)+1e-30,fbeta));		 
 	}
 
+	//cout<<"ctlim "<<ctlim <<endl;
+
 	for(int r= sarea; r<=narea; r++)
 	{
 		if(yYieldNat(indyr(ii))(indnatarea(r))<ctlim(indnatarea(r))){
 			tmp1(r)= (pow(tVBarea(ii)(r)+1e-30,fbeta)/(totVBnation(ii)(indnatarea(r)))) * effPwr(r);
 			tmp2(r) = tmp1(r)*TotEffyear(indfisharea(r))(indyr(ia));
 			Effarea(ii)(r) = tmp2(r)*TotEffmonth(indfisharea(r))(indmonth(ii));
+			//cout<<"aqui?? " <<endl;
+			//cout<<"Effarea(ii)(r) "<<Effarea(ii)(r) <<endl;
 		}else{
 			Effarea(ii)(r) = 0.0;
 		}
@@ -743,7 +773,7 @@ FUNCTION void calc_position(const int& ii)
 	meanPosX(sage,nage) = minPos + (maxPos - minPos) * (0.5+0.5*sin(indmonth(ii)*PI/6. - mo*PI/6. -PI/2.)); 
 
 
-	int g, r, ig, b;
+	int g, r, ig, b,a;
 
 	for(ig=1;ig<=n_rg ;ig++)
 	{
@@ -755,7 +785,12 @@ FUNCTION void calc_position(const int& ii)
 		NAreaAgeG(ig)(ii)(sage-2)= g;
 		NAreaAgeG(ig)(ii)(sage-1)= r;
 
-		
+		NAreaLenG(ig)(ii)(1-3) = ii;
+		NAreaLenG(ig)(ii)(1-2) = g;
+		NAreaLenG(ig)(ii)(1-1) = r;
+
+
+
 		PosX(g)(indmonth(ii))(sage-1) = g;
 		PosX(g)(indmonth(ii))(sage,nage) =  Xini(g)*varPos+meanPosX(sage,nage);
 		
@@ -773,7 +808,23 @@ FUNCTION void calc_position(const int& ii)
 		//{
 		//		NAreaLen(ii)(r)(b) += elem_prod(Nage(g)(ii)(sage,nage),(cnorm(areas(r)+0.5,PosX(g)(ii),varPosg)-cnorm(areas(r)-0.5,PosX(g)(ii),varPosg)))*P_la(g)(indmonth(ii))(b)(sage,nage);
 		//}
+
+		for(a = sage; a<=nage;a++)
+		{	
+				//cout<<"sage "<<sage<<endl;
+				
+				//cout<<"NAreaAgeG(ig)(ii)(a) "<<NAreaAgeG(ig)(ii)(a)<<endl;
+				//cout<<"P_al*NAreaAgeG(ig)(ii)(a)"<<NAreaAgeG(ig)(ii)(a)*P_al(g)(indmonth(ii))( a )( 1,nlen )<<endl;
+				
+				NAreaLenG(ig)(ii)(1,nlen) += NAreaAgeG(ig)(ii)(a)*P_al(g)(indmonth(ii))( a )( 1,nlen );
+	
+		}
+
+
 	}
+
+
+
 
 	//cout<<"Ok after calc_position"<<endl;
 
@@ -781,10 +832,7 @@ FUNCTION void calc_position(const int& ii)
 FUNCTION void calc_catage(const int& ii)
 
 		int ig,r,g,n;
-		
-		
-
-		//There is a bug here
+			
 
 	for(int ig=1;ig<=n_rg;ig++)
 	{
@@ -805,18 +853,31 @@ FUNCTION void calc_catage(const int& ii)
 		CatchNatAge(ii)(indnatarea(r))(sage-2) = ii;
 		CatchNatAge(ii)(indnatarea(r))(sage-1) = indnatarea(r);
 
-		CatchFGAge(ii)(indnatarea(r))(sage-2) = ii;
-		CatchFGAge(ii)(indnatarea(r))(sage-1) = indfisharea(r);
+		CatchFGAge(ii)(indfisharea(r))(sage-2) = ii;
+		CatchFGAge(ii)(indfisharea(r))(sage-1) = indfisharea(r);
+
+		yCatchFGAge(indyr(ii))(indfisharea(r))(sage-2) = indyr(ii);
+		yCatchFGAge(indyr(ii))(indfisharea(r))(sage-1) = indfisharea(r);
+
+		yCatchNatAge(indyr(ii))(indnatarea(r))(sage-2) = indyr(ii);
+		yCatchNatAge(indyr(ii))(indnatarea(r))(sage-1) = indfisharea(r);
 
 
 
 		tmpc1 =elem_div(q*Effarea(ii)(r)*va,q*Effarea(ii)(r)*va+m_tsp);
 		tmpc2 =elem_prod(tmpc1,(1-mfexp(-(q*Effarea(ii)(r)*va+m_tsp))));
 
+		//cout<<" tmpc1 "<<tmpc1<<endl;
+		//cout<<" tmpc2 "<<tmpc2<<endl;
+		//cout<<" NAreaAgeG(ig)(comm_obsCatageii)(sage,nage) "<<NAreaAgeG(ig)(ii)(sage,nage)<<endl;
+
 		CatchAreaAgeG(ig)(ii)(sage,nage) = elem_prod(tmpc2,NAreaAgeG(ig)(ii)(sage,nage));		
 		CatchNatAge(ii)(indnatarea(r))(sage,nage) += CatchAreaAgeG(ig)(ii)(sage,nage);//+0.0000001;
 		CatchFGAge(ii)(indfisharea(r))(sage,nage) += CatchAreaAgeG(ig)(ii)(sage,nage);//+0.0000001;
+		yCatchFGAge(indyr(ii))(indfisharea(r))(sage,nage) += CatchAreaAgeG(ig)(ii)(sage,nage);//+0.0000001;
+		yCatchNatAge(indyr(ii))(indnatarea(r))(sage,nage) += CatchAreaAgeG(ig)(ii)(sage,nage);//+0.0000001;
 		
+
 		yYieldtotal(indyr(ii)) += CatchAreaAgeG(ig)(ii)(sage,nage)*Wage(g)(indmonth(ii))(sage,nage);
 		Yieldtotal(ii) += CatchAreaAgeG(ig)(ii)(sage,nage)*Wage(g)(indmonth(ii))(sage,nage);
 		yYieldtotalage(indyr(ii))(sage,nage) += elem_prod(CatchAreaAgeG(ig)(ii)(sage,nage),Wage(g)(indmonth(ii))(sage,nage));
@@ -826,7 +887,7 @@ FUNCTION void calc_catage(const int& ii)
 		
 	}
 
-		
+
 
 	for(int n=1;n<=nations;n++)
 	{
@@ -848,41 +909,50 @@ FUNCTION void calc_catage(const int& ii)
 
 FUNCTION void calc_catlen(const int& ii)
 	
-			int ig,r,g,b;
+			int ig,r,g,b,a;
 			
-			for(int ig=1;ig<=n_rg;ig++)
-			{
-				g = n_group(ig);
-				r = n_area(ig);
+	for(int ig=1;ig<=n_rg;ig++)
+	{
+				
+		g = n_group(ig);
+		r = n_area(ig);
 
+		
+		CatchAreaLenG(ig)(ii)(1-3)= ii;
+		CatchAreaLenG(ig)(ii)(1-2)= g;
+		CatchAreaLenG(ig)(ii)(1-1)= r;
+				
+		CatchNatLen(ii)(indnatarea(r))(-1) = ii;
+		CatchNatLen(ii)(indnatarea(r))(0) = indnatarea(r);
 
-				CatchNatLen(ii)(indfisharea(r))(-1) = ii;
-				CatchNatLen(ii)(indfisharea(r))(0) = indfisharea(r);
+		CatchFGLen(ii)(indfisharea(r))(-1) = ii;
+		CatchFGLen(ii)(indfisharea(r))(0) = indfisharea(r);
 				
-				for( b = 1; b<=nlen;b++)
-				{
-					
-						
-					CatchAreaLen(ii)(r)(b) += CatchAreaAgeG(ig)(ii)(sage,nage)*P_la(g)(indmonth(ii))( b )( sage,nage );
-					
-				}
+		for(a = sage; a<=nage;a++)
+		{
+								
+			CatchAreaLenG(ig)(ii)(1,nlen) += CatchAreaAgeG(ig)(ii)(a)*P_al(g)(indmonth(ii))( a )( 1,nlen );
+		}
+		
+		CatchNatLen(ii)(indnatarea(r))(1,nlen) += CatchAreaLenG(ig)(ii)(1,nlen);
+		CatchFGLen(ii)(indfisharea(r))(1,nlen) += CatchAreaLenG(ig)(ii)(1,nlen);
 				
-				CatchNatLen(ii)(indnatarea(r))(1,nlen) += CatchAreaLen(ii)(r)(1,nlen);
-				Catlen(ii)(1,nlen) += CatchAreaLen(ii)(r)(1,nlen);
+		Catlen(ii)(1,nlen) += CatchAreaLenG(ig)(ii)(1,nlen);
 				
-				yCatchFGLen(indyr(ii))(indfisharea(r))(-1) = indyr(ii);
-				yCatchFGLen(indyr(ii))(indfisharea(r))(0) = indfisharea(r);
-				yCatchFGLen(indyr(ii))(indfisharea(r))(1,nlen) += CatchAreaLen(ii)(r)(1,nlen);			
+		yCatchFGLen(indyr(ii))(indfisharea(r))(-1) = indyr(ii);
+		yCatchFGLen(indyr(ii))(indfisharea(r))(0) = indfisharea(r);
+		yCatchFGLen(indyr(ii))(indfisharea(r))(1,nlen) += CatchAreaLenG(ig)(ii)(1,nlen);			
 				
-				yCatchNatLen(indyr(ii))(indnatarea(r))(1-2) = indyr(ii);
-				yCatchNatLen(indyr(ii))(indnatarea(r))(1-1) = indnatarea(r);
-				yCatchNatLen(indyr(ii))(indnatarea(r))(1,nlen) += CatchAreaLen(ii)(r)(1,nlen);
+		yCatchNatLen(indyr(ii))(indnatarea(r))(1-2) = indyr(ii);
+		yCatchNatLen(indyr(ii))(indnatarea(r))(1-1) = indnatarea(r);
+		yCatchNatLen(indyr(ii))(indnatarea(r))(1,nlen) += CatchAreaLenG(ig)(ii)(1,nlen);
 				
-				yCatchtotalLen(indyr(ii))(1,nlen) += CatchAreaLen(ii)(r)(1,nlen);
+		yCatchtotalLen(indyr(ii))(1,nlen) += CatchAreaLenG(ig)(ii)(1,nlen);
 				
-			}
-	
-			//cout<<"Ok after calc_catLen"<<endl;
+	}
+
+			
+		//cout<<"Ok after calc_catLen"<<endl;
 
 
 	
@@ -890,6 +960,7 @@ FUNCTION initialization
 			
 	Nage.initialize();
  	VulB.initialize();
+ 	VulBage.initialize();
 
  	PosX.initialize();
  	yYieldtotal.initialize();
@@ -899,7 +970,9 @@ FUNCTION initialization
  	CatchNatAge.initialize();
  	CatchFGAge.initialize();
  	NAreaAgeG.initialize();
+ 	NAreaLenG.initialize();
  	CatchAreaAgeG.initialize();
+ 	CatchAreaLenG.initialize();
  	propVBarea.initialize();
 
  	
@@ -916,9 +989,11 @@ FUNCTION initialization
 
  	//CatageG.initialize();
  	//Catage.initialize();
- 	//yNage.initialize();
- 	//yFatage.initialize();
- 	CatchAreaLen.initialize();
+ 	yNage.initialize();
+ 	yFatage.initialize();
+ 	ywa.initialize();
+ 	wa.initialize();
+ 	//CatchAreaLen.initialize();
  	yCatchtotalage.initialize();
  	yCatchtotalLen.initialize();
  	yYieldNat.initialize();
@@ -934,13 +1009,21 @@ FUNCTION calc_first_year
  	//dvar_vector tnage(sage,nage);
  	//tnage.initialize();
 
+ 	//cout<<"batata??"<<endl;
+
  	for(int g=1;g<=ngroup;g++)
 	{
 		Nage(g)(1)(sage-1)=g;
 		Nage(g)(1)(sage-2)=1;
 	
 			
-		Nage(g)(1)(sage,nage) =(So*Bo/(1.+beta*Bo))* prop_ng(g);
+		Nage(g)(1)(sage) =(So*Bo/(1.+beta*Bo))* prop_ng(g);
+
+		//cout<< "Bo "<<Bo<<endl;
+		//cout<< "prop_ng(g) "<<prop_ng(g)<<endl;
+ 		
+		//cout<< "Nage(g)(1)(sage) "<<Nage(g)(1)(sage)<<endl;
+ 		//exit(1);
 
 
         for(int a=sage+1 ; a <= nage ; a++)
@@ -948,6 +1031,8 @@ FUNCTION calc_first_year
 			Nage(g)(1)(a) = Nage(g)(1)(a-1) * mfexp(-za(a-1));
 		}
 		Nage(g)(1)(nage) /= (1.-mfexp(-za(nage)));
+
+		//cout<< "Nage(g)(1)(sage,nage) "<<Nage(g)(1)(sage,nage)<<endl;
 
             		          	
         VulB(g)(1)(sage-2) = 1;
@@ -957,25 +1042,24 @@ FUNCTION calc_first_year
 		//tnage(sage,nage) += Nage(g)(1)(sage,nage);
 		SB(1) = elem_prod(Nage(g)(1)(sage,nage),fa)*Wage(g)(1)(sage,nage)/2.0;
 		tB(1) += Nage(g)(1)(sage,nage)*Wage(g)(1)(sage,nage);
+		yNage(indyr(1))(sage,nage) += Nage(g)(1)(sage,nage);
+		
 		
 	}
+	calc_empirical_wa(indyr(1));
 
-	
-
-
-	
-	
+	//cout<< "yNage(indyr(1))(sage,nage) "<<yNage(indyr(1))(sage,nage)<<endl;
 
 	
 	
 	calc_position(1);
 	
-	
+	//cout<<"catlim "<<catlim<<endl;
 	calc_effarea(1,1,catlim);
 	
-	//calc_catage(1);
-	//cout<<"chegou?"<<endl;
-	//calc_catlen(1);
+	calc_catage(1);
+	calc_catlen(1);
+	
 
 	cout<<"Ok after calc_first_year "<<endl;
  
@@ -998,18 +1082,18 @@ FUNCTION move_grow_die
 
 	for(int ie=2;ie<=ststp;ie++)
 	{
+		//cout<<"ie is "<<indyr(ie)<<" " << ie<<endl;
 		calcmaxpos(0.0);
 		//calcmaxpos(wx(syr));
 		calc_numbers_at_age(ie,0.0 );	//wt(indyr(ie))	
 		calc_position(ie);
 		calc_effarea(ie,ie, catlim);
-		//calc_catage(ie);
-		//calc_catlen(ie);
+		calc_catage(ie);
+		calc_catlen(ie);
 		
-		//cout<<"ie is "<<indyr(ie)<<endl;
 
 	}
-		
+	//exit(1);
 
 	int p;
  	p=1;
@@ -1017,12 +1101,11 @@ FUNCTION move_grow_die
  	int svyr;
  	svyr = 1;
 
-
-
 	for(int i=ststp+1;i<=ntstp;i++){
 
+
+		maxPos.initialize();
 		calcmaxpos(wx(indyr(i)));
-		//calcmaxpos(wx(syr));
 		calc_numbers_at_age(i,wt(indyr(i)));
 		
 		
@@ -1048,6 +1131,7 @@ FUNCTION move_grow_die
 
 
 		
+			cout<<"i is "<<indyr(i)<<" "<< i <<endl;
 
 		if(indmonth(i)==nmon){
 			//survey calculations
@@ -1058,13 +1142,16 @@ FUNCTION move_grow_die
 				svyr +=1;
 			}
 
-			catage_comm(indyr(i));	
+			catage_comm(indyr(i));
+
 			catlen_comm(indyr(i));
 			calc_wt_comm(indyr(i));
 		}
 	}
 
+	
 	run_projections(p,svyr);
+	 //exit(1);
 
 
 	cout<<"Ok after move_grow_die"<<endl;
@@ -1086,7 +1173,7 @@ FUNCTION void clean_catage(const int& ii,const int& pp,const int& nn)
 				
 				//cout<<" obsCatchNatAge(pp)(sage,nage) "<<obsCatchNatAge(pp)(sage,nage)<<endl;
 
-	cout<<"Ok after clean_catage"<<endl;
+	//cout<<"Ok after clean_catage"<<endl;
 	
 
 
@@ -1108,18 +1195,18 @@ FUNCTION dvar_vector calcmaxpos(const dvariable& expwx)
 FUNCTION void catage_comm(const int& ii)
 
 	dvector tmpca(sage,nage);
-      tmpca.initialize();
+    tmpca.initialize();
 	
 	for(int i=(ii-syr+1)*tmon-tmon+1;i<=(ii-syr+1)*tmon;i++)
 	{
 		
-		for(int n=1 ; n<=nations;n++)
+		for(int n=1 ; n<=fisharea;n++)
 		{
 							
 			if(TotEffmonth(n)(indmonth(i))>0)
        		{
 
-       			tmpca(sage,nage) += value(CatchNatAge(i)(n)(sage,nage));
+       			tmpca(sage,nage) += value(CatchFGAge(i)(n)(sage,nage));
        		}
        		
 		}
@@ -1127,23 +1214,25 @@ FUNCTION void catage_comm(const int& ii)
 			dvector pa(sage,nage);
        		pa.initialize();
       
-    
-		pa = value((tmpca)/(sum(tmpca)))+0.0000001;			
+    	cout<<"tmpca(sage,nage) "<<sum(tmpca(sage,nage))<<endl;
+		pa = ((tmpca)/(sum(tmpca)))+0.0000001;			
 		//pa = value((tot_comm_obsCatage(ii)(sage,nage))/(sum(tot_comm_obsCatage(ii)(sage,nage))));			
 		
 		comm_obsCatage(ii)(sage,nage) = rmvlogistic(pa,tau_c,seed+ii);	
 		Ut(ii) = Yieldtotal(ii)/tB((ii-syr+1)*tmon-(nmon-smon));
 		ytB(ii) = tB((ii-syr+1)*tmon-(nmon-smon));
+	
 		
 
 
 FUNCTION void catlen_comm(const int& ii)
 
-	
+	///olha esse
 	//for(int i=rep_yr*nmon+1;i<=ntstp;i++)
 	//{
 
 		dvector tempcl(1,nlen);
+		 tempcl.initialize();
 
 	for(int i=(ii-syr+1)*tmon-tmon+1;i<=(ii-syr+1)*tmon;i++)
 	{
@@ -1151,25 +1240,41 @@ FUNCTION void catlen_comm(const int& ii)
 		for(int n=1;n<=fisharea;n++)
 		{
 							
-			if(TotEffmonth(n)(indmonth(i))>0)
+			if(TotEffmonth(n)(indmonth(i))>0.0)
        		{
 
-       			tempcl(1,nlen) += value(CatchNatLen(i)(n)(1,nlen));
+       			tempcl(1,nlen) += value(CatchFGLen(i)(n)(1,nlen));
+       			//tempcl(1,nlen) += value(Catlen(i)(1,nlen));
+				
+				
+       		
+				//cout<<"CatchFGLen(i)("<<n<<")(1,nlen) "<<CatchFGLen(i)(n)(1,nlen)<<endl;
        		}
        		
 		}
 	}
+
+	cout<<"ii is  "<<ii<<endl;
+	cout<<"tempcl(1,nlen) "<< sum(tempcl(1,nlen))<<endl;
+
+
 			dvector pl(1,nlen);
        		pl.initialize();
       
+		totcatchLen(ii) = 	sum(tempcl(1,nlen));
     
-		pl = value((tempcl(1,nlen))/(sum(tempcl(1,nlen))))+0.000001;			
+		pl = ((tempcl(1,nlen))/(sum(tempcl(1,nlen))));			
 		//pa = value((tot_comm_obsCatage(ii)(sage,nage))/(sum(tot_comm_obsCatage(ii)(sage,nage))));			
 		
+		//cout<<"pl "<<pl<<endl;
+		//cout<<"totcatchLen(ii) "<<totcatchLen(ii)<<endl;
+
 		comm_obsCatLen(ii)(1,nlen) = rmvlogistic(pl,tau_l,seed+ii);	
-		totcatchLen(ii) = 	sum(tempcl(1,nlen));	
+		//comm_obsCatLen(ii)(1,nlen) = pl;		
+		comm_obsCatLen(ii)(1,nlen) *= totcatchLen(ii);	
 		//UtLen(ii) = totcatchLen(ii)/tB((ii-syr+1)*tmon-(nmon-smon));
-		
+		//cout<<"comm_obsCatLen"<<endl<<comm_obsCatLen<<endl;
+		//exit(1);
 
 
 FUNCTION void calc_wt_comm(const int& ii)
@@ -1237,20 +1342,31 @@ FUNCTION void calc_length_comps(const int& mi)
 	int g,a, b ;
 
 	//cout<<"ii is "<<ii<<endl;
+	wa.initialize();
+
 
 	for(int g=1;g<=ngroup;g++)
 	{
-		dvector ag(sage,nage);
-		ag = ((mi-1)/tmon);
-		ag += age;
-		ag = age;
-		Lage(g)(mi)(sage-1) = mi;
+		dvar_vector ag(sage,nage);
+		
+		ag.fill_seqadd(sage,1);
+		ag += ((mi-1)/12.);
+			
+		
+		//cout<< "mi is "<< ((mi-1)/12.)<< endl;
+		//cout<< "ag is "<< ag<< endl;
+		//ag = age;
+		Lage(g)(mi)(sage-2) = mi;
 		Lage(g)(mi)(sage-1) = g;
-		Lage(g)(mi)(sage,nage) = Linf(g)*(1.- exp(-vbk*(ag-to)));
+
+		Wage(g)(mi)(sage-2) = mi;
+		Wage(g)(mi)(sage-1) = g;
+
+		Lage(g)(mi)(sage,nage) = Linf(g)*(1.- mfexp(-vbk*(ag-to)));
 		Wage(g)(mi)(sage,nage) = awt*pow(Lage(g)(mi)(sage,nage),bwt);
 
 		
-		Lstd(g)(mi)(sage,nage) = Lage(g)(mi)(sage,nage)*cvl;  		  //std for length at age
+		//Lstd(g)(mi)(sage,nage) = Lage(g)(mi)(sage,nage)*cvl;  		  //std for length at age
 
 
 		dvar_vector z1(1,nlen); 				// intermediate steps for calculating proportion of age at length
@@ -1259,130 +1375,159 @@ FUNCTION void calc_length_comps(const int& mi)
 
 		std = Lage(g)(mi)(sage,nage)*cvl;
 
+	
+
 		 //Calculate proportion of length at age class
 
-		cout<<"std "<< endl<< std<<endl;
-		cout<<"Lage(g)(ii)(sage,nage) "<< endl<< Lage(g)(mi)(sage,nage)<<endl;
+		//cout<<"std "<< endl<< std<<endl;
+		//cout<<"Lage(g)(ii)(sage,nage) "<< endl<< Lage(g)(mi)(sage,nage)<<endl;
 
  		for( a = sage; a <= nage; a++ )
 		{
 			z1 = (( len - lenstp * 0.5 )-Lage(g)(mi)(a))/std( a );
 			z2 = (( len + lenstp * 0.5 )-Lage(g)(mi)(a))/std( a );
 			
-		cout<<"lenstp "<< endl<< lenstp<<endl;
-		cout<<"len "<< endl<< len<<endl;
+		//cout<<"lenstp "<< endl<< lenstp<<endl;
+		//cout<<"len "<< endl<< len<<endl;
 			
 
-		cout<<"z1 "<< endl<< z1<<endl;
-		cout<<"z2 "<< endl<< z2<<endl;
+		//cout<<"z1 "<< endl<< z1<<endl;
+		//cout<<"z2 "<< endl<< z2<<endl;
 
-		for( b=1; b<= nlen; b++ )
-		{
+			for( b=1; b<= nlen; b++ )
+			{
+				P_al(g)(mi)( a )( 0 )=b;
+				P_al(g)(mi)( a )( 1 -2)=mi;
+				P_al(g)(mi)( a )( 1 -3)=g;
+				P_al(g)(mi)( a )( b )=cumd_norm( z2( b ))-cumd_norm( z1( b )); // calculates the proportion of a given age given your length
+			
+				
+			}
 		
-			P_la(g)(mi)( b )( a )=cumd_norm( z2( b ))-cumd_norm( z1( b )); // calculates the proportion of a given age given your length
+			// plus length group
+			P_al(g)(mi)( a)( nlen )= 1.00 -cumd_norm( z1( nlen ));
 		
 		}
-		}
 
+		//cout<<"sum(P_la(g)(mi)( nlen )( sage,nage ))"<<sum(P_la(g)(indmonth(ii))( b )( sage,nage ))<<endl;
 		
 	
 		wa(sage,nage) += Wage(g)(1)(sage,nage)*prop_ng(g);
 		//	wa(sage,nage) = Wage(1)(1)(sage,nage);
 
-
+		
+		
 
 		
 	}
+	//exit(1);
+
+	//cout<<"Wage(g)(10)(sage,nage)"<<Wage(10)(1)(sage,nage)<<endl;
+	//cout<<"prop_ng(g) "<<sum(prop_ng)<<endl;
 	
 	
 
 
-	//FUNCTION calc_selectivity
-	//
-	//	int n, nn, i;
-	//
-	//	for(i=syr; i<=nyr;i++){
-	//		
-	//		for(n=1;n<=nations;n++){
-	//			
-	//			selnation(i)(n)(sage-1)=i;
-	//			selnation(i)(n)(sage-2)=n;
-	//			selnation(i)(n)(sage,nage) = elem_div(yCatchStateAge(i)(n)(sage,nage),yNage(i)(sage,nage))/max(elem_div(yCatchStateAge(i)(n)(sage,nage),yNage(i)(sage,nage)));
-	//
-	//		}
-	//	
-	//		for(nn=1;nn<=fisharea;nn++){
-	//			
-	//			selfisharea(i)(nn)(sage-1)=i;
-	//			selfisharea(i)(nn)(sage-2)=nn;
-	//			selfisharea(i)(nn)(sage,nage) = elem_div(yCatchNatAge(i)(nn)(sage,nage),yNage(i)(sage,nage))/max(elem_div(yCatchNatAge(i)(nn)(sage,nage),yNage(i)(sage,nage)));	
-	//
-	//		}
-	//
-	//		seltotal(i)(sage,nage) = elem_div(yCatchtotalage(i)(sage,nage),yNage(i)(sage,nage));
-	//	}
-	//
-	//
-	//FUNCTION calc_spr	
-	//
-	//	int i, ii, a, g;
-	//
-	//	
-	//	dvector lz(sage,nage);
-	//	
-	//	
-	//	for(ii=syr; ii<=proj_yr;ii++){
-	//
-	//		
-	//		dvar_vector ypropg(1,ngroup);
-	//
-	//		for(g=1; g<=ngroup; g++){
-	//			ypropg(g) =  sum(Nage(g)((ii-1)*tmon+1)(sage,nage))/sum(yNage(ii)(sage,nage));
-	//			ywa(ii)(sage,nage) += Wage(g)(1)(sage,nage)*ypropg(g);
-	//		}
-	//
-	//
-	//		yFatage(ii)(sage,nage) = elem_div(yCatchtotalage(ii)(sage,nage),yNage(ii)(sage,nage));
-	//
-	//		lz.initialize();
-	//		lz(sage) = 1.;
-	//		for(a=sage+1; a<=nage;a++){
-	//			lz(a)= value(lz(a-1)*mfexp(-m-yFatage(ii)(a-1)));
-	//		}
-	//		lz(nage) /= value(1.-mfexp(-m-yFatage(ii)(nage)));
-	//
-	//
-	//		phie(ii)=elem_prod(lz,fa)*ywa(ii);
-	//		spr(ii)=phie(ii)/phiE;
-	//
-	//	
-	//	}
-	//
-	//	//cout<<"Ok after calculating SPR"<<endl;
-	//
-	//
+FUNCTION calc_selectivity
+
+	int n, nn, i;
+
+	for(i=syr; i<=nyr;i++){
+		
+		for(n=1;n<=fisharea;n++){
+
+
+			
+			selfisharea(i)(n)(sage-1)=i;
+			selfisharea(i)(n)(sage-2)=n;
+			selfisharea(i)(n)(sage,nage) = elem_div(yCatchFGAge(i)(n)(sage,nage),yNage(i)(sage,nage))/max(elem_div(yCatchFGAge(i)(n)(sage,nage),yNage(i)(sage,nage)));
+
+		}
+	
+		for(nn=1;nn<=nations;nn++){
+			
+			selnation(i)(nn)(sage-1)=i;
+			selnation(i)(nn)(sage-2)=nn;
+			selnation(i)(nn)(sage,nage) = elem_div(yCatchNatAge(i)(nn)(sage,nage),yNage(i)(sage,nage))/max(elem_div(yCatchNatAge(i)(nn)(sage,nage),yNage(i)(sage,nage)));	
+
+		}
+
+		seltotal(i)(sage,nage) = elem_div(yCatchtotalage(i)(sage,nage),yNage(i)(sage,nage))/max(elem_div(yCatchtotalage(i)(sage,nage),yNage(i)(sage,nage)));
+	}
+
+
+
+FUNCTION void calc_empirical_wa(const int& ii)
+
+
+ 		ywa(ii)(sage,nage).initialize();
+		dvar_vector ypropg(1,ngroup);
+		for(int g=1; g<=ngroup; g++){
+			ypropg(g) =  sum(Nage(g)((ii-1)*tmon+1)(sage,nage))/sum(yNage(ii)(sage,nage));
+			//cout<<"Nage(g)((ii-1)*tmon+1)(sage,nage) "<<Nage(g)((ii-1)*tmon+1)(sage,nage)<<endl;
+			//cout<<"yNage(ii)(sage,nage) "<<yNage(ii)(sage,nage)<<endl;
+			//cout<<"ypropg(g) "<<ypropg(g)<<endl;
+			ywa(ii)(sage,nage) += Wage(g)(1)(sage,nage)*ypropg(g);
+		}
+
+
+
+
+FUNCTION calc_spr	
+
+	int i, ii, a, g;
+
+	
+	dvector lz(sage,nage);
+	
+	
+	for(ii=syr; ii<=proj_yr;ii++){
+	
+		yFatage(ii)(sage,nage) = elem_div(yCatchtotalage(ii)(sage,nage),yNage(ii)(sage,nage));
+
+		lz.initialize();
+		lz(sage) = 1.;
+		for(a=sage+1; a<=nage;a++){
+			lz(a)= value(lz(a-1)*mfexp(-m-yFatage(ii)(a-1)));
+		}
+		lz(nage) /= value(1.-mfexp(-m-yFatage(ii)(nage)));
+
+
+		phie(ii)=elem_prod(lz,fa)*ywa(ii);
+		spr(ii)=phie(ii)/phiE;
+
+	
+	}
+
+	cout<<"Ok after calculating SPR"<<endl;
+
+
+
+
 FUNCTION void run_stock_assessment(const int& ii,const int& svy)
 			
 		cout<<"running stock assessment"<<endl;
 	
 		switch (satype) {
-	            case 1:  
-	            //to be deprecated
-	            //output_pin_SA();
-	            //output_datSA(ii,svy);
-	            //output_ctlSA(ii);
-	
-	            //#if defined __APPLE__ || defined __linux
-	            // cout<<m_est_fmsy<<endl;
+	            case 1: 
+
+	            //Length-SRA assessment 
 	            
-	            //system("cd ../../stock_assessment/ && ./lagrangian_SA");
+	            write_LSRA_data_file(ii,svy);
 	
-	            //#endif
+	            write_LSRA_ctl_file(ii,svy);
+
+	
+	            #if defined __APPLE__ || defined __linux
+	             //cout<<m_est_fmsy<<endl;
+	            	system("cd /Users/catarinawor/Documents/length_SRA/examples/closedloop/&& make clean && make");
+	           
+	            #endif
+	
+				//exit(1);
 	
 	            //#if defined _WIN32 || defined _WIN64
-	
 	            //system("lagrangian_SS.exe");
-	
 	            //#endif
 	
 	            calc_catlim();
@@ -1394,15 +1539,15 @@ FUNCTION void run_stock_assessment(const int& ii,const int& svy)
 	
 	            case 2:
 	
-	            //write_iscam_data_file(ii,svy);
-	            //write_iscam_ctl_file(ii,svy);
+	            write_iscam_data_file(ii,svy);
+	            write_iscam_ctl_file(ii,svy);
 	
 	
-	            //#if defined __APPLE__ || defined __linux
+	            #if defined __APPLE__ || defined __linux
 	            // cout<<m_est_fmsy<<endl;
-	            //system("cd /Users/catarinawor/Documents/iSCAM/examples/hakelag/DATA && make clean && make");// && "exec make");
+	            system("cd /Users/catarinawor/Documents/iSCAM/examples/hakelag/DATA && make clean && make");// && "exec make");
 	           
-	            //#endif
+	            #endif
 	
 	            calc_catlim();
 				read_catlim();
@@ -1478,12 +1623,13 @@ FUNCTION calc_catlim
 		}
 	}
 
+	cout<< "TAC" << endl << TAC<< endl;
 	catlim = TAC * nationTACprop;
 	cout<< "catlim" << endl << catlim<< endl;
 	//cout<< "seltotal_SA" << endl << seltotal_SA<< endl;
 
 	ofstream afs("catlim.txt");
-	afs<<"catlim" << endl << catlim <<endl;
+	afs<<"#catlim" << endl << catlim <<endl;
 
 
 
@@ -1498,30 +1644,33 @@ FUNCTION void run_projections(const int& pi,const int& svi)
 	p=pi;
 
 	
-
-	
 	for(int ib=syr;ib<=nyr;ib++){
 		if(ib==surv_yrs(svyr)) svyr++;
 	}
 
 	//catage_comm(nyr);
+	output_true();
 	run_stock_assessment(nyr,svyr-1);
+
+	cout<<"começa a projecao"<<endl;
+	exit(1);
 
 
 	for(int ii=ntstp+1;ii<=ptstp;ii++)
 	{ 
 
-		calc_numbers_at_age(ii,wt(indyr(ii)));
 		maxPos.initialize();		
 		calcmaxpos(wx(indyr(ii)));
-
-		cout<<"chegou aqui? "<<endl;
+		calc_numbers_at_age(ii,wt(indyr(ii)));
+		
 		calc_position(ii);
 	
 		calc_effarea(ii,ntstp,catlim);
 
 		calc_catage(ii);
-		//calc_catlen(ii);
+		calc_catlen(ii);
+
+		cout<<"ii is"<<ii<<endl;
 		
 		for(int n=1;n<=fisharea;n++)
 		{					
@@ -1532,7 +1681,6 @@ FUNCTION void run_projections(const int& pi,const int& svi)
        		}	
 		}
 		
-
 		
 
 		if(indmonth(ii)==nmon){
@@ -1548,8 +1696,7 @@ FUNCTION void run_projections(const int& pi,const int& svi)
 			calc_wt_comm(indyr(ii));
 			run_stock_assessment(indyr(ii),svyr-1);
 
-			cout<<"e aqui? "<<endl;
-			exit(1);
+			//exit(1);
 		}
 		
 
@@ -1561,7 +1708,7 @@ FUNCTION void run_projections(const int& pi,const int& svi)
 
 
 
-//FUNCTION save_OMrep
+	//FUNCTION save_OMrep
 
 	//system("cd ../../../R/read_mse && make readROM");
 	// Terminal year of projection.
@@ -1570,7 +1717,11 @@ FUNCTION void run_projections(const int& pi,const int& svi)
 	
 FUNCTION read_catlim
 
-	cifstream ifs_clm("../TAC_input.dat");
+	/* This Function reads in the catch limits in the text file
+	This is usually based on the TAC. 
+ 	*/
+
+	cifstream ifs_clm("catlim.txt");
 
 	// Terminal year of projection.
     ifs_clm >> catlim;
@@ -1591,7 +1742,7 @@ FUNCTION output_true
 	ofs<<"maxPossd" << endl << maxPossd <<endl;
 	ofs<<"cvPos" << endl << cvPos <<endl;
 	ofs<<"fbeta " << endl << fbeta <<endl;
-	ofs<<"Fmult" << endl <<  Fmult* exp(vt(syr,nyr)-(0.1*0.1/2)) <<endl;
+	ofs<<"Fmult" << endl <<  Fmult <<endl; //* exp(vt(syr,nyr)-(0.1*0.1/2))
 	ofs<<"syr" << endl << syr <<endl;
 	ofs<<"nyr" << endl << nyr <<endl;
 	ofs<<"rep_yr" << endl << rep_yr <<endl;
@@ -1616,7 +1767,7 @@ FUNCTION output_true
 	ofs<<"varPos" << endl << varPos <<endl;
 	//ofs<<"PosX" << endl << PosX <<endl;	
 	ofs<<"wa" << endl << wa <<endl;	
-	//ofs<<"ywa" << endl << ywa <<endl;	
+	ofs<<"ywa" << endl << ywa <<endl;	
 	ofs<<"Wage" << endl << Wage <<endl;	
 	ofs<<"Lage" << endl << Lage <<endl;	
 	ofs<<"SB" << endl << SB <<endl;
@@ -1628,6 +1779,7 @@ FUNCTION output_true
 	ofs<<"Nage" << endl << Nage <<endl;
 	ofs<<"Effarea"<< endl << Effarea <<endl;
 	ofs<<"comm_obsCatage"<< endl << comm_obsCatage <<endl;
+	ofs<<"comm_obsCatLen"<< endl << comm_obsCatLen <<endl;
 	ofs<<"surv_obsCatage"<< endl << surv_obsCatage <<endl;
 	ofs<<"totVBnation" << endl << totVBnation <<endl;
 	ofs<<"CatchNatAge"<< endl << CatchNatAge<<endl;
@@ -1635,18 +1787,19 @@ FUNCTION output_true
 	ofs<<"indmonth"<< endl << indmonth<<endl;
 	ofs<<"indnatarea"<< endl << indnatarea<<endl;
 	ofs<<"propVBarea"<< endl << propVBarea <<endl;
-	//ofs<<"selfisharea"<< endl << selfisharea <<endl;
-	//ofs<<"selnation"<< endl << selnation <<endl;
-	//ofs<<"seltotal"<< endl << seltotal <<endl;
+	ofs<<"selfisharea"<< endl << selfisharea <<endl;
+	ofs<<"selnation"<< endl << selnation <<endl;
+	ofs<<"seltotal"<< endl << seltotal <<endl;
 	ofs<<"yCatchtotalage"<< endl << yCatchtotalage <<endl;
 	ofs<<"yYieldNat"<< endl << yYieldNat <<endl;
 	//ofs<<"yCatchStateAge"<< endl << yCatchStateAge <<endl;
-	//ofs<<"yNage"<< endl << yNage <<endl;
+	ofs<<"yNage"<< endl << yNage <<endl;
 	//ofs<<"Fatage"<< endl << Fatage <<endl;
-	//ofs<<"yFatage"<< endl << yFatage <<endl;
-	//ofs<<"spr"<< endl <<spr <<endl;
-	//ofs<<"phie"<< endl <<phie <<endl;
-	//ofs<<"phiE"<< endl <<phiE <<endl;
+	ofs<<"yFatage"<< endl << yFatage <<endl;
+	ofs<<"spr"<< endl <<spr <<endl;
+	ofs<<"phie"<< endl <<phie <<endl;
+	ofs<<"phiE"<< endl <<phiE <<endl;
+	ofs<<"P_al"<< endl <<P_al <<endl;
 
 
 
@@ -1768,368 +1921,422 @@ FUNCTION output_gtgdat
 	afs<<"# Total effort by country and year " << endl << trans(trans(pTotEffyear).sub(rep_yr+1,nyr)) <<endl;
 	afs<<"# Total effort by country and month " << endl << TotEffmonth <<endl;
 	afs<<"# effPwr"<< endl << effPwr <<endl;	
-	afs<<"# dMinP " << endl << 0.1e-13<<endl;
+	afs<<"# dMinP " << endl << 0.1e-9<<endl;
 	afs<<"# tstp month area catage " << endl << obsCatchFGAge <<endl;	
 	afs<<"# yYieldtotal"<< endl << yYieldtotal(rep_yr+1,nyr) <<endl;
 	afs<<"# eof " << endl << 999 <<endl;
 
 
+FUNCTION void write_LSRA_ctl_file(const int& ii,const int& svy)
 
-	//FUNCTION void output_datSA(const int& ii,const int& svy)
+	dvector wt_init(sage,nage-1);
+	dvector wt_yrs(rep_yr+1,ii);
 
-	//	int tmpts;
-	//	tmpts = (ii-syr+1)*tmon;
-	//
-	//	int tot_tmppcat;
-	//	ivector tmppcat(1,fisharea);
-	//
-	//	for(int n=1;n<=fisharea;n++){
-	//		 tmppcat(n)= sum(pmat(n)(1,tmpts));
-	//	}
-	//	 tot_tmppcat = sum(tmppcat);
-	//
-	//	 
-	//	ofstream mfs("../../stock_assessment/lagrangian_SA.dat");
-	//	mfs<<"# syr " << endl << rep_yr+1 <<endl;
-	//	mfs<<"# nyr " << endl << ii <<endl;
-	//	mfs<<"# sage " << endl << sage <<endl;
-	//	mfs<<"# nage " << endl << nage <<endl;
-	//	mfs<<"# smon " << endl << smon <<endl;
-	//	mfs<<"# nmon " << endl << nmon <<endl;
-	//	mfs<<"# sarea " << endl << sarea <<endl;
-	//	mfs<<"# narea " << endl << narea <<endl;
-	//	mfs<<"# fisharea " << endl << fisharea <<endl;
-	//	mfs<<"# fishbound " << endl << fishbound <<endl;
-	//	mfs<<"# nations " << endl << nations <<endl;
-	//	mfs<<"# border " << endl << border <<endl;
-	//	mfs<<"# m " << endl << m <<endl;
-	//	mfs<<"# fe " << endl << fe <<endl;
-	//	mfs<<"# q " << endl << q <<endl;
-	//	mfs<<"# fbeta " << endl << fbeta <<endl;
-	//	mfs<<"# sigR " << endl << sigR <<endl;
-	//	mfs<<"# weight at age " << endl << wa <<endl;
-	//	mfs<<"# fecundity at age " << endl << fa <<endl;
-	//	mfs<<"# vulnerability at age " << endl << va <<endl;
-	//	mfs<<"# minPos "<< endl << minPos <<endl;
-	//	mfs<<"# Fmult "<< endl << Fmult <<endl;
-	//	mfs<<"# Total effort by country and year " << endl << trans(trans(TotEffyear_rep).sub(rep_yr+1,ii)) <<endl;
-	//	mfs<<"# Total effort by country and month " << endl << TotEffmonth <<endl;
-	//	mfs<<"# effPwr"<< endl << effPwr <<endl;
-	//	mfs<<"# dMinP " << endl << 0.1e-15 <<endl;
-	//	mfs<<"# tstp month area catage " << endl << (obsCatchNatAge).sub(1,tot_tmppcat)<<endl;	
-	//	mfs<<"# nItNobs " << endl << svy <<endl;
-	//	mfs<<"## iyr     index(it) gear area group sex log(SE) log(PE)   timing" << endl;
-	//	for(int l=1;l<=svy;l++){
-	//		//  	iyr     		index(it) 	log(SE)  	log(PE)   	timing
-	//		mfs<<surv_yrs(l) <<"\t"<< survB(l) <<"\t" << 0.2<<"\t"<< 0.01<<"\t"<< surv_mon <<endl;
-	//	}
-	//	mfs<<"# eof " << endl << 999 <<endl;
-	//
-
-	//FUNCTION void write_iscam_ctl_file(const int& ii,const int& svy)
-	//
-	//	ofstream mfs("/Users/catarinawor/Documents/iSCAM/examples/hakelag/DATA/hakelag.ctl");
-	//	mfs<<"## ------------------------------------------------------------------------------------ ##"<< endl;
-	//	mfs<<"## CONTROL FILE TEMPLATE                                                                ##"<< endl;
-	//	mfs<<"## ------------------------------------------------------------------------------------ ##"<< endl;
-	//	mfs<<"## ------------------------------------------------------------------------------------ ##"<< endl;
-	//	mfs<<"## CONTROLS FOR LEADING PARAMETERS                                                      ##"<< endl;
-	//	mfs<<"##  Prior descriptions:                                                                 ##"<< endl;
-	//	mfs<<"##                      -0 uniform      (0,0)                                           ##"<< endl;
-	//	mfs<<"##                      -1 normal       (p1=mu,p2=sig)                                  ##"<< endl;
-	//	mfs<<"##                      -2 lognormal    (p1=log(mu),p2=sig)                             ##"<< endl;
-	//	mfs<<"##                      -3 beta         (p1=alpha,p2=beta)                              ##"<< endl;
-	//	mfs<<"##                      -4 gamma        (p1=alpha,p2=beta)                              ##"<< endl;	
-	//	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
-	//	mfs<<"## npar"<<endl<< "7"<< endl;
-	//	mfs<<"## ival         lb      ub      phz     prior   p1      p2        #parameter            ##"<< endl;
-	//	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
-	//	mfs<< 1.2  		 <<"\t"<< -1.0 <<"\t"<< 4  	 <<"\t"<< 1  <<"\t"<< 1  <<"\t"<<  1.2 	 <<"\t"<<  0.4   <<"\t"<<"#log_ro   ##"<<endl;
-	//   	mfs<< 0.862 	 <<"\t"<<  0.2 <<"\t"<< 1.0  <<"\t"<< 2  <<"\t"<< 3  <<"\t"<<  9.909 <<"\t"<< 2.959  <<"\t"<<"#steepness    ##"<<endl;
-	//   	mfs<< -1.537117  <<"\t"<< -4.0 <<"\t"<< 0.0  <<"\t"<< -3 <<"\t"<< 1  <<"\t"<< -1.609 <<"\t"<< 0.1    <<"\t"<<"#log_m g&b    ##"<<endl;
-	//   	mfs<< 2.0  		 <<"\t"<< -4.0 <<"\t"<< 10.0 <<"\t"<< 1  <<"\t"<< 0  <<"\t"<< -3.0 	 <<"\t"<< 10.0   <<"\t"<<"#log_avgrec   ##"<<endl;
-	//   	mfs<< 1.0  		 <<"\t"<< -4.0 <<"\t"<< 10.0 <<"\t"<< 1  <<"\t"<< 0  <<"\t"<< -3.0   <<"\t"<< 10.0   <<"\t"<<"#log_recinit  ##"<<endl;
-	//   	mfs<< 0.03764649 <<"\t"<< 0.01 <<"\t"<< 0.99 <<"\t"<< 4  <<"\t"<< 3  <<"\t"<<  5.98  <<"\t"<< 155.98 <<"\t"<<"#rho          ##"<<endl;
-	//   	mfs<< 10.4909967 <<"\t"<< 0.01 <<"\t"<< 10.0 <<"\t"<< 3  <<"\t"<< 4  <<"\t"<<  4.01  <<"\t"<< 2.01   <<"\t"<<"#sigma_r      ##"<<endl;
-	//	//mfs<< 0.9805792  <<"\t"<<  -3 <<"\t"<< 5.0  <<"\t"<< 1  <<"\t"<< 1  <<"\t"<<  1.2 	 <<"\t"<<  0.4   <<"\t"<<"#log_ro   ##"<<endl;
-	//   	//mfs<< 0.862 	 <<"\t"<<  0.2 <<"\t"<< 1.0  <<"\t"<< 2  <<"\t"<< 3  <<"\t"<<  9.909 <<"\t"<< 2.959  <<"\t"<<"#steepness    ##"<<endl;
-	//   	//mfs<< -1.537117  <<"\t"<< -4.0 <<"\t"<< 0.0  <<"\t"<< -3 <<"\t"<< 1  <<"\t"<< -1.609 <<"\t"<< 0.1    <<"\t"<<"#log_m g&b    ##"<<endl;
-	//   	//mfs<< 2.0  		 <<"\t"<< -4.0 <<"\t"<< 10.0 <<"\t"<< 4  <<"\t"<< 0  <<"\t"<< -3.0 	 <<"\t"<< 10.0   <<"\t"<<"#log_avgrec   ##"<<endl;
-	//   	//mfs<< 1.0  		 <<"\t"<< -4.0 <<"\t"<< 10.0 <<"\t"<< 4  <<"\t"<< 0  <<"\t"<< -3.0   <<"\t"<< 10.0   <<"\t"<<"#log_recinit  ##"<<endl;
-	//   	//mfs<< 0.03764649 <<"\t"<< 0.01 <<"\t"<< 0.99 <<"\t"<< 4  <<"\t"<< 3  <<"\t"<<  5.98  <<"\t"<< 155.98 <<"\t"<<"#rho          ##"<<endl;
-	//   	//mfs<< 10.4909967 <<"\t"<< 0.01 <<"\t"<< 10.0 <<"\t"<< 1  <<"\t"<< 4  <<"\t"<<  4.01  <<"\t"<< 2.01   <<"\t"<<"#sigma_r      ##"<<endl;
-	//   	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
-	//	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
-	//	mfs<<"## CONTROL PARAMETERS FOR AGE/SIZE COMPOSITION DATA FOR na_gears                        ##"<< endl;
-	//	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
-	//	mfs<<"## Likelihood type for each gear:														  ##"<< endl;
-	//	mfs<<"##     -1 : multivariate logistic (dmvlogistic) 										  ##"<< endl;
-	//	mfs<<"##     -2 : multinomial, sample size based on input data 								  ##"<< endl;
-	//	mfs<<"##     -3 : logistic_normal, no autocorrelation, AR1, AR2. 							  ##"<< endl;
-	//	mfs<<"##     -4 : logistic_normal, AR1 														  ##"<< endl;
-	//	mfs<<"##     -5 : logistic_normal, AR2 														  ##"<< endl;
-	//	mfs<<"##     -6 : multinomial with estimated effective samples size (log_age_tau2 phz >0) 	  ##"<< endl;
-	//	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
-	//	mfs<<"## Number of columns == na_gears." << endl;
-	//	mfs<<" 1 "	 <<"\t"<< " 2 " 	<<"\t"<< "## • Gear Index"<<endl;
-	//   	mfs<<" 1 "	 <<"\t"<< " 1 "  	<<"\t"<< "## • Likelihood type"<<endl;
-	//   	mfs<<"0.000" <<"\t"<< "0.000"	<<"\t"<< "## • Minimum proportion for aggregation & tail compression"<<endl;
-	//   	mfs<<"0.0000"<<"\t"<< "0.0000" 	<<"\t"<< "## • Small constant to add to comps & renormalize"<<endl;
-	//   	mfs<<" 1 "	 <<"\t"<< " 1 " 	<<"\t"<< "## • phase for log_age_tau2 estimation. "<<endl;
-	//   	mfs<<" 2 "	 <<"\t"<< " 2 " 	<<"\t"<< "## • phase for phi1 estimation: bounded (-1,1) AR1 "<<endl;
-	//   	mfs<<"-2 "	 <<"\t"<< "-2 " 	<<"\t"<< "## • phase for phi2 estimation: bounded (0,1)  AR2 "<<endl;
-	//   	mfs<<"-2 "	 <<"\t"<< "-2 " 	<<"\t"<< "## • phase for degrees of freedom for student T. "<<endl;
-	//   	mfs<<"-12345" <<"\t"<<  "## • int check (-12345)"<<endl;
-	//   	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
-	//	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
-	//	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
-	//	mfs<<"## SELECTIVITY CONTROLS                                                                 ##"<< endl;
-	//	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
-	//	mfs<<"## - Each gear must have at least one selectivity and retention curve.					"<< endl;
-	//	mfs<<"## - Use a -ve phase with the gear index to mirror another gear.  Note 					"<< endl;
-	//	mfs<<"##   that if you mirror another gear, it must have the same sel type and                  "<< endl;
-	//	mfs<<"##   age and year nodes so that the arrays are the same shape & block years.				"<< endl;
-	//	mfs<<"##																						"<< endl;
-	//	mfs<<"## • Index       = gear index for selectivity curve.										"<< endl;
-	//	mfs<<"## • sel_type    = type of selectivity function (see Legend). 							"<< endl;
-	//	mfs<<"## • sel_mu      = mean age/length 50% selectivity. 										"<< endl;
-	//	mfs<<"## • sel_sd      = std in 50% SELECTIVITY 												"<< endl;
-	//	mfs<<"## • sex_dep     = 0 -> no;  1 -> offset for sex 2. 										"<< endl;
-	//	mfs<<"## • size_nodes  = # of nodes for age/size cubic spline. 									"<< endl;
-	//	mfs<<"## • year_nodes  = # of nodes for time varying bicubic spline. 							"<< endl;
-	//	mfs<<"## • phz_mirror  = phase of estimation (-ve phase to mirror selextivity index) 			"<< endl;
-	//	mfs<<"## • lam1        = penalty weight for 2nd differences (w = 1/(2•sig^2)). 					"<< endl;
-	//	mfs<<"## • lam2        = penalty weight for dome-shaped selectivity. 							"<< endl;
-	//	mfs<<"## • lam3        = penalty weight for time-varying selectivity. 							"<< endl;
-	//	mfs<<"## • start_block = year index for first year of selectivity curve.						"<< endl;
-	//	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
-	//	mfs<<"## sel_nBlocks    ret_nBlocks      ## Gear Description.						"<< endl;
-	//	mfs<<" 2 " <<"\t"<< " 1 " <<"\t"<< "## Commercial retained 					"<< endl;
-	//    mfs<<" 1 " <<"\t"<< " 0 " <<"\t"<< "## survey retained    					"<< endl;
-	//	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;					
-	//	mfs<<"## Selectivity P(capture of all size/age)													"<< endl;
-	//	mfs<<"## slx_dControls																			"<< endl;				
-	//	mfs<<"## • index for sex (0=both, 1=female, 2=male)												"<< endl;
-	//	mfs<<"##        sel   sel  sel       age    year  phz or                    start  end        ##"<< endl;
-	//	mfs<<"## Index  type  mu   sd   sex  nodes  nodes mirror lam1  lam2  lam3 | block  block      ##"<< endl;
-	//	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
-	//    mfs<<"1" <<"\t"<<"4" <<"\t"<<"3.5" <<"\t"<<"0.45" <<"\t"<<"0" <<"\t"<<"7" <<"\t"<<"1" <<"\t"<<"2" <<"\t"<<"150.0" <<"\t"<<"1.0" <<"\t"<<"1.0" <<"\t"<<rep_yr <<"\t"<<"1999"<<endl;
-	//    mfs<<"1" <<"\t"<<"4" <<"\t"<<"3.5" <<"\t"<<"0.45" <<"\t"<<"0" <<"\t"<<"7" <<"\t"<<"1" <<"\t"<<"2" <<"\t"<<"150.0" <<"\t"<<"1.0" <<"\t"<<"1.0" <<"\t"<<"1999" <<"\t"<<ii<<endl;
-	//    mfs<<"2" <<"\t"<<"2" <<"\t"<<"1.5" <<"\t"<<"0.45" <<"\t"<<"0" <<"\t"<<"4" <<"\t"<<"5" <<"\t"<<"2" <<"\t"<<"200.0" <<"\t"<<"50.0"<<"\t"<<"50.0"<<"\t"<<rep_yr <<"\t"<<ii<<endl;
-	//    mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
-	//	mfs<<"## Retention P(retaining size/age)													 	"<< endl;														
-	//	mfs<<"## ret_dControls																			"<< endl;
-	//	mfs<<"## • index for sex (0=both, 1=female, 2=male)												"<< endl;
-	//	mfs<<"##        sel   sel  sel       age    year  phz or                    start  end        ##"<< endl;
-	//	mfs<<"## Index  type  mu   sd   sex  nodes  nodes mirror lam1  lam2  lam3 | block  block      ##"<< endl;
-	//	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
-	//  	mfs<<"-1"<<"\t"<<"2"<<"\t"<<"10"<<"\t"<<"2.0"<<"\t"<<"1"<<"\t"<<"0"<<"\t"<<"0"<<"\t"<<"-2"<<"\t"<<"0.0"<<"\t"<<"0.0"<<"\t"<<"0.0"<<"\t"<<syr<<"\t"<<ii <<endl;
-	//	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
-	//	mfs<<"## LEGEND FOR SELECTIVITY TYPES (sel_type)                                              ##"<< endl;
-	//	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
-	//	mfs<<"## sel  | No.        | 																	"<< endl;
-	//	mfs<<"## type | parameters | Description 														"<< endl;
-	//	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
-	//	mfs<<"##   1  |   2        | • Logistic curve with mean and standard dev at age = p(50%) 		"<< endl;
-	//	mfs<<"##   2  | (nages-1)  | • Age-specific selectivity coefficients for (sage):(nage-1) 		"<< endl;
-	//	mfs<<"##   3  | age_nodes  | • Age-specific coefficients based on cubic-spline interpolation 	"<< endl;
-	//	mfs<<"##   4  | n*age_nodes| • Annual age-specific coeffs using cubic-spline interpolation 		"<< endl;
-	//	mfs<<"##   5  | nyr*nage   | • Bicubic spline interpolation over time & age. 					"<< endl;
-	//	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
-	//	mfs<<"## TO BE DEPRECATED															 "<< endl;	
-	//	mfs<<"## ------------------------------------------------------------------------- ##"<< endl;
-	//	mfs<<"## SELECTIVITY PARAMETERS Columns for gear                                   ##"<< endl;
-	//	mfs<<"## OPTIONS FOR SELECTIVITY (isel_type):                                      ##"<< endl;
-	//	mfs<<"##      1) logistic selectivity parameters                                   ##"<< endl;
-	//	mfs<<"##      2) selectivity coefficients                                          ##"<< endl;
-	//	mfs<<"##      3) a constant cubic spline with age-nodes                            ##"<< endl;
-	//	mfs<<"##      4) a time varying cubic spline with age-nodes                        ##"<< endl;
-	//	mfs<<"##      5) a time varying bicubic spline with age & year nodes.              ##"<< endl;
-	//	mfs<<"##      6) fixed logistic (set isel_type=6, and estimation phase to -1)      ##"<< endl;
-	//	mfs<<"##      7) logistic function of body weight.                                 ##"<< endl;
-	//	mfs<<"##      8) logistic with weight deviations (3 parameters)                    ##"<< endl;
-	//	mfs<<"##      11) logistic selectivity with 2 parameters based on mean length      ##"<< endl;
-	//	mfs<<"##      12) length-based selectivity coefficients with spline interpolation  ##"<< endl;
-	//	mfs<<"##      sig=0.05 0.10 0.15 0.20 0.30 0.40 0.50                               ##"<< endl;
-	//	mfs<<"##      wt =200. 50.0 22.2 12.5 5.56 3.12 2.00                               ##"<< endl;
-	//	mfs<<"## ------------------------------------------------------------------------- ##"<< endl;
-	//  	mfs<<"5   "<<"\t"<<" 2   "<<"\t"<<"        # 1  -selectivity type ivector(isel_type) for gear"<< endl;
-	//  	mfs<<"2.5 "<<"\t"<<" 2.5 "<<"\t"<<"        # 2  -Age/length at 50% selectivity (logistic)"<< endl;
-	//  	mfs<<"0.45"<<"\t"<<" 0.45"<<"\t"<<"        # 3  -STD at 50% selectivity (logistic)"<< endl;
-	//  	mfs<<"4   "<<"\t"<<" 5   "<<"\t"<<"        # 4  -No. of age nodes for each gear (0=ignore)"<< endl;
-	//  	mfs<<"5   "<<"\t"<<" 5   "<<"\t"<<"        # 5  -No. of year nodes for 2d spline(0=ignore)"<< endl;
-	//  	mfs<<"1   "<<"\t"<<" 1   "<<"\t"<<"        # 6  -Phase of estimation (-1 for fixed)"<< endl;
-	//  	mfs<<"150 "<<"\t"<<" 150 "<<"\t"<<"     # 7  -Penalty wt for 2nd differences w=1/(2*sig^2)"<< endl;
-	//  	mfs<<"2.00"<<"\t"<<" 2.00"<<"\t"<<"  # 8  -Penalty wt for dome-shaped w=1/(2*sig^2)"<< endl;
-	//  	mfs<<"12.5"<<"\t"<<" 12.5"<<"\t"<<"    # 9  -Penalty wt for time-varying selectivity"<< endl;
-	//  	mfs<<"1   "<<"\t"<<" 1   "<<"\t"<<"       # 10 -n_sel_blocks (number of selex blocks)"<< endl;
-	//	mfs<<"## ------------------------------------------------------------------------- ##"<< endl;
-	//	mfs<<"## Start year of each time block: 1 row for each gear 						 "<< endl;
-	//	mfs<<rep_yr<< endl;
-	//	mfs<<rep_yr<< endl;
-	//	mfs<<"##"<< endl;
-	//	mfs<<"##"<< endl;
-	//	mfs<<"##"<< endl;
-	//	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
-	//	mfs<<"## TIME VARYING NATURAL MORTALIIY RATES                                                 ##"<< endl;
-	//	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
-	//	mfs<<"## TYPE: "<< endl;
-	//	mfs<<"##      0 = constant natural mortality "<< endl;
-	//	mfs<<"##      1 = Random walk (deviates constrained by variance in M) "<< endl;
-	//	mfs<<"##      2 = Cubic Spline (deviates constrined by nodes & node-placement)"<< endl;
-	//	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ## "<< endl;
-	//    mfs<<"0"<< endl;
-	//	mfs<<"## Phase of estimation"<< endl;
-	//	mfs<<"  -3"<< endl;
-	//	mfs<<"## STDEV in m_dev for Random walk"<< endl;
-	//	mfs<<"  0.01"<< endl;
-	//	mfs<<"## Number of nodes for cubic spline"<< endl;
-	//	mfs<<"  0"<< endl;
-	//	mfs<<"## Year position of the knots (vector must be equal to the number of nodes)"<< endl;
-	//  	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
-	//	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
-	//	mfs<<"## ABUNDANCE OBSERVATION MODELS 															"<< endl;
-	//	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
-	//	mfs<<"## QTYPE:"<< endl;
-	//	mfs<<"##    0 = FIXED SURVEY Q (specify log(mean) for prior log(mean))"<< endl;
-	//	mfs<<"##    1 = CONSTANT Q     (use MLE for q and optional informative prior)"<< endl;
-	//	mfs<<"##    2 = RANDOM WALK Q  (use prior mean & sd for penalized random walk)"<< endl;
-	//	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
-	//	mfs<<"1             # -number of surveys (n_it_nobs) 											"<< endl;
-	//	mfs<<" 2            # -QTYPE (see legend above)													"<< endl;
-	//	mfs<<" 0            # -prior log(mean)															"<< endl;
-	//	mfs<<" 0.1            # -prior sd (set to 0 for uniformative prior)								"<< endl;
-	//	mfs<<" 1            # -Estimation Phase 														"<< endl;
-	//	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
-	//	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
-	//	mfs<<"## OTHER MISCELANEOUS CONTROLS                                                          ##"<< endl;
-	//	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
-	//	mfs<<"0           # 1  -verbose ADMB output (0=off, 1=on)"<< endl;
-	//	mfs<<"1           # 2  -recruitment model (1=beverton-holt, 2=ricker)"<< endl;
-	//	mfs<<"0.100       # 3  -std in observed catches in first phase."<< endl;
-	//	mfs<<"0.0707      # 4  -std in observed catches in last phase."<< endl;
-	//	mfs<<"0           # 5  -Assume unfished in first year (0=FALSE, 1=TRUE)"<< endl;
-	//	mfs<<"0.00        # 6  -Minimum proportion to consider in age-proportions for dmvlogistic"<< endl;
-	//	mfs<<"0.20        # 7  -Mean fishing mortality for regularizing the estimates of Ft"<< endl;
-	//	mfs<<"0.10        # 8  -std in mean fishing mortality in first phase"<< endl;
-	//	mfs<<"2.00        # 9  -std in mean fishing mortality in last phase"<< endl;
-	//	mfs<<"-3          # 10 -DEPRECATED phase for estimating m_deviations (use -1 to turn off mdevs)"<< endl;
-	//	mfs<<"0.1         # 11 -DEPRECATED std in deviations for natural mortality"<< endl;
-	//	mfs<<"12          # 12 -DEPRECATED number of estimated nodes for deviations in natural mortality"<< endl;
-	//	mfs<<"0.00        # 13 -fraction of total mortality that takes place prior to spawning"<< endl;
-	//	mfs<<"0           # 14 -number of prospective years to add to syr. "<< endl;
-	//	mfs<<"0           # 15 -switch for IFD distribution in selectivity simulations"<< endl;
-	//	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
-	//	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
-	//	mfs<<"## MARKER FOR END OF CONTROL FILE (eofc)"<< endl;
-	//	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
-	//	mfs<<"999"<< endl;
+	wt_init.initialize();
+	wt_yrs.initialize();
+	ofstream lfs("/Users/catarinawor/Documents/length_SRA/examples/closedloop/hakelag.ctl");
+	lfs<<"## ------------------------------------------------------------------------------------ ##"<< endl;
+	lfs<<"## CONTROL FILE TEMPLATE                                                                ##"<< endl;
+	lfs<<"## ------------------------------------------------------------------------------------ ##"<< endl;
+	lfs<<"## ------------------------------------------------------------------------------------ ##"<< endl;
+	lfs<<"## CONTROLS FOR LEADING PARAMETERS                                         ##"<< endl;
+	lfs<<"##  Prior descriptions:                                                    ##"<< endl;
+	lfs<<"##                      -0 uniform      (0,0)                              ##"<< endl;
+	lfs<<"##                      -1 normal       (p1=mu,p2=sig)                     ##"<< endl;
+	lfs<<"##                      -2 lognormal    (p1=log(mu),p2=sig)                ##"<< endl;
+	lfs<<"##                      -3 beta         (p1=alpha,p2=beta)                 ##"<< endl;
+	lfs<<"##                      -4 gamma        (p1=alpha,p2=beta)                 ##"<< endl;
+	lfs<<"## ——————————————————————————————————————————————————————————————————————— ##"<< endl;
+	lfs<<"## npar 															"<< endl;		
+	lfs<<"4 																"<< endl;
+	lfs<<"## ival    	lb      ub        phz     prior   p1      p2      #parameter   ##"<< endl;
+	lfs<<"## ——————————————————————————————————————————————————————————————————————— ##"<< endl;
+	//lfs<<  log(Ro)  <<"\t"<< log(Ro*0.01) <<"\t"<< log(Ro*100) <<"\t"<<" 1" <<"\t"<<"0"	<<"\t"<< log(Ro*0.01) <<"\t"<< log(Ro*100)  <<"\t"<< "## Ro"<< endl;
+	lfs<<  log(Ro)  <<"\t"<< log(Ro*0.01) <<"\t"<< log(Ro*100) <<"\t"<<" 1" <<"\t"<<"0"	<<"\t"<< log(Ro*0.01) <<"\t"<< log(Ro*100)  <<"\t"<< "## Ro"<< endl;
+	lfs<<  log(yNage(rep_yr+1)(sage)*0.8)  <<"\t"<< log(Ro*0.01) <<"\t"<< log(Ro*100) <<"\t"<<" 1" <<"\t"<<"0"	<<"\t"<< log(Ro*0.01) <<"\t"<< log(Ro*100)  <<"\t"<< "## R_init "<< endl;
+	//lfs<<  log(Ro*0.8)  <<"\t"<< log(Ro*0.01) <<"\t"<< log(Ro*100) <<"\t"<<" 1" <<"\t"<<"0"	<<"\t"<< log(Ro*0.01) <<"\t"<< log(Ro*100)  <<"\t"<< "## R_init "<< endl;	
+	lfs<<  log(kappa*0.9)  <<"\t"<< log(kappa*0.1) <<"\t"<< log(kappa*10) <<"\t"<<" 1" <<"\t"<<"1"	<<"\t"<< log(kappa) <<"\t"<< 0.9  <<"\t"<< "## log_reck"<< endl;
+	lfs<<  log(1.1)  <<"\t"<< log(0.1) <<"\t"<< log(3.0) <<"\t"<<" -1" <<"\t"<<"0"	<<"\t"<< log(0.1) <<"\t"<< log(3.0)  <<"\t"<< "## "<< endl;
+	lfs<<"## ——————————————————————————————————————————————————————————————————————— ##"<< endl;
+	lfs<<"##initial values for recruitment deviations ##"<< endl;
+	lfs<<"# wt "<< endl;
+	lfs<< wt_init << endl;
+	lfs<< wt_yrs << endl;
+	lfs<<"#log(q) prior - same codes as above"<< endl;
+	lfs<<"#prior   p1      p2 "<< endl;
+	lfs<<"1		   0		 0.1"<< endl;
+	lfs<<"#closedloop"<<endl<< 1 << endl;
+	lfs<<"##initial values for recruitment deviations in first year ##"<< endl;
+	lfs<<"999"<< endl;
 
 
-	//FUNCTION void write_iscam_data_file(const int& ii,const int& svy)
-	//
-	//	
-	//
-	//	ofstream ufs("/Users/catarinawor/Documents/iSCAM/examples/hakelag/DATA/hakelag.dat");
-	//	ufs<<"# DATA FILE FOR iSCAM  " << endl;
-	//	ufs<<"## ------------------------------------------------------------------------- ##"<< endl;
-	//	ufs<<"## MODEL DIMENSIONS  " << endl;
-	//	ufs<<"## ------------------------------------------------------------------------- ##"<< endl;
-	//	ufs<< 1  	<< "\t" << "# -number of areas            (narea) "  <<endl;
-	//	ufs<< 1 	<< "\t" << "# -number of groups or stocks (ngroup)"  <<endl;
-	//	ufs<< 1  	<< "\t" << "# -number of sexes            (nsex)"  <<endl;
-	//	ufs<< rep_yr+1 	<< "\t" << "# -first year of data         (syr)"  <<endl;
-	//	ufs<< ii 	<< "\t" << "# -last year of data          (nyr)"  <<endl;
-	//	ufs<< sage 	<< "\t" << "# -age of youngest age class  (sage)"  <<endl;
-	//	ufs<< nage 	<< "\t" << "# -age of plus group          (nage)"  <<endl;
-	//	ufs<< 2 	<< "\t" << "# -number of gears            (ngear)"  <<endl;
-	//	ufs<<"## ------------------------------------------------------------------------- ##"<< endl;
-	//	ufs<<"## Allocation for each gear in (ngear), use 0 for survey gears. " << endl;
-	//	ufs<<"## ------------------------------------------------------------------------- ##"<< endl;
-	//	ufs<< "1 0"  <<endl;
-	//	ufs<<"## ------------------------------------------------------------------------- ##"<< endl;
-	//	ufs<<"## Age-schedule and population parameters                                    ##" << endl;
-	//	ufs<<"## ------------------------------------------------------------------------- ##"<< endl;
-	//	ufs<<"## Need one value for each area and sex.                                    " << endl;
-	//	ufs<< "53.2  "  	<< "\t" << "# -asymptotic length (linf)  not updated         (nage)"  <<endl;
-	//	ufs<< "0.3   "  	<< "\t" << "#-brody growth coefficient (k) not updated"  <<endl;
-	//	ufs<< "-0.5  "   	<< "\t" << "#-theoretical age at zero length (to)"  <<endl;
-	//	ufs<< "5e-6  "   	<< "\t" << "#-scaler in length-weight allometry"  <<endl;
-	//	ufs<< "3.0  "		<< "\t" << "#-power parameter in length-weight allometry"  <<endl;
-	//	ufs<< "3.45  "  	<< "\t" << "#-age at 50% maturity (approx with log(3.0)/k)"  <<endl;
-	//	ufs<< "0.35  "  	<< "\t" << "#-std at 50% maturity (CV ~ 0.1)"  <<endl;
-	//	ufs<< "1"  	<< "\t" << "#flag mat vec  (if nmat==1) then read this vector, else if nmat==0, ignore it."  <<endl;			
-	//	ufs<< fa 	<< "\t" << "#mat vec"  <<endl;		
-	//	ufs<<"## ------------------------------------------------------------------------- ##"<< endl;
-	//	ufs<<"## Aging Error vectors (mean,sd,sage,nage)                                   ##" << endl;
-	//	ufs<<"## ------------------------------------------------------------------------- ##"<< endl;
-	//	ufs<< 1 	<< "\t" << "# Number of ageing error_definitions"  <<endl;		
-	//	ufs<< "# 1 - No error"  <<endl;	
-	//	ufs<< age  <<endl;		
-	//	ufs<< "0.01  0.01  0.01  0.01  0.01  0.01  0.01  0.01  0.01  0.01  0.01  0.01  0.01  0.01  0.01  0.01  0.01  0.01  0.01  0.01"  <<endl;		
-	//	ufs<<"## ------------------------------------------------------------------------- ##" << endl;
-	//	ufs<<"## TIME SERIES data                                						   ##" << endl;
-	//	ufs<<"## ------------------------------------------------------------------------- ##" << endl;
-	//	ufs<<"## Observed catch from all gears, areas, and sex                             ##" << endl;
-	//	ufs<<"## sex: 1=female, 2=male, 0=asexual                         				   ##" << endl;
-	//	ufs<<"##               1 = catch in weight                                         ##" << endl;
-	//	ufs<<"##               2 = catch in numbers                                        ##" << endl;
-	//	ufs<<"##               3 = catch in spawn (roe)                                    ##" << endl;
-	//	ufs<<"## n_ct_obs" << endl;
-	//	ufs<<  ii -rep_yr <<endl;
-	//	ufs<<"## Year gear area group sex type value" << endl;
-	//	for(int i=rep_yr+1;i<=ii;i++){
-	//		//   year 		gear 		area 	  group       sex       type   		value             se
-	//		ufs<<  i <<"\t"<< 1 <<"\t"<< 1 <<"\t"<< 1 <<"\t"<< 0 <<"\t"<< 1 <<"\t"<<totcatch(i)<<"\t"<<0.1<<endl;
-	//	}
-	//	ufs<<"## ------------------------------------------------------------------------- ##" << endl;
-	//	ufs<<"## ABUNDANCE INDICES -A RAGGED ARRAY: (1,nit,1,nit_nobs,1,5)                 ##" << endl;
-	//	ufs<<"## ------------------------------------------------------------------------- ##" << endl;
-	//	ufs<< 1 	<< "\t" << "# Number of abundance series         int(nit)"  <<endl;
-	//	ufs<< svy 	<< "\t" << "# Number of observations in series   ivector(nit_nobs(1,nit))"  <<endl;
-	//	ufs<< 2 	<< "\t" << "#Survey type (see key below)        ivector(survey_type(1,nit))"  <<endl;
-	//	ufs<<"## 1 = survey is proportional to vulnerable numbers" << endl;
-	//	ufs<<"## 2 = survey is proportional to vulnerable biomass" << endl;
-	//	ufs<<"## 3 = survey is proportional to spawning biomass (e.g., a spawn survey)" << endl;
-	//	ufs<<"## iyr     index(it) gear area group sex log(SE) log(PE)   timing" << endl;
-	//	for(int l=1;l<=svy;l++){
-	//		//  	iyr     		index(it) 		  gear       area 		group 		sex 	log(SE)  		log(PE)   	timing
-	//		ufs<<surv_yrs(l) <<"\t"<< survB(l) <<"\t"<< 2 <<"\t"<< 1 <<"\t"<< 1 <<"\t"<< 0 <<"\t"<< 0.2<<"\t"<< 0.01<<"\t"<< 0.5 <<endl;
-	//	}
-	//	ufs<<"## ------------------------------------------------------------------------- ##" << endl;
-	//	ufs<<"## AGE COMPOSITION DATA (ROW YEAR, COL=AGE) Ragged object                    ##" << endl;
-	//	ufs<<"## ------------------------------------------------------------------------- ##" << endl;
-	//	ufs<< 2 	<< "\t" << "# Number of gears with age-comps int(na_gears)"  <<endl;
-	//	ufs<< ii-rep_yr << "\t" << svy	<< "\t" << "# Number of rows in the matrix   ivector(na_gears)"  <<endl;
-	//	ufs<< sage << "\t" << sage	<< "\t" << "## ivector(na_gears) of youngest age-class"  <<endl;
-	//	ufs<< nage << "\t" << nage	<< "\t" << "## ivector(na_gears) of oldest age-class + group"  <<endl;
-	//	ufs<< 10 << "\t" << 10	<< "\t" << "## effective sample size for multinomial"  <<endl;
-	//	ufs<< 1	<< "\t" << 1 << "\t" << "## Age composition flag (1==age comps, 0==length comps)"  <<endl;
-	//	ufs<<"## year gear area group sex age_err | data columns (numbers or proportions)" << endl;
-	//	for(int i=rep_yr+1;i<=ii;i++){
-	//		//  year 	  gear 		area 		group 		sex 	age_err | data columns (numbers or proportions)
-	//		ufs<<i <<"\t"<< 1 <<"\t"<< 1 <<"\t"<< 1 <<"\t"<< 0 <<"\t"<< 1 <<"\t"<< comm_obsCatage(i)(sage,nage) <<endl;
-	//	}
-	//	for(int l=1;l<=svy;l++){	
-	//		//  	year 	  		gear 	area 		group 		sex 	age_err | data columns (numbers or proportions)
-	//		ufs<<surv_yrs(l)<<"\t"<< 2 <<"\t"<< 1 <<"\t"<< 1 <<"\t"<< 0 <<"\t"<< 1 <<"\t"<< surv_obsCatage(l)(sage,nage) <<endl;
-	//	}	
-	//	ufs<<"## ------------------------------------------------------------------------- ##" << endl;
-	//	ufs<<"## EMPIRICAL WEIGHT-AT-AGE DATA                                              ##" << endl;
-	//	ufs<<"## ------------------------------------------------------------------------- ##" << endl;
-	//	ufs<<"## Number of weight-at-age tables (n_wt_tab)                                 ##" << endl;
-	//	ufs<< 1 <<endl;
-	//	ufs<<"## Number of rows in each weight-at-age table vector(n_wt_obs), use -99 if NA ##" << endl;
-	//	ufs<< ii-rep_yr <<endl;
-	//	ufs<<"## year gear area stock sex |age columns (sage, nage) of weight at age data   ##" << endl;
-	//	for(int i=rep_yr+1;i<=ii;i++){
-	//		ufs<<i <<"\t"<< 1 <<"\t"<< 1 <<"\t"<< 1 <<"\t"<< 0 <<"\t"<< Watage_comm(i)(sage,nage) <<endl;
-	//	}
-	//	ufs<<"##1975 2     1     1    0  0.0550 0.1575 0.2987 0.3658 0.6143 0.6306 0.7873 0.8738 0.9678 0.9075 0.9700 1.6933 1.5000 1.9000 1.9555 2.7445 2.7445 2.7445 2.7445 2.7445 2.7445" << endl;
-	// 	ufs<<"## ------------------------------------------------------------------------- ##" << endl;
-	//	ufs<<"## MARKER FOR END OF DATA FILE (eof)                                         ##" << endl;
-	//	ufs<<"## ------------------------------------------------------------------------- ##" << endl;
-	//	ufs<< 999 <<endl;                                
+FUNCTION void write_LSRA_data_file(const int& ii,const int& svy)
+
+	
+	ofstream rfs("/Users/catarinawor/Documents/length_SRA/examples/closedloop/hakelag.dat");
+	rfs<<"# DATA FILE FOR Length-SRA  " << endl;
+	rfs<<"## ------------------------------------------------------------------------- ##"<< endl;
+	rfs<<"# syr "<< endl;
+	rfs<<rep_yr+1<< endl;
+	rfs<<"# eyr "<< endl;
+	rfs<< ii << endl;
+	rfs<<"# sage "<< endl;
+	rfs<<sage<< endl;
+	rfs<<"# nage "<< endl;
+	rfs<< nage << endl;
+	rfs<<"# slen "<< endl;
+	rfs<< inilen << endl;
+	rfs<<"# nlen "<< endl;
+	rfs<< nlen << endl;
+	rfs<<"# lstp "<< endl;
+	rfs<< lenstp << endl;
+	rfs<<"# SR function "<< endl;
+	rfs<< 1 << endl;
+	rfs<<"# m "<< endl;
+	rfs<< m << endl;
+	rfs<<"# alw "<< endl;
+	rfs<< awt << endl;
+	rfs<< "# blw" << endl;
+	rfs<< bwt << endl;
+	rfs<< "# w@age " << endl;
+	rfs<< ywa(ii)(sage,nage) << endl;
+	rfs<< "# wasw " << endl;
+	rfs<< "0 " << endl;
+	rfs<< "# vul " << endl;
+	rfs<< va << endl;
+	rfs<< "# fec " << endl;
+	rfs<< elem_prod(fa,ywa(ii)(sage,nage)) << endl;
+	rfs<< "# nyt " << endl;
+	rfs<< svy << endl;
+	rfs<< "# iyr  " << endl;
+	rfs<< surv_yrs(1,svy) << endl;
+	rfs<< "# it  " << endl;
+	rfs<< survB(1,svy) << endl;
+	rfs<< "# Clt   " << endl;
+	rfs<< (comm_obsCatLen).sub(rep_yr+1,ii) << endl;
+	rfs<< "# linf"  <<endl;    
+	rfs<< mean(Linf) <<endl;     
+	rfs<< "# vbk"  <<endl;    
+	rfs<< vbk <<endl;       
+	rfs<< "# to"  <<endl;    
+	rfs<< to <<endl;   
+	rfs<< "# cvl"  <<endl;    
+	rfs<< cvl <<endl;   
+	rfs<< "# cv_it"  <<endl;    
+	rfs<< "0.1" <<endl;  
+	rfs<< "# sigVul "  <<endl;    
+	rfs<< "50" <<endl;   
+	rfs<< "#uinit"  <<endl;    
+	rfs<< "0.0" <<endl;   
+	rfs<< "# eof " <<endl;                              
+	rfs<< "999 " <<endl;   
+
+
+
+FUNCTION void write_iscam_ctl_file(const int& ii,const int& svy)
+
+	ofstream mfs("/Users/catarinawor/Documents/iSCAM/examples/hakelag/DATA/hakelag.ctl");
+	mfs<<"## ------------------------------------------------------------------------------------ ##"<< endl;
+	mfs<<"## CONTROL FILE TEMPLATE                                                                ##"<< endl;
+	mfs<<"## ------------------------------------------------------------------------------------ ##"<< endl;
+	mfs<<"## ------------------------------------------------------------------------------------ ##"<< endl;
+	mfs<<"## CONTROLS FOR LEADING PARAMETERS                                                      ##"<< endl;
+	mfs<<"##  Prior descriptions:                                                                 ##"<< endl;
+	mfs<<"##                      -0 uniform      (0,0)                                           ##"<< endl;
+	mfs<<"##                      -1 normal       (p1=mu,p2=sig)                                  ##"<< endl;
+	mfs<<"##                      -2 lognormal    (p1=log(mu),p2=sig)                             ##"<< endl;
+	mfs<<"##                      -3 beta         (p1=alpha,p2=beta)                              ##"<< endl;
+	mfs<<"##                      -4 gamma        (p1=alpha,p2=beta)                              ##"<< endl;	
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## npar"<<endl<< "7"<< endl;
+	mfs<<"## ival         lb      ub      phz     prior   p1      p2        #parameter            ##"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<< 1.2  		 <<"\t"<< -1.0 <<"\t"<< 4  	 <<"\t"<< 1  <<"\t"<< 1  <<"\t"<<  1.2 	 <<"\t"<<  0.4   <<"\t"<<"#log_ro   ##"<<endl;
+   	mfs<< 0.862 	 <<"\t"<<  0.2 <<"\t"<< 1.0  <<"\t"<< 2  <<"\t"<< 3  <<"\t"<<  9.909 <<"\t"<< 2.959  <<"\t"<<"#steepness    ##"<<endl;
+   	mfs<< -1.537117  <<"\t"<< -4.0 <<"\t"<< 0.0  <<"\t"<< -3 <<"\t"<< 1  <<"\t"<< -1.609 <<"\t"<< 0.1    <<"\t"<<"#log_m g&b    ##"<<endl;
+   	mfs<< 2.0  		 <<"\t"<< -4.0 <<"\t"<< 10.0 <<"\t"<< 1  <<"\t"<< 0  <<"\t"<< -3.0 	 <<"\t"<< 10.0   <<"\t"<<"#log_avgrec   ##"<<endl;
+   	mfs<< 1.0  		 <<"\t"<< -4.0 <<"\t"<< 10.0 <<"\t"<< 1  <<"\t"<< 0  <<"\t"<< -3.0   <<"\t"<< 10.0   <<"\t"<<"#log_recinit  ##"<<endl;
+   	mfs<< 0.03764649 <<"\t"<< 0.01 <<"\t"<< 0.99 <<"\t"<< 4  <<"\t"<< 3  <<"\t"<<  5.98  <<"\t"<< 155.98 <<"\t"<<"#rho          ##"<<endl;
+   	mfs<< 10.4909967 <<"\t"<< 0.01 <<"\t"<< 10.0 <<"\t"<< 3  <<"\t"<< 4  <<"\t"<<  4.01  <<"\t"<< 2.01   <<"\t"<<"#sigma_r      ##"<<endl;
+	//mfs<< 0.9805792  <<"\t"<<  -3 <<"\t"<< 5.0  <<"\t"<< 1  <<"\t"<< 1  <<"\t"<<  1.2 	 <<"\t"<<  0.4   <<"\t"<<"#log_ro   ##"<<endl;
+   	//mfs<< 0.862 	 <<"\t"<<  0.2 <<"\t"<< 1.0  <<"\t"<< 2  <<"\t"<< 3  <<"\t"<<  9.909 <<"\t"<< 2.959  <<"\t"<<"#steepness    ##"<<endl;
+   	//mfs<< -1.537117  <<"\t"<< -4.0 <<"\t"<< 0.0  <<"\t"<< -3 <<"\t"<< 1  <<"\t"<< -1.609 <<"\t"<< 0.1    <<"\t"<<"#log_m g&b    ##"<<endl;
+   	//mfs<< 2.0  		 <<"\t"<< -4.0 <<"\t"<< 10.0 <<"\t"<< 4  <<"\t"<< 0  <<"\t"<< -3.0 	 <<"\t"<< 10.0   <<"\t"<<"#log_avgrec   ##"<<endl;
+   	//mfs<< 1.0  		 <<"\t"<< -4.0 <<"\t"<< 10.0 <<"\t"<< 4  <<"\t"<< 0  <<"\t"<< -3.0   <<"\t"<< 10.0   <<"\t"<<"#log_recinit  ##"<<endl;
+   	//mfs<< 0.03764649 <<"\t"<< 0.01 <<"\t"<< 0.99 <<"\t"<< 4  <<"\t"<< 3  <<"\t"<<  5.98  <<"\t"<< 155.98 <<"\t"<<"#rho          ##"<<endl;
+   	//mfs<< 10.4909967 <<"\t"<< 0.01 <<"\t"<< 10.0 <<"\t"<< 1  <<"\t"<< 4  <<"\t"<<  4.01  <<"\t"<< 2.01   <<"\t"<<"#sigma_r      ##"<<endl;
+   	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## CONTROL PARAMETERS FOR AGE/SIZE COMPOSITION DATA FOR na_gears                        ##"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## Likelihood type for each gear:														  ##"<< endl;
+	mfs<<"##     -1 : multivariate logistic (dmvlogistic) 										  ##"<< endl;
+	mfs<<"##     -2 : multinomial, sample size based on input data 								  ##"<< endl;
+	mfs<<"##     -3 : logistic_normal, no autocorrelation, AR1, AR2. 							  ##"<< endl;
+	mfs<<"##     -4 : logistic_normal, AR1 														  ##"<< endl;
+	mfs<<"##     -5 : logistic_normal, AR2 														  ##"<< endl;
+	mfs<<"##     -6 : multinomial with estimated effective samples size (log_age_tau2 phz >0) 	  ##"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## Number of columns == na_gears." << endl;
+	mfs<<" 1 "	 <<"\t"<< " 2 " 	<<"\t"<< "## • Gear Index"<<endl;
+   	mfs<<" 1 "	 <<"\t"<< " 1 "  	<<"\t"<< "## • Likelihood type"<<endl;
+   	mfs<<"0.000" <<"\t"<< "0.000"	<<"\t"<< "## • Minimum proportion for aggregation & tail compression"<<endl;
+   	mfs<<"0.0000"<<"\t"<< "0.0000" 	<<"\t"<< "## • Small constant to add to comps & renormalize"<<endl;
+   	mfs<<" 1 "	 <<"\t"<< " 1 " 	<<"\t"<< "## • phase for log_age_tau2 estimation. "<<endl;
+   	mfs<<" 2 "	 <<"\t"<< " 2 " 	<<"\t"<< "## • phase for phi1 estimation: bounded (-1,1) AR1 "<<endl;
+   	mfs<<"-2 "	 <<"\t"<< "-2 " 	<<"\t"<< "## • phase for phi2 estimation: bounded (0,1)  AR2 "<<endl;
+   	mfs<<"-2 "	 <<"\t"<< "-2 " 	<<"\t"<< "## • phase for degrees of freedom for student T. "<<endl;
+   	mfs<<"-12345" <<"\t"<<  "## • int check (-12345)"<<endl;
+   	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## SELECTIVITY CONTROLS                                                                 ##"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## - Each gear must have at least one selectivity and retention curve.					"<< endl;
+	mfs<<"## - Use a -ve phase with the gear index to mirror another gear.  Note 					"<< endl;
+	mfs<<"##   that if you mirror another gear, it must have the same sel type and                  "<< endl;
+	mfs<<"##   age and year nodes so that the arrays are the same shape & block years.				"<< endl;
+	mfs<<"##																						"<< endl;
+	mfs<<"## • Index       = gear index for selectivity curve.										"<< endl;
+	mfs<<"## • sel_type    = type of selectivity function (see Legend). 							"<< endl;
+	mfs<<"## • sel_mu      = mean age/length 50% selectivity. 										"<< endl;
+	mfs<<"## • sel_sd      = std in 50% SELECTIVITY 												"<< endl;
+	mfs<<"## • sex_dep     = 0 -> no;  1 -> offset for sex 2. 										"<< endl;
+	mfs<<"## • size_nodes  = # of nodes for age/size cubic spline. 									"<< endl;
+	mfs<<"## • year_nodes  = # of nodes for time varying bicubic spline. 							"<< endl;
+	mfs<<"## • phz_mirror  = phase of estimation (-ve phase to mirror selextivity index) 			"<< endl;
+	mfs<<"## • lam1        = penalty weight for 2nd differences (w = 1/(2•sig^2)). 					"<< endl;
+	mfs<<"## • lam2        = penalty weight for dome-shaped selectivity. 							"<< endl;
+	mfs<<"## • lam3        = penalty weight for time-varying selectivity. 							"<< endl;
+	mfs<<"## • start_block = year index for first year of selectivity curve.						"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## sel_nBlocks    ret_nBlocks      ## Gear Description.						"<< endl;
+	mfs<<" 2 " <<"\t"<< " 1 " <<"\t"<< "## Commercial retained 					"<< endl;
+    mfs<<" 1 " <<"\t"<< " 0 " <<"\t"<< "## survey retained    					"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;					
+	mfs<<"## Selectivity P(capture of all size/age)													"<< endl;
+	mfs<<"## slx_dControls																			"<< endl;				
+	mfs<<"## • index for sex (0=both, 1=female, 2=male)												"<< endl;
+	mfs<<"##        sel   sel  sel       age    year  phz or                    start  end        ##"<< endl;
+	mfs<<"## Index  type  mu   sd   sex  nodes  nodes mirror lam1  lam2  lam3 | block  block      ##"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+    mfs<<"1" <<"\t"<<"4" <<"\t"<<"3.5" <<"\t"<<"0.45" <<"\t"<<"0" <<"\t"<<"7" <<"\t"<<"1" <<"\t"<<"2" <<"\t"<<"150.0" <<"\t"<<"1.0" <<"\t"<<"1.0" <<"\t"<<rep_yr <<"\t"<<"1999"<<endl;
+    mfs<<"1" <<"\t"<<"4" <<"\t"<<"3.5" <<"\t"<<"0.45" <<"\t"<<"0" <<"\t"<<"7" <<"\t"<<"1" <<"\t"<<"2" <<"\t"<<"150.0" <<"\t"<<"1.0" <<"\t"<<"1.0" <<"\t"<<"1999" <<"\t"<<ii<<endl;
+    mfs<<"2" <<"\t"<<"2" <<"\t"<<"1.5" <<"\t"<<"0.45" <<"\t"<<"0" <<"\t"<<"4" <<"\t"<<"5" <<"\t"<<"2" <<"\t"<<"200.0" <<"\t"<<"50.0"<<"\t"<<"50.0"<<"\t"<<rep_yr <<"\t"<<ii<<endl;
+    mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## Retention P(retaining size/age)													 	"<< endl;														
+	mfs<<"## ret_dControls																			"<< endl;
+	mfs<<"## • index for sex (0=both, 1=female, 2=male)												"<< endl;
+	mfs<<"##        sel   sel  sel       age    year  phz or                    start  end        ##"<< endl;
+	mfs<<"## Index  type  mu   sd   sex  nodes  nodes mirror lam1  lam2  lam3 | block  block      ##"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+  	mfs<<"-1"<<"\t"<<"2"<<"\t"<<"10"<<"\t"<<"2.0"<<"\t"<<"1"<<"\t"<<"0"<<"\t"<<"0"<<"\t"<<"-2"<<"\t"<<"0.0"<<"\t"<<"0.0"<<"\t"<<"0.0"<<"\t"<<syr<<"\t"<<ii <<endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## LEGEND FOR SELECTIVITY TYPES (sel_type)                                              ##"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## sel  | No.        | 																	"<< endl;
+	mfs<<"## type | parameters | Description 														"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"##   1  |   2        | • Logistic curve with mean and standard dev at age = p(50%) 		"<< endl;
+	mfs<<"##   2  | (nages-1)  | • Age-specific selectivity coefficients for (sage):(nage-1) 		"<< endl;
+	mfs<<"##   3  | age_nodes  | • Age-specific coefficients based on cubic-spline interpolation 	"<< endl;
+	mfs<<"##   4  | n*age_nodes| • Annual age-specific coeffs using cubic-spline interpolation 		"<< endl;
+	mfs<<"##   5  | nyr*nage   | • Bicubic spline interpolation over time & age. 					"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## TO BE DEPRECATED															 "<< endl;	
+	mfs<<"## ------------------------------------------------------------------------- ##"<< endl;
+	mfs<<"## SELECTIVITY PARAMETERS Columns for gear                                   ##"<< endl;
+	mfs<<"## OPTIONS FOR SELECTIVITY (isel_type):                                      ##"<< endl;
+	mfs<<"##      1) logistic selectivity parameters                                   ##"<< endl;
+	mfs<<"##      2) selectivity coefficients                                          ##"<< endl;
+	mfs<<"##      3) a constant cubic spline with age-nodes                            ##"<< endl;
+	mfs<<"##      4) a time varying cubic spline with age-nodes                        ##"<< endl;
+	mfs<<"##      5) a time varying bicubic spline with age & year nodes.              ##"<< endl;
+	mfs<<"##      6) fixed logistic (set isel_type=6, and estimation phase to -1)      ##"<< endl;
+	mfs<<"##      7) logistic function of body weight.                                 ##"<< endl;
+	mfs<<"##      8) logistic with weight deviations (3 parameters)                    ##"<< endl;
+	mfs<<"##      11) logistic selectivity with 2 parameters based on mean length      ##"<< endl;
+	mfs<<"##      12) length-based selectivity coefficients with spline interpolation  ##"<< endl;
+	mfs<<"##      sig=0.05 0.10 0.15 0.20 0.30 0.40 0.50                               ##"<< endl;
+	mfs<<"##      wt =200. 50.0 22.2 12.5 5.56 3.12 2.00                               ##"<< endl;
+	mfs<<"## ------------------------------------------------------------------------- ##"<< endl;
+  	mfs<<"5   "<<"\t"<<" 2   "<<"\t"<<"        # 1  -selectivity type ivector(isel_type) for gear"<< endl;
+  	mfs<<"2.5 "<<"\t"<<" 2.5 "<<"\t"<<"        # 2  -Age/length at 50% selectivity (logistic)"<< endl;
+  	mfs<<"0.45"<<"\t"<<" 0.45"<<"\t"<<"        # 3  -STD at 50% selectivity (logistic)"<< endl;
+  	mfs<<"4   "<<"\t"<<" 5   "<<"\t"<<"        # 4  -No. of age nodes for each gear (0=ignore)"<< endl;
+  	mfs<<"5   "<<"\t"<<" 5   "<<"\t"<<"        # 5  -No. of year nodes for 2d spline(0=ignore)"<< endl;
+  	mfs<<"1   "<<"\t"<<" 1   "<<"\t"<<"        # 6  -Phase of estimation (-1 for fixed)"<< endl;
+  	mfs<<"150 "<<"\t"<<" 150 "<<"\t"<<"     # 7  -Penalty wt for 2nd differences w=1/(2*sig^2)"<< endl;
+  	mfs<<"2.00"<<"\t"<<" 2.00"<<"\t"<<"  # 8  -Penalty wt for dome-shaped w=1/(2*sig^2)"<< endl;
+  	mfs<<"12.5"<<"\t"<<" 12.5"<<"\t"<<"    # 9  -Penalty wt for time-varying selectivity"<< endl;
+  	mfs<<"1   "<<"\t"<<" 1   "<<"\t"<<"       # 10 -n_sel_blocks (number of selex blocks)"<< endl;
+	mfs<<"## ------------------------------------------------------------------------- ##"<< endl;
+	mfs<<"## Start year of each time block: 1 row for each gear 						 "<< endl;
+	mfs<<rep_yr<< endl;
+	mfs<<rep_yr<< endl;
+	mfs<<"##"<< endl;
+	mfs<<"##"<< endl;
+	mfs<<"##"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## TIME VARYING NATURAL MORTALIIY RATES                                                 ##"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## TYPE: "<< endl;
+	mfs<<"##      0 = constant natural mortality "<< endl;
+	mfs<<"##      1 = Random walk (deviates constrained by variance in M) "<< endl;
+	mfs<<"##      2 = Cubic Spline (deviates constrined by nodes & node-placement)"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ## "<< endl;
+    mfs<<"0"<< endl;
+	mfs<<"## Phase of estimation"<< endl;
+	mfs<<"  -3"<< endl;
+	mfs<<"## STDEV in m_dev for Random walk"<< endl;
+	mfs<<"  0.01"<< endl;
+	mfs<<"## Number of nodes for cubic spline"<< endl;
+	mfs<<"  0"<< endl;
+	mfs<<"## Year position of the knots (vector must be equal to the number of nodes)"<< endl;
+  	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## ABUNDANCE OBSERVATION MODELS 															"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## QTYPE:"<< endl;
+	mfs<<"##    0 = FIXED SURVEY Q (specify log(mean) for prior log(mean))"<< endl;
+	mfs<<"##    1 = CONSTANT Q     (use MLE for q and optional informative prior)"<< endl;
+	mfs<<"##    2 = RANDOM WALK Q  (use prior mean & sd for penalized random walk)"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"1             # -number of surveys (n_it_nobs) 											"<< endl;
+	mfs<<" 2            # -QTYPE (see legend above)													"<< endl;
+	mfs<<" 0            # -prior log(mean)															"<< endl;
+	mfs<<" 0.1            # -prior sd (set to 0 for uniformative prior)								"<< endl;
+	mfs<<" 1            # -Estimation Phase 														"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## OTHER MISCELANEOUS CONTROLS                                                          ##"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"0           # 1  -verbose ADMB output (0=off, 1=on)"<< endl;
+	mfs<<"1           # 2  -recruitment model (1=beverton-holt, 2=ricker)"<< endl;
+	mfs<<"0.100       # 3  -std in observed catches in first phase."<< endl;
+	mfs<<"0.0707      # 4  -std in observed catches in last phase."<< endl;
+	mfs<<"0           # 5  -Assume unfished in first year (0=FALSE, 1=TRUE)"<< endl;
+	mfs<<"0.00        # 6  -Minimum proportion to consider in age-proportions for dmvlogistic"<< endl;
+	mfs<<"0.20        # 7  -Mean fishing mortality for regularizing the estimates of Ft"<< endl;
+	mfs<<"0.10        # 8  -std in mean fishing mortality in first phase"<< endl;
+	mfs<<"2.00        # 9  -std in mean fishing mortality in last phase"<< endl;
+	mfs<<"-3          # 10 -DEPRECATED phase for estimating m_deviations (use -1 to turn off mdevs)"<< endl;
+	mfs<<"0.1         # 11 -DEPRECATED std in deviations for natural mortality"<< endl;
+	mfs<<"12          # 12 -DEPRECATED number of estimated nodes for deviations in natural mortality"<< endl;
+	mfs<<"0.00        # 13 -fraction of total mortality that takes place prior to spawning"<< endl;
+	mfs<<"0           # 14 -number of prospective years to add to syr. "<< endl;
+	mfs<<"0           # 15 -switch for IFD distribution in selectivity simulations"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"## MARKER FOR END OF CONTROL FILE (eofc)"<< endl;
+	mfs<<"## ———————————————————————————————————————————————————————————————————————————————————— ##"<< endl;
+	mfs<<"999"<< endl;
+
+
+FUNCTION void write_iscam_data_file(const int& ii,const int& svy)
+
+	
+
+	ofstream ufs("/Users/catarinawor/Documents/iSCAM/examples/hakelag/DATA/hakelag.dat");
+	ufs<<"# DATA FILE FOR iSCAM  " << endl;
+	ufs<<"## ------------------------------------------------------------------------- ##"<< endl;
+	ufs<<"## MODEL DIMENSIONS  " << endl;
+	ufs<<"## ------------------------------------------------------------------------- ##"<< endl;
+	ufs<< 1  	<< "\t" << "# -number of areas            (narea) "  <<endl;
+	ufs<< 1 	<< "\t" << "# -number of groups or stocks (ngroup)"  <<endl;
+	ufs<< 1  	<< "\t" << "# -number of sexes            (nsex)"  <<endl;
+	ufs<< rep_yr+1 	<< "\t" << "# -first year of data         (syr)"  <<endl;
+	ufs<< ii 	<< "\t" << "# -last year of data          (nyr)"  <<endl;
+	ufs<< sage 	<< "\t" << "# -age of youngest age class  (sage)"  <<endl;
+	ufs<< nage 	<< "\t" << "# -age of plus group          (nage)"  <<endl;
+	ufs<< 2 	<< "\t" << "# -number of gears            (ngear)"  <<endl;
+	ufs<<"## ------------------------------------------------------------------------- ##"<< endl;
+	ufs<<"## Allocation for each gear in (ngear), use 0 for survey gears. " << endl;
+	ufs<<"## ------------------------------------------------------------------------- ##"<< endl;
+	ufs<< "1 0"  <<endl;
+	ufs<<"## ------------------------------------------------------------------------- ##"<< endl;
+	ufs<<"## Age-schedule and population parameters                                    ##" << endl;
+	ufs<<"## ------------------------------------------------------------------------- ##"<< endl;
+	ufs<<"## Need one value for each area and sex.                                    " << endl;
+	ufs<< "53.2  "  	<< "\t" << "# -asymptotic length (linf)  not updated         (nage)"  <<endl;
+	ufs<< "0.3   "  	<< "\t" << "#-brody growth coefficient (k) not updated"  <<endl;
+	ufs<< "-0.5  "   	<< "\t" << "#-theoretical age at zero length (to)"  <<endl;
+	ufs<< "5e-6  "   	<< "\t" << "#-scaler in length-weight allometry"  <<endl;
+	ufs<< "3.0  "		<< "\t" << "#-power parameter in length-weight allometry"  <<endl;
+	ufs<< "3.45  "  	<< "\t" << "#-age at 50% maturity (approx with log(3.0)/k)"  <<endl;
+	ufs<< "0.35  "  	<< "\t" << "#-std at 50% maturity (CV ~ 0.1)"  <<endl;
+	ufs<< "1"  	<< "\t" << "#flag mat vec  (if nmat==1) then read this vector, else if nmat==0, ignore it."  <<endl;			
+	ufs<< fa 	<< "\t" << "#mat vec"  <<endl;		
+	ufs<<"## ------------------------------------------------------------------------- ##"<< endl;
+	ufs<<"## Aging Error vectors (mean,sd,sage,nage)                                   ##" << endl;
+	ufs<<"## ------------------------------------------------------------------------- ##"<< endl;
+	ufs<< 1 	<< "\t" << "# Number of ageing error_definitions"  <<endl;		
+	ufs<< "# 1 - No error"  <<endl;	
+	ufs<< age  <<endl;		
+	ufs<< "0.01  0.01  0.01  0.01  0.01  0.01  0.01  0.01  0.01  0.01  0.01  0.01  0.01  0.01  0.01  0.01  0.01  0.01  0.01  0.01"  <<endl;		
+	ufs<<"## ------------------------------------------------------------------------- ##" << endl;
+	ufs<<"## TIME SERIES data                                						   ##" << endl;
+	ufs<<"## ------------------------------------------------------------------------- ##" << endl;
+	ufs<<"## Observed catch from all gears, areas, and sex                             ##" << endl;
+	ufs<<"## sex: 1=female, 2=male, 0=asexual                         				   ##" << endl;
+	ufs<<"##               1 = catch in weight                                         ##" << endl;
+	ufs<<"##               2 = catch in numbers                                        ##" << endl;
+	ufs<<"##               3 = catch in spawn (roe)                                    ##" << endl;
+	ufs<<"## n_ct_obs" << endl;
+	ufs<<  ii -rep_yr <<endl;
+	ufs<<"## Year gear area group sex type value" << endl;
+	for(int i=rep_yr+1;i<=ii;i++){
+		//   year 		gear 		area 	  group       sex       type   		value             se
+		ufs<<  i <<"\t"<< 1 <<"\t"<< 1 <<"\t"<< 1 <<"\t"<< 0 <<"\t"<< 1 <<"\t"<<yYieldtotal(i)<<"\t"<<0.1<<endl;
+	}
+	ufs<<"## ------------------------------------------------------------------------- ##" << endl;
+	ufs<<"## ABUNDANCE INDICES -A RAGGED ARRAY: (1,nit,1,nit_nobs,1,5)                 ##" << endl;
+	ufs<<"## ------------------------------------------------------------------------- ##" << endl;
+	ufs<< 1 	<< "\t" << "# Number of abundance series         int(nit)"  <<endl;
+	ufs<< svy 	<< "\t" << "# Number of observations in series   ivector(nit_nobs(1,nit))"  <<endl;
+	ufs<< 2 	<< "\t" << "#Survey type (see key below)        ivector(survey_type(1,nit))"  <<endl;
+	ufs<<"## 1 = survey is proportional to vulnerable numbers" << endl;
+	ufs<<"## 2 = survey is proportional to vulnerable biomass" << endl;
+	ufs<<"## 3 = survey is proportional to spawning biomass (e.g., a spawn survey)" << endl;
+	ufs<<"## iyr     index(it) gear area group sex log(SE) log(PE)   timing" << endl;
+	for(int l=1;l<=svy;l++){
+		//  	iyr     		index(it) 		  gear       area 		group 		sex 	log(SE)  		log(PE)   	timing
+		ufs<<surv_yrs(l) <<"\t"<< survB(l) <<"\t"<< 2 <<"\t"<< 1 <<"\t"<< 1 <<"\t"<< 0 <<"\t"<< 0.2<<"\t"<< 0.01<<"\t"<< 0.5 <<endl;
+	}
+	ufs<<"## ------------------------------------------------------------------------- ##" << endl;
+	ufs<<"## AGE COMPOSITION DATA (ROW YEAR, COL=AGE) Ragged object                    ##" << endl;
+	ufs<<"## ------------------------------------------------------------------------- ##" << endl;
+	ufs<< 2 	<< "\t" << "# Number of gears with age-comps int(na_gears)"  <<endl;
+	ufs<< ii-rep_yr << "\t" << svy	<< "\t" << "# Number of rows in the matrix   ivector(na_gears)"  <<endl;
+	ufs<< sage << "\t" << sage	<< "\t" << "## ivector(na_gears) of youngest age-class"  <<endl;
+	ufs<< nage << "\t" << nage	<< "\t" << "## ivector(na_gears) of oldest age-class + group"  <<endl;
+	ufs<< 10 << "\t" << 10	<< "\t" << "## effective sample size for multinomial"  <<endl;
+	ufs<< 1	<< "\t" << 1 << "\t" << "## Age composition flag (1==age comps, 0==length comps)"  <<endl;
+	ufs<<"## year gear area group sex age_err | data columns (numbers or proportions)" << endl;
+	for(int i=rep_yr+1;i<=ii;i++){
+		//  year 	  gear 		area 		group 		sex 	age_err | data columns (numbers or proportions)
+		ufs<<i <<"\t"<< 1 <<"\t"<< 1 <<"\t"<< 1 <<"\t"<< 0 <<"\t"<< 1 <<"\t"<< comm_obsCatage(i)(sage,nage) <<endl;
+	}
+	for(int l=1;l<=svy;l++){	
+		//  	year 	  		gear 	area 		group 		sex 	age_err | data columns (numbers or proportions)
+		ufs<<surv_yrs(l)<<"\t"<< 2 <<"\t"<< 1 <<"\t"<< 1 <<"\t"<< 0 <<"\t"<< 1 <<"\t"<< surv_obsCatage(l)(sage,nage) <<endl;
+	}	
+	ufs<<"## ------------------------------------------------------------------------- ##" << endl;
+	ufs<<"## EMPIRICAL WEIGHT-AT-AGE DATA                                              ##" << endl;
+	ufs<<"## ------------------------------------------------------------------------- ##" << endl;
+	ufs<<"## Number of weight-at-age tables (n_wt_tab)                                 ##" << endl;
+	ufs<< 1 <<endl;
+	ufs<<"## Number of rows in each weight-at-age table vector(n_wt_obs), use -99 if NA ##" << endl;
+	ufs<< ii-rep_yr <<endl;
+	ufs<<"## year gear area stock sex |age columns (sage, nage) of weight at age data   ##" << endl;
+	for(int i=rep_yr+1;i<=ii;i++){
+		ufs<<i <<"\t"<< 1 <<"\t"<< 1 <<"\t"<< 1 <<"\t"<< 0 <<"\t"<< Watage_comm(i)(sage,nage) <<endl;
+	}
+	ufs<<"##1975 2     1     1    0  0.0550 0.1575 0.2987 0.3658 0.6143 0.6306 0.7873 0.8738 0.9678 0.9075 0.9700 1.6933 1.5000 1.9000 1.9555 2.7445 2.7445 2.7445 2.7445 2.7445 2.7445" << endl;
+ 	ufs<<"## ------------------------------------------------------------------------- ##" << endl;
+	ufs<<"## MARKER FOR END OF DATA FILE (eof)                                         ##" << endl;
+	ufs<<"## ------------------------------------------------------------------------- ##" << endl;
+	ufs<< 999 <<endl;                                
 	
 
 REPORT_SECTION
@@ -2140,9 +2347,9 @@ REPORT_SECTION
 
 TOP_OF_MAIN_SECTION
 	time(&start);
-	arrmblsize = 900000000;
-	gradient_structure::set_GRADSTACK_BUFFER_SIZE(1.e7);
-	gradient_structure::set_CMPDIF_BUFFER_SIZE(1.e7);
+	arrmblsize = 10000000000;
+	gradient_structure::set_GRADSTACK_BUFFER_SIZE(1.e9);
+	gradient_structure::set_CMPDIF_BUFFER_SIZE(1.e9);
 	gradient_structure::set_MAX_NVAR_OFFSET(5000);
 	gradient_structure::set_NUM_DEPENDENT_VARIABLES(5000);
  
