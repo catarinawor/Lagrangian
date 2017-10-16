@@ -1656,8 +1656,11 @@ FUNCTION void calc_selectivity(const int& ii)
 
 	int n, nn;
 
-	
-		
+	double sumcat;
+	sumcat=value(sum(yCatchtotalage(ii)(sage,nage)));
+
+	if(sumcat>0){
+
 		for(n=1;n<=fisharea;n++){
 
 
@@ -1677,7 +1680,9 @@ FUNCTION void calc_selectivity(const int& ii)
 		}
 
 		seltotal(ii)(sage,nage) = elem_div(yCatchtotalage(ii)(sage,nage),yNage(ii)(sage,nage))/max(elem_div(yCatchtotalage(ii)(sage,nage),yNage(ii)(sage,nage)));
-		
+	}else{
+		seltotal(ii)(sage,nage)=seltotal(ii-1)(sage,nage);
+	}
 		//cout<<"seltotal(ii)(sage,nage) "<<seltotal(ii)<<endl;
 		//cout<<"yCatchtotalage(ii)(sage,nage) "<<yCatchtotalage(ii)(sage,nage)<<endl;
 
@@ -1990,7 +1995,7 @@ FUNCTION void calc_Fspr_target(const int& ii, double target )
 			} 
 		}
 				
-		//cout<<"ftarget(ii) "<<ftarget(ii)<<endl;
+		cout<<"ftarget(ii) "<<ftarget(ii)<<endl;
 
 		//exit(1);
 
@@ -2029,13 +2034,12 @@ FUNCTION void calc_known_catlim(const int& ii, double seen_ytB)
 	//40:10 harvest control rule	
 
 		if(BBo>0.4){
-			cout<<"BBo"<<BBo<<endl;
-				cout<<"fmsy(ii)"<<fmsy(ii)<<endl;
+			//cout<<"ftarget(ii)"<<ftarget(ii)<<endl;
 
-			TAC = elem_prod(elem_div(fmsy(ii)*seltotal(ii),fmsy(ii)*seltotal(ii)+m),elem_prod(yNage(ii),(1-mfexp(-fmsy(ii)*seltotal(ii)-m))))*ywa(ii); 
+			TAC = elem_prod(elem_div(ftarget(ii)*seltotal(ii-1),ftarget(ii)*seltotal(ii-1)+m),elem_prod(yNage(ii),(1-mfexp(-ftarget(ii)*seltotal(ii-1)-m))))*ywa(ii); 
 			
-			cout<<"TAC"<<TAC<<endl;
 
+			
 
 		}else{
 		
@@ -2045,13 +2049,22 @@ FUNCTION void calc_known_catlim(const int& ii, double seen_ytB)
 
 				y = (BBo-0.1)/(0.4-0.1);
 
-				TAC = y*elem_prod(elem_div(fmsy(ii)*seltotal(ii),fmsy(ii)*seltotal(ii)+m),elem_prod(yNage(ii),(1-mfexp(-fmsy(ii)*seltotal(ii)-m))))*wa; 
+				TAC = elem_prod(elem_div(ftarget(ii)*seltotal(ii),ftarget(ii)*seltotal(ii)+m),elem_prod(yNage(ii),(1-mfexp(-ftarget(ii)*seltotal(ii)-m))))*ywa(ii)*y; 
 
 			}else{
 				TAC = 0;
 
 			}
 		}
+
+
+		if(TAC>600){
+			TAC = 600.;
+		}
+
+		cout<<"ii "<<ii<<endl<<"BBo "<<BBo<<endl;
+		cout<<"TAC "<<TAC<<endl;
+			
 
 		break;
 
@@ -2073,6 +2086,10 @@ FUNCTION void calc_known_catlim(const int& ii, double seen_ytB)
 
 		}
 		
+
+		if(TAC>600){
+			TAC = 600.;
+		}
 
 		break;
 
