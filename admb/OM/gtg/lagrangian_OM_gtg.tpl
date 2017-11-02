@@ -1,4 +1,3 @@
-
 //  ******************************************************************
 //  Lagragian movement model
 //  
@@ -442,7 +441,7 @@ DATA_SECTION
 			//cout<<"Xini is "<<Xini<<endl;	
 
 			ofstream nfs("catlim.txt");
-			nfs<<"#catlim" << endl << "00 0" <<endl;
+			nfs<<"#catlim" << endl << "0000000 0000000" <<endl;
 			
        			
 	END_CALCS
@@ -561,12 +560,13 @@ PARAMETER_SECTION
  	3darray propVBarea(1,n_rg,1,ptstp,sage-3,nage);
  	4darray P_al(1,ngroup,smon,nmon,sage,nage,1-3,nlen); 
 
- 	//buscar esse aqui
  	matrix obsCatchFGAge(1,tot_pcat,sage-3,nage);
 
 PRELIMINARY_CALCS_SECTION
 
 
+	//cout<<"wt"<<wt(rep_yr+1,nyr)<<endl;
+	//exit(1);
 	read_catlim();
 	initialization();
 
@@ -691,7 +691,7 @@ FUNCTION incidence_functions
 	for(int a = sage+1; a<= nage; a++){
 		lxo(a) = lxo(a-1)*mfexp(-m);
 	}	
-	//lxo(nage) /= (1. - mfexp(-m)); 
+	lxo(nage) += lxo(nage)* mfexp(-m); 
 
 
 	for(int im=smon;im<=nmon;im++){
@@ -706,13 +706,13 @@ FUNCTION incidence_functions
 		Bo 	+= lxo*Ro* Wage(g)(1)(sage,nage)*prop_ng(g);
 	}
 
-	So 		= kappa/phiE;
+	So 		= kappa/(phiE);
 	SBo 	= phiE*Ro;
 	beta 	= (kappa-1)/SBo;
 
 
 	//cout<<"kappa "<<kappa<<endl;
-	//cout<<"phiE "<<phiE <<endl;
+	//cout<<"SBo "<<SBo <<endl;
 	//cout<<"lxo "<<lxo <<endl;
 	//cout<<"wa "<<wa <<endl;
 	//cout<<"Wage(g)(1)(sage,nage) "<< Wage(1)(1)(sage,nage) <<endl;
@@ -739,15 +739,21 @@ FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt)
 
 		
         case 1:  
-
+        	
+        	//cout<< "prop_ng "<<sum(prop_ng)<<endl;
+        	//cout<< "expwt "<<expwt<<endl;
+        	
+        	//exit(1);
 
             for(int g=1;g<=ngroup;g++)
 			{
 				Nage(g)(ii)(sage-2)=ii;
 				Nage(g)(ii)(sage-1)=g;	
 				
-            	Nage(g)(ii)(sage) =(So*SB(ii-nmon)/(1.+beta*SB(ii-nmon)))*mfexp(expwt*err)* prop_ng(g);//*1.0/dg;
+            	Nage(g)(ii)(sage) = (So*SB(ii-nmon)/(1.+beta*SB(ii-nmon)))*mfexp(expwt- (sigR*sigR/2.))* prop_ng(g);//*1.0/dg;
 
+            	//(4.*h*Ro*SB(ii-nmon))/(SBo*(1-h)+SB(ii-nmon)*(5*h-1))*mfexp(expwt- (sigR*sigR/2))* prop_ng(g);
+            	//
             	//cout<<"chegou aqui? "<<endl;
 
             	for(int a = sage+1;a<=nage;a++)
@@ -766,7 +772,10 @@ FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt)
 								     Nage(g)(ii-1)(a-1)*(1.0-sum(propBarea))*mfexp(-(m_tsp));
 				}
 				
-				//Nage(g)(ii)(nage) = sum(elem_div(elem_prod(Nage(g)(ii-1)(nage-1)*propBarea,mfexp(-(m_tsp+q*Effarea(ii-1)*va(nage-1)))),
+				Nage(g)(ii)(nage) += Nage(g)(ii-1)(nage)*propBarea*mfexp(-(m_tsp+q*Effarea(ii-1)*va(nage))) +
+								     Nage(g)(ii-1)(nage)*(1.0-sum(propBarea))*mfexp(-(m_tsp));
+
+				//sum(elem_div(elem_prod(Nage(g)(ii-1)(nage-1)*propBarea,mfexp(-(m_tsp+q*Effarea(ii-1)*va(nage-1)))),
             	//				    (1.0-mfexp(-(m_tsp+q*Effarea(ii-1)*va(nage))))))+
             	//				    (Nage(g)(ii-1)(nage-1)*(1.0-sum(propBarea))*mfexp(-m_tsp))/(1.-mfexp(-m_tsp));
             	
@@ -825,7 +834,7 @@ FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt)
 				VulBage(ii)(sage,nage) += VulB(g)(ii)(sage,nage);
 
 				//tnage(sage,nage) += Nage(g)(ii)(sage,nage);
-				SB(ii) += elem_prod(Nage(g)(ii)(sage,nage),fa)*Wage(g)(indmonth(ii))(sage,nage)/2.;
+				SB(ii) += elem_prod(Nage(g)(ii)(sage,nage),fa)*Wage(g)(indmonth(ii))(sage,nage);
 				tB(ii) += Nage(g)(ii)(sage,nage)*Wage(g)(indmonth(ii))(sage,nage);
 				//totB(g)(ii)(sage,nage) = elem_prod(Nage(g)(ii)(sage,nage),wa(sage,nage));
 			            
@@ -1207,12 +1216,14 @@ FUNCTION calc_first_year
 		Nage(g)(1)(sage-2)=1;
 	
 			
-		Nage(g)(1)(sage) =(So*SBo/(1.+beta*SBo))* prop_ng(g);
+		Nage(g)(1)(sage) = Ro*prop_ng(g);
+		//(So*SBo/(1.+beta*SBo))* prop_ng(g);
 
         for(int a=sage+1 ; a <= nage ; a++)
 		{
 			Nage(g)(1)(a) = Nage(g)(1)(a-1) * mfexp(-m);
 		}
+		Nage(g)(1)(nage) += (Nage(g)(1)(nage)*mfexp(-m));
 		//Nage(g)(1)(nage) /= (1.-mfexp(-m));
       		          	
         VulB(g)(1)(sage-2) = 1;
@@ -1718,10 +1729,12 @@ FUNCTION calc_spr
 		for(a=sage+1; a<=nage;a++){
 			lz(a)= value(lz(a-1)*mfexp(-m-yFatage(ii)(a-1)));
 		}
-		lz(nage) /= value(1.-mfexp(-m-yFatage(ii)(nage)));
+		lz(nage) += value(lz(nage)*mfexp(-m-yFatage(ii)(nage)));
+
+		//lz(nage) /= value(1.-mfexp(-m-yFatage(ii)(nage)));
 
 
-		phie(ii)=elem_prod(lz,fa)*ywa(ii)/2;
+		phie(ii)=elem_prod(lz,fa)*ywa(ii);
 		spr(ii)=phie(ii)/phiE;
 
 	
@@ -1835,6 +1848,7 @@ FUNCTION calc_catlim
 
 		TAC = elem_prod(elem_div(fspr_SA*seltotal_SA,fspr_SA*seltotal_SA+m),elem_prod(yNage_SA,(1-mfexp(-fspr_SA*seltotal_SA-m))))*wa; 
 		
+		
 
 	}else{
 		
@@ -1846,6 +1860,8 @@ FUNCTION calc_catlim
 
 			TAC = y*elem_prod(elem_div(fspr_SA*seltotal_SA,fspr_SA*seltotal_SA+m),elem_prod(yNage_SA,(1-mfexp(-fspr_SA*seltotal_SA-m))))*wa; 
 
+			
+
 		}else{
 
 			TAC = 0;
@@ -1853,7 +1869,7 @@ FUNCTION calc_catlim
 		}
 	}
 
-	cout<< "TAC" << endl << TAC<< endl;
+	//cout<< "TAC" << endl << TAC<< endl;
 	catlim = TAC * nationTACprop;
 	cout<< "catlim" << endl << catlim<< endl;
 	//cout<< "seltotal_SA" << endl << seltotal_SA<< endl;
@@ -1902,7 +1918,9 @@ FUNCTION void calc_msy(const int& ii )
 		for(int a=sage+1; a<=nage;a++){
 			lz(a)= value(lz(a-1)*mfexp(-m-seltotal(ii-1)(a)*ftest(k)));
 		}
-		lz(nage) /= value(1.-mfexp(-m-seltotal(ii-1)(nage)*ftest(k)));
+		lz(nage) += value(lz(nage)*mfexp(-m-seltotal(ii-1)(nage)*ftest(k)));
+
+		//lz(nage) /= value(1.-mfexp(-m-seltotal(ii-1)(nage)*ftest(k)));
 		//cout<<"lz"<<lz<<endl;
 		//cout<<"lxo"<<lxo<<endl;
  		
@@ -1970,7 +1988,11 @@ FUNCTION void calc_Fspr_target(const int& ii, double target )
 		for( a=sage+1; a<=nage; a++){
 			lzt(a) = lzt(a-1) *value(mfexp(-m-seltotal(ii-1)(a)*ftest(k)));
 		}
-		lzt(nage) /= 1.0 - value(mfexp(-m-seltotal(ii-1)(nage)*ftest(k)));
+		lzt(nage) += value(lzt(nage)* mfexp(-m-seltotal(ii-1)(nage)*ftest(k)));
+		
+
+		//lzt(nage) /= 1.0 - value(mfexp(-m-seltotal(ii-1)(nage)*ftest(k)));
+		
 		//cout<<"ftest(k) "<<ftest(k)<<endl;
 		//cout<<"seltotal(ii-1) "<<seltotal(ii-1)<<endl;
 		//cout<<"lzt "<<lzt<<endl;
@@ -2009,7 +2031,7 @@ FUNCTION void calc_known_catlim(const int& ii, double seen_ytB)
 	//variables
 
 	double fspr_true;
-	dvar_vector seltotal_true(sage,nage);
+
 	dvar_vector yNage_true(sage,nage);
 	double Bo_true;
 	
@@ -2038,8 +2060,9 @@ FUNCTION void calc_known_catlim(const int& ii, double seen_ytB)
 
 			TAC = elem_prod(elem_div(ftarget(ii)*seltotal(ii-1),ftarget(ii)*seltotal(ii-1)+m),elem_prod(yNage(ii),(1-mfexp(-ftarget(ii)*seltotal(ii-1)-m))))*ywa(ii); 
 			
+			//cout<<"all good?? "<<endl;
+		 	//cout<<"BBo "<<BBo<<endl;
 
-			
 
 		}else{
 		
@@ -2050,8 +2073,16 @@ FUNCTION void calc_known_catlim(const int& ii, double seen_ytB)
 				y = (BBo-0.1)/(0.4-0.1);
 
 				TAC = elem_prod(elem_div(ftarget(ii)*seltotal(ii),ftarget(ii)*seltotal(ii)+m),elem_prod(yNage(ii),(1-mfexp(-ftarget(ii)*seltotal(ii)-m))))*ywa(ii)*y; 
+				//cout<<"ftarget(ii) "<<ftarget(ii)<<endl;
+				//cout<<"seltotal(ii)"<<seltotal(ii)<<endl;
 
+				//cout<<"BBo "<<BBo<<endl;
+				//cout<<"recovery TAC is "<<TAC<<endl;
+
+				
 			}else{
+
+				//cout<<"bad BBo "<<BBo<<endl;
 				TAC = 0;
 
 			}
@@ -2062,8 +2093,8 @@ FUNCTION void calc_known_catlim(const int& ii, double seen_ytB)
 			TAC = 600.;
 		}
 
-		cout<<"ii "<<ii<<endl<<"BBo "<<BBo<<endl;
-		cout<<"TAC "<<TAC<<endl;
+		//cout<<"ii "<<ii<<endl<<"BBo "<<BBo<<endl;
+		//cout<<"TAC "<<TAC<<endl;
 			
 
 		break;
@@ -2096,6 +2127,7 @@ FUNCTION void calc_known_catlim(const int& ii, double seen_ytB)
 
 	}
 
+	cout<<"BBo "<<BBo<<endl;
 	cout<< "TAC" << endl << TAC<< endl;
 	catlim = TAC * nationTACprop;
 	cout<< "catlim" << endl << catlim<< endl;
@@ -2148,7 +2180,8 @@ FUNCTION void run_projections(const int& pi,const int& svi)
 		if(indmonth(ii)==smon){
 			
 
-			seen_bt(indyr(ii))= ytB(indyr(ii))*mfexp(ot(indyr(ii)));	
+			seen_bt(indyr(ii))= ytB(indyr(ii))*mfexp(ot(indyr(ii)));
+			calc_selectivity(indyr(ii));	
 			calc_msy(indyr(ii));
 			calc_Fspr_target(indyr(ii), 0.40);
 			calc_known_catlim(indyr(ii),value(seen_bt(indyr(ii))));
@@ -2189,7 +2222,7 @@ FUNCTION void run_projections(const int& pi,const int& svi)
 			catage_comm(indyr(ii));
 			catlen_comm(indyr(ii));
 			calc_wt_comm(indyr(ii));
-			calc_selectivity(indyr(ii));
+			
 			//cout<<"yYieldNat(indyr(ii))"<<yYieldNat(indyr(ii))<<endl;
 	
 			
