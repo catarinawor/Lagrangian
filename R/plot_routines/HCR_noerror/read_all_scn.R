@@ -46,12 +46,14 @@ for(p in 1:length(plotfiles)){
 	source(plotfiles[p])
 }
 
-#M<-SIMSdat[[1]]
-#M2<-SIMSdat[[2]]
-#M3<-SIMSdat[[3]]
-#Msq<-SIMSdat[[4]]
-#Msq2<-SIMSdat[[5]]
-#Msq3<-SIMSdat[[6]]
+M<-SIMSdat[[1]]
+M1<-SIMSdat[[1]]
+M2<-SIMSdat[[2]]
+M3<-SIMSdat[[3]]
+Msq<-SIMSdat[[4]]
+Msq1<-SIMSdat[[4]]
+Msq2<-SIMSdat[[5]]
+Msq3<-SIMSdat[[6]]
 
 
 #normal<-plot_logUtility( SIMSdat,SIMSsq , sv=TRUE, nome="nostrongrec",nations=TRUE)
@@ -90,6 +92,8 @@ oneY<-plot_Yield( SIMSdat[[2]],SIMSdat[[5]]  , sv=FALSE, nome="clonestrongrec",n
 twoY<-plot_Yield( SIMSdat[[3]],SIMSdat[[6]]  , sv=FALSE, nome="cltwostrongrec",nations=TRUE)
 Yield<-plot_grid(noY,oneY,twoY,nrow=3, labels="AUTO",rel_widths = c(1,1, 1))
 Yield
+setwd("/Users/catarinawor/Documents/Lagrangian/figures/HCR")
+ggsave("Yield_allScn.pdf", plot=Yield, width = 15, height = 13,dpi = 600)
 
 
 Bno<-plot_B40( SIMSdat[[1]],SIMSdat[[4]], sv=FALSE, nome="nostrongrec",nations=TRUE)

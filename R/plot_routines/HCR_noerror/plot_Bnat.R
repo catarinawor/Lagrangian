@@ -41,7 +41,7 @@ plot_B40 <- function( M,  Msq, sv=F, nome="",nations=F)
 
 		slope_hcr[i]<-M[[i]][[1]]$slope_hcr
 		intercept_hcr[i]<-M[[i]][[1]]$intercept_hcr
-		B40_total[i]<-sum((M[[i]][[1]]$ytB/M[[i]][[1]]$Bo)[iniyr:fimyr]<0.4)/length(iniyr:fimyr)
+		B40_total[i]<-sum((M[[i]][[1]]$ytB/M[[i]][[1]]$Bo)[iniyr:fimyr]<0.2)/length(iniyr:fimyr)
 
 	}
 
@@ -58,7 +58,7 @@ plot_B40 <- function( M,  Msq, sv=F, nome="",nations=F)
 
 		slope_hcr_sq[y]<-Msq[[y]][[1]]$slope_hcr
 		intercept_hcr_sq[y]<-Msq[[y]][[1]]$intercept_hcr
-		B40_total_sq[y]<-sum((Msq[[y]][[1]]$ytB/Msq[[y]][[1]]$Bo)[iniyr:fimyr]<0.4)/length(iniyr:fimyr)
+		B40_total_sq[y]<-sum((Msq[[y]][[1]]$ytB/Msq[[y]][[1]]$Bo)[iniyr:fimyr]<0.2)/length(iniyr:fimyr)
 
 	}
 

@@ -1,0 +1,20 @@
+
+
+
+ set slope value{
+ 	set intercept value{
+
+ 		maybe write slope and intercept to a text file (?) 
+ 	
+ 		in R, read in values  for slope and intercept and run  writeHCRdat()
+
+ 		do this 100 times{
+ 	 		
+ 	 		- run OM
+
+ 	 	    - save HCR output as .Rdata
+
+ 		}
+ 	}
+}
+

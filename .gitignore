@@ -3,6 +3,16 @@
 *.rep
 *.std
 *.log 
+*.cov
+*.hes
+*.log
+*.fff
+*.fls
+*.bbl
+*.blg
+*.aux
+*.htp
+*.log
 *.Rdata
 environ/environTS.R
 environ/PDO.csv
