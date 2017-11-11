@@ -46,14 +46,14 @@ for(p in 1:length(plotfiles)){
 	source(plotfiles[p])
 }
 
-M<-SIMSdat[[1]]
-M1<-SIMSdat[[1]]
-M2<-SIMSdat[[2]]
-M3<-SIMSdat[[3]]
-Msq<-SIMSdat[[4]]
-Msq1<-SIMSdat[[4]]
-Msq2<-SIMSdat[[5]]
-Msq3<-SIMSdat[[6]]
+#M<-SIMSdat[[1]]
+#M1<-SIMSdat[[1]]
+#M2<-SIMSdat[[2]]
+#M3<-SIMSdat[[3]]
+#Msq<-SIMSdat[[4]]
+#Msq1<-SIMSdat[[4]]
+#Msq2<-SIMSdat[[5]]
+#Msq3<-SIMSdat[[6]]
 
 
 #normal<-plot_logUtility( SIMSdat,SIMSsq , sv=TRUE, nome="nostrongrec",nations=TRUE)
@@ -111,4 +111,13 @@ ggsave("B40_allScn.pdf", plot=b40, width = 15, height = 6,dpi = 600)
 
 
 
+Blimno<-plot_B40( SIMSdat[[1]],SIMSdat[[4]], sv=FALSE, nome="nostrongrec",nations=TRUE,limite=.25)
+Blimone<-plot_B40( SIMSdat[[2]],SIMSdat[[5]], sv=FALSE, nome="nostrongrec",nations=TRUE,limite=.25)
+Blimtwo<-plot_B40( SIMSdat[[3]],SIMSdat[[6]], sv=FALSE, nome="nostrongrec",nations=TRUE,limite=.25)
+
+b20<-plot_grid(Blimno,Blimone,Blimtwo,ncol=3, labels="AUTO")
+b20
+
+
+plot_tradeoff(SIMSdat[[1]],SIMSdat[[2]],SIMSdat[[3]],SIMSdat[[4]],SIMSdat[[5]],SIMSdat[[6]],sv=TRUE)
 

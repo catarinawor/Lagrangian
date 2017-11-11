@@ -123,7 +123,7 @@ plot_Yield <- function( M, Msq, sv=F, nome="",nations=F)
                                 title.hjust = .5))
 		pYt  <- pYt  + geom_text(aes(x=dfY_plot$intercept_hcr[which.max(dfY_plot$Yield_total)],y=dfY_plot$slope_hcr[which.max(dfY_plot$Yield_total)],label="max"),fontface = "bold",colour="gray90")
 		pYt  <- pYt  + geom_point(aes(x=dfY_plot$intercept_hcr[Yield_total_comparison],y=dfY_plot$slope_hcr[Yield_total_comparison]),colour="gray90", size=10)
-		pYt  <- pYt  + geom_text(aes(x=dfY_plot$intercept_hcr[Yield_total_comparison],y=dfY_plot$slope_hcr[Yield_total_comparison],label="10:40"),fontface = "bold",colour="black")
+		pYt  <- pYt  + geom_text(aes(x=dfY_plot$intercept_hcr[Yield_total_comparison],y=dfY_plot$slope_hcr[Yield_total_comparison],label="40:10"),fontface = "bold",colour="black")
 		pYt
 
 		n1labs<-round(range(dfY_plot$Yield_nat1))+c(1,-1)
@@ -139,7 +139,7 @@ plot_Yield <- function( M, Msq, sv=F, nome="",nations=F)
                                 label.position = "bottom"))
 		pYn1  <- pYn1  + geom_text(aes(x=dfY_plot$intercept_hcr[which.max(dfY_plot$Yield_nat1)],y=dfY_plot$slope_hcr[which.max(dfY_plot$Yield_nat1)],label="max"),fontface = "bold",colour="gray90")
 		pYn1  <- pYn1  + geom_point(aes(x=dfY_plot$intercept_hcr[Yield_nat1_comparison],y=dfY_plot$slope_hcr[Yield_nat1_comparison]),colour="gray90", size=10)
-		pYn1  <- pYn1  + geom_text(aes(x=dfY_plot$intercept_hcr[Yield_nat1_comparison],y=dfY_plot$slope_hcr[Yield_nat1_comparison],label="10:40"),fontface = "bold",colour="black")
+		pYn1  <- pYn1  + geom_text(aes(x=dfY_plot$intercept_hcr[Yield_nat1_comparison],y=dfY_plot$slope_hcr[Yield_nat1_comparison],label="40:10"),fontface = "bold",colour="black")
 		pYn1
 
 		n2labs<-round(range(dfY_plot$Yield_nat2))+c(1,-1)
@@ -155,7 +155,7 @@ plot_Yield <- function( M, Msq, sv=F, nome="",nations=F)
                                 label.position = "bottom"))
 		pYn2  <- pYn2  + geom_text(aes(x=dfY_plot$intercept_hcr[which.max(dfY_plot$Yield_nat2)],y=dfY_plot$slope_hcr[which.max(dfY_plot$Yield_nat2)],label="max"),fontface = "bold",colour="gray90")
 		pYn2  <- pYn2  + geom_point(aes(x=dfY_plot$intercept_hcr[Yield_nat2_comparison],y=dfY_plot$slope_hcr[Yield_nat2_comparison]),colour="gray90", size=10)
-		pYn2  <- pYn2  + geom_text(aes(x=dfY_plot$intercept_hcr[Yield_nat2_comparison],y=dfY_plot$slope_hcr[Yield_nat2_comparison],label="10:40"),fontface = "bold",colour="black")
+		pYn2  <- pYn2  + geom_text(aes(x=dfY_plot$intercept_hcr[Yield_nat2_comparison],y=dfY_plot$slope_hcr[Yield_nat2_comparison],label="40:10"),fontface = "bold",colour="black")
 
 		pYn2
 

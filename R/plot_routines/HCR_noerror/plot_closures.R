@@ -116,7 +116,7 @@ plot_closures <- function( M , Msq, sv=F, nome="",nations=F)
 		pclt <- pclt  + guides(fill = guide_colourbar(title.position = "top",
                                 title.hjust = .5))
 		pclt <- pclt + geom_point(aes(x=dfcl_plot$intercept_hcr[closure_total_comparison],y=dfcl_plot$slope_hcr[closure_total_comparison]),colour="gray90", size=10)
-		pclt <- pclt + geom_text(aes(x=dfcl_plot$intercept_hcr[closure_total_comparison],y=dfcl_plot$slope_hcr[closure_total_comparison],label="10:40"),fontface = "bold",colour="black")
+		pclt <- pclt + geom_text(aes(x=dfcl_plot$intercept_hcr[closure_total_comparison],y=dfcl_plot$slope_hcr[closure_total_comparison],label="40:10"),fontface = "bold",colour="black")
 		pclt <- pclt + geom_text(aes(x=dfcl_plot$intercept_hcr[which.min(dfcl_plot$closure_total)],y=dfcl_plot$slope_hcr[which.min(dfcl_plot$closure_total)],label="min"),fontface = "bold",colour="black",position = position_nudge(y = -0.02))
 		pclt 
 

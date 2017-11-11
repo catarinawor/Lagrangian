@@ -119,26 +119,26 @@ plot_tradeoff <- function( M1 ,M2,M3, Msq1,Msq2,Msq3, sv=F, nome="",nations=F)
 	dfa<-rbind(dflu_selec,dflu_plotsq)
 
 	dfa$slope<-as.character(dfa$slope_hcr)
-	dfa$slope[dfa$slope=="999"]<-"10:40"
+	dfa$slope[dfa$slope=="999"]<-"40:10"
 
 	dfa$intercept<-as.character(dfa$intercept_hcr)
-	dfa$intercept[dfa$intercept=="999"]<-"10:40"
+	dfa$intercept[dfa$intercept=="999"]<-"40:10"
 
 	dfa$ut2tf<- -999
-	dfa$ut2tf[which(dfa$slope=="10:40")]<-dfa$utility_total2[which(dfa$slope=="10:40")]
+	dfa$ut2tf[which(dfa$slope=="40:10")]<-dfa$utility_total2[which(dfa$slope=="40:10")]
 
 	dfa$nt1tf<- -999
-	dfa$nt1tf[which(dfa$slope=="10:40")]<-dfa$utility_nat1[which(dfa$slope=="10:40")]
+	dfa$nt1tf[which(dfa$slope=="40:10")]<-dfa$utility_nat1[which(dfa$slope=="40:10")]
 
 	dfa$nt2tf<- -999
-	dfa$nt2tf[which(dfa$slope=="10:40")]<-dfa$utility_nat2[which(dfa$slope=="10:40")]
+	dfa$nt2tf[which(dfa$slope=="40:10")]<-dfa$utility_nat2[which(dfa$slope=="40:10")]
 
 	dfa$scn<-"no strong recruitment"
 	dfa$scn[dfa$scenario==2]<-"one strong recruitment"
 	dfa$scn[dfa$scenario==3]<-"two strong recruitments"
 
 	dfa$b40tf<- -999
-	dfa$b40tf[dfa$slope=="10:40"]<-dfa$b40[which(dfa$slope=="10:40")]
+	dfa$b40tf[dfa$slope=="40:10"]<-dfa$b40[which(dfa$slope=="40:10")]
 
 	head(dfa)
 

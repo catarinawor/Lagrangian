@@ -147,7 +147,7 @@ plot_AAV <- function( M , Msq, sv=F, nome="",nations=F)
 		paavt <- paavt + guides(fill = guide_colourbar(title.position = "top",
                                 title.hjust = .5))
 		paavt  <- paavt + geom_point(aes(x=dfaav_plot$intercept_hcr[AAV_total_comparison],y=dfaav_plot$slope_hcr[AAV_total_comparison]),colour="gray90", size=10)
-		paavt  <- paavt + geom_text(aes(x=dfaav_plot$intercept_hcr[AAV_total_comparison],y=dfaav_plot$slope_hcr[AAV_total_comparison],label="10:40"),fontface = "bold",colour="black")
+		paavt  <- paavt + geom_text(aes(x=dfaav_plot$intercept_hcr[AAV_total_comparison],y=dfaav_plot$slope_hcr[AAV_total_comparison],label="40:10"),fontface = "bold",colour="black")
 		paavt  <- paavt + geom_text(aes(x=dfaav_plot$intercept_hcr[which.min(dfaav_plot$AAV_total)],y=dfaav_plot$slope_hcr[which.min(dfaav_plot$AAV_total)],label="min"),fontface = "bold",colour="black", position = position_nudge(y = -0.02))
 		paavt
 
@@ -163,7 +163,7 @@ plot_AAV <- function( M , Msq, sv=F, nome="",nations=F)
                                 title.hjust = .5))
                                 #label.position = "bottom"))
 		paavn1  <- paavn1 + geom_point(aes(x=dfaav_plot$intercept_hcr[AAV_nat1_comparison],y=dfaav_plot$slope_hcr[AAV_nat1_comparison]),colour="gray90", size=10)
-		paavn1  <- paavn1 + geom_text(aes(x=dfaav_plot$intercept_hcr[AAV_nat1_comparison],y=dfaav_plot$slope_hcr[AAV_nat1_comparison],label="10:40"),fontface = "bold",colour="black")
+		paavn1  <- paavn1 + geom_text(aes(x=dfaav_plot$intercept_hcr[AAV_nat1_comparison],y=dfaav_plot$slope_hcr[AAV_nat1_comparison],label="40:10"),fontface = "bold",colour="black")
 		paavn1  <- paavn1 + geom_text(aes(x=dfaav_plot$intercept_hcr[which.min(dfaav_plot$AAV_nat1)],y=dfaav_plot$slope_hcr[which.min(dfaav_plot$AAV_nat1)],label="min"),fontface = "bold",colour="black", position = position_nudge(y = -0.02))
 		paavn1
 
@@ -178,7 +178,7 @@ plot_AAV <- function( M , Msq, sv=F, nome="",nations=F)
                                 title.hjust = .5
                                ))
 		paavn2  <- paavn2 + geom_point(aes(x=dfaav_plot$intercept_hcr[AAV_nat2_comparison],y=dfaav_plot$slope_hcr[AAV_nat2_comparison]),colour="gray90", size=10)
-		paavn2  <- paavn2 + geom_text(aes(x=dfaav_plot$intercept_hcr[AAV_nat2_comparison],y=dfaav_plot$slope_hcr[AAV_nat2_comparison],label="10:40"),fontface = "bold",colour="black")
+		paavn2  <- paavn2 + geom_text(aes(x=dfaav_plot$intercept_hcr[AAV_nat2_comparison],y=dfaav_plot$slope_hcr[AAV_nat2_comparison],label="40:10"),fontface = "bold",colour="black")
 		paavn2  <- paavn2 + geom_text(aes(x=dfaav_plot$intercept_hcr[which.min(dfaav_plot$AAV_nat2)],y=dfaav_plot$slope_hcr[which.min(dfaav_plot$AAV_nat2)],label="min"),fontface = "bold",colour="black", position = position_nudge(y = -0.02))
 	
 		paavn2
