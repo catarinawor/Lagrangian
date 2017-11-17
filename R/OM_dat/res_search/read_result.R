@@ -51,13 +51,39 @@ readOutput <- function(dir)
 	#setwd("/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_twostRec_limit")	
 		
 
-
-
-
-	setwd("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_nostRec_limit")
+	#setwd("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_nostRec_limit")
 	#setwd("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_onestRec_limit")
 	#setwd("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_twostRec_limit")
+	
+	#no cap	
+	#setwd("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_nostRec")
+	#setwd("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_onestRec")
+	#setwd("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_twostRec")
+
+	#setwd("/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_nostRec")	
+	#setwd("/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_onestRec")	
+	#setwd("/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_twostRec")	
 		
+	
+	#A50=4.5	
+	#setwd("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_nostRec_m2")
+	#setwd("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_onestRec_m2")
+	#setwd("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_twostRec_m2")
+
+	#setwd("/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_nostRec_m2")	
+	#setwd("/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_onestRec_m2")	
+	#setwd("/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_twostRec_m2")	
+		
+	#on angrycrab
+	setwd("/home/wisdom/result/HCR_sims_Best_nostRec_m2")
+	#setwd("/home/wisdom/result/HCR_sims_Best_onestRec_m2")
+	#setwd("/home/wisdom/result/HCR_sims_Best_twostRec_m2")
+
+	#setwd("/home/wisdom/result/HCR_sims_stquo_nostRec_m2")	
+	#setwd("/home/wisdom/result/HCR_sims_stquo_onestRec_m2")	
+	#setwd("/home/wisdom/result/HCR_sims_stquo_twostRec_m2")	
+		
+
 
 	save(sims,file=file.name)
 

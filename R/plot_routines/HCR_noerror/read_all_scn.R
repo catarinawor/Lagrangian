@@ -15,6 +15,16 @@ DIRS<-c("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_nostRec_limit"
 ,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_onestRec_limit"
 ,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_twostRec_limit")
 
+
+DIRS<-c("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_nostRec"
+,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_onestRec"
+,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_twostRec"
+,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_nostRec_limit"
+,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_onestRec_limit"
+,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_twostRec_limit")
+
+
+
 Rfiles<-list()
 SIMSdat<-list()
 
