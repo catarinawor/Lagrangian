@@ -8,7 +8,7 @@
 
 
 
-writeWTdat<-function(DIR= "/Users/catarinawor/Documents/Lagrangian/admb/OM/gtg/", myseed){
+writeWTdat<-function(DIR= "../../admb/OM/gtg/", myseed){
 
 	setwd(DIR)
 
