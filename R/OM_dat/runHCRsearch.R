@@ -2,9 +2,11 @@
 args <- commandArgs(trailingOnly=TRUE)
 
 
-source("/Users/catarinawor/Documents/Lagrangian/R/OM_dat/OM_dat.R")
-source("/Users/catarinawor/Documents/Lagrangian/R/OM_dat/reset_seed.R")
+#source("/Users/catarinawor/Documents/Lagrangian/R/OM_dat/OM_dat.R")
+#source("/Users/catarinawor/Documents/Lagrangian/R/OM_dat/reset_seed.R")
 
+source("OM_dat.R")
+source("reset_seed.R")
 
 
 
