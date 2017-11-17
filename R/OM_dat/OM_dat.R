@@ -6,7 +6,7 @@
 
 
 
-writeHCRdat<-function(DIR= "/Users/catarinawor/Documents/Lagrangian/admb/OM/gtg/", slope, intercept){
+writeHCRdat<-function(DIR= "../../admb/OM/gtg/", slope, intercept){
 
 
 	setwd(DIR)

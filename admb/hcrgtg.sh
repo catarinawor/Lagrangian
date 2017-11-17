@@ -18,7 +18,7 @@ do
 	echo "$it"
 	
 	cd ../R/OM_dat/ 
-	Rscript  runHCRsearch.r  $sp  $it
+	Rscript  runHCRsearch.R  $sp  $it
 
 	cd ../../admb/ 
 
