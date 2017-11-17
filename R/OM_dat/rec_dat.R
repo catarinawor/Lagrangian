@@ -21,7 +21,7 @@ writeWTdat<-function(DIR= "../../admb/OM/gtg/", myseed){
 	rec_ts<-c(twt[1:49],perr)
 
 
-	setwd(DIR)
+	#setwd(DIR)
 	sink("wt.dat")
 	cat("#recruitment deviations\n")
 	cat(rec_ts,"\n")
