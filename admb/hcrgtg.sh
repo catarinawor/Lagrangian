@@ -28,7 +28,7 @@ do
 	do
 
 	 cd ../R/OM_dat/ 
-		Rscript runWTerr.r
+		Rscript runWTerr.R
 
 	cd ../../admb/OM/gtg 
 
