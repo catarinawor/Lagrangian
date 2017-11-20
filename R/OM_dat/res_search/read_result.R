@@ -77,9 +77,12 @@ readOutput <- function(dir)
 	#on angrycrab
 	#setwd("/home/wisdom/result/HCR_sims_Best_nostRec_m2")
 	#setwd("/home/wisdom/result/HCR_sims_Best_onestRec_m2")
-	setwd("/home/wisdom/result/HCR_sims_Best_twostRec_m2")
+	#setwd("/home/wisdom/result/HCR_sims_Best_twostRec_m2")
 
-	#setwd("/home/wisdom/result/HCR_sims_stquo_nostRec_m2")	
+	#setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_Best_twostRec_m2")
+
+
+	setwd("/home/wisdom/result/HCR_sims_stquo_nostRec_m2")	
 	#setwd("/home/wisdom/result/HCR_sims_stquo_onestRec_m2")	
 	#setwd("/home/wisdom/result/HCR_sims_stquo_twostRec_m2")	
 		
