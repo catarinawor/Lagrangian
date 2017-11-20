@@ -4,7 +4,7 @@
 
 
 	cd ../R/OM_dat/ 
-	Rscript  runHCRstquo.r  
+	Rscript  runHCRstquo.R  
 
 	cd ../../admb/ 
 
@@ -14,7 +14,7 @@
 	do
 
 	 cd ../R/OM_dat/ 
-		Rscript runWTerr.r
+		Rscript runWTerr.R
 
 	cd ../../admb/OM/gtg 
 
