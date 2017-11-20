@@ -1,5 +1,5 @@
 #!/usr/local/bin/Rscript --slave
-args <- commandArgs(trailingOnly=TRUE)
+#args <- commandArgs(trailingOnly=TRUE)
 
 
 #source("/Users/catarinawor/Documents/Lagrangian/R/OM_dat/OM_dat.R")
@@ -13,6 +13,7 @@ source("reset_seed.R")
 
 
 #	writeHCRdat(slope=args[1],intercept=args[2])
+	setwd("../../admb/OM/gtg/")
 	reset_seed()
 
 
