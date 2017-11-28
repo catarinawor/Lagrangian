@@ -16,12 +16,22 @@ DIRS<-c("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_nostRec_limit"
 ,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_twostRec_limit")
 
 
-DIRS<-c("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_nostRec"
-,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_onestRec"
-,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_twostRec"
-,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_nostRec_limit"
-,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_onestRec_limit"
-,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_twostRec_limit")
+#DIRS<-c("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_nostRec"
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_onestRec"
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_twostRec"
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_nostRec_limit"
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_onestRec_limit"
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_twostRec_limit")
+
+
+#DIRS<-c("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_Best_nostRec_m2"
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_Best_onestRec_m2"
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_Best_twostRec_m2"
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_nostRec_m2"
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_onestRec_m2"
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_twostRec_m2")
+
+
 
 
 
@@ -56,14 +66,14 @@ for(p in 1:length(plotfiles)){
 	source(plotfiles[p])
 }
 
-#M<-SIMSdat[[1]]
-#M1<-SIMSdat[[1]]
-#M2<-SIMSdat[[2]]
-#M3<-SIMSdat[[3]]
-#Msq<-SIMSdat[[4]]
-#Msq1<-SIMSdat[[4]]
-#Msq2<-SIMSdat[[5]]
-#Msq3<-SIMSdat[[6]]
+M<-SIMSdat[[1]]
+M1<-SIMSdat[[1]]
+M2<-SIMSdat[[2]]
+M3<-SIMSdat[[3]]
+Msq<-SIMSdat[[4]]
+Msq1<-SIMSdat[[4]]
+Msq2<-SIMSdat[[5]]
+Msq3<-SIMSdat[[6]]
 
 
 #normal<-plot_logUtility( SIMSdat,SIMSsq , sv=TRUE, nome="nostrongrec",nations=TRUE)
@@ -80,7 +90,8 @@ ggsave("logUtility_allScn.pdf", plot=lu, width = 15, height = 13,dpi = 600)
 noAAV<-plot_AAV( SIMSdat[[1]],SIMSdat[[4]] , sv=TRUE, nome="AAVnostrongrec",nations=TRUE)
 oneAAV<-plot_AAV( SIMSdat[[2]],SIMSdat[[5]]  , sv=TRUE, nome="AAVonestrongrec",nations=TRUE)
 twoAAV<-plot_AAV( SIMSdat[[3]],SIMSdat[[6]]  , sv=TRUE, nome="AAVtwostrongrec",nations=TRUE)
-AAV<-plot_grid(noAAV,oneAAV,twoAAV,nrow=3, labels="AUTO")
+AAV<-plot_grid(noAAV,oneAAV,twoAAV,nrow=3, labels=c("no strong recruitment","one strong recruitments","two strong recruitments"),
+	  hjust = 0)
 AAV
 setwd("/Users/catarinawor/Documents/Lagrangian/figures/HCR")
 ggsave("AAV_allScn.pdf", plot=AAV, width = 15, height = 13,dpi = 600)

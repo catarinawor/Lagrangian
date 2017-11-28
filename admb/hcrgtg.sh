@@ -24,7 +24,7 @@ do
 
 	counter=1
 
-	while [ $counter -le 10 ]
+	while [ $counter -le 100 ]
 	do
 
 	 cd ../R/OM_dat/ 

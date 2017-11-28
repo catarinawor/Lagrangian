@@ -141,7 +141,7 @@ plot_AAV <- function( M , Msq, sv=F, nome="",nations=F)
 		paavt <- paavt +geom_raster(aes(fill=AAV_total))
 		paavt <- paavt + scale_fill_gradientn(colours = myPalette(4),name  ="Median AAV")
 		paavt <- paavt + theme_bw(16)+ theme(legend.position="right")
-		paavt <- paavt + ylab("") + xlab("Intercept")
+		paavt <- paavt + ylab("") + xlab("Biomass threshold")
 		paavt <- paavt + ggtitle("Total")
 		paavt <- paavt + theme(plot.title = element_text(hjust = 0.5))
 		paavt <- paavt + guides(fill = guide_colourbar(title.position = "top",
@@ -149,6 +149,8 @@ plot_AAV <- function( M , Msq, sv=F, nome="",nations=F)
 		paavt  <- paavt + geom_point(aes(x=dfaav_plot$intercept_hcr[AAV_total_comparison],y=dfaav_plot$slope_hcr[AAV_total_comparison]),colour="gray90", size=10)
 		paavt  <- paavt + geom_text(aes(x=dfaav_plot$intercept_hcr[AAV_total_comparison],y=dfaav_plot$slope_hcr[AAV_total_comparison],label="40:10"),fontface = "bold",colour="black")
 		paavt  <- paavt + geom_text(aes(x=dfaav_plot$intercept_hcr[which.min(dfaav_plot$AAV_total)],y=dfaav_plot$slope_hcr[which.min(dfaav_plot$AAV_total)],label="min"),fontface = "bold",colour="black", position = position_nudge(y = -0.02))
+		paavt  <- paavt +  theme(plot.margin = unit(c(2,0,0,0), "lines"))
+		
 		paavt
 
 
@@ -156,7 +158,7 @@ plot_AAV <- function( M , Msq, sv=F, nome="",nations=F)
 		paavn1 <- paavn1 +geom_raster(aes(fill=AAV_nat1))
 		paavn1 <- paavn1 + scale_fill_gradientn(colours = myPalette(4),name  ="Median AAV")
 		paavn1 <- paavn1 + theme_bw(16)+ theme(legend.position="none")#egend.position = "top")e
-		paavn1 <- paavn1 + ylab("Slope") + xlab("Intercept")
+		paavn1 <- paavn1 + ylab("Harvest rate") + xlab("Biomass threshold")
 		paavn1 <- paavn1  + ggtitle("Nation 1")
 		paavn1 <- paavn1  +  theme(plot.title = element_text(hjust = 0.5))
 		paavn1 <- paavn1 + guides(fill = guide_colourbar(title.position = "top",
@@ -165,13 +167,15 @@ plot_AAV <- function( M , Msq, sv=F, nome="",nations=F)
 		paavn1  <- paavn1 + geom_point(aes(x=dfaav_plot$intercept_hcr[AAV_nat1_comparison],y=dfaav_plot$slope_hcr[AAV_nat1_comparison]),colour="gray90", size=10)
 		paavn1  <- paavn1 + geom_text(aes(x=dfaav_plot$intercept_hcr[AAV_nat1_comparison],y=dfaav_plot$slope_hcr[AAV_nat1_comparison],label="40:10"),fontface = "bold",colour="black")
 		paavn1  <- paavn1 + geom_text(aes(x=dfaav_plot$intercept_hcr[which.min(dfaav_plot$AAV_nat1)],y=dfaav_plot$slope_hcr[which.min(dfaav_plot$AAV_nat1)],label="min"),fontface = "bold",colour="black", position = position_nudge(y = -0.02))
+		paavn1  <- paavn1 +  theme(plot.margin = unit(c(2,0,0,0), "lines"))
+		
 		paavn1
 
 		paavn2 <- ggplot(dfaav_plot, aes(x=intercept_hcr,y=slope_hcr,z=AAV_nat2))
 		paavn2 <- paavn2 +geom_raster(aes(fill=AAV_nat2))
 		paavn2 <- paavn2 + scale_fill_gradientn(colours = myPalette(4),name  ="Median AAV")
 		paavn2 <- paavn2 + theme_bw(16) +theme(legend.position="none")
-		paavn2 <- paavn2 + ylab("") + xlab("Intercept")
+		paavn2 <- paavn2 + ylab("") + xlab("Biomass Threshold")
 		paavn2 <- paavn2  + ggtitle("Nation 2")
 		paavn2 <- paavn2  +  theme(plot.title = element_text(hjust = 0.5))
 		paavn2 <- paavn2 + guides(fill = guide_colourbar(title.position = "top",
@@ -180,7 +184,7 @@ plot_AAV <- function( M , Msq, sv=F, nome="",nations=F)
 		paavn2  <- paavn2 + geom_point(aes(x=dfaav_plot$intercept_hcr[AAV_nat2_comparison],y=dfaav_plot$slope_hcr[AAV_nat2_comparison]),colour="gray90", size=10)
 		paavn2  <- paavn2 + geom_text(aes(x=dfaav_plot$intercept_hcr[AAV_nat2_comparison],y=dfaav_plot$slope_hcr[AAV_nat2_comparison],label="40:10"),fontface = "bold",colour="black")
 		paavn2  <- paavn2 + geom_text(aes(x=dfaav_plot$intercept_hcr[which.min(dfaav_plot$AAV_nat2)],y=dfaav_plot$slope_hcr[which.min(dfaav_plot$AAV_nat2)],label="min"),fontface = "bold",colour="black", position = position_nudge(y = -0.02))
-	
+		paavn2  <- paavn2 +  theme(plot.margin = unit(c(2,0,0,0), "lines"))
 		paavn2
 
 		#plun <- plun+geom_contour()

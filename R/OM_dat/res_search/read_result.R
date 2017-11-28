@@ -84,9 +84,11 @@ readOutput <- function(dir)
 
 	#setwd("/home/wisdom/result/HCR_sims_stquo_nostRec_m2")	
 	#setwd("/home/wisdom/result/HCR_sims_stquo_onestRec_m2")	
-	#setwd("/home/wisdom/result/HCR_sims_stquo_twostRec_m2")	
+	setwd("/home/wisdom/result/HCR_sims_stquo_twostRec_m2")	
 		
-	setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_nostRec_m2")
+	#setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_nostRec_m2")
+	#setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_onestRec_m2")
+	#setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_twostRec_m2")
 
 
 	save(sims,file=file.name)

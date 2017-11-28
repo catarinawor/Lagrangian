@@ -103,7 +103,7 @@ plot_B40 <- function( M,  Msq, sv=F, nome="",nations=F, limite=.4)
 		pB40t <- pB40t +geom_raster(aes(fill=b40))
 		pB40t <- pB40t  + scale_fill_gradientn(colours = myPalette(11),name  =paste("% time Bt <",limite,"Bo"),breaks=tlabs,labels=(tlabs))
 		pB40t <- pB40t  + theme_bw(16) + theme(legend.position="top")
-		pB40t <- pB40t  + ylab("") + xlab("Intercept")
+		pB40t <- pB40t  + ylab("Harvest rate") + xlab("Biomass threshold")
 		pB40t <- pB40t  + ggtitle("Total")
 		pB40t <- pB40t  +  theme(plot.title = element_text(hjust = 0.5))
 		pB40t <- pB40t  + guides(fill = guide_colourbar(title.position = "top",
