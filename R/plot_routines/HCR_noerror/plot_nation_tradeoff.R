@@ -188,7 +188,7 @@ summary(dfa)
 
 	p<-ggplot(dfcr)
 	p<-p+geom_path(aes(y=utility_nat2_sc,x=utility_nat1_sc,color=slope))
-	p<-p+geom_point(aes(y=utility_nat2_sc,x=utility_nat1_sc,color=slope, size=intercept),alpha=.6)
+	p<-p+geom_point(aes(y=utility_nat2_sc,x=utility_nat1_sc,color=slope, shape=intercept),size=4,alpha=.6)
 	p<-p+ geom_text(data=dft,aes(y=dft$utility_nat2_sc,x=dft$utility_nat1_sc,label="40:10"),fontface = "bold",colour="black")				
 	p<-p + facet_wrap(~scn, scales="free")
 	p<-p+ ylab("average log utility - Nation 2") + xlab("average log utility - Nation 1")
@@ -199,16 +199,16 @@ summary(dfa)
 
 	p1 <- ggplot(dfcr)
 	p1 <- p1+geom_path(aes(y=yield_nat2_sc,x=yield_nat1_sc,color=slope))
-	p1 <- p1+geom_point(aes(y=yield_nat2_sc,x=yield_nat1_sc,color=slope, size=intercept),alpha=.6)
+	p1 <- p1+geom_point(aes(y=yield_nat2_sc,x=yield_nat1_sc,color=slope, shape=intercept),size=4,alpha=.6)
 	p1 <- p1+ geom_text(data=dft,aes(y=dft$yield_nat2_sc,x=dft$yield_nat1_sc,label="40:10"),fontface = "bold",colour="black")				
 	
 	p1 <- p1+facet_wrap(~scn, scales="free")
 	p1 <- p1+ ylab(" average yield - Nation 2") + xlab(" average yield - Nation 1")
 	p1 <- p1  + theme_bw(16)+ theme(legend.position = "bottom")
-	p1 <- p1 + guides(color=guide_legend("harvest rate"), size=guide_legend("biomass threshold"))
+	p1 <- p1 + guides(color=guide_legend("harvest rate"), shape=guide_legend("biomass threshold"),size=guide_legend("none"))
 	p1
 	#p<-p+ geom_text(aes(y=nt2tf,x=nt1tf,label="10:40"),fontface = "bold",colour="black", position = position_nudge(y = -0.02))				
-
+	#, size=guide_legend("biomass threshold")
 
 	pto<-plot_grid(p,p1,nrow=2,rel_heights  = c(1, 1.3))
 	pto

@@ -41,7 +41,7 @@ plot_B40 <- function( M,  Msq, sv=F, nome="",nations=F, limite=.4)
 
 		slope_hcr[i]<-M[[i]][[1]]$slope_hcr
 		intercept_hcr[i]<-M[[i]][[1]]$intercept_hcr
-		B40_total[i]<-sum((M[[i]][[1]]$ytB/M[[i]][[1]]$Bo)[iniyr:fimyr]<limite)/length(iniyr:fimyr)
+		B40_total[i]<-sum((M[[i]][[1]]$ySB/M[[i]][[1]]$SBo)[iniyr:fimyr]<limite)/length(iniyr:fimyr)
 
 	}
 
@@ -58,7 +58,7 @@ plot_B40 <- function( M,  Msq, sv=F, nome="",nations=F, limite=.4)
 
 		slope_hcr_sq[y]<-Msq[[y]][[1]]$slope_hcr
 		intercept_hcr_sq[y]<-Msq[[y]][[1]]$intercept_hcr
-		B40_total_sq[y]<-sum((Msq[[y]][[1]]$ytB/Msq[[y]][[1]]$Bo)[iniyr:fimyr]<limite)/length(iniyr:fimyr)
+		B40_total_sq[y]<-sum((Msq[[y]][[1]]$ySB/Msq[[y]][[1]]$SBo)[iniyr:fimyr]<limite)/length(iniyr:fimyr)
 
 	}
 
@@ -77,6 +77,7 @@ plot_B40 <- function( M,  Msq, sv=F, nome="",nations=F, limite=.4)
 	db40_plot<-aggregate(db40,list(db40$slope_hcr,db40$intercept_hcr), mean)
 
 	db40_plotsq<-aggregate(db40sq,list(db40sq$slope_hcr,db40sq$intercept_hcr), mean)
+	print(db40_plotsq)
 
 
 	b40_total_comparison<-which.min(abs(db40_plot$b40-db40_plotsq$b40))
@@ -98,7 +99,7 @@ plot_B40 <- function( M,  Msq, sv=F, nome="",nations=F, limite=.4)
 	}else{
 		#
 	
-		tlabs<- round(range(db40_plot$b40)*c(1.2,0.95),2)
+		tlabs<- round(range(db40_plot$b40)*c(1.2,0.95),3)
 		pB40t <- ggplot(db40_plot, aes(x=intercept_hcr,y=slope_hcr,z=b40))
 		pB40t <- pB40t +geom_raster(aes(fill=b40))
 		pB40t <- pB40t  + scale_fill_gradientn(colours = myPalette(11),name  =paste("% time Bt <",limite,"Bo"),breaks=tlabs,labels=(tlabs))
@@ -109,10 +110,12 @@ plot_B40 <- function( M,  Msq, sv=F, nome="",nations=F, limite=.4)
 		pB40t <- pB40t  + guides(fill = guide_colourbar(title.position = "top",
                                 title.hjust = .5,
                                 label.position = "bottom"))
-		pB40t <- pB40t + geom_point(aes(x=db40_plot$intercept_hcr[b40_total_comparison],y=db40_plot$slope_hcr[b40_total_comparison]),colour="gray90", size=10)
+		pB40t <- pB40t + geom_point(aes(x=db40_plot$intercept_hcr[which.min(db40_plot$b40)],y=db40_plot$slope_hcr[which.min(db40_plot$b40)]),colour="black", size=8,shape=15)
+		pB40t <- pB40t + geom_point(aes(x=db40_plot$intercept_hcr[b40_total_comparison],y=db40_plot$slope_hcr[b40_total_comparison]),colour="gray90", size=8)
 		pB40t <- pB40t + geom_text(aes(x=db40_plot$intercept_hcr[b40_total_comparison],y=db40_plot$slope_hcr[b40_total_comparison],label="40:10"),fontface = "bold",colour="black")
-		pB40t <- pB40t + geom_text(aes(x=db40_plot$intercept_hcr[which.min(db40_plot$b40)],y=db40_plot$slope_hcr[which.min(db40_plot$b40)],label="min"),fontface = "bold",colour="black", position = position_nudge(y = -0.02))
+		#pB40t <- pB40t + geom_text(aes(x=db40_plot$intercept_hcr[which.min(db40_plot$b40)],y=db40_plot$slope_hcr[which.min(db40_plot$b40)],label="min"),fontface = "bold",colour="black", position = position_nudge(y = -0.02))
 		#
+		pB40t
 
 
 		print(pB40t)

@@ -65,7 +65,7 @@ readOutput <- function(dir)
 	#setwd("/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_twostRec")	
 		
 	
-	#A50=4.5	
+	#A50=3.0 , sd=1	
 	#setwd("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_nostRec_m2")
 	#setwd("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_onestRec_m2")
 	#setwd("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_twostRec_m2")
@@ -84,11 +84,28 @@ readOutput <- function(dir)
 
 	#setwd("/home/wisdom/result/HCR_sims_stquo_nostRec_m2")	
 	#setwd("/home/wisdom/result/HCR_sims_stquo_onestRec_m2")	
-	setwd("/home/wisdom/result/HCR_sims_stquo_twostRec_m2")	
+	#setwd("/home/wisdom/result/HCR_sims_stquo_twostRec_m2")	
 		
 	#setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_nostRec_m2")
 	#setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_onestRec_m2")
 	#setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_twostRec_m2")
+
+	#zoology cluster stuff
+	#setwd("~/results/HCR_linear_nostrec")
+	#setwd("~/results/HCR_linear_onestrec")
+	#setwd("~/results/HCR_linear_twostrec")
+	#setwd("~/results/HCR_100_twostrec/")
+
+
+	#setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_nostRec")
+	setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_onestRec")
+	#setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_twostRec")
+
+	#setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_nostRec_100")
+	#setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_onestRec_100")
+	#setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_twostRec_100")
+
+
 
 
 	save(sims,file=file.name)

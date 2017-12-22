@@ -4,11 +4,13 @@
 
 tp=0.1
 
-for i in {1..10}; 
+
+
+
+for j in {0..5}; 
 do 
 
-
-for j in {0..10}; 
+for i in {1..9}; 
 do 
 
  	sp=`echo "$i * $tp"| bc -l`
@@ -24,7 +26,7 @@ do
 
 	counter=1
 
-	while [ $counter -le 100 ]
+	while [ $counter -le 20 ]
 	do
 
 	 cd ../R/OM_dat/ 

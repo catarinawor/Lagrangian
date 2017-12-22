@@ -8,12 +8,10 @@
 
 library(cowplot)
 
-DIRS<-c("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_nostRec"
-,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_onestRec_100"
-,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_twostRec"
-,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_nostRec_100"
-,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_onestRec_100"
-,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_twostRec_100")
+DIRS<-c("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_nostRec",
+	"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_nostRec_100",
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_nostRec",
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_nostRec_100")
 
 
 #DIRS<-c("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_nostRec_limit"

@@ -1014,6 +1014,7 @@ FUNCTION void calc_catage(const int& ii)
 		
 			//if(yYN(indnatarea(rr))<1.3*catlim(indnatarea(rr))){
 				Effarea(ii)(rr) *= 0.01;
+				//Effarea(ii)(rr) *= 0.1;
 			//}else{	
 				//cout<<" aqui"<<endl;
 				//cout<<"closed"<< indyr(ii) <<"nation is"<< indnatarea(rr)<<endl;
@@ -2032,13 +2033,12 @@ FUNCTION void calc_known_catlim(const int& ii, double seen_ytB)
 
 	double fspr_true;
 
-	dvar_vector yNage_true(sage,nage);
-	double Bo_true;
 	
+	double Bo_true;
 	
 
 	
-	Bo_true=value(Bo);
+	Bo_true=value(SBo);
 	
 
     
@@ -2058,7 +2058,8 @@ FUNCTION void calc_known_catlim(const int& ii, double seen_ytB)
 		if(BBo>0.4){
 			//cout<<"ftarget(ii)"<<ftarget(ii)<<endl;
 
-			TAC = elem_prod(elem_div(ftarget(ii)*seltotal(ii-1),ftarget(ii)*seltotal(ii-1)+m),elem_prod(yNage(ii),(1-mfexp(-ftarget(ii)*seltotal(ii-1)-m))))*ywa(ii); 
+			TAC = (1.-mfexp(-ftarget(ii)))*seltotal(ii)*elem_prod(yNage(ii),ywa(ii));
+			//TAC = elem_prod(elem_div(ftarget(ii)*seltotal(ii-1),ftarget(ii)*seltotal(ii-1)+m),elem_prod(yNage(ii),(1-mfexp(-ftarget(ii)*seltotal(ii-1)-m))))*ywa(ii); 
 			
 			//cout<<"all good?? "<<endl;
 		 	//cout<<"BBo "<<BBo<<endl;
@@ -2070,9 +2071,12 @@ FUNCTION void calc_known_catlim(const int& ii, double seen_ytB)
 
 				double y;
 
-				y = (BBo-0.1)/(0.4-0.1);
+				//y = (BBo-0.1)/(0.4-0.1);
 
-				TAC = elem_prod(elem_div(ftarget(ii)*seltotal(ii),ftarget(ii)*seltotal(ii)+m),elem_prod(yNage(ii),(1-mfexp(-ftarget(ii)*seltotal(ii)-m))))*ywa(ii)*y; 
+				y = (seen_ytB-0.1*Bo_true)*((0.4/seen_ytB)/(0.4-0.1));
+				
+				//TAC = elem_prod(elem_div(ftarget(ii)*seltotal(ii),ftarget(ii)*seltotal(ii)+m),elem_prod(yNage(ii),(1-mfexp(-ftarget(ii)*seltotal(ii)-m))))*ywa(ii)*y; 
+				TAC = (1.-mfexp(-ftarget(ii)))*seltotal(ii)*elem_prod(yNage(ii),ywa(ii))*y;
 				//cout<<"ftarget(ii) "<<ftarget(ii)<<endl;
 				//cout<<"seltotal(ii)"<<seltotal(ii)<<endl;
 
@@ -2105,11 +2109,11 @@ FUNCTION void calc_known_catlim(const int& ii, double seen_ytB)
 
 		double yint;
 
-		yint = - slope_hcr*intercept_hcr*Bo_true;
+		yint = - slope_hcr*intercept_hcr*value(SBo);
 
 		if(BBo>intercept_hcr){
 
-		TAC= yint + slope_hcr*seen_ytB;
+		TAC= yint + slope_hcr*ytB(ii);
 
 		}else{
 
@@ -2180,7 +2184,7 @@ FUNCTION void run_projections(const int& pi,const int& svi)
 		if(indmonth(ii)==smon){
 			
 
-			seen_bt(indyr(ii))= ytB(indyr(ii))*mfexp(ot(indyr(ii)));
+			seen_bt(indyr(ii))= ySB(indyr(ii))*mfexp(ot(indyr(ii)));
 			calc_selectivity(indyr(ii));	
 			calc_msy(indyr(ii));
 			calc_Fspr_target(indyr(ii), 0.40);
@@ -2402,12 +2406,12 @@ FUNCTION output_CL
 	ofs<<"comm_obsCatage"<< endl << comm_obsCatage <<endl;
 	ofs<<"comm_obsCatLen"<< endl << comm_obsCatLen <<endl;
 	ofs<<"surv_obsCatage"<< endl << surv_obsCatage <<endl;
-	ofs<<"totVBnation" << endl << totVBnation <<endl;
+	//ofs<<"totVBnation" << endl << totVBnation <<endl;
 	//ofs<<"CatchNatAge"<< endl << CatchNatAge<<endl;
 	ofs<<"indyr"<< endl << indyr<<endl;
 	ofs<<"indmonth"<< endl << indmonth<<endl;
 	ofs<<"indnatarea"<< endl << indnatarea<<endl;
-	//ofs<<"propVBarea"<< endl << propVBarea <<endl;
+	ofs<<"tVBarea"<< endl << tVBarea <<endl;
 	//ofs<<"selfisharea"<< endl << selfisharea <<endl;
 	ofs<<"selnation"<< endl << selnation <<endl;
 	ofs<<"seltotal"<< endl << seltotal <<endl;
@@ -2977,8 +2981,8 @@ REPORT_SECTION
 TOP_OF_MAIN_SECTION
 	time(&start);
 	arrmblsize = 10000000000;
-	gradient_structure::set_GRADSTACK_BUFFER_SIZE(1.e9);
-	gradient_structure::set_CMPDIF_BUFFER_SIZE(1.e9);
+	gradient_structure::set_GRADSTACK_BUFFER_SIZE(1.e8);
+	gradient_structure::set_CMPDIF_BUFFER_SIZE(1.e8);
 	gradient_structure::set_MAX_NVAR_OFFSET(5000);
 	gradient_structure::set_NUM_DEPENDENT_VARIABLES(5000);
  

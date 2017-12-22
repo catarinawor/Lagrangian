@@ -16,7 +16,7 @@ writeWTdat<-function(DIR= "../../admb/OM/gtg/", myseed){
 
 
 	set.seed(myseed)
-	perr<-twt[50:length(twt)]*exp(rnorm(length(twt[50:length(twt)]),0,0.1))
+	perr<-twt[50:length(twt)] #*exp(rnorm(length(twt[50:length(twt)]),0,0.1))
 
 	rec_ts<-c(twt[1:49],perr)
 

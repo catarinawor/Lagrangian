@@ -91,6 +91,8 @@ plot_closures <- function( M , Msq, sv=F, nome="",nations=F)
 	summary(dfcl_plotn)
 	myPalette <- colorRampPalette(rev(brewer.pal(8, "Spectral")))
 
+	dfcl_plot2<-dfcl_plot
+
 	if(nations==F){
 		pcl <- ggplot(dfcl_plot, aes(x=intercept_hcr,y=slope_hcr,z=closure_total))
 		pcl <- pcl+geom_raster(aes(fill=closure_total))
@@ -105,9 +107,9 @@ plot_closures <- function( M , Msq, sv=F, nome="",nations=F)
 		#pcln  <- pcln  + theme_bw(16)
 		#pcln  <- pcln  + ylab("Slope") + xlab("Intercept")
 
-		tlabs<-round(range(dfcl_plot$closure_total)*0.9,2)
-		pclt <- ggplot(dfcl_plot, aes(x=intercept_hcr,y=slope_hcr,z=closure_total))
-		pclt <- pclt+geom_raster(aes(fill=closure_total))
+		tlabs<-round(range(dfcl_plot2$closure_total)*0.9,4)
+		pclt <- ggplot(dfcl_plot2, aes(x=intercept_hcr,y=slope_hcr,z=closure_total))
+		pclt <- pclt + geom_raster(aes(fill=closure_total))
 		pclt <- pclt + scale_fill_gradientn(colours = myPalette(8),name  ="Closure rate",breaks=tlabs,labels=tlabs)
 		pclt <- pclt + theme_bw(16) + theme(legend.position="top")
 		pclt <- pclt + ylab("Harvest rate") + xlab("Biomass threshold")
@@ -115,9 +117,11 @@ plot_closures <- function( M , Msq, sv=F, nome="",nations=F)
 		pclt <- pclt  +  theme(plot.title = element_text(hjust = 0.5))
 		pclt <- pclt  + guides(fill = guide_colourbar(title.position = "top",
                                 title.hjust = .5))
-		pclt <- pclt + geom_point(aes(x=dfcl_plot$intercept_hcr[closure_total_comparison],y=dfcl_plot$slope_hcr[closure_total_comparison]),colour="gray90", size=10)
-		pclt <- pclt + geom_text(aes(x=dfcl_plot$intercept_hcr[closure_total_comparison],y=dfcl_plot$slope_hcr[closure_total_comparison],label="40:10"),fontface = "bold",colour="black")
-		pclt <- pclt + geom_text(aes(x=dfcl_plot$intercept_hcr[which.min(dfcl_plot$closure_total)],y=dfcl_plot$slope_hcr[which.min(dfcl_plot$closure_total)],label="min"),fontface = "bold",colour="black",position = position_nudge(y = -0.02))
+		pclt <- pclt + geom_point(aes(x=dfcl_plot2$intercept_hcr[which.min(dfcl_plot2$closure_total)],y=dfcl_plot2$slope_hcr[which.min(dfcl_plot2$closure_total)]),colour="black", size=10,shape=15)
+		pclt <- pclt + geom_point(aes(x=dfcl_plot2$intercept_hcr[closure_total_comparison],y=dfcl_plot2$slope_hcr[closure_total_comparison]),colour="gray90", size=10)
+		pclt <- pclt + geom_text(aes(x=dfcl_plot2$intercept_hcr[closure_total_comparison],y=dfcl_plot2$slope_hcr[closure_total_comparison],label="40:10"),fontface = "bold",colour="black")
+		#pclt <- pclt + geom_text(aes(x=dfcl_plot2$intercept_hcr[which.min(dfcl_plot2$closure_total)],y=dfcl_plot2$slope_hcr[which.min(dfcl_plot2$closure_total)],label="min"),fontface = "bold",colour="gray90",position = position_nudge(y = -0.02))
+		
 		pclt 
 
 		pcln1 <- ggplot(dfcl_plot, aes(x=intercept_hcr,y=slope_hcr,z=closure_nat1))

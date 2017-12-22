@@ -6,7 +6,7 @@
 
 counter=1
 
-while [ $counter -le 100 ]
+while [ $counter -le 200 ]
 do
 	  cd OM/gtg 
 	./lagrangian_OM_gtg

@@ -3,10 +3,10 @@
 #nationTACprop
 0.7388 0.2612 
 #hcr
-1 
+2 
 #hcr_slope
-1.0 
+.4 
 #hcr_intercept
-1.0 
+.2 
 #eof
 999 

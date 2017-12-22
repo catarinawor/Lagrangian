@@ -71,7 +71,7 @@ Rfilessqlim <- list.files(DIRsqlim,pattern="\\.Rdata",full.name=TRUE)
 #	SIMSsq[[y]]<-sims
 #}
 
-3length(SIMSsq)
+length(SIMSsq)
 
 
 
