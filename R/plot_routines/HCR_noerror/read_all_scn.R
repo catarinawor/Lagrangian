@@ -8,12 +8,15 @@
 
 library(cowplot)
 
-DIRS<-c("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_nostRec"
-,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_onestRec_100"
-,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_twostRec"
-,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_nostRec_100"
-,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_onestRec_100"
-,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_twostRec_100")
+
+
+DIRS<-c("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_nostRec_100",
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_onestRec_100",
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_twostRec_100",
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_nostRec_100",
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_onestRec_100",
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_twostRec_100"
+)
 
 
 #DIRS<-c("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_nostRec_limit"
@@ -75,6 +78,7 @@ for(p in 1:length(plotfiles)){
 }
 
 M<-SIMSdat[[1]]
+
 M1<-SIMSdat[[1]]
 M2<-SIMSdat[[2]]
 M3<-SIMSdat[[3]]
@@ -82,6 +86,7 @@ Msq<-SIMSdat[[4]]
 Msq1<-SIMSdat[[4]]
 Msq2<-SIMSdat[[5]]
 Msq3<-SIMSdat[[6]]
+
 
 
 #normal<-plot_logUtility( SIMSdat,SIMSsq , sv=TRUE, nome="nostrongrec",nations=TRUE)
@@ -137,6 +142,7 @@ b40
 setwd("/Users/catarinawor/Documents/Lagrangian/figures/HCR")
 ggsave("B40_allScn.pdf", plot=b40, width = 15, height = 6,dpi = 600)
 
+plot_B40( SIMSdat[[1]],SIMSdat[[4]], sv=FALSE, nome="nostrongrec",nations=TRUE, limite=.1)
 
 
 

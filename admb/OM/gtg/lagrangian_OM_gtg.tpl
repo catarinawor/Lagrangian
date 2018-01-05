@@ -492,6 +492,7 @@ PARAMETER_SECTION
 	vector fmsy(syr,proj_yr);
 	vector ftarget(nyr,proj_yr);
 	vector seen_bt(nyr,proj_yr);
+	vector seen_sb(nyr,proj_yr);
 
 	vector catlim(1,nations);
 
@@ -1238,7 +1239,7 @@ FUNCTION calc_first_year
 		
 	}
 
-	cout<<"yNage(indyr(1))(sage,nage)"<<yNage(indyr(1))(sage,nage)<<endl;
+	//cout<<"yNage(indyr(1))(sage,nage)"<<yNage(indyr(1))(sage,nage)<<endl;
 
 
 	ytB(indyr(1))= tB(1);
@@ -1324,9 +1325,9 @@ FUNCTION move_grow_die
 
 			calc_hist_catlim(indyr(i));
 			read_catlim();
-			cout<< "year is"<< indyr(i)<<endl;
-			cout<< "catlim is"<< catlim <<endl;
-			cout<< "hiscatch is "<< catlim_hist(indyr(i))<<endl;
+			//cout<< "year is"<< indyr(i)<<endl;
+			//cout<< "catlim is"<< catlim <<endl;
+			//cout<< "hiscatch is "<< catlim_hist(indyr(i))<<endl;
 			
 
 		}
@@ -1376,7 +1377,7 @@ FUNCTION move_grow_die
 			calc_wt_comm(indyr(i));
 			calc_selectivity(indyr(i));
 			calc_msy(indyr(i));
-			cout<< "yYieldNat is"<< yYieldNat(indyr(i)) <<endl;
+			//cout<< "yYieldNat is"<< yYieldNat(indyr(i)) <<endl;
 		
 		}
 	}
@@ -2026,7 +2027,7 @@ FUNCTION void calc_Fspr_target(const int& ii, double target )
 
 
 
-FUNCTION void calc_known_catlim(const int& ii, double seen_ytB)
+FUNCTION void calc_known_catlim(const int& ii)
 
 	
 	//variables
@@ -2035,31 +2036,48 @@ FUNCTION void calc_known_catlim(const int& ii, double seen_ytB)
 
 	
 	double Bo_true;
+	double SBo_true;
+	//double vBo_true;
+	double seen_bt;
+	double seen_sbt;
+	double seen_vbt;
 	
 
+	//vBo_true= value(elem_prod(lxo,seltotal(ii-1))*Ro* ywa(1));
 	
-	Bo_true=value(SBo);
+	//cout<<"vBo_true "<< vBo_true<<endl;
+	//Bo_true=value(Bo);
+	SBo_true=value(SBo);
 	
+	seen_sbt = value(ySB(indyr(ii))*mfexp(ot(ii)));
+	seen_bt = value(ytB(indyr(ii))*mfexp(ot(ii)));
+	//seen_vbt = value((seltotal(ii-1)*elem_prod(yNage(ii),ywa(ii)))*mfexp(ot(ii)));
 
-    
     //calculate new catlim
 	double BBo;
+	double SBSBo;
 	dvariable TAC;
 	//dvector TACnation(1,nations);
 
 
-	BBo = seen_ytB/Bo_true;
+	SBSBo = seen_sbt/SBo_true;
+	BBo = seen_bt/Bo_true;
 
 	switch(hcr){
 
 	case 1:
 	//40:10 harvest control rule	
 
-		if(BBo>0.4){
+		if(SBSBo>0.4){
 			//cout<<"ftarget(ii)"<<ftarget(ii)<<endl;
 
-			TAC = (1.-mfexp(-ftarget(ii)))*seltotal(ii)*elem_prod(yNage(ii),ywa(ii));
-			//TAC = elem_prod(elem_div(ftarget(ii)*seltotal(ii-1),ftarget(ii)*seltotal(ii-1)+m),elem_prod(yNage(ii),(1-mfexp(-ftarget(ii)*seltotal(ii-1)-m))))*ywa(ii); 
+		TAC = (1.-mfexp(-ftarget(ii)*seltotal(ii-1)))*(elem_prod(yNage(ii),ywa(ii))*mfexp(ot(ii)));
+
+
+			//TAC = value((seltotal(ii-1)*elem_prod(yNage(ii),ywa(ii)))*mfexp(ot(ii)))
+			//TAC = (1.-mfexp(-ftarget(ii)))*seltotal(ii)*elem_prod(yNage(ii),ywa(ii));
+			
+			//TAC = elem_prod(elem_div(ftarget(ii)*seltotal(ii-1),ftarget(ii)*seltotal(ii-1)+m),elem_prod(yNage(ii),(1-mfexp(-ftarget(ii)*seltotal(ii-1)-m))))*ywa(ii)*mfexp(ot(ii)); 
 			
 			//cout<<"all good?? "<<endl;
 		 	//cout<<"BBo "<<BBo<<endl;
@@ -2067,16 +2085,17 @@ FUNCTION void calc_known_catlim(const int& ii, double seen_ytB)
 
 		}else{
 		
-			if(BBo>0.1){
+			if(SBSBo>0.1){
 
 				double y;
 
 				//y = (BBo-0.1)/(0.4-0.1);
 
-				y = (seen_ytB-0.1*Bo_true)*((0.4/seen_ytB)/(0.4-0.1));
+				y = (seen_sbt-0.1*SBo_true)*((0.4/seen_sbt)/(0.4-0.1));
 				
-				//TAC = elem_prod(elem_div(ftarget(ii)*seltotal(ii),ftarget(ii)*seltotal(ii)+m),elem_prod(yNage(ii),(1-mfexp(-ftarget(ii)*seltotal(ii)-m))))*ywa(ii)*y; 
-				TAC = (1.-mfexp(-ftarget(ii)))*seltotal(ii)*elem_prod(yNage(ii),ywa(ii))*y;
+				//TAC = elem_prod(elem_div(ftarget(ii)*seltotal(ii-1),ftarget(ii)*seltotal(ii-1)+m),elem_prod(yNage(ii),(1-mfexp(-ftarget(ii)*seltotal(ii-1)-m))))*ywa(ii)*mfexp(ot(ii))*y; 
+				//TAC = (1.-mfexp(-ftarget(ii)))*seen_vbt*y;
+				TAC = (1.-mfexp(-ftarget(ii)*seltotal(ii-1)))*(elem_prod(yNage(ii),ywa(ii))*mfexp(ot(ii)))*y;
 				//cout<<"ftarget(ii) "<<ftarget(ii)<<endl;
 				//cout<<"seltotal(ii)"<<seltotal(ii)<<endl;
 
@@ -2086,7 +2105,7 @@ FUNCTION void calc_known_catlim(const int& ii, double seen_ytB)
 				
 			}else{
 
-				//cout<<"bad BBo "<<BBo<<endl;
+				
 				TAC = 0;
 
 			}
@@ -2109,15 +2128,19 @@ FUNCTION void calc_known_catlim(const int& ii, double seen_ytB)
 
 		double yint;
 
-		yint = - slope_hcr*intercept_hcr*value(SBo);
+		//yint = - slope_hcr*intercept_hcr*SBo_true;
 
-		if(BBo>intercept_hcr){
 
-		TAC= yint + slope_hcr*ytB(ii);
+		if(SBSBo>intercept_hcr){
+
+			//TAC= slope_hcr*seen_vbt;
+			//TAC= slope_hcr*(seen_bt- Bo_true*intercept_hcr);
+			TAC= slope_hcr* seen_bt*((seen_sbt- SBo_true*intercept_hcr)/SBo_true);
+
 
 		}else{
 
-		TAC= 0.0;
+			TAC= 0.0;
 
 		}
 		
@@ -2126,15 +2149,20 @@ FUNCTION void calc_known_catlim(const int& ii, double seen_ytB)
 			TAC = 600.;
 		}
 
+		if(TAC<0){
+			TAC =0.;
+		}
+
+
 		break;
 
 
 	}
 
-	cout<<"BBo "<<BBo<<endl;
-	cout<< "TAC" << endl << TAC<< endl;
+	//cout<< "SBSBo " << SBSBo<< endl;
+	//cout<< "TAC "<< ii << endl << TAC<< endl;
 	catlim = TAC * nationTACprop;
-	cout<< "catlim" << endl << catlim<< endl;
+	//cout<< "catlim" << endl << catlim<< endl;
 	//cout<< "seltotal_SA" << endl << seltotal_SA<< endl;
 
 	ofstream afs("catlim.txt");
@@ -2183,12 +2211,10 @@ FUNCTION void run_projections(const int& pi,const int& svi)
 
 		if(indmonth(ii)==smon){
 			
-
-			seen_bt(indyr(ii))= ySB(indyr(ii))*mfexp(ot(indyr(ii)));
-			calc_selectivity(indyr(ii));	
+				
 			calc_msy(indyr(ii));
 			calc_Fspr_target(indyr(ii), 0.40);
-			calc_known_catlim(indyr(ii),value(seen_bt(indyr(ii))));
+			calc_known_catlim(indyr(ii));
 			read_catlim();
 			histTAC(indyr(ii))=catlim;
 		}
@@ -2227,6 +2253,7 @@ FUNCTION void run_projections(const int& pi,const int& svi)
 			catlen_comm(indyr(ii));
 			calc_wt_comm(indyr(ii));
 			
+			calc_selectivity(indyr(ii));
 			//cout<<"yYieldNat(indyr(ii))"<<yYieldNat(indyr(ii))<<endl;
 	
 			

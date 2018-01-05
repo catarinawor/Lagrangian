@@ -72,7 +72,6 @@ plot_DynCatch <- function( M,  Msq, sv=F, nome="",nations=F, limite=.4)
 
 
 
-
 	sp<- unique(slope_hcr)
 	int<-unique(intercept_hcr)
 	Yield_lo_nat2<-matrix(nrow=length(sp)*length(int)+1,ncol=111)

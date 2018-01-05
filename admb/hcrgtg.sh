@@ -4,16 +4,18 @@
 
 tp=0.1
 
+hrtp=0.05
+
 
 
 
 for j in {0..5}; 
 do 
 
-for i in {1..9}; 
+for i in {1..10}; 
 do 
 
- 	sp=`echo "$i * $tp"| bc -l`
+ 	sp=`echo "$i * $hrtp"| bc -l`
  	it=`echo "$j * $tp"| bc -l`
 
 	echo "$sp"
@@ -26,7 +28,7 @@ do
 
 	counter=1
 
-	while [ $counter -le 20 ]
+	while [ $counter -le 100 ]
 	do
 
 	 cd ../R/OM_dat/ 

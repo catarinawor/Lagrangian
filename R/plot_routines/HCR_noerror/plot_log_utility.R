@@ -8,8 +8,8 @@
 
 
 
-#M<-SIMSdatlim
-#Msq<-SIMSsqlim
+#M<-SIMSdat[[3]]
+#Msq<-SIMSdat[[3]]
 
 require(reshape2)
 require(tidyr)
@@ -34,6 +34,11 @@ plot_logUtility <- function( M , Msq, sv=F, nome="",nations=F)
 	utility_nat1<-NULL
 	utility_nat2<-NULL
 
+	myseed<-NULL
+
+
+	
+
 
 	for(i in 1:n){
 
@@ -44,7 +49,7 @@ plot_logUtility <- function( M , Msq, sv=F, nome="",nations=F)
 		utility_nat1[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,1]+0.01))
 		utility_nat2[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,2]+0.01))
 
-
+		myseed[i]<-M[[i]][[1]]$seed
 	}
 
 
@@ -78,7 +83,13 @@ plot_logUtility <- function( M , Msq, sv=F, nome="",nations=F)
 		utility_total2=utility_total2_sq,utility_total=utility_total_sq,utility_nat1=utility_nat1_sq,utility_nat2=utility_nat2_sq)
 
 
-	#dflu<-dflu[dflu$intercept_hcr<0.6,]
+	unique(dflu$intercept_hcr)
+	unique(dflu$slope_hcr)
+
+	nrow(dflu[dflu$slope_hcr==0.5,])
+	length(dflu$intercept_hcr[dflu$slope_hcr==0.5&dflu$intercept_hcr==0.5])
+
+	myseed[dflu$slope_hcr==0.1&dflu$intercept_hcr==0.5]
 
 	#summary(dflu)
 

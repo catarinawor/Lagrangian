@@ -38,7 +38,7 @@ readOutput <- function(dir)
 	#seed<-scan("../../../admb/OM/gtg/seed.txt")	
 	#HCR <- read.pin("../../../admb/OM/gtg/HCR.dat")
 	sims<-readOutput("../../../admb/")
-	slo<-round(sims[[2]][[4]]*10)
+	slo<-round(sims[[2]][[4]]*100)
 	int<-round(sims[[2]][[5]]*10)
 	file.name <- paste("HCR",sims[[3]],"_0",slo,"_0",int,".Rdata",sep="")
 	#setwd("../R/OM_dat/res_search")
@@ -98,13 +98,16 @@ readOutput <- function(dir)
 
 
 	#setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_nostRec")
-	setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_onestRec")
-	#setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_twostRec")
+	#setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_onestRec")
+	#setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_twostRec")
 
 	#setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_nostRec_100")
 	#setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_onestRec_100")
 	#setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_twostRec_100")
 
+	setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_nostRec_100")
+	#setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_onestRec_100")
+	#setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_twostRec_100")
 
 
 

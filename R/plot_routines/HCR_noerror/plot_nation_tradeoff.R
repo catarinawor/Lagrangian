@@ -8,8 +8,6 @@
 
 
 
-#M<-SIMSdatlim
-#Msq<-SIMSsqlim
 
 require(reshape2)
 require(tidyr)
@@ -200,7 +198,7 @@ summary(dfa)
 	p1 <- ggplot(dfcr)
 	p1 <- p1+geom_path(aes(y=yield_nat2_sc,x=yield_nat1_sc,color=slope))
 	p1 <- p1+geom_point(aes(y=yield_nat2_sc,x=yield_nat1_sc,color=slope, shape=intercept),size=4,alpha=.6)
-	p1 <- p1+ geom_text(data=dft,aes(y=dft$yield_nat2_sc,x=dft$yield_nat1_sc,label="40:10"),fontface = "bold",colour="black")				
+	#p1 <- p1+ geom_text(data=dft,aes(y=dft$yield_nat2_sc,x=dft$yield_nat1_sc,label="40:10"),fontface = "bold",colour="black")				
 	
 	p1 <- p1+facet_wrap(~scn, scales="free")
 	p1 <- p1+ ylab(" average yield - Nation 2") + xlab(" average yield - Nation 1")
