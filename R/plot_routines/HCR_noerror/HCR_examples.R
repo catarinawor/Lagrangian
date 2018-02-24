@@ -4,11 +4,80 @@
 
 #need to run with no effort
 
-Bo<-100
 
 
-yB<-0:100
+SBo<-4421.47
 
+
+ySB<-seq(0,4421.47,length=100)
+yB<-ySB*1.239169
+
+
+slope=.2
+slope2=.2
+slope3=.5
+
+intercept=0
+intercept2= 0.1
+intercept3=.4
+
+utarget=0.15
+
+TAC<-NULL
+TAC2<-NULL
+TAC3<-NULL
+
+TAC1040<-NULL
+
+for(i in 1:length(yB)){
+
+	if(ySB[i]/SBo>intercept){
+		TAC[i]= max(min(slope*yB[i]*(ySB[i]-SBo*intercept)/SBo,600),0)
+	}else{
+		TAC[i]= 0
+	}
+
+	if(ySB[i]/SBo>intercept2){
+		TAC2[i]= max(min(slope2*yB[i]*(ySB[i]-SBo*intercept2)/SBo,600),0)
+	}else{
+		TAC2[i]= 0
+	}
+
+	if(ySB[i]/SBo>intercept2){
+		TAC3[i]= max(min(slope3*yB[i]*(ySB[i]-SBo*intercept3)/SBo,600),0)
+	}else{
+		TAC3[i]= 0
+	}
+
+	if(ySB[i]/SBo>.4){
+		TAC1040[i]= min(utarget*yB[i],600)
+	}else{
+	 	if(ySB[i]/SBo>.1){
+	 		TAC1040[i]=min(((ySB[i]-0.1*SBo)*((0.4/ySB[i])/(0.4-0.1)))* utarget*yB[i],600)
+		}else{
+			TAC1040[i]=0
+		}
+	}
+}
+
+
+pdf("Figurec4_HCRex.pdf",width = 10, height = 8)
+
+plot(ySB/SBo,TAC,type="l",lwd=2, xlab= expression(SB[t]/SB[0]))
+text(x=0.32,75, labels ="slope = 0.2", adj=0.0,font=2)
+text(x=0.32,100, labels ="intercept = 0.0", adj=0.0,font=2)
+
+lines(ySB/SBo,TAC3, lwd=2, lty=2,col="gray40")
+text(x=0.55,175, labels ="slope = 0.5", adj=0.0,col="gray40",font=2)
+text(x=0.55,200, labels ="intercept = 0.4", adj=0.0,col="gray40",font=2)
+
+lines(yB/SBo,TAC1040, lwd=2, lty=3,col="gray20")
+text(x=0.15,175, labels ="40:10 rule", adj=0.0,col="gray20",font=2)
+
+dev.off()
+
+
+#lines(ySB/SBo,TAC2, lwd=2,col="gray30")
 yint=-0.2*Bo*0.4
 TAC<- yint + 0.4*yB
 

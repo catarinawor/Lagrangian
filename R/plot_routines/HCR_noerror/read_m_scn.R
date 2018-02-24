@@ -11,37 +11,12 @@ library(cowplot)
 
 
 DIRS<-c("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_nostRec_100",
-"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_onestRec_100",
-"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_twostRec_100",
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_nostRec_100_m2",
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_nostRec_100_m3",
 "/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_nostRec_100",
-"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_onestRec_100",
-"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_twostRec_100"
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_nostRec_100_m2",
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_nostRec_100_m3"
 )
-
-
-#DIRS<-c("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_nostRec_limit"
-#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_onestRec_limit"
-#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_twostRec_limit"
-#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_nostRec_limit"
-#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_onestRec_limit"
-#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_twostRec_limit")
-
-
-#DIRS<-c("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_nostRec"
-#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_onestRec"
-#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_twostRec"
-#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_nostRec_limit"
-#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_onestRec_limit"
-#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_twostRec_limit")
-
-
-#DIRS<-c("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_Best_nostRec_m2"
-#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_Best_onestRec_m2"
-#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_Best_twostRec_m2"
-#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_nostRec_m2"
-#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_onestRec_m2"
-#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_twostRec_m2")
-
 
 
 
@@ -90,9 +65,9 @@ Msq3<-SIMSdat[[6]]
 
 draft_dir<-"/Users/catarinawor/Documents/Lagrangian/report/manuscript/ICES"
 #normal<-plot_logUtility( SIMSdat,SIMSsq , sv=TRUE, nome="nostrongrec",nations=TRUE)
-no<-plot_logUtility( SIMSdat[[1]],SIMSdat[[4]] , sv=TRUE, nome="nostrongrec",nations=TRUE)
-one<-plot_logUtility( SIMSdat[[2]],SIMSdat[[5]]  , sv=TRUE, nome="onestrongrec",nations=TRUE)
-two<-plot_logUtility( SIMSdat[[3]],SIMSdat[[6]]  , sv=TRUE, nome="twostrongrec",nations=TRUE)
+no<-plot_logUtility( SIMSdat[[1]],SIMSdat[[4]] , sv=FALSE, nome="nostrongrec",nations=TRUE)
+one<-plot_logUtility( SIMSdat[[2]],SIMSdat[[5]]  , sv=FALSE, nome="onestrongrec",nations=TRUE)
+two<-plot_logUtility( SIMSdat[[3]],SIMSdat[[6]]  , sv=FALSE, nome="twostrongrec",nations=TRUE)
 lu<-plot_grid(no,one,two,nrow=3, labels="AUTO")
 lu
 setwd("/Users/catarinawor/Documents/Lagrangian/figures/HCR")
@@ -103,11 +78,11 @@ ggsave("logUtility_allScn.pdf", plot=lu, width = 15, height = 13,dpi = 600)
 noAAV<-plot_AAV( SIMSdat[[1]],SIMSdat[[4]] , sv=TRUE, nome="AAVnostrongrec",nations=TRUE)
 oneAAV<-plot_AAV( SIMSdat[[2]],SIMSdat[[5]]  , sv=TRUE, nome="AAVonestrongrec",nations=TRUE)
 twoAAV<-plot_AAV( SIMSdat[[3]],SIMSdat[[6]]  , sv=TRUE, nome="AAVtwostrongrec",nations=TRUE)
-AAV<-plot_grid(noAAV,oneAAV,twoAAV,nrow=3, labels=c("no strong recruitment","one strong recruitment","two strong recruitments"),
+AAV<-plot_grid(noAAV,oneAAV,twoAAV,nrow=3, labels=c("no strong recruitment","one strong recruitments","two strong recruitments"),
 	  hjust = 0)
 AAV
 setwd(draft_dir)
-ggsave("Figurec4_3.pdf", plot=AAV, width = 15, height = 15,dpi = 600)
+ggsave("AAV_allScn.pdf", plot=AAV, width = 15, height = 15,dpi = 600)
 
 
 

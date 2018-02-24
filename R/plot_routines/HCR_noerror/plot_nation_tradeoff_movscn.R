@@ -17,7 +17,7 @@ library(RColorBrewer)
 library(cowplot)
 
 
-plot_tradeoff <- function( M1 ,M2,M3, Msq1,Msq2,Msq3, sv=F, nome="",nations=F)
+plot_tradeoff_mov <- function( M1 ,M2,M3, Msq1,Msq2,Msq3, sv=F, nome="",nations=F)
 {
 	cat("plot_tradeoff")
 
@@ -146,8 +146,8 @@ plot_tradeoff <- function( M1 ,M2,M3, Msq1,Msq2,Msq3, sv=F, nome="",nations=F)
 	dfa$nt2tf[which(dfa$slope=="40:10")]<-dfa$utility_nat2[which(dfa$slope=="40:10")]
 
 	dfa$scn<-"Base case movement"
-	dfa$scn[dfa$scenario==2]<-"early movement"
-	dfa$scn[dfa$scenario==3]<-"late movement"
+	dfa$scn[dfa$scenario==2]<-"Early movement"
+	dfa$scn[dfa$scenario==3]<-"Late movement"
 
 	dfa$b40tf<- -999
 	dfa$b40tf[dfa$slope=="40:10"]<-dfa$b40[which(dfa$slope=="40:10")]
@@ -213,8 +213,8 @@ summary(dfa)
 	
 
 	if(sv==TRUE){
-			setwd("/Users/catarinawor/Documents/Lagrangian/report/manuscript/ICES")
-			ggsave(paste(nome,"tradeoff_nations_mov_scn.pdf",sep=""), plot=pto, width = 11, height = 9)
+			setwd("/Users/catarinawor/Documents/Thesis")
+			ggsave(paste(nome,"Figurec4_tradeoff_nations_mov_scn.pdf",sep=""), plot=pto, width = 11, height = 9)
 		}
 
 		return(pto)

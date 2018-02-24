@@ -8,7 +8,7 @@
 
 
 
-#M<-SIMSdat[[3]]
+#M<-SIMSdat[[1]]
 #Msq<-SIMSdat[[3]]
 
 require(reshape2)

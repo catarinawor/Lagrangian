@@ -12,7 +12,7 @@ hrtp=0.05
 for j in {0..5}; 
 do 
 
-for i in {1..10}; 
+for i in {11..20}; 
 do 
 
  	sp=`echo "$i * $hrtp"| bc -l`

@@ -1,4 +1,4 @@
-source("../../read.admb.R")
+sssource("../../read.admb.R")
 
 
 
@@ -105,10 +105,26 @@ readOutput <- function(dir)
 	#setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_onestRec_100")
 	#setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_twostRec_100")
 
-	setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_nostRec_100")
+	#setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_nostRec_100")
 	#setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_onestRec_100")
 	#setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_twostRec_100")
 
+	#setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_nostRec_100_m2")
+	#setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_onestRec_100_m2")
+	#setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_twostRec_100_m2")
+
+	#setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_nostRec_100_m2")
+	#setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_onestRec_100_m2")
+	#setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_twostRec_100_m2")
+
+	#setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_nostRec_100_m3")
+	
+	#setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_onestRec_100_m2")
+	#setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_twostRec_100_m2")
+	#setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_onestRec_100_m3")
+	setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_twostRec_100_m3")
+
+	#setwd("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_nostRec_100_m3")
 
 
 	save(sims,file=file.name)
