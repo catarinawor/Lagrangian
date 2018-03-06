@@ -241,7 +241,7 @@ DATA_SECTION
 
        			for(int n=1;n<=fisharea;n++)
        			{
-       				TotEffyear(n)(syr,nyr) = elem_prod(Fmult* exp(vt(syr,nyr)-(0.1*0.1/2)), pTotEffyear(n)(syr,nyr));
+       				TotEffyear(n)(syr,nyr) = elem_prod(Fmult* exp((vt(syr,nyr)-(0.1*0.1/2))*err), pTotEffyear(n)(syr,nyr));
        				//TotEffyear(n)(syr,nyr) = Fmult* pTotEffyear(n)(syr,nyr);
        			}
        			
@@ -499,13 +499,13 @@ FUNCTION void calc_numbers_at_age(const int& ii, const dvariable& expwt)
 					//cout<<" propBarea "<<(propBarea)<<endl;
 					//cout<<" sum of propBarea "<<sum(propBarea)<<endl;
 					Nage(ii)(a) = (Nage(ii-1)(a-1)*propBarea)*mfexp(-(m_tsp+q*Effarea(ii-1)*va(a-1))) +
-								  Nage(ii-1)(a-1)*(1-sum(propBarea))*mfexp(-(m_tsp));
+								  Nage(ii-1)(a-1)*(1.0-sum(propBarea))*mfexp(-(m_tsp));
 
             		//Nage(ii)(a) = Nage(ii-1)(a-1)*mfexp(-(m_tsp+q*Effage(ii-1)(a-1)*va(a-1)));
             	}
       
             	Nage(ii)(nage) = sum(elem_div(elem_prod((Nage(ii-1)(nage-1)*propBarea),mfexp(-(m_tsp+q*Effarea(ii-1)*va(nage-1)))),
-            					(1.-mfexp(-(m_tsp+q*Effarea(ii-1)*va(nage))))))+
+            					(1.0-mfexp(-(m_tsp+q*Effarea(ii-1)*va(nage))))))+
             					(Nage(ii-1)(nage-1)*(1.0-sum(propBarea))*mfexp(-m_tsp))/(1.-mfexp(-m_tsp));
 
             	yNage(indyr(ii))(sage,nage) = Nage(ii)(sage,nage);
@@ -547,15 +547,17 @@ FUNCTION void calc_effarea(const int& ii,const int& ia)
 
 		
 		for(int n=1; n<=nations;n++){
-       		totVBnation(ii,n) = sum(pow(VBarea(ii)(ntmp1(n),ntmp1(n+1)-1.0) +1e-30,fbeta));
+       		totVBnation(ii,n) = sum(pow(VBarea(ii)(ntmp1(n),ntmp1(n+1)-1.0) ,fbeta));
        	}
+
+       	//cout<<"ntmp1"<<endl<<ntmp1<<endl;
 
 
 		for(int rr= sarea; rr<=narea; rr++)
 		{
        		//if(sum(yCatchNatAge(indyr(ii))(indnatarea(rr))(sage,nage))<ctlim(indnatarea(rr))){
 
-				tmp1(rr)= (pow(VBarea(ii)(rr)+1e-30,fbeta)/(totVBnation(ii,indnatarea(rr)))) * effPwr(rr);
+				tmp1(rr)= (pow(VBarea(ii)(rr),fbeta)/(totVBnation(ii,indnatarea(rr)))) * effPwr(rr);
 				tmp2(rr) = tmp1(rr)*TotEffyear(indfisharea(rr))(indyr(ia));
 				Effarea(ii)(rr) = tmp2(rr)*TotEffmonth(indfisharea(rr))(indmonth(ii));
 			//}else{
@@ -648,7 +650,7 @@ FUNCTION initialization
 	Nage(1)(nage) /= (1.-mfexp(-za(nage)));
 
 	VulB(1) = elem_prod(elem_prod(Nage(1),va),wa);
-	SB(1) = elem_prod(Nage(1),fa)*wa/2;
+	SB(1) = elem_prod(Nage(1),fa)*wa/2.0;
 	yNage(1)(sage,nage)= Nage(1)(sage,nage);
 
 
@@ -702,7 +704,7 @@ FUNCTION move_grow_die
 
 	for(int i=rep_yr*tmon+1;i<=ntstp;i++){
 
-		calcmaxpos(wx(indyr(i)));
+		calcmaxpos(wx(indyr(i))*err);
 
 		
 		calc_numbers_at_age(i,wt(indyr(i)));
@@ -1207,7 +1209,7 @@ FUNCTION output_true
 	ofs<<"propVBarea" << endl << propVBarea <<endl;
 	ofs<<"Effarea"<< endl << Effarea <<endl;
 	ofs<<"TotEffyear" << endl << TotEffyear<<endl;
-	ofs<<"Fmult" << endl << Fmult* exp(vt(syr,nyr)-(0.1*0.1/2))<<endl;
+	ofs<<"Fmult" << endl << Fmult* exp((vt(syr,nyr)-(0.1*0.1/2))*err)<<endl;
 	//ofs<<"Fmult" << endl << Fmult<<endl;
 	//ofs<<"comm_obsCatage"<< endl << comm_obsCatage <<endl;
 	//ofs<<"surv_obsCatage"<< endl << surv_obsCatage <<endl;

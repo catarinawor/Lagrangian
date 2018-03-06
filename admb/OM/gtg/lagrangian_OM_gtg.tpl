@@ -285,7 +285,7 @@ DATA_SECTION
        		for(int n=1;n<=fisharea;n++)
        		{
        			//TotEffyear(n)(syr,nyr) = Fmult* pTotEffyear(n)(syr,nyr);
-       			TotEffyear(n)(syr,nyr) = elem_prod(Fmult* exp(vt(syr,nyr)-(0.1*0.1/2)), pTotEffyear(n)(syr,nyr));
+       			TotEffyear(n)(syr,nyr) = elem_prod(Fmult* exp((vt(syr,nyr)-(0.1*0.1/2))*err), pTotEffyear(n)(syr,nyr));
        		}
        			
    			
@@ -712,13 +712,13 @@ FUNCTION void calc_effarea(const int& ii,const int& ia)
 	tmp2.initialize();
 
 	for(int n=1; n<=nations;n++){
-       totVBnation(ii,n) = sum(pow(tVBarea(ii)(ntmp1(n),ntmp1(n+1)-1.0)+1e-30,fbeta));		 
+       totVBnation(ii,n) = sum(pow(tVBarea(ii)(ntmp1(n),ntmp1(n+1)-1.0),fbeta));		 
 	}
 
 	for(int r= sarea; r<=narea; r++)
 	{
 		//if(sum(yCatchNatAge(indyr(ii))(indnatarea(r))(sage,nage))<ctlim(indnatarea(r))){
-			tmp1(r)= (pow(tVBarea(ii)(r)+1e-30,fbeta)/(totVBnation(ii)(indnatarea(r)))) * effPwr(r);
+			tmp1(r)= (pow(tVBarea(ii)(r),fbeta)/(totVBnation(ii)(indnatarea(r)))) * effPwr(r);
 			tmp2(r) = tmp1(r)*TotEffyear(indfisharea(r))(indyr(ia));
 			Effarea(ii)(r) = tmp2(r)*TotEffmonth(indfisharea(r))(indmonth(ii));
 		//}else{
@@ -1010,7 +1010,7 @@ FUNCTION move_grow_die
 
 	for(int i=ststp+1;i<=ntstp;i++){
 
-		calcmaxpos(wx(indyr(i)));
+		calcmaxpos(wx(indyr(i))*err);
 		//calcmaxpos(wx(syr));
 		calc_numbers_at_age(i,wt(indyr(i)));
 		
@@ -1577,7 +1577,7 @@ FUNCTION output_true
 	ofs<<"maxPossd" << endl << maxPossd <<endl;
 	ofs<<"cvPos" << endl << cvPos <<endl;
 	ofs<<"fbeta " << endl << fbeta <<endl;
-	ofs<<"Fmult" << endl <<  Fmult* exp(vt(syr,nyr)-(0.1*0.1/2)) <<endl;
+	ofs<<"Fmult" << endl <<  Fmult* exp((vt(syr,nyr)-(0.1*0.1/2))*err) <<endl;
 	ofs<<"syr" << endl << syr <<endl;
 	ofs<<"nyr" << endl << nyr <<endl;
 	ofs<<"rep_yr" << endl << rep_yr <<endl;

@@ -53,7 +53,7 @@ p2 <- p2 + geom_text(x=-134.5,y=50.5,label="fishing ground 4", colour="black")
 p2 <- p2 + geom_text(x=-134.5,y=53.5,label="fishing ground 5", colour="black")
 p2 <- p2 + theme_bw(16)
 p2 <- p2 + geom_text(x=-120,y=51,label="Canada", colour="black", size=6)
-p2 <- p2 + geom_text(x=-120,y=43,label="U.S.A", colour="black",f size=6)
+p2 <- p2 + geom_text(x=-120,y=43,label="U.S.A", colour="black", size=6)
 
 #-127.620
 p2
