@@ -1,0 +1,118 @@
+
+\documentclass[a4paper]{article}
+
+%% Compile this with
+%% R> library(pgfSweave)
+%% R> pgfSweave
+%\usepackage[nogin]{Sweave} %way to understand R code
+\usepackage{pgf} 
+
+%look it up
+\usepackage{tikz} 
+
+% allows R code or other stuff in the figure labels
+\usepackage{subfigure} 
+
+% allows to have subfigures
+\usepackage{color} 
+
+%colored text!
+\usepackage[left=1.2in,right=1.2in,top=1.2in,bottom=1.2in]{geometry} 
+
+% sets the margins
+\usepackage{fancyhdr} 
+\usepackage{setspace} 
+\usepackage{indentfirst} 
+\usepackage{titlesec} 
+\usepackage{natbib}
+\usepackage{float}
+
+\newcommand{\lang}{\textsf} 
+
+%
+\newcommand{\code}{\texttt} 
+\newcommand{\pkg}{\texttt} 
+\newcommand{\ques}[1]{{\bf\large#1}} 
+\newcommand{\eb}{\\
+\nonumber} 
+
+\doublespacing
+\titleformat{
+\section} {\normalfont
+\fontsize{12}{13}\bfseries}{\thesection}{1em}{}
+
+\title{Report on the effect of various linear harvest control rules on fisheries management perfomance metrics} 
+\author{Catarina Wor}
+
+%\pgfrealjobname{pgfSweave-vignette}
+%pgfSweave-vignette
+\begin{document}
+
+\maketitle \large
+
+\section{Introduction and Method overview}
+ 
+We evaluate a series of harvest control rules that are given by a linear relationship between relative stock biomass ($B_t/B_0$) and Total allowable catch (TAC). This relationship is given by two parameters: slope and  x intercept. The slope indicates the exploitation rate at which the stock is harvested. The xintercept (hereafter referred as intercept) is the minimum relative stock biomass level required for harvest to occur. Figure \ref{examplehcr} shows three harvest control  rules examples with varying slopes and intercepts.
+
+
+\begin{center} %left bottom right top,
+\begin{figure}[H]
+\centering 
+    \label{examplehcr}             
+    \includegraphics[trim= 0mm 0mm 0mm 0mm, scale=.6]{HCR_example.pdf}  
+    \caption{ Example harvest control rules with various values for intercept and slope}                
+\end{figure}
+\end{center}
+
+
+In order to evaluate the and compare the performance of various linear harvest control rules, we sistematically calculated a series of performance metrics over a range of 10 slopes (from 0.1 to 1.0 in 0.1 intervals) and 11 intercepts (fro 0.0 to 1.0 in 0.1 intervals). We then mapped the performance metrics values over the slope-intercept surface. 
+
+The performance metrics are a result of the Lagrangian movement dynamics model described in Wor et al. 2017. We assumed that the manager had perfect information of the resource (i.e. no assessment model). 
+
+
+
+\section{Scenario: One strong recruitment per decade}
+
+
+\begin{center} %left bottom right top,
+\begin{figure}[H]   
+\large           
+    \includegraphics[trim= 0mm 0mm 0mm 0mm, scale=.4]{onestrongreclogUtility.pdf}  
+	\caption{ Log Utility performance over a range of performance metrics. Nation 1 = U.S.A., Nation 2= Canada, Total =  combined results.}                
+\end{figure}
+\end{center}
+
+
+\begin{center} %left bottom right top,
+\begin{figure}[H]               
+    \includegraphics[trim= 0mm 0mm 0mm 0mm, scale=.4]{onestrongrec_smYield.pdf}  
+	\caption{ Sum of yield over 60 years. Nation 1 = U.S.A., Nation 2= Canada, Total =  combined results. }                
+\end{figure}
+\end{center}
+
+
+\begin{center} %left bottom right top,
+\begin{figure}[H]               
+    \includegraphics[trim= 0mm 0mm 0mm 0mm, scale=0.4]{onestrongrecAAV.pdf}  
+	\caption{Average annual variability in catch.  Nation 1 = U.S.A., Nation 2= Canada, Total =  combined results.}                
+\end{figure}
+\end{center}
+
+\begin{center} %left bottom right top,
+\begin{figure}[H]               
+    \includegraphics[trim= 0mm 0mm 0mm 0mm, scale=0.4]{onestrongrecclosure.pdf}  
+    \caption{ \% of fisheries closures.  Nation 1 = U.S.A., Nation 2= Canada, Total =  combined results.}                
+\end{figure}
+\end{center}
+
+
+
+\begin{center} %left bottom right top,
+\begin{figure}[H]               
+    \includegraphics[trim= 0mm 0mm 0mm 0mm, scale=0.4]{onestrongrec_pTAC.pdf}  
+    \caption{ \% of TAC caught.  Nation 1 = U.S.A., Nation 2= Canada, Total =  combined results.}                
+\end{figure}
+\end{center}
+
+
+\end{document}

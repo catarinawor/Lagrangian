@@ -1,0 +1,1177 @@
+.SIMNAME<-list(length(.SIMDIRS))#
+#
+estn<-list(length(.SIMDIRS))#
+pbias<-list(length(.SIMDIRS))#
+maxgrad<-list(length(.SIMDIRS))#
+initvals<-list(length(.SIMDIRS))#
+initvals_bad<-list(length(.SIMDIRS))#
+for( i in 1:length(.SIMDIRS)){#
+  .SIMNAME[[i]]   <- list.files(.SIMDIRS[i],pattern="\\.Rdata", full.name=TRUE)#
+  tmp_estn<-matrix(NA,nrow=length(.SIMNAME[[i]]),ncol=5)#
+  tmp_pbias<-matrix(NA,nrow=length(.SIMNAME[[i]]),ncol=5)#
+  tmp_maxgrad<-vector(length=length(.SIMNAME[[i]]))#
+  tmp_initvals<-matrix(NA,nrow=length(.SIMNAME[[i]]),ncol=5)#
+  for( j in 1:length(.SIMNAME[[i]])){#
+    load(.SIMNAME[[i]][j])#
+#
+    true_pars <- c(sims[[1]]$"mo",sims[[1]]$"cvPos",sims[[1]]$"maxPos50",sims[[1]]$"maxPossd",mean(sims[[1]]$Fmult-(.1*.1/2)))  #
+    #parameters#
+    tmp_estn[j,]<-exp(sims[[3]]$est[1:5])#
+    tmp_pbias[j,]<-((tmp_estn[j,]-true_pars)/true_pars)*100#
+    tmp_maxgrad[j]<-sims[[3]]$maxgrad#
+    tmp_initvals[j,]<-exp(unlist(sims[[5]][1:5]))#
+   }#
+#
+  tmp_estn<- tmp_estn[tmp_maxgrad<=1.,]#
+  tmp_pbias<- tmp_pbias[tmp_maxgrad<=1.,]#
+  estn[[i]]<-tmp_estn#
+  pbias[[i]]<-tmp_pbias#
+  maxgrad[[i]]<-tmp_maxgrad#
+  initvals[[i]]<-tmp_initvals[tmp_maxgrad<=1.,]#
+  initvals_bad[[i]]<-tmp_initvals[tmp_maxgrad>1.,]#
+}#
+titulos<-c("5 areas, tau=0.4, B = 1.0")#
+,#
+  "5 areas, tau=1.0, B = 1.0",#
+  "5 areas, tau=1.0, B = 2.0")#
+#
+#setwd("/Users/catarinawor/Documents/hake/Thesis/figs/chap2")#
+#setwd("/Users/catarinawor/Documents/hake/JTC_talk")#
+#pdf("single_version_simeval.pdf", width=14, height=7)#
+par(mfcol=c(1,1))#
+for( i in 1:length(.SIMDIRS)){#
+  boxplot(pbias[[i]],names=c(expression("t"[0]),expression("CV"),expression("a"[50]),#
+    expression(sigma["X"["max"]]),expression("q")),ylim=c(-50,50),main=titulos[i],cex.axis=1.5,#
+    cex.lab=2,cex.main=2,cex=1.6)#
+  abline(h=0)#
+  text(4, y = 8, labels = nrow(pbias[[i]]), cex=2)#
+}#
+mtext("% Bias", 2, line = -2, outer = TRUE, font=2)#
+#dev.off()
+.SIMDIRS   <- c("/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_3areas_tau04",#
+                "/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_3areas_tau04_delta2",#
+                "/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_3areas_tau1",#
+                "/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_5areas_tau04"#,#
+  )#
+.SIMNAME<-list(length(.SIMDIRS))#
+#
+estn<-list(length(.SIMDIRS))#
+pbias<-list(length(.SIMDIRS))#
+maxgrad<-list(length(.SIMDIRS))#
+initvals<-list(length(.SIMDIRS))#
+initvals_bad<-list(length(.SIMDIRS))#
+for( i in 1:length(.SIMDIRS)){#
+  .SIMNAME[[i]]   <- list.files(.SIMDIRS[i],pattern="\\.Rdata", full.name=TRUE)#
+  tmp_estn<-matrix(NA,nrow=length(.SIMNAME[[i]]),ncol=5)#
+  tmp_pbias<-matrix(NA,nrow=length(.SIMNAME[[i]]),ncol=5)#
+  tmp_maxgrad<-vector(length=length(.SIMNAME[[i]]))#
+  tmp_initvals<-matrix(NA,nrow=length(.SIMNAME[[i]]),ncol=5)#
+  for( j in 1:length(.SIMNAME[[i]])){#
+    load(.SIMNAME[[i]][j])#
+#
+    true_pars <- c(sims[[1]]$"mo",sims[[1]]$"cvPos",sims[[1]]$"maxPos50",sims[[1]]$"maxPossd",mean(sims[[1]]$Fmult-(.1*.1/2)))  #
+    #parameters#
+    tmp_estn[j,]<-exp(sims[[3]]$est[1:5])#
+    tmp_pbias[j,]<-((tmp_estn[j,]-true_pars)/true_pars)*100#
+    tmp_maxgrad[j]<-sims[[3]]$maxgrad#
+    tmp_initvals[j,]<-exp(unlist(sims[[5]][1:5]))#
+   }#
+#
+  tmp_estn<- tmp_estn[tmp_maxgrad<=1.,]#
+  tmp_pbias<- tmp_pbias[tmp_maxgrad<=1.,]#
+  estn[[i]]<-tmp_estn#
+  pbias[[i]]<-tmp_pbias#
+  maxgrad[[i]]<-tmp_maxgrad#
+  initvals[[i]]<-tmp_initvals[tmp_maxgrad<=1.,]#
+  initvals_bad[[i]]<-tmp_initvals[tmp_maxgrad>1.,]#
+}
+titulos<-c("3 areas, tau=0.4, B = 1.0",#
+  "3 areas, tau=0.4, B = 2.0",#
+  "3 areas, tau=1.0, B = 1.0"#
+  "5 areas, tau=0.4, B = 1.0")
+par(mfcol=c(4,1))#
+for( i in 1:length(.SIMDIRS)){#
+  boxplot(pbias[[i]],names=c(expression("t"[0]),expression("CV"),expression("a"[50]),#
+    expression(sigma["X"["max"]]),expression("q")),ylim=c(-50,50),main=titulos[i],cex.axis=1.5,#
+    cex.lab=2,cex.main=2,cex=1.6)#
+  abline(h=0)#
+  text(4, y = 8, labels = nrow(pbias[[i]]), cex=2)#
+}#
+mtext("% Bias", 2, line = -2, outer = TRUE, font=2)#
+#dev.off()
+par(mfcol=c(1,4))#
+for( i in 1:length(.SIMDIRS)){#
+  boxplot(pbias[[i]],names=c(expression("t"[0]),expression("CV"),expression("a"[50]),#
+    expression(sigma["X"["max"]]),expression("q")),ylim=c(-50,50),main=titulos[i],cex.axis=1.5,#
+    cex.lab=2,cex.main=2,cex=1.6)#
+  abline(h=0)#
+  text(4, y = 8, labels = nrow(pbias[[i]]), cex=2)#
+}#
+mtext("% Bias", 2, line = -2, outer = TRUE, font=2)#
+#dev.off()
+titulos<-c("3 areas, tau=0.4, B = 1.0",#
+  "3 areas, tau=0.4, B = 2.0",#
+  "3 areas, tau=1.0, B = 1.0",#
+  "5 areas, tau=0.4, B = 1.0")
+par(mfcol=c(1,4))#
+for( i in 1:length(.SIMDIRS)){#
+  boxplot(pbias[[i]],names=c(expression("t"[0]),expression("CV"),expression("a"[50]),#
+    expression(sigma["X"["max"]]),expression("q")),ylim=c(-50,50),main=titulos[i],cex.axis=1.5,#
+    cex.lab=2,cex.main=2,cex=1.6)#
+  abline(h=0)#
+  text(4, y = 8, labels = nrow(pbias[[i]]), cex=2)#
+}#
+mtext("% Bias", 2, line = -2, outer = TRUE, font=2)#
+#dev.off()
+load("/Users/catarinawor/Documents/Lagrangian/simeval/SimResult_3areas_tau1/simest480.Rdata")
+rm(list=ls()); #
+#
+library(plyr)#
+library(data.table)#
+library(ggplot2)#
+library(reshape2)#
+library(animation)#
+library(ggmap)#
+#if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")#
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")
+names(sim_gtg)
+matplot(sim_gtg$comm_obsCatLen)
+sim_gtg$comm_obsCatLen
+matplot(sim_gtg$comm_obsCatLen, type="b")
+matplot(t(sim_gtg$comm_obsCatLen), type="b")
+seq(15, length=25, by=2 )
+seq(15, length=22, by=2 )
+rm(list=ls()); #
+#
+library(plyr)#
+library(data.table)#
+library(ggplot2)#
+library(reshape2)#
+library(animation)#
+library(ggmap)#
+#if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")#
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")#
+#
+names(sim_gtg)#
+matplot(t(sim_gtg$comm_obsCatLen), type="b")
+seq(15, length=20, by=2 )
+rm(list=ls()); #
+#
+library(plyr)#
+library(data.table)#
+library(ggplot2)#
+library(reshape2)#
+library(animation)#
+library(ggmap)#
+#if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")#
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")#
+#
+names(sim_gtg)#
+matplot(t(sim_gtg$comm_obsCatLen), type="b")
+rm(list=ls()); #
+#
+library(plyr)#
+library(data.table)#
+library(ggplot2)#
+library(reshape2)#
+library(animation)#
+library(ggmap)#
+#if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")#
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")#
+#
+names(sim_gtg)#
+matplot(t(sim_gtg$comm_obsCatLen), type="b")
+rm(list=ls()); #
+#
+library(plyr)#
+library(data.table)#
+library(ggplot2)#
+library(reshape2)#
+library(animation)#
+library(ggmap)#
+#if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")#
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")#
+#
+names(sim_gtg)#
+matplot(t(sim_gtg$comm_obsCatLen), type="b")
+rm(list=ls()); #
+#
+library(plyr)#
+library(data.table)#
+library(ggplot2)#
+library(reshape2)#
+library(animation)#
+library(ggmap)#
+#if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")#
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")#
+#
+names(sim_gtg)#
+matplot(t(sim_gtg$comm_obsCatLen), type="b")
+(0.3-0.1)*100/.3
+(0.2-0.1)*100/.3
+(0.12-0.1)*100/.3
+(0.12-0.1)/.3
+rm(list=ls()); #
+#
+library(plyr)#
+library(data.table)#
+library(ggplot2)#
+library(reshape2)#
+library(animation)#
+library(ggmap)#
+#if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")#
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")#
+#
+names(sim_gtg)
+plot(apply(sim_gtg$yNage,1,sum),type="l")
+sim_gtg$Bo
+plot(apply(sim_gtg$ytB,1,sum),type="l")
+plot(sim_gtg$ytB,type="l")
+hline(sim_gtg$Bo)
+abline(h=sim_gtg$Bo)
+plotsim_gtg$fmsy,type="l")
+plot(sim_gtg$fmsy,type="l")
+rm(list=ls()); #
+#
+library(plyr)#
+library(data.table)#
+library(ggplot2)#
+library(reshape2)#
+library(animation)#
+library(ggmap)#
+#if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")#
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")#
+#
+names(sim_gtg)
+rm(list=ls()); #
+#
+library(plyr)#
+library(data.table)#
+library(ggplot2)#
+library(reshape2)#
+library(animation)#
+library(ggmap)#
+#if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")#
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")#
+#
+names(sim_gtg)
+rm(list=ls()); #
+#
+library(plyr)#
+library(data.table)#
+library(ggplot2)#
+library(reshape2)#
+library(animation)#
+library(ggmap)#
+#if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")#
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")#
+#
+names(sim_gtg)
+dim(sim_gtg$yYieldNat)
+apply(sim_gtg$yYieldNat,1,sum)
+apply(sim_gtg$histTAC,1,sum)
+apply(sim_gtg$yYieldNat[52:130],1,sum)
+apply(sim_gtg$yYieldNat[52:130,],1,sum)
+apply(sim_gtg$yYieldNat[100:130,],1,sum)/#
+apply(sim_gtg$histTAC,1,sum)
+sim_gtg$yYieldNat[100:130,]/sim_gtg$histTAC
+rm(list=ls()); #
+#
+library(plyr)#
+library(data.table)#
+library(ggplot2)#
+library(reshape2)#
+library(animation)#
+library(ggmap)#
+#if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")#
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")
+sim_gtg$yYieldNat[100:130,]/sim_gtg$histTAC
+#========================================================================================#
+# Biomass comparison between gtg and non gtg#
+#========================================================================================#
+#
+#need to run with no effort#
+rm(list=ls()); #
+#
+library(plyr)#
+library(data.table)#
+library(ggplot2)#
+library(reshape2)#
+library(animation)#
+library(ggmap)#
+#if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")#
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")
+#========================================================================================#
+# Biomass comparison between gtg and non gtg#
+#========================================================================================#
+#
+#need to run with no effort#
+rm(list=ls()); #
+#
+library(plyr)#
+library(data.table)#
+library(ggplot2)#
+library(reshape2)#
+library(animation)#
+library(ggmap)#
+#if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")#
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")
+plot(apply(sim_gtg$yNage,1,sum),type="l")
+sim_gtg$yYieldNat[100:130,]/sim_gtg$histTAC
+rm(list=ls()); #
+#
+library(plyr)#
+library(data.table)#
+library(ggplot2)#
+library(reshape2)#
+library(animation)#
+library(ggmap)#
+#if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")#
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")#
+#
+names(sim_gtg)#
+apply(sim_gtg$histTAC,1,sum)#
+apply(sim_gtg$yYieldNat[100:130,],1,sum)/#
+apply(sim_gtg$histTAC,1,sum)#
+#
+sim_gtg$yYieldNat[100:130,]/sim_gtg$histTAC
+rm(list=ls()); #
+#
+library(plyr)#
+library(data.table)#
+library(ggplot2)#
+library(reshape2)#
+library(animation)#
+library(ggmap)#
+#if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")#
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")#
+#
+names(sim_gtg)#
+apply(sim_gtg$histTAC,1,sum)#
+apply(sim_gtg$yYieldNat[100:130,],1,sum)/#
+apply(sim_gtg$histTAC,1,sum)#
+#
+sim_gtg$yYieldNat[100:130,]/sim_gtg$histTAC
+rm(list=ls()); #
+#
+library(plyr)#
+library(data.table)#
+library(ggplot2)#
+library(reshape2)#
+library(animation)#
+library(ggmap)#
+#if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")#
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")#
+#
+names(sim_gtg)#
+apply(sim_gtg$histTAC,1,sum)#
+apply(sim_gtg$yYieldNat[100:130,],1,sum)/#
+apply(sim_gtg$histTAC,1,sum)#
+#
+sim_gtg$yYieldNat[100:130,]/sim_gtg$histTAC
+sim_gtg <- read.rep("../admb/OM/gtg/CL_gtg.rep")
+names(sim_gtg)
+sim_gtg$yYieldNat[100:130,]/sim_gtg$histTAC
+rm(list=ls()); #
+#
+library(plyr)#
+library(data.table)#
+library(ggplot2)#
+library(reshape2)#
+library(animation)#
+library(ggmap)#
+#if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")#
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+#sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")#
+sim_gtg <- read.rep("../admb/OM/gtg/CL_gtg.rep")#
+names(sim_gtg)#
+apply(sim_gtg$histTAC,1,sum)#
+apply(sim_gtg$yYieldNat[100:130,],1,sum)/#
+apply(sim_gtg$histTAC,1,sum)#
+#
+sim_gtg$yYieldNat[100:130,]/sim_gtg$histTAC
+rm(list=ls()); #
+#
+library(plyr)#
+library(data.table)#
+library(ggplot2)#
+library(reshape2)#
+library(animation)#
+library(ggmap)#
+#if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")#
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+#sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")#
+sim_gtg <- read.rep("../admb/OM/gtg/CL_gtg.rep")#
+names(sim_gtg)#
+apply(sim_gtg$histTAC,1,sum)#
+apply(sim_gtg$yYieldNat[100:130,],1,sum)/apply(sim_gtg$histTAC,1,sum)#
+#
+sim_gtg$yYieldNat[100:130,]/sim_gtg$histTAC
+rm(list=ls()); #
+#
+library(plyr)#
+library(data.table)#
+library(ggplot2)#
+library(reshape2)#
+library(animation)#
+library(ggmap)#
+#if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")#
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+#sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")#
+sim_gtg <- read.rep("../admb/OM/gtg/CL_gtg.rep")#
+names(sim_gtg)#
+apply(sim_gtg$histTAC,1,sum)#
+apply(sim_gtg$yYieldNat[100:130,],1,sum)/apply(sim_gtg$histTAC,1,sum)#
+#
+sim_gtg$yYieldNat[100:130,]/sim_gtg$histTAC
+rm(list=ls()); #
+#
+library(plyr)#
+library(data.table)#
+library(ggplot2)#
+library(reshape2)#
+library(animation)#
+library(ggmap)#
+#if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")#
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+#sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")#
+sim_gtg <- read.rep("../admb/OM/gtg/CL_gtg.rep")#
+names(sim_gtg)#
+apply(sim_gtg$histTAC,1,sum)#
+apply(sim_gtg$yYieldNat[100:130,],1,sum)/apply(sim_gtg$histTAC,1,sum)#
+#
+sim_gtg$yYieldNat[100:130,]/sim_gtg$histTAC
+sim_gtg$histTAC
+sim_gtg$yYieldNat[100:130,]
+sim_gtg$yYieldNat[100:130,]/sim_gtg$histTAC
+rm(list=ls()); #
+#
+library(plyr)#
+library(data.table)#
+library(ggplot2)#
+library(reshape2)#
+library(animation)#
+library(ggmap)#
+#if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")#
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+#sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")#
+sim_gtg <- read.rep("../admb/OM/gtg/CL_gtg.rep")
+sim_gtg$yYieldNat[100:130,]/sim_gtg$histTAC
+#========================================================================================#
+# Biomass comparison between gtg and non gtg#
+#========================================================================================#
+#
+#need to run with no effort#
+rm(list=ls()); #
+#
+library(plyr)#
+library(data.table)#
+library(ggplot2)#
+library(reshape2)#
+library(animation)#
+library(ggmap)#
+#if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")#
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+#sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")#
+sim_gtg <- read.rep("../admb/OM/gtg/CL_gtg.rep")#
+names(sim_gtg)#
+apply(sim_gtg$histTAC,1,sum)#
+apply(sim_gtg$yYieldNat[100:130,],1,sum)/apply(sim_gtg$histTAC,1,sum)#
+#
+sim_gtg$yYieldNat[100:130,]/sim_gtg$histTAC
+DIR= "/Users/catarinawor/Documents/Lagrangian/admb/OM/gtg/"
+setwd(DIR)#
+    sink("lagrangian_OM_gtg_test.dat")#
+    cat("#Data file for Lagragian operating model\n")#
+    cat("#syr\n")#
+    cat(1,"\n")#
+    cat("#nyr\n")#
+    sink()
+setwd(DIR)#
+    sink("HCR.dat")#
+    cat("#Harvest control rules\n")#
+    cat("#nationTACprop\n")#
+    cat(0.7388 0.2612 "\n")#
+    cat("#hcr\n")#
+    cat(1 "\n")#
+    cat("#hcr_slope\n")#
+    cat(0.8 "\n")#
+    cat("#hcr_intercept\n")#
+    cat(0.5 "\n")#
+    cat("#eof\n")#
+    cat(999 "\n")#
+    sink()
+setwd(DIR)#
+    sink("HCR.dat")#
+    cat("#Harvest control rules\n")#
+    cat("#nationTACprop\n")#
+    cat("0.7388 0.2612 \n")#
+    cat("#hcr\n")#
+    cat(1 "\n")#
+    cat("#hcr_slope\n")#
+    cat(0.8 "\n")#
+    cat("#hcr_intercept\n")#
+    cat(0.5 "\n")#
+    cat("#eof\n")#
+    cat(999 "\n")#
+    sink()
+setwd(DIR)#
+    sink("HCR.dat")#
+    cat("#Harvest control rules\n")#
+    cat("#nationTACprop\n")#
+    cat("0.7388 0.2612 \n")#
+    cat("#hcr\n")#
+    cat(1 ,"\n")#
+    cat("#hcr_slope\n")#
+    cat(0.8, "\n")#
+    cat("#hcr_intercept\n")#
+    cat(0.5, "\n")#
+    cat("#eof\n")#
+    cat(999, "\n")#
+    sink()
+DIR
+DIR
+writeHCRdat<-function(DIR= "/Users/catarinawor/Documents/Lagrangian/admb/OM/gtg/",slope=0.8,intercept=0.5){#
+    setwd(DIR)#
+    sink("HCR.dat")#
+    cat("#Harvest control rules\n")#
+    cat("#nationTACprop\n")#
+    cat("0.7388 0.2612 \n")#
+    cat("#hcr\n")#
+    cat(2 ,"\n")#
+    cat("#hcr_slope\n")#
+    cat(0.8, "\n")#
+    cat("#hcr_intercept\n")#
+    cat(0.5, "\n")#
+    cat("#eof\n")#
+    cat(999, "\n")#
+    sink()#
+}
+source("/Users/catarinawor/Documents/Lagrangian/R/OM_dat/OM_dat.R")#
+if (length(args)==0) {#
+  stop("At least one argument must be supplied (input file).n", call.=FALSE)#
+} else{#
+    sp=args[1]#
+    it=args[2]#
+    writeHCRdat(slope=sp,intercept=it)#
+}
+seed<-scan("../../../admb/seed.txt")
+file.name <- paste("HCR",seed,".Rdata",sep="")
+sims<-readOutput("../../../admb/")
+readOutput <- function(dir)#
+{#
+    setwd(dir)#
+    sim <- read.rep("OM/gtg/CL_gtg.rep")    #
+    HCR <- read.pin("OM/gtg/HCR.dat")#
+    seed<- scan("seed.txt")#
+    C <- list(sim,HCR,seed)#
+    return( C );#
+}
+sims<-readOutput("../../../admb/")
+read.pin <- function(fn)#
+{#
+    # The following reads is catarina's effort to read in the pin file#
+    # Created By Steven Martell#
+    options(warn=-1)  #Suppress the NA message in the coercion to double#
+    lines<- readLines(fn)#
+    myline<-seq(2, length(lines), by=2)#
+#
+    A=list()#
+    for(i in 1:length(myline)){#
+        A[[i]] <- as.vector(read.table(text=lines[myline[i]], header=FALSE))#
+    }#
+    return(A)#
+}
+sims<-readOutput("../../../admb/")
+setwd("../R/OM_dat/res_search")
+seed<-scan("../../../admb/seed.txt")
+sims<-readOutput("../../../admb/")
+sim <- read.rep("OM/gtg/CL_gtg.rep")
+HCR <- read.pin("OM/gtg/HCR.dat")
+HCR <- read.pin("OM/gtg/HCR.dat")
+HCR
+read.pin <- function(fn)#
+{#
+    # The following reads is catarina's effort to read in the pin file#
+    # Created By Steven Martell#
+    options(warn=-1)  #Suppress the NA message in the coercion to double#
+    lines<- readLines(fn)#
+    myline<-seq(2, length(lines), by=2)#
+#
+    A=list()#
+    for(i in 1:length(myline)){#
+        A[[i]] <- as.vector(read.table(text=lines[myline[i]], header=lines[myline[i]-1]))#
+    }#
+    return(A)#
+}
+HCR <- read.pin("OM/gtg/HCR.dat")
+?read.tabe
+?read.table
+lines[myline[i]-1]
+lines<- readLines(fn)
+read.pin <- function(fn)#
+{#
+    # The following reads is catarina's effort to read in the pin file#
+    # Created By Steven Martell#
+    options(warn=-1)  #Suppress the NA message in the coercion to double#
+    lines<- readLines(fn)#
+    myline<-seq(2, length(lines), by=2)#
+#
+    A=list()#
+    for(i in 1:length(myline)){#
+        A[[i]] <- as.vector(read.table(text=lines[myline[i]], header=FALSE))#
+    }#
+    return(A)
+}
+HCR <- read.pin("OM/gtg/HCR.dat")
+sims<-readOutput("../../../admb/")
+setwd("../R/OM_dat/res_search")
+sims<-readOutput("../../../admb/")
+setwd("../R/OM_dat/res_search")
+save(sims,file=file.name)
+seq(0.0,1.0, by=0.05)
+length(seq(0.0,1.0, by=0.05))
+#echo "Hello, world!"#
+sp=0.0#
+#
+for i in seq 1 21; #
+do #
+echo "$sp+$i*0.05"|bc -l;#
+#
+done
+source("../../read.admb.R")#
+read.pin <- function(fn)#
+{#
+    # The following reads is catarina's effort to read in the pin file#
+    # Created By Steven Martell#
+    options(warn=-1)  #Suppress the NA message in the coercion to double#
+    lines<- readLines(fn)#
+    myline<-seq(2, length(lines), by=2)#
+#
+    A=list()#
+    for(i in 1:length(myline)){#
+        A[[i]] <- as.vector(read.table(text=lines[myline[i]], header=FALSE))#
+    }#
+    return(A)#
+}
+readOutput <- function(dir)#
+{#
+    setwd(dir)#
+    sim <- read.rep("OM/gtg/CL_gtg.rep")    #
+    HCR <- read.pin("OM/gtg/HCR.dat")#
+    seed<- scan("seed.txt")#
+    C <- list(sim,HCR,seed)#
+    return( C );#
+}#
+    seed<-scan("../../../admb/seed.txt")    #
+    file.name <- paste("HCR",seed,".Rdata",sep="")#
+    sims<-readOutput("../../../admb/")
+readOutput <- function(dir)#
+{#
+    setwd(dir)#
+    sim <- read.rep("OM/gtg/CL_gtg.rep")    #
+    HCR <- read.pin("OM/gtg/HCR.dat")#
+    seed<- scan("seed.txt")#
+    C <- list(sim,HCR,seed)#
+    return( C );#
+}#
+    seed<-scan("../../../admb/seed.txt")    #
+    file.name <- paste("HCR",seed,".Rdata",sep="")#
+    sims<-readOutput("../../../admb/")
+setwd("../R/OM_dat/res_search")
+seed<-scan("../../../admb/seed.txt")    #
+    file.name <- paste("HCR",seed,".Rdata",sep="")#
+    sims<-readOutput("../../../admb/")
+DIR<-"/Users/catarinawor/Documents/Lagrangian/R/OM_dat/res_search"#
+plotlib<-"/Users/catarinawor/Documents/Lagrangian/R/plot_routines/HCR_noerror"#
+#.RFILES     <- list.files(.LIB,pattern="\\.[Rr]$")#
+#
+SIMSdat<-list()#
+#
+Rfiles <- list.files(DIR,pattern="\\.Rdata",full.name=TRUE)#
+#
+plotfiles <- list.files(plotlib,pattern="plot",full.name=TRUE)#
+for(i in 1:length(Rfiles)){#
+    load(Rfiles[i])#
+    SIMSdat[[i]]<-sims#
+}
+M<-SIMSdat
+n <- length( M )
+n
+names(M[[1]])
+length(M[[1]])
+names(M[[1]][[1]])
+names(M[[1]][[2]])
+M[[1]][[2]]
+names(M[[1]][[1]])
+length(M[[1]])
+names(M[[1]][[3]])
+M[[1]][[3]]
+M[[1]][[1]]$seed
+M[[1]][[1]]$seed
+M[[1]][[1]]$yYieldNat
+M[[1]][[1]]$yYieldNat[101:160,]
+log(apply(M[[1]][[1]]$yYieldNat[101:160,],1,sum)+1)
+sum(log(apply(M[[1]][[1]]$yYieldNat[101:160,],1,sum)+1))
+names(M[[1]][[1]])
+slope_hcr<-NULL#
+    intercept_hcr<-NULL#
+    utility_total<-NULL#
+    utility_nat1<-NULL#
+    utility_nat2<-NULL#
+    for(i in 1:n){#
+#
+        slope_hcr[i]<-M[[i]][[1]]$slope_hcr#
+        intercept_hcr[i]<-M[[i]][[1]]$intercept_hcr#
+        utility_total[i]<-sum(log(apply(M[[i]][[1]]$yYieldNat[101:160,],1,sum)+1))#
+        utility_nat1[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,1]+1))#
+        utility_nat2[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,2]+1))#
+    }
+dflu<-cbind(slope_hcr,intercept_hcr,utility_total,utility_nat1,utility_nat2)
+summary(dflu)
+dflu
+M[[i]][[445]]$slope_hcr
+M[[445]][[1]]$slope_hcr
+M[[445]][[1]]$seed
+M[[445]][[1]]$seedx
+M[[445]][[1]]$seed
+DIR<-"/Users/catarinawor/Documents/Lagrangian/R/OM_dat/res_search"#
+plotlib<-"/Users/catarinawor/Documents/Lagrangian/R/plot_routines/HCR_noerror"#
+#.RFILES     <- list.files(.LIB,pattern="\\.[Rr]$")#
+#
+SIMSdat<-list()#
+#
+Rfiles <- list.files(DIR,pattern="\\.Rdata",full.name=TRUE)#
+#
+plotfiles <- list.files(plotlib,pattern="plot",full.name=TRUE)#
+for(i in 1:length(Rfiles)){#
+    load(Rfiles[i])#
+    SIMSdat[[i]]<-sims#
+}
+DIR<-"/Users/catarinawor/Documents/Lagrangian/R/OM_dat/res_search"#
+plotlib<-"/Users/catarinawor/Documents/Lagrangian/R/plot_routines/HCR_noerror"#
+#.RFILES     <- list.files(.LIB,pattern="\\.[Rr]$")#
+#
+SIMSdat<-list()#
+#
+Rfiles <- list.files(DIR,pattern="\\.Rdata",full.name=TRUE)#
+#
+plotfiles <- list.files(plotlib,pattern="plot",full.name=TRUE)#
+for(i in 1:length(Rfiles)){#
+    load(Rfiles[i])#
+    SIMSdat[[i]]<-sims#
+}
+n <- length( M )#
+    slope_hcr<-NULL#
+    intercept_hcr<-NULL#
+    utility_total<-NULL#
+    utility_nat1<-NULL#
+    utility_nat2<-NULL#
+    for(i in 1:n){#
+#
+        slope_hcr[i]<-M[[i]][[1]]$slope_hcr#
+        intercept_hcr[i]<-M[[i]][[1]]$intercept_hcr#
+        utility_total[i]<-sum(log(apply(M[[i]][[1]]$yYieldNat[101:160,],1,sum)+1))#
+        utility_nat1[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,1]+1))#
+        utility_nat2[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,2]+1))#
+    }
+dflu<-cbind(slope_hcr,intercept_hcr,utility_total,utility_nat1,utility_nat2)
+summary(dflu)
+length(dflu)
+21*100
+dflu
+dflu[dflu$slope_hcr==0.5,]
+dflu$slope_hcr
+summary(dflu)
+dflu$slope_hcr
+dflu<-data.frame(slope_hcr=slope_hcr,intercept_hcr=intercept_hcr,#
+        utility_total=utility_total,utility_nat1=utility_nat1,utility_nat2=utility_nat2)#
+#
+    summary(dflu)
+dflu[dflu$slope_hcr,]
+dflu$slope_hcr
+dflu[dflu$slope_hcr==0.5,]
+M[[1]][[434]]$seed
+M[[434]][[1]]$seed
+M[[434]][[1]]$seed
+n
+M[[44]][[1]]$seed
+M[[445]][[1]]$seed
+DIR<-"/Users/catarinawor/Documents/Lagrangian/R/OM_dat/res_search"
+plotlib<-"/Users/catarinawor/Documents/Lagrangian/R/plot_routines/HCR_noerror"
+SIMSdat<-list()
+Rfiles <- list.files(DIR,pattern="\\.Rdata",full.name=TRUE)
+Rfiles
+Rfiles <- list.files(DIR,pattern="\\.Rdata",full.name=TRUE)#
+#
+plotfiles <- list.files(plotlib,pattern="plot",full.name=TRUE)#
+for(i in 1:length(Rfiles)){#
+    load(Rfiles[i])#
+    SIMSdat[[i]]<-sims#
+}
+n <- length( M )
+slope_hcr<-NULL#
+    intercept_hcr<-NULL#
+    utility_total<-NULL#
+    utility_nat1<-NULL#
+    utility_nat2<-NULL#
+    for(i in 1:n){#
+#
+        slope_hcr[i]<-M[[i]][[1]]$slope_hcr#
+        intercept_hcr[i]<-M[[i]][[1]]$intercept_hcr#
+        utility_total[i]<-sum(log(apply(M[[i]][[1]]$yYieldNat[101:160,],1,sum)+1))#
+        utility_nat1[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,1]+1))#
+        utility_nat2[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,2]+1))#
+    }
+n
+M<-SIMSdat
+n <- length( M )
+n
+slope_hcr<-NULL#
+    intercept_hcr<-NULL#
+    utility_total<-NULL#
+    utility_nat1<-NULL#
+    utility_nat2<-NULL#
+    for(i in 1:n){#
+#
+        slope_hcr[i]<-M[[i]][[1]]$slope_hcr#
+        intercept_hcr[i]<-M[[i]][[1]]$intercept_hcr#
+        utility_total[i]<-sum(log(apply(M[[i]][[1]]$yYieldNat[101:160,],1,sum)+1))#
+        utility_nat1[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,1]+1))#
+        utility_nat2[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,2]+1))#
+    }
+dflu<-data.frame(slope_hcr=slope_hcr,intercept_hcr=intercept_hcr,#
+        utility_total=utility_total,utility_nat1=utility_nat1,utility_nat2=utility_nat2)#
+#
+    summary(dflu)
+dflu[dflu$slope_hcr==0.5,]
+M[[528]][[1]]$seed
+Rfiles
+DIR<-"/Users/catarinawor/Documents/Lagrangian/R/OM_dat/res_search"#
+plotlib<-"/Users/catarinawor/Documents/Lagrangian/R/plot_routines/HCR_noerror"#
+#.RFILES     <- list.files(.LIB,pattern="\\.[Rr]$")#
+#
+SIMSdat<-list()#
+#
+Rfiles <- list.files(DIR,pattern="\\.Rdata",full.name=TRUE)#
+#
+plotfiles <- list.files(plotlib,pattern="plot",full.name=TRUE)#
+for(i in 1:length(Rfiles)){#
+    load(Rfiles[i])#
+    SIMSdat[[i]]<-sims#
+}
+dflu<-data.frame(slope_hcr=slope_hcr,intercept_hcr=intercept_hcr,#
+        utility_total=utility_total,utility_nat1=utility_nat1,utility_nat2=utility_nat2)#
+#
+    summary(dflu)
+M<-SIMSdat
+n <- length( M )#
+    slope_hcr<-NULL#
+    intercept_hcr<-NULL#
+    utility_total<-NULL#
+    utility_nat1<-NULL#
+    utility_nat2<-NULL#
+    for(i in 1:n){#
+#
+        slope_hcr[i]<-M[[i]][[1]]$slope_hcr#
+        intercept_hcr[i]<-M[[i]][[1]]$intercept_hcr#
+        utility_total[i]<-sum(log(apply(M[[i]][[1]]$yYieldNat[101:160,],1,sum)+1))#
+        utility_nat1[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,1]+1))#
+        utility_nat2[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,2]+1))#
+    }#
+    dflu<-data.frame(slope_hcr=slope_hcr,intercept_hcr=intercept_hcr,#
+        utility_total=utility_total,utility_nat1=utility_nat1,utility_nat2=utility_nat2)#
+#
+    summary(dflu)
+dflu<-data.frame(slope_hcr=slope_hcr,intercept_hcr=intercept_hcr,#
+        utility_total=utility_total,utility_nat1=utility_nat1,utility_nat2=utility_nat2)#
+#
+    summary(dflu)
+aggregate(dflu,list(dflu$slope_hcr,dflu$intercept_hcr), sum)
+aggregate(dflu,list(dflu$slope_hcr,dflu$intercept_hcr), mean)
+dflu_plot<-aggregate(dflu,list(dflu$slope_hcr,dflu$intercept_hcr), mean)
+plu <- ggplot(dflu_plot, aes(x=intercept_hcr,y=slope_hcr))#
+    plu <- plu+geom_points(aes(color=utility_total,size=utility_total))#
+    plu
+plu <- plu+geom_point(aes(color=utility_total,size=utility_total))
+plu
+plu <- ggplot(dflu_plot, aes(x=intercept_hcr,y=slope_hcr))#
+    plu <- plu+geom_raster(aes(color=utility_total,size=utility_total))#
+    plu
+plu <- ggplot(dflu_plot, aes(x=intercept_hcr,y=slope_hcr))#
+    plu <- plu+geom_point(aes(fill=utility_total,size=utility_total))#
+    plu
+plu <- ggplot(dflu_plot, aes(x=intercept_hcr,y=slope_hcr))#
+    plu <- plu+geom_raster(aes(fill=utility_total,size=utility_total))#
+    plu
+plu <- ggplot(dflu_plot, aes(x=intercept_hcr,y=slope_hcr))#
+    plu <- plu+geom_raster(aes(fill=utility_total,size=utility_total))#
+    plu <- plu+geom_contour(aes(colour = "white",binwidth = 0.001))#
+    plu
+plu <- ggplot(dflu_plot, aes(x=intercept_hcr,y=slope_hcr))#
+    plu <- plu+geom_point(aes(color=utility_total,size=utility_total))#
+    plu
+plu <- ggplot(dflu_plot, aes(x=intercept_hcr,y=slope_hcr,z))#
+    plu <- plu+geom_raster(aes(fill=utility_total,size=utility_total))#
+    plu <- plu+geom_contour(aes(colour = "white",binwidth = 0.001))#
+    plu
+plu <- ggplot(dflu_plot, aes(x=intercept_hcr,y=slope_hcr,z))#
+    plu <- plu+geom_raster(aes(fill=utility_total))#
+    plu
+plu <- plu+geom_contour(aes(colour = "white",binwidth = 0.001))
+plu <- plu+geom_contour(aes(colour = "white"))
+plu
+plu <- ggplot(dflu_plot, aes(x=intercept_hcr,y=slope_hcr,z=utility_total))#
+    plu <- plu+geom_raster(aes(fill=utility_total))#
+    plu <- plu+geom_contour(aes(colour = "white"))#
+    plu
+plu <- ggplot(dflu_plot, aes(x=intercept_hcr,y=slope_hcr,z=utility_total))#
+    plu <- plu+geom_raster(aes(fill=utility_total))#
+    plu <- plu+geom_contour(aes(colour = "white", binwidth=0.1))#
+    plu
+plu <- ggplot(dflu_plot, aes(x=intercept_hcr,y=slope_hcr,z=utility_total))#
+    plu <- plu+geom_raster(aes(fill=utility_total))#
+    plu <- plu+geom_contour(aes(colour = "white"),binwidth=0.1)#
+    plu
+plu <- ggplot(dflu_plot, aes(x=intercept_hcr,y=slope_hcr,z=utility_total))#
+    plu <- plu+geom_raster(aes(fill=utility_total))#
+    plu <- plu+geom_contour(aes(colour = "white"),binwidth=0.01)#
+    plu
+plu <- ggplot(dflu_plot, aes(x=intercept_hcr,y=slope_hcr,z=utility_total))#
+    plu <- plu+geom_raster(aes(fill=utility_total))#
+    plu <- plu+geom_contour(aes(colour = "white"),binwidth=0.01)#
+    plu
+summary(dflu)
+summary(dflu)
+summary(dflu_plot)
+dflu_plotn<-data.frame(rep(dflu_plot$slope_hcr,2),rep(dflu_plot$intercept_hcr,2),#
+        c(dflu_plot$utility_nat1,dflu_plot$utility_nat2),rep(1:2,each=length(dflu_plot$intercept_hcr)))
+summary(dflun)
+summary(dflun)
+summary(dflu_plot)
+dflu_plotn<-data.frame(rep(dflu_plot$slope_hcr,2),rep(dflu_plot$intercept_hcr,2),#
+        c(dflu_plot$utility_nat1,dflu_plot$utility_nat2),rep(1:2,each=length(dflu_plot$intercept_hcr)))#
+#
+    summary(dflu_plotn)
+dflu_plotn<-data.frame(slope_hcr=rep(dflu_plot$slope_hcr,2),intercept_hcr=rep(dflu_plot$intercept_hcr,2),#
+        utility=c(dflu_plot$utility_nat1,dflu_plot$utility_nat2),nation=rep(1:2,each=length(dflu_plot$intercept_hcr)))#
+#
+    summary(dflu_plotn)
+plu <- ggplot(dflu_plotn, aes(x=intercept_hcr,y=slope_hcr,z=utility_total))#
+    plu <- plu+geom_raster(aes(fill=utility_total))#
+    plu <- plu+facet_wrap(~nation)#
+    plu <- plu+geom_contour(aes(colour = "white"),binwidth=0.05)#
+    plu
+plu <- ggplot(dflu_plotn, aes(x=intercept_hcr,y=slope_hcr,z=utility_total))#
+    plu <- plu+geom_raster(aes(fill=utility_total))#
+    plu <- plu+facet_wrap(~nation)#
+    plu
+plu <- ggplot(dflu_plotn, aes(x=intercept_hcr,y=slope_hcr,z=utility))#
+    plu <- plu+geom_raster(aes(fill=utility_total))#
+    plu <- plu+facet_wrap(~nation)#
+    plu <- plu+geom_contour(aes(colour = "white"),binwidth=0.05)#
+    plu
+summary(dflu_plotn)
+plu <- ggplot(dflu_plotn, aes(x=intercept_hcr,y=slope_hcr,z=utility))#
+    plu <- plu+geom_raster(aes(fill=utility))#
+    plu <- plu+facet_wrap(~nation)#
+    plu
+dflu_plotn
+plu <- ggplot(dflu_plotn, aes(x=intercept_hcr,y=slope_hcr))#
+    plu <- plu+geom_raster(aes(fill=utility*10))#
+    plu <- plu+facet_wrap(~nation)#
+    plu <- plu+geom_contour(aes(colour = "white"),binwidth=0.05)#
+    plu
+dflu_plotn<-data.frame(slope_hcr=rep(dflu_plot$slope_hcr,2),intercept_hcr=rep(dflu_plot$intercept_hcr,2),#
+        utility=c(dflu_plot$utility_nat1/mean(dflu_plot$utility_nat1),dflu_plot$utility_nat2/mean(dflu_plot$utility_nat2)),nation=rep(1:2,each=length(dflu_plot$intercept_hcr)))#
+#
+    summary(dflu_plotn)#
+    plu <- ggplot(dflu_plotn, aes(x=intercept_hcr,y=slope_hcr))#
+    plu <- plu+geom_raster(aes(fill=utility*10))#
+    plu <- plu+facet_wrap(~nation)#
+    plu <- plu+geom_contour(aes(colour = "white"),binwidth=0.05)#
+    plu
+plu <- ggplot(dflu_plotn, aes(x=intercept_hcr,y=slope_hcr))#
+    plu <- plu+geom_raster(aes(fill=utility*10))#
+    plu <- plu+facet_wrap(~nation)#
+    #plu <- plu+geom_contour(aes(colour = "white"),binwidth=0.05)#
+    plu
+plu <- ggplot(dflu_plotn, aes(x=intercept_hcr,y=slope_hcr,z=utility))#
+    plu <- plu +geom_density_2d() #+geom_raster(aes(fill=utility*10))#
+    plu <- plu+facet_wrap(~nation)#
+    #plu <- plu+geom_contour(aes(colour = "white"),binwidth=0.05)#
+    plu
+plu <- ggplot(dflu_plotn, aes(x=intercept_hcr,y=slope_hcr,z=utility))#
+    plu <- plu +geom_density() #+geom_raster(aes(fill=utility*10))#
+    plu <- plu+facet_wrap(~nation)#
+    #plu <- plu+geom_contour(aes(colour = "white"),binwidth=0.05)#
+    plu
+plu <- ggplot(dflu_plotn, aes(x=intercept_hcr,y=slope_hcr,z=utility))#
+        plu <- plu +geom_raster(aes(fill=utility*10))#
+        plu <- plu+facet_wrap(~nation)#
+    #plu <- plu+geom_contour(aes(colour = "white"),binwidth=0.05)#
+    plu
+plu <- ggplot(dflu_plotn, aes(x=intercept_hcr,y=slope_hcr,z=utility))#
+        #plu <- plu +geom_raster(aes(fill=utility*10))#
+        plu <- plu+facet_wrap(~nation)#
+            plu <- plu+geom_contour(aes(colour = "white"),binwidth=0.05)#
+    plu
+plu <- ggplot(dflu_plotn, aes(x=intercept_hcr,y=slope_hcr,z=utility))#
+        #plu <- plu +geom_raster(aes(fill=utility*10))#
+        plu <- plu+facet_wrap(~nation)#
+            plu <- plu+geom_contour()#
+    plu
+plu <- ggplot(dflu_plotn, aes(x=intercept_hcr,y=slope_hcr,z=utility))#
+        plu <- plu +geom_raster(aes(fill=utility*10))#
+        plu <- plu+facet_wrap(~nation)#
+            plu <- plu+geom_contour()#
+    plu
+DIR<-"/Users/catarinawor/Documents/Lagrangian/R/OM_dat/res_search"#
+plotlib<-"/Users/catarinawor/Documents/Lagrangian/R/plot_routines/HCR_noerror"#
+#.RFILES     <- list.files(.LIB,pattern="\\.[Rr]$")#
+#
+SIMSdat<-list()#
+#
+Rfiles <- list.files(DIR,pattern="\\.Rdata",full.name=TRUE)#
+#
+plotfiles <- list.files(plotlib,pattern="plot",full.name=TRUE)#
+for(i in 1:length(Rfiles)){#
+    load(Rfiles[i])#
+    SIMSdat[[i]]<-sims#
+}
+n <- length( M )
+M<-SIMSdat
+n <- length( M )
+n
+slope_hcr<-NULL#
+    intercept_hcr<-NULL#
+    utility_total<-NULL#
+    utility_nat1<-NULL#
+    utility_nat2<-NULL#
+    for(i in 1:n){#
+#
+        slope_hcr[i]<-M[[i]][[1]]$slope_hcr#
+        intercept_hcr[i]<-M[[i]][[1]]$intercept_hcr#
+        utility_total[i]<-sum(log(apply(M[[i]][[1]]$yYieldNat[101:160,],1,sum)+1))#
+        utility_nat1[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,1]+1))#
+        utility_nat2[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,2]+1))#
+    }#
+    dflu<-data.frame(slope_hcr=slope_hcr,intercept_hcr=intercept_hcr,#
+        utility_total=utility_total,utility_nat1=utility_nat1,utility_nat2=utility_nat2)#
+    dflu_plot<-aggregate(dflu,list(dflu$slope_hcr,dflu$intercept_hcr), mean)#
+    #plu <- ggplot(dflu_plot, aes(x=intercept_hcr,y=slope_hcr))#
+    #plu <- plu+geom_point(aes(color=utility_total,size=utility_total))#
+    #plu#
+#
+    summary(dflu_plot)
+plu <- ggplot(dflu_plot, aes(x=intercept_hcr,y=slope_hcr,z=utility_total))#
+        plu <- plu+geom_raster(aes(fill=utility_total))#
+        plu <- plu+geom_contour(aes(colour = "white"),binwidth=0.01)#
+        plu
+plu <- ggplot(dflu_plot, aes(x=intercept_hcr,y=slope_hcr,z=utility_total))#
+        plu <- plu+geom_raster(aes(fill=utility_total))#
+        plu
+plu <- ggplot(dflu_plot, aes(x=intercept_hcr,y=slope_hcr,z=utility_total))#
+        plu <- plu+geom_raster(aes(fill=utility_total))#
+        plu <- plu + scale_colour_gradient2()#
+        plu
+plu <- ggplot(dflu_plot, aes(x=intercept_hcr,y=slope_hcr,z=utility_total))#
+        plu <- plu+geom_raster(aes(fill=utility_total))#
+        plu <- plu + scale_fill_gradient2()#
+        plu
+plu <- ggplot(dflu_plot, aes(x=intercept_hcr,y=slope_hcr,z=utility_total))#
+        plu <- plu+geom_raster(aes(fill=utility_total))#
+        plu <- plu + scale_fill_gradientn(colours = terrain.colors(10))#
+        plu
+plu <- ggplot(dflu_plot, aes(x=intercept_hcr,y=slope_hcr,z=utility_total))#
+        plu <- plu+geom_raster(aes(fill=utility_total))#
+        plu <- plu + scale_fill_gradientn(colours = terrain.colors(5))#
+        plu
+plu <- ggplot(dflu_plot, aes(x=intercept_hcr,y=slope_hcr,z=utility_total))#
+        plu <- plu+geom_raster(aes(fill=utility_total))#
+        plu <- plu + scale_fill_gradientn(colours = terrain.colors(5))#
+        plu <- plu + theme_bw(16)#
+        print(plu)
+myPalette <- colorRampPalette(rev(brewer.pal(11, "Spectral")))
+plu <- ggplot(dflu_plot, aes(x=intercept_hcr,y=slope_hcr,z=utility_total))#
+        plu <- plu+geom_raster(aes(fill=utility_total))#
+        plu <- plu + scale_fill_gradientn(colours = myPalette(4))#
+        plu <- plu + theme_bw(16)#
+        print(plu)
+myPalette <- colorRampPalette(rev(brewer.pal(11, "Spectral")))
+require(reshape2)#
+require(tidyr)#
+require(ggplot2)#
+library(scales)#
+library(RColorBrewer)
+myPalette <- colorRampPalette(rev(brewer.pal(11, "Spectral")))
+plu <- ggplot(dflu_plot, aes(x=intercept_hcr,y=slope_hcr,z=utility_total))#
+        plu <- plu+geom_raster(aes(fill=utility_total))#
+        plu <- plu + scale_fill_gradientn(colours = myPalette(4))#
+        plu <- plu + theme_bw(16)#
+        print(plu)
+plu <- ggplot(dflu_plot, aes(x=intercept_hcr,y=slope_hcr,z=utility_total))#
+        plu <- plu+geom_raster(aes(fill=utility_total))#
+        plu <- plu + scale_fill_gradientn(colours = myPalette(4))#
+        plu <- plu + theme_bw(16)#
+        print(plu)

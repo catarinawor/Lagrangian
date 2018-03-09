@@ -1,0 +1,791 @@
+pp1 <- ggplot(datall[datall$Year==2009,],aes(x=LatBin, y=value, fill=variable))#
+pp1 <- pp1 + geom_bar(stat="identity")#
+pp1 <- pp1 + facet_wrap(~Month)#
+pp1 <- pp1 + geom_vline(xintercept = 42)#
+pp1 <- pp1 + geom_vline(xintercept = 46.2)#
+pp1
+pp1 <- ggplot(datall[datall$Year==2010,],aes(x=LatBin, y=value, fill=variable))#
+pp1 <- pp1 + geom_bar(stat="identity")#
+pp1 <- pp1 + facet_wrap(~Month)#
+pp1 <- pp1 + geom_vline(xintercept = 42)#
+pp1 <- pp1 + geom_vline(xintercept = 46.2)#
+pp1
+pp1 <- ggplot(datall[datall$Year==2011,],aes(x=LatBin, y=value, fill=variable))#
+pp1 <- pp1 + geom_bar(stat="identity")#
+pp1 <- pp1 + facet_wrap(~Month)#
+pp1 <- pp1 + geom_vline(xintercept = 42)#
+pp1 <- pp1 + geom_vline(xintercept = 46.2)#
+pp1
+pp1 <- ggplot(datall[datall$Year==2011,],aes(x=LatBin, y=value, fill=variable))#
+pp1 <- pp1 + geom_bar(stat="identity")#
+pp1 <- pp1 + facet_wrap(~Month)#
+pp1 <- pp1 + geom_vline(xintercept = 42)#
+pp1 <- pp1 + geom_vline(xintercept = 46.2)#
+pp1
+pp1 <- ggplot(datall[datall$Year==2012,],aes(x=LatBin, y=value, fill=variable))#
+pp1 <- pp1 + geom_bar(stat="identity")#
+pp1 <- pp1 + facet_wrap(~Month)#
+pp1 <- pp1 + geom_vline(xintercept = 42)#
+pp1 <- pp1 + geom_vline(xintercept = 46.2)#
+pp1
+pp1 <- ggplot(datall[datall$Year==2013,],aes(x=LatBin, y=value, fill=variable))#
+pp1 <- pp1 + geom_bar(stat="identity")#
+pp1 <- pp1 + facet_wrap(~Month)#
+pp1 <- pp1 + geom_vline(xintercept = 42)#
+pp1 <- pp1 + geom_vline(xintercept = 46.2)#
+pp1
+pp1 <- ggplot(datall[datall$Year==2014,],aes(x=LatBin, y=value, fill=variable))#
+pp1 <- pp1 + geom_bar(stat="identity")#
+pp1 <- pp1 + facet_wrap(~Month)#
+pp1 <- pp1 + geom_vline(xintercept = 42)#
+pp1 <- pp1 + geom_vline(xintercept = 46.2)#
+pp1
+pp1 <- ggplot(datall[datall$Year==2015,],aes(x=LatBin, y=value, fill=variable))#
+pp1 <- pp1 + geom_bar(stat="identity")#
+pp1 <- pp1 + facet_wrap(~Month)#
+pp1 <- pp1 + geom_vline(xintercept = 42)#
+pp1 <- pp1 + geom_vline(xintercept = 46.2)#
+pp1
+pp1 <- ggplot(datall[datall$Year==2016,],aes(x=LatBin, y=value, fill=variable))#
+pp1 <- pp1 + geom_bar(stat="identity")#
+pp1 <- pp1 + facet_wrap(~Month)#
+pp1 <- pp1 + geom_vline(xintercept = 42)#
+pp1 <- pp1 + geom_vline(xintercept = 46.2)#
+pp1
+length(M)
+p <- ggplot(dat,aes(x=LatBin, y=HakeWt))#
+p <- p + geom_bar()#
+p <- p + facet_wrap(~Year,scales="free")#
+p
+p <- ggplot(dat,aes(x=LatBin, y=HakeWt))#
+p <- p + geom_boxplot()#
+p <- p + facet_wrap(~Year,scales="free")#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBin), y=HakeWt))#
+p <- p + geom_boxplot()#
+p <- p + facet_wrap(~Year,scales="free")#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBin), y=HakeWt))#
+p <- p + geom_boxplot()#
+p <- p + facet_wrap(~Month,scales="free")#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBin), y=HakeWt))#
+p <- p + geom_boxplot()#
+p <- p + facet_wrap(~Month)#
+p
+dat$LatBin
+floor(dat$LatBin)
+dat$LatBinw<-floor(dat$LatBin)
+p <- ggplot(dat,aes(x=as.factor(LatBinw), y=HakeWt))#
+p <- p + geom_boxplot()#
+p <- p + facet_wrap(~Month)#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBinw), y=HakeWt))#
+p <- p + geom_boxplot()#
+p <- p + facet_wrap(~Month)#
+p <- p + ylim(0,5000)#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBinw), y=HakeWt))#
+p <- p + geom_bar(stat="identity")#
+p <- p + facet_wrap(~Month)#
+p <- p + ylim(0,5000)#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBin), y=HakeWt))
+p <- p + geom_bar(stat="identity")
+p <- p + facet_wrap(~Month)
+p <- p + ylim(0,5000)
+p
+p <- ggplot(dat,aes(x=as.factor(LatBin), y=HakeWt))#
+p <- p + geom_bar(stat="identity")#
+p <- p + facet_wrap(~Month)#
+p <- p + ylim(0,30000)#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBinw), y=HakeWt))#
+p <- p + geom_bar(stat="identity")#
+p <- p + facet_wrap(~Month)#
+p <- p + ylim(0,30000)#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBin), y=HakeWt))#
+p <- p + geom_bar(stat="identity")#
+p <- p + facet_wrap(~Month)#
+p <- p + ylim(0,30000)#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBinw), y=HakeWt))#
+p <- p + geom_bar(stat="identity")#
+p <- p + facet_wrap(~Month)#
+p <- p + ylim(0,80000)#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBinw), y=HakeWt))#
+p <- p + geom_bar(stat="identity")#
+p <- p + facet_wrap(~Month)#
+p <- p + ylim(0,100000)#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBinw), y=HakeWt))#
+p <- p + geom_bar(stat="identity")#
+p <- p + facet_wrap(~Month)#
+p <- p + ylim(0,1000000)#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBinw), y=HakeWt))#
+p <- p + geom_bar(stat="identity")#
+p <- p + facet_wrap(~Month)#
+p <- p + ylim(0,250000)#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBinw), y=HakeWt))#
+p <- p + geom_bar(stat="identity")#
+p <- p + facet_wrap(~Month)#
+p <- p + ylim(0,150000)#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBinw), y=HakeWt))#
+p <- p + geom_bar(stat="identity")#
+p <- p + facet_wrap(~Month)#
+p <- p + ylim(0,130000)#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBinw), y=HakeWt))#
+p <- p + geom_boxplot()#
+p <- p + facet_wrap(~Month)#
+p <- p + ylim(0,130000)#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBinw), y=HakeWt))#
+p <- p + geom_boxplot()#
+p <- p + facet_wrap(~Month)#
+p <- p + ylim(0,30000)#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBinw), y=HakeWt))#
+p <- p + geom_boxplot()#
+p <- p + facet_wrap(~Month)#
+p <- p + ylim(0,10000)#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBinw), y=HakeWt))#
+p <- p + geom_boxplot()#
+p <- p + facet_wrap(~Month)#
+p <- p + ylim(0,7000)#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBinw), y=HakeWt))#
+p <- p + geom_boxplot()#
+p <- p + facet_wrap(~Month)#
+p <- p + ylim(0,5000)#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBinw), y=HakeWt,fill=Year))#
+p <- p + geom_boxplot()#
+p <- p + facet_wrap(~Month)#
+p <- p + ylim(0,5000)#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBinw), y=HakeWt,fill=as.factor(Year)))#
+p <- p + geom_boxplot()#
+p <- p + facet_wrap(~Month)#
+p <- p + ylim(0,5000)#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBinw), y=HakeWt))#
+p <- p + geom_boxplot() + geom_jitter()#
+p <- p + facet_wrap(~Month)#
+p <- p + ylim(0,5000)#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBinw), y=HakeWt))#
+p <- p + geom_boxplot() + geom_bar()#
+p <- p + facet_wrap(~Month)#
+p <- p + ylim(0,5000)#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBinw), y=HakeWt))#
+p <- p + geom_boxplot() + geom_bar(stat="identity")#
+p <- p + facet_wrap(~Month)#
+p <- p + ylim(0,5000)#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBinw), y=HakeWt))#
+p <- p + geom_boxplot() #
+p <- p + facet_wrap(~Month)#
+p <- p + ylim(0,5000)#
+p
+datb<-melt(dat, id.vars = c("X", "Year", "Month","VesselType","LatBin","HakeWt"))#
+#
+pp <- ggplot(datb,aes(x=LatBin, y=value, fill=variable))#
+pp <- pp + geom_bar(stat="identity")#
+pp <- pp + facet_wrap(~Year,scales="free")#
+pp
+datb<-melt(dat, id.vars = c("X", "Year", "Month","VesselType","LatBin","LatBinw","HakeWt"))#
+#
+pp <- ggplot(datb,aes(x=LatBin, y=value, fill=variable))#
+pp <- pp + geom_bar(stat="identity")#
+pp <- pp + facet_wrap(~Year,scales="free")#
+pp
+pp <- ggplot(datb,aes(x=LatBinw, y=value, fill=variable))#
+pp <- pp + geom_bar(stat="identity")#
+pp <- pp + facet_wrap(~Year,scales="free")#
+pp
+pp <- ggplot(datb,aes(x=LatBinw, y=value, fill=variable))#
+pp <- pp + geom_bar(stat="identity")#
+pp <- pp + facet_wrap(~Month,scales="free")#
+pp
+pp <- ggplot(datb,aes(x=LatBinw, y=value, fill=variable))#
+pp <- pp + geom_bar(stat="identity")#
+pp <- pp + facet_wrap(~Month,scales=)#
+pp
+p <- ggplot(dat,aes(x=as.factor(LatBin), y=Pop))#
+p <- p + geom_bar(stat="identity")#
+p <- p + facet_wrap(~Month)#
+#p <- p + ylim(0,30000)#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBin), y=Pop))#
+p <- p + geom_boxplot#
+p <- p + facet_wrap(~Month)#
+#p <- p + ylim(0,30000)#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBin), y=Pop))#
+p <- p + geom_boxplot()#
+p <- p + facet_wrap(~Month)#
+#p <- p + ylim(0,30000)#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBinw), y=Pop))#
+p <- p + geom_boxplot()#
+p <- p + facet_wrap(~Month)#
+#p <- p + ylim(0,30000)#
+p
+pp <- ggplot(datb,aes(x=LatBinw, y=value, fill=variable))#
+pp <- pp + geom_boxplot#
+pp <- pp + facet_wrap(~Month)#
+pp
+pp <- ggplot(datb,aes(x=LatBinw, y=value, fill=variable))#
+pp <- pp + geom_boxplot()#
+pp <- pp + facet_wrap(~Month)#
+pp
+p <- ggplot(dat,aes(x=as.factor(LatBinw), y=Pop))#
+p <- p + geom_boxplot()#
+p <- p + facet_wrap(~Month)#
+#p <- p + ylim(0,30000)#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBin), y=HakeWt))#
+p <- p + geom_bar(stat="identity")#
+p <- p + facet_wrap(~Month)#
+p <- p + ylim(0,30000)#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBinw), y=HakeWt))#
+p <- p + geom_bar(stat="identity")#
+p <- p + facet_wrap(~Month)#
+p <- p + ylim(0,130000)#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBin), y=Pop))#
+p <- p + geom_bar(stat="identity")#
+p <- p + facet_wrap(~Month)#
+#p <- p + ylim(0,30000)#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBinw), y=Pop))#
+p <- p + geom_bar(stat="identity")#
+p <- p + facet_wrap(~Month)#
+#p <- p + ylim(0,30000)#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBin), y=HakeWt))#
+p <- p + geom_bar(stat="identity")#
+p <- p + facet_wrap(~Month)#
+p <- p + ylim(0,30000)#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBinw), y=HakeWt))#
+p <- p + geom_bar(stat="identity")#
+p <- p + facet_wrap(~Month)#
+p <- p + ylim(0,130000)#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBinw), y=Pop))#
+p <- p + geom_bar(stat="identity")#
+p <- p + facet_wrap(~Month)#
+#p <- p + ylim(0,30000)#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBinw), y=Pop))#
+p <- p + geom_boxplot()#
+p <- p + facet_wrap(~Month)#
+#p <- p + ylim(0,30000)#
+p
+pp <- ggplot(datb,aes(x=LatBinw, y=value, fill=variable))#
+pp <- pp + geom_boxplot()#
+pp <- pp + facet_wrap(~Month)#
+pp
+pp <- ggplot(datb,aes(x=LatBinw, y=value))#
+pp <- pp + geom_boxplot()#
+pp <- pp + facet_wrap(~Month)#
+pp
+pp <- ggplot(datb,aes(x=as.factor(LatBinw), y=value, fill=variable))#
+pp <- pp + geom_boxplot()#
+pp <- pp + facet_wrap(~Month)#
+pp
+hakeprop<-dat$HakeWt/max(dat$HakeWt) #
+widowprop<-dat$Widow/max(dat$Widow) #
+Popprop<-dat$Pop/max(dat$Pop)  #
+DKBprop<-dat$DKB/max(dat$DKB) #
+#
+datc<-cbind(dat,hakeprop,widowprop,Popprop,DKBprop)#
+datall<-melt(datc, id.vars = c("X", "Year", "Month","VesselType","LatBin","LatBinw","HakeWt","Pop","DKB","Widow", "hakeprop"))#
+#
+summary(datall)#
+#
+pp <- ggplot(datb,aes(x=as.factor(LatBinw), y=value, fill=variable))#
+pp <- pp + geom_boxplot()#
+pp <- pp + facet_wrap(~Month)#
+pp
+pp <- ggplot(datall,aes(x=as.factor(LatBinw), y=value, fill=variable))#
+pp <- pp + geom_boxplot()#
+pp <- pp + facet_wrap(~Month)#
+pp
+pp <- ggplot(datb,aes(x=as.factor(LatBinw), y=value, fill=variable))#
+pp <- pp + geom_boxplot()#
+pp <- pp + facet_wrap(~Month)#
+pp
+p <- ggplot(dat,aes(x=as.factor(LatBinw), y=HakeWt))#
+p <- p + geom_boxplot()#
+p <- p + facet_wrap(~Year,scales="free")#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBinw), y=HakeWt))#
+p <- p + geom_boxplot() #
+p <- p + facet_wrap(~Month)#
+p <- p + ylim(0,5000)#
+p
+30:60
+p <- ggplot(dat,aes(x=as.factor(LatBinw), y=Pop))#
+p <- p + geom_boxplot()#
+p <- p + facet_wrap(~Month)#
+#p <- p + ylim(0,30000)#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBin), y=Pop))#
+p <- p + geom_boxplot()#
+p <- p + facet_wrap(~Month)#
+#p <- p + ylim(0,30000)#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBin), y=Pop))#
+p <- p + geom_boxplot()#
+p <- p + facet_wrap(~Month)#
+p <- p + ylim(0,1)#
+p
+p <- ggplot(dat,aes(x=as.factor(LatBinw), y=Pop))#
+p <- p + geom_boxplot()#
+p <- p + facet_wrap(~Month)#
+p <- p + ylim(0,1)#
+p
+length(M)
+names(M[[1]])
+DIR<-"/Users/catarinawor/Documents/Lagrangian/R/read_mse/result"#
+setwd(DIR)#
+iSCAMdir<-list.files(DIR,pattern="runiSCAM",full.name=TRUE)#
+#
+plotlib<-"/Users/catarinawor/Documents/Lagrangian/R/read_mse/Rplots"#
+.RFILES     <- list.files(.LIB,pattern="\\.[Rr]$")#
+#
+OMdat<-list()#
+SAdat<-list()#
+SApar<-list()#
+#
+for(i in 1:length(iSCAMdir)){#
+#
+    Rfiles <- list.files(iSCAMdir[i],pattern="\\.Rdata",full.name=TRUE)#
+    rfil<-basename(Rfiles)#
+    load(grep("OM",Rfiles,value=TRUE))#
+    seed<-paste("seed",OM[[1]]$seed,sep="")#
+    OMdat[[seed]]<-OM[[1]]#
+    SAfiles<-grep("assess",Rfiles,value=TRUE)#
+    indSAdat<-list(length=length(SAfiles))#
+    for(j in 1:length(SAfiles)){#
+        load(SAfiles[j])#
+        names(sims$assmt)#
+        yr=paste("yr",sims$assmt$nyr,sep="")#
+#
+        SAdat[[seed]][[yr]]<-sims$assmt#
+        SApar[[seed]][[yr]]<-sims$par#
+#
+    }#
+#
+}
+length(iSCAMdir)
+DIR<-"/Users/catarinawor/Documents/Lagrangian/R/read_mse/result"#
+setwd(DIR)#
+iSCAMdir<-list.files(DIR,pattern="runiSCAM",full.name=TRUE)#
+#
+plotlib<-"/Users/catarinawor/Documents/Lagrangian/R/read_mse/Rplots"#
+.RFILES     <- list.files(.LIB,pattern="\\.[Rr]$")#
+#
+OMdat<-list()#
+SAdat<-list()#
+SApar<-list()
+DIR<-"/Users/catarinawor/Documents/Lagrangian/R/read_mse/result"#
+setwd(DIR)#
+iSCAMdir<-list.files(DIR,pattern="runiSCAM",full.name=TRUE)#
+#
+plotlib<-"/Users/catarinawor/Documents/Lagrangian/R/read_mse/Rplots"#
+#.RFILES     <- list.files(.LIB,pattern="\\.[Rr]$")#
+#
+OMdat<-list()#
+SAdat<-list()#
+SApar<-list()
+length(iSCAMdir)
+for(i in 1:length(iSCAMdir)){#
+#
+    Rfiles <- list.files(iSCAMdir[i],pattern="\\.Rdata",full.name=TRUE)#
+    rfil<-basename(Rfiles)#
+    load(grep("OM",Rfiles,value=TRUE))#
+    seed<-paste("seed",OM[[1]]$seed,sep="")#
+    OMdat[[seed]]<-OM[[1]]#
+    SAfiles<-grep("assess",Rfiles,value=TRUE)#
+    indSAdat<-list(length=length(SAfiles))#
+    for(j in 1:length(SAfiles)){#
+        load(SAfiles[j])#
+        names(sims$assmt)#
+        yr=paste("yr",sims$assmt$nyr,sep="")#
+#
+        SAdat[[seed]][[yr]]<-sims$assmt#
+        SApar[[seed]][[yr]]<-sims$par#
+#
+    }#
+#
+}
+length(SAfiles)
+SAfiles<-grep("assess",Rfiles,value=TRUE)
+grep("assess",Rfiles,value=TRUE)
+.RFILES
+Rfiles <- list.files(iSCAMdir[i],pattern="\\.Rdata",full.name=TRUE)
+rfil<-basename(Rfiles)
+load(grep("OM",Rfiles,value=TRUE))
+M <- OMdat
+length(M)
+names(M[[1]])
+n <- length( M )
+mdf <- NULL
+M[[i]]$"yCatchStateAge"
+i=1
+M[[i]]$"yCatchStateAge"
+M[[i]]$"yCatchStateAge"[,2]
+apply(M[[i]]$"yCatchStateAge"[,-1:2],1,sum)
+M[[i]]$"yCatchStateAge"[,-c(1,2)]
+apply(M[[i]]$"yCatchStateAge"[,-c(1,2)],1,sum)
+for(i in 1:n)#
+    {#
+        df <- data.frame(Model=as.factor(M[[i]]$seed),Nation=M[[i]]$"yCatchStateAge"[,2],Catch=apply(M[[i]]$"yCatchStateAge"[,-c(1,2)],1,sum),Year=(M[[i]]$rep_yr+1):M[[i]]$proj_yr)#
+        mdf <- rbind(mdf,df)#
+    }
+for(i in 1:n)#
+    {#
+        df <- data.frame(Model=as.factor(M[[i]]$seed),Nation=M[[i]]$"yCatchStateAge"[,2],Catch=apply(M[[i]]$"yCatchStateAge"[,-c(1,2)],1,sum),Year=M[[i]]$"yCatchStateAge"[,1])#
+        mdf <- rbind(mdf,df)#
+    }
+p <- ggplot(mdf,aes(x=Year,y=Biomass, color=Model)) + geom_line()#
+    p <- p + labs(x="Year",y="Total Biomass")#
+    p <- p + ylim(0,max(df$Biomass))#
+    p <- p + theme_bw(11)#
+    print(p)
+p <- ggplot(mdf,aes(x=Year,y=Catch, color=Model)) + geom_line()#
+    p <- p + labs(x="Year",y="Total Biomass")#
+    p <- p + ylim(0,max(df$Biomass))#
+    p <- p + theme_bw(11)#
+    print(p)
+mdf
+p <- ggplot(mdf,aes(x=Year,y=Catch, color=Model)) + geom_line()
+p <- p + labs(x="Year",y="Total Biomass")
+p <- ggplot(mdf,aes(x=Year,y=Catch, color=Model)) + geom_line()#
+    p <- p + labs(x="Year",y="Total Biomass")#
+    p <- p + ylim(0,max(mdf$Catch))#
+    p <- p + facet_wrap(~Nation,scales="free")#
+    p <- p + theme_bw(11)#
+    print(p)
+mdf<- mdf[mdf$Year>M[[1]]$rep_yr,]#
+#
+    p <- ggplot(mdf,aes(x=Year,y=Catch, color=Model)) + geom_line()#
+    p <- p + labs(x="Year",y="Total Biomass")#
+    p <- p + ylim(0,max(mdf$Catch))#
+    p <- p + facet_wrap(~Nation,scales="free")#
+    p <- p + theme_bw(11)#
+    print(p)
+cib <- data.frame(apply(M[[1]]$"yCatchStateAge"[,-1:2],1,sum))#
+#
+    for(i in 2:n){#
+#
+        ci <- data.frame(apply(M[[i]]$"yCatchStateAge"[,-1:2],1,sum))#
+        cib <- cbind(cib,bio)#
+    }
+cib <- data.frame(apply(M[[1]]$"yCatchStateAge"[,-c(1,2)],1,sum))
+cib <- data.frame(apply(M[[1]]$"yCatchStateAge"[,-c(1,2)],1,sum))#
+#
+    for(i in 2:n){#
+#
+        ci <- data.frame(apply(M[[i]]$"yCatchStateAge"[,-c(1,2)],1,sum))#
+        cib <- cbind(cib,bio)#
+    }
+cib <- data.frame(apply(M[[1]]$"yCatchStateAge"[,-c(1,2)],1,sum))#
+#
+    for(i in 2:n){#
+#
+        ci <- data.frame(apply(M[[i]]$"yCatchStateAge"[,-c(1,2)],1,sum))#
+        cib <- cbind(cib,ci)#
+    }
+qq<-apply(cib,1,calc_quantile)
+median<-qq["50%",]
+low<-qq["2.5%",]
+high<-qq["97.5%",]
+fdf<-data.frame(Median=median,Low=low, High=high,Year=M[[1]]$"yCatchStateAge"[,1],Nation=M[[1]]$"yCatchStateAge"[,2])
+p <- ggplot(fdf,aes(x=Year,y=Median, fill=Nation)) + geom_line()#
+    p <- p + geom_ribbon(aes(ymax=High, ymin=Low),alpha=0.2)#
+    p <- p + labs(x="Year",y="Catch")#
+    p <- p + ylim(min(fdf$Low),max(fdf$High))#
+    p <- p + theme_bw(11)#
+    print(p)
+p <- ggplot(fdf,aes(x=Year,y=Median, fill=Nation)) + geom_line()
+p <- p + labs(x="Year",y="Catch")
+p <- p + ylim(min(fdf$Low),max(fdf$High))
+p <- p + theme_bw(11)
+print(p)
+fdf<- fdf[fdf$Year>M[[1]]$rep_yr,]
+p <- ggplot(fdf,aes(x=Year,y=Median, fill=Nation)) + geom_line()
+p <- p + geom_ribbon(aes(ymax=High, ymin=Low),alpha=0.2)
+p
+low
+high
+fdf<- fdf[fdf$Year>M[[1]]$rep_yr,]
+p <- ggplot(fdf,aes(x=Year,y=Median, fill=Nation)) + geom_line()
+p <- p + geom_ribbon(aes(ymax=High, ymin=Low))
+print(p)
+fdf<-data.frame(Median=median,Low=low, High=high,Year=M[[1]]$"yCatchStateAge"[,1],Nation=as.factor(M[[1]]$"yCatchStateAge"[,2]))
+fdf<- fdf[fdf$Year>M[[1]]$rep_yr,]
+p <- ggplot(fdf,aes(x=Year,y=Median, fill=Nation)) + geom_line()
+p <- p + geom_ribbon(aes(ymax=High, ymin=Low))
+p <- p + labs(x="Year",y="Catch")
+p <- p + ylim(min(fdf$Low),max(fdf$High))
+p <- p + theme_bw(11)
+print(p)
+p <- ggplot(fdf,aes(x=Year,y=Median, fill=Nation)) + geom_line()#
+    p <- p + geom_ribbon(aes(ymax=High, ymin=Low), alpha=0.2)#
+    p <- p + labs(x="Year",y="Catch")#
+    p <- p + ylim(min(fdf$Low),max(fdf$High))#
+    p <- p + theme_bw(11)#
+    print(p)
+p <- ggplot(fdf,aes(x=Year,y=Median, fill=Nation,color=Nation)) + geom_line()#
+    p <- p + geom_ribbon(aes(ymax=High, ymin=Low), alpha=0.2)#
+    p <- p + labs(x="Year",y="Catch")#
+    p <- p + ylim(min(fdf$Low),max(fdf$High))#
+    p <- p + theme_bw(11)
+print(p)
+p <- ggplot(fdf,aes(x=Year,y=Median,color=Nation)) + geom_line()#
+    p <- p + geom_ribbon(aes(ymax=High, ymin=Low), alpha=0.2)#
+    p <- p + labs(x="Year",y="Catch")#
+    p <- p + ylim(min(fdf$Low),max(fdf$High))#
+    p <- p + theme_bw(11)#
+    print(p)
+p <- ggplot(fdf,aes(x=Year,y=Median,color=Nation),color=Nation) + geom_line()#
+    p <- p + geom_ribbon(aes(ymax=High, ymin=Low), alpha=0.2)#
+    p <- p + labs(x="Year",y="Catch")#
+    p <- p + ylim(min(fdf$Low),max(fdf$High))#
+    p <- p + theme_bw(11)#
+    print(p)
+p <- ggplot(fdf,aes(x=Year,y=Median),color=Nation) + geom_line()#
+    p <- p + geom_ribbon(aes(ymax=High, ymin=Low,fill=Nation), alpha=0.2)#
+    p <- p + labs(x="Year",y="Catch")#
+    p <- p + ylim(min(fdf$Low),max(fdf$High))#
+    p <- p + theme_bw(11)#
+    print(p)
+p <- ggplot(fdf,aes(x=Year,y=Median,color=Nation)) + geom_line()#
+    p <- p + geom_ribbon(aes(ymax=High, ymin=Low, alpha=0.2))#
+    p <- p + labs(x="Year",y="Catch")#
+    p <- p + ylim(min(fdf$Low),max(fdf$High))#
+    p <- p + theme_bw(11)#
+    print(p)
+p <- ggplot(fdf,aes(x=Year,y=Median,fill=Nation)) + geom_line()#
+    p <- p + geom_ribbon(aes(ymax=High, ymin=Low), alpha=0.2)#
+    p <- p + labs(x="Year",y="Catch")#
+    p <- p + ylim(min(fdf$Low),max(fdf$High))#
+    p <- p + theme_bw(11)#
+    print(p)
+p <- ggplot(fdf,aes(x=Year,y=Median,fill=Nation),col=Nation) + geom_line()#
+    p <- p + geom_ribbon(aes(ymax=High, ymin=Low), alpha=0.2)#
+    p <- p + labs(x="Year",y="Catch")#
+    p <- p + ylim(min(fdf$Low),max(fdf$High))#
+    p <- p + theme_bw(11)#
+    print(p)
+p <- ggplot(fdf,aes(x=Year,y=Median,fill=Nation),color=Nation) + geom_line()#
+    p <- p + geom_ribbon(aes(ymax=High, ymin=Low), alpha=0.2)#
+    p <- p + labs(x="Year",y="Catch")#
+    p <- p + ylim(min(fdf$Low),max(fdf$High))#
+    p <- p + theme_bw(11)#
+    print(p)
+p <- ggplot(fdf,aes(x=Year,y=Median,fill=Nation,color=Nation)) + geom_line()#
+    p <- p + geom_ribbon(aes(ymax=High, ymin=Low), alpha=0.2)#
+    p <- p + labs(x="Year",y="Catch")#
+    p <- p + ylim(min(fdf$Low),max(fdf$High))#
+    p <- p + theme_bw(11)#
+    print(p)
+p <- ggplot(fdf,aes(x=Year,y=Median,color=Nation)) + geom_line()#
+    p <- p + geom_ribbon(aes(ymax=High, ymin=Low), alpha=0.2,fill=Nation)#
+    p <- p + labs(x="Year",y="Catch")#
+    p <- p + ylim(min(fdf$Low),max(fdf$High))#
+    p <- p + theme_bw(11)#
+    print(p)
+fdf<-data.frame(Median=median,Low=low, High=high,Year=M[[1]]$"yCatchStateAge"[,1],Nation=as.factor(M[[1]]$"yCatchStateAge"[,2]))
+fdf<- fdf[fdf$Year>M[[1]]$rep_yr,]
+names(fdf)
+p <- ggplot(fdf,aes(x=Year,y=Median,color=Nation)) + geom_line()#
+    p <- p + geom_ribbon(aes(ymax=High, ymin=Low,fill=Nation), alpha=0.5,)#
+    p <- p + labs(x="Year",y="Catch")#
+    p <- p + ylim(min(fdf$Low),max(fdf$High))#
+    p <- p + theme_bw(11)#
+    print(p)
+p <- ggplot(fdf,aes(x=Year,y=Median,color=Nation)) + geom_line()#
+    p <- p + geom_ribbon(aes(ymax=High, ymin=Low,fill=Nation), alpha=0.2)#
+    p <- p + labs(x="Year",y="Catch")#
+    p <- p + ylim(min(fdf$Low),max(fdf$High))#
+    p <- p + theme_bw(11)#
+    print(p)
+p <- ggplot(fdf,aes(x=Year,y=Median)) + geom_line(aes(color=Nation))#
+    p <- p + geom_ribbon(aes(ymax=High, ymin=Low,fill=Nation), alpha=0.3)#
+    p <- p + labs(x="Year",y="Catch")#
+    p <- p + ylim(min(fdf$Low),max(fdf$High))#
+    p <- p + theme_bw(11)#
+    print(p)
+mdf
+yrs<-unique(mdf$Year)
+mdf
+yrs
+mdf$AAV[mdf$Year==yrs[1]]<-0
+mdf
+for(y in 2:length(yrs)){#
+#
+            mdf$AAV[mdf$Year==yrs[y]]<-(mdf$Catch[mdf$Year==yrs[y]]-mdf$Catch[mdf$Year==yrs[y-1]])/(mdf$Catch[mdf$Year==yrs[y]]+mdf$Catch[mdf$Year==yrs[y-1]])#
+        }
+p <- ggplot(mdf,aes(x=Year,y=AAV, color=Model)) + geom_line()#
+    p <- p + labs(x="Year",y="Total Biomass")#
+    #p <- p + ylim(0,max(mdf$Catch))#
+    p <- p + facet_wrap(~Nation,scales="free")#
+    p <- p + theme_bw(11)#
+    print(p)
+mdf
+tdf<-cbind(mdf$Model,mdf$AAV)
+tdf
+require(reshape2)
+dcast(mdf,AAV~Model)
+dcast(mdf,Model~AAV)
+?cast
+dcast(mdf,.~Model)
+dcast(mdf,~Model)
+dcast(mdf,Model~)
+dcast(mdf,Model~.)
+dcast(mdf,Model~AAV)
+dcast(mdf,AAV~Model)
+spread(mdf, Model, AAV)
+cdf<-data.frame(Model=mdf$Model, Year=mdf$Year, AAV=mdf$AAV, Nation=mdf$Nation)
+spread(cdf, Model, AAV)
+spread(cdf, Model, AAV)
+qq<-apply(cib[,-c(1,2)],1,calc_quantile)
+qq
+cib[,-c(1,2)]
+cib<-spread(cdf, Model, AAV)
+cib[,-c(1,2)]
+qq<-apply(cib[,-c(1,2)],1,calc_quantile)
+qq
+median<-qq["50%",]
+low<-qq["2.5%",]
+high<-qq["97.5%",]
+fdf<-data.frame(Median=median,Low=low, High=high,Year=cib$Year,Nation=as.factor(cib$Nation))
+p <- ggplot(fdf,aes(x=Year,y=Median)) + geom_line(aes(color=Nation))#
+    p <- p + geom_ribbon(aes(ymax=High, ymin=Low,fill=Nation), alpha=0.3)#
+    p <- p + labs(x="Year",y="Catch")#
+    p <- p + ylim(min(fdf$Low),max(fdf$High))#
+    p <- p + theme_bw(11)#
+    print(p)
+p <- ggplot(fdf,aes(x=Year,y=Median)) + geom_line(aes(color=Nation))#
+    p <- p + geom_ribbon(aes(ymax=High, ymin=Low,fill=Nation), alpha=0.3)#
+    p <- p + labs(x="Year",y="Catch")#
+    p <- p + ylim(min(fdf$Low),max(fdf$High))#
+    p <- p + facet_wrap(~Nation,scales="free")#
+    p <- p + theme_bw(11)#
+    print(p)
+n <- length( M )
+n
+names(M[[1]])
+n <- length( M )#
+    mdf <- NULL#
+#
+    for(i in 1:n)#
+    {#
+#
+        df <- data.frame(Model=as.factor(M[[i]]$seed),Nation=M[[i]]$"yCatchStateAge"[,2],Catch=apply(M[[i]]$"yCatchStateAge"[,-c(1,2)],1,sum),Year=M[[i]]$"yCatchStateAge"[,1])#
+        mdf <- rbind(mdf,df)#
+    }#
+#
+    mdf<- mdf[mdf$Year>M[[1]]$rep_yr,]#
+    yrs<-unique(mdf$Year)#
+#
+    mdf$CVAR[mdf$Year==yrs[1]]<-0#
+    for(y in 2:length(yrs)){#
+#
+        mdf$CVAR[mdf$Year==yrs[y]]<-(mdf$Catch[mdf$Year==yrs[y]]-mdf$Catch[mdf$Year==yrs[y-1]])#
+    }#
+    p <- ggplot(mdf,aes(x=Year,y=CVAR, color=Model)) + geom_line()#
+    p <- p + labs(x="Year",y="Total Biomass")#
+    #p <- p + ylim(0,max(mdf$Catch))#
+    p <- p + facet_wrap(~Nation,scales="free")#
+    p <- p + theme_bw(11)#
+    print(p)
+p <- ggplot(mdf,aes(x=Year,y=CVAR, color=Model)) + geom_bar()#
+    p <- p + labs(x="Year",y="Total Biomass")#
+    #p <- p + ylim(0,max(mdf$Catch))#
+    p <- p + facet_wrap(~Nation,scales="free")#
+    p <- p + theme_bw(11)#
+    print(p)
+p <- ggplot(mdf,aes(x=Year,y=CVAR, color=Model)) + geom_bar(stat="identity")#
+    p <- p + labs(x="Year",y="Total Biomass")#
+    #p <- p + ylim(0,max(mdf$Catch))#
+    p <- p + facet_wrap(~Nation,scales="free")#
+    p <- p + theme_bw(11)#
+    print(p)
+p <- ggplot(mdf,aes(x=Year,y=CVAR, color=Model)) + geom_boxplot()#
+    p <- p + labs(x="Year",y="Total Biomass")#
+    #p <- p + ylim(0,max(mdf$Catch))#
+    p <- p + facet_wrap(~Nation,scales="free")#
+    p <- p + theme_bw(11)#
+    print(p)
+p <- ggplot(mdf,aes(x=as.factor(Year),y=CVAR)) + geom_boxplot()#
+    p <- p + labs(x="Year",y="Total Biomass")#
+    #p <- p + ylim(0,max(mdf$Catch))#
+    p <- p + facet_wrap(~Nation,scales="free")#
+    p <- p + theme_bw(11)#
+    print(p)
+cdf<-data.frame(Model=mdf$Model, Year=mdf$Year, CVAR=mdf$CVAR, Nation=mdf$Nation)
+cib<-spread(cdf, Model, CVAR)
+qq<-apply(cib[,-c(1,2)],1,calc_quantile)#
+#
+    median<-qq["50%",]#
+    low<-qq["2.5%",]#
+    high<-qq["97.5%",]#
+#
+    fdf<-data.frame(Median=median,Low=low, High=high,Year=cib$Year,Nation=as.factor(cib$Nation))#
+    p <- ggplot(fdf,aes(x=Year,y=Median)) + geom_line(aes(color=Nation))#
+    p <- p + geom_ribbon(aes(ymax=High, ymin=Low,fill=Nation), alpha=0.3)#
+    p <- p + labs(x="Year",y="Catch")#
+    p <- p + ylim(min(fdf$Low),max(fdf$High))#
+    p <- p + facet_wrap(~Nation,scales="free")#
+    p <- p + theme_bw(11)#
+    print(p)
+?quantile
+delta<-6/ngroup
+ngroup=20
+delta<-6/ngroup
+delta*(1:20 -20/2))
+delta*(1:20 -20/2)
+d(1:20 -20/2)
+(1:20 -20/2)
+delta*(1:20 -20/2)
+xini=delta*(1:20 -20/2)
+(xini+53.3)*5
+xini
+xini*5+53.3
+xini*3+53.3
+exp(-3)
+exp(-0)
+mes<-1:12
+mes/12
+(mes-1)/12
+age=1:20
+53.2*-exp(-.3*(age+0.5))
+53.2*-exp(1-.3*(age+0.5))
+53.2*(1-exp(-.3*(age+0.5))
+)
+48*(1-exp(-.3*(age+0.5))
+)
+seq(15,60,by5)
+seq(15,60,by=5)
+seq(15,60,by=2)
+seq(14,60,by=2)
+length(seq(14,60,by=2))
+length(seq(14,60,by=3))
+(seq(14,60,by=3))
+va<-rep(1,20)
+va[1]<-0.5

@@ -1,0 +1,441 @@
+\documentclass[12pt,halfline,a4paper]{ouparticle}
+
+
+\usepackage{pgf} %nice pictures
+\usepackage{rotating}
+
+\usepackage{fancyhdr}
+\usepackage{setspace}
+
+ 
+\usepackage{titlesec}
+\usepackage{natbib}
+\usepackage{checkend}   % better error messages on left-open environments
+\usepackage{graphicx}   % for incorporating external images
+
+\usepackage{rotating}
+\usepackage{pdflscape}
+
+
+\usepackage{times,mathptmx,courier}
+\usepackage[scaled=1]{helvet}
+
+
+% Math or theory people may want to include the handy AMS macros
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{float}
+
+
+\usepackage[printonlyused,nohyperlinks]{acronym}
+
+\usepackage{comment}
+
+
+%% url: for typesetting URLs and smart(er) hyphenation.
+%% \url{http://...} 
+\usepackage{url}
+
+\usepackage{gensymb}
+
+\usepackage{lineno}
+
+
+\usepackage[T1]{fontenc}
+\usepackage[icelandic,spanish,english]{babel}
+
+\usepackage{listings}
+
+%move all figures to the end
+\usepackage[nomarkers,nofiglist,notablist]{endfloat}
+
+
+\bibpunct{(}{)}{;}{a}{}{;}
+
+
+\doublespacing
+
+\urlstyle{sf}   % typeset urls in sans-serif
+
+
+\linenumbers
+
+
+
+%% The following is used for tables of equations.
+\newcounter{saveEq} 
+\def\putEq{\setcounter{saveEq}{\value{equation}}} 
+\def\getEq{\setcounter{equation}{\value{saveEq}}} 
+\def 
+\tableEq{ 
+
+
+
+% equations in tables
+\putEq \setcounter{equation}{0} 
+\renewcommand{\theequation}{T\arabic{table}.\arabic{equation}} \vspace{-5mm} } 
+\def\normalEq{ 
+% renew normal equations
+\getEq 
+\renewcommand{\theequation}{\arabic{section}.\arabic{equation}}}
+
+
+
+
+\begin{document}
+
+\title{Evaluation of harvest control rules for transboundary stocks}
+
+\author{%
+\name{Catarina Wor}
+\address{Institute for the Oceans and Fisheries, University of British Columbia,  Vancouver, BC,\\ 
+ V6T 1Z4,  Canada}
+\email{catarinawor@gmail.com}
+\and
+\name{ Nathan G. Taylor}
+\address{Fisheries and Oceans Canada, Nanaimo, BC,\\ V9T 6N7, Canada}
+\email{Nathan.Taylor@dfo-mpo.gc.ca}
+\and
+\name{ Steven J. D. Martell}
+\address{Sea State Inc., Vashon, WA,\\ 98070, USA}
+\email{martell.steve@gmail.com}
+\and
+\name{ Murdoch K. McAllister}
+\address{Institute for the Oceans and Fisheries, University of British Columbia,  Vancouver, BC,\\ 
+ V6T 1Z4,  Canada}
+\email{m.mcallister@oceans.ubc.ca}
+\and
+\name{Carl J. Walters}
+\address{Institute for the Oceans and Fisheries, University of British Columbia,  Vancouver, BC,\\ 
+ V6T 1Z4,  Canada}
+\email{c.walters@oceans.ubc.ca}}
+
+
+\abstract{Effective management of transboundary fisheries depends on a stable distribution of the resource. However, for many fished stocks, the spatial distribution depend on stock abundance and age/size composition.  We use a spatial model in a closed loop simulation framework to evaluate the performance of a large number of harvest control rules for Pacific hake, a resource that is subject to migration range variability associated with age/size. We identify that the choice of harvest control rule affects the distribution and availability of the resource to the sharing nations. This effect is reflected by the long term yield magnitude and variability. We found that a threshold harvest control rule associated with a maximum quota cap and help mitigate the variability in fish abundance and distribution. We expect that the closed loop simulation framework presented here  can be useful in identifying effective management procedures for Pacific hake and other migratory transboundary species.
+}
+
+\date{\today}
+
+\keywords{harvest control rule; transboundary stocks; age-based movement}
+
+\maketitle
+
+
+\section{Introduction}
+\label{sec1}
+
+
+
+In fisheries management, harvest control rules are previously agreed upon management actions that should be taken in response to stock status indicators \citep{deroba_review_2008}. Despite the long history of harvest control rule evaluations in the literature \citep{hilborn_comparison_1986,walters_fixed_1996}, the practice of formally adopting harvest control rules in fisheries management is more recent \citep{deroba_review_2008}. Over the past decade, harvest control rules have been recognized as a mechanism to increase consistency and transparency in fisheries management \citep{punt_harvest_2010,kvamsdal_harvest_2016}. In addition a variety of policy documents have fostered the adoption of harvest control rules  in many fisheries around the world \citep{government_of_canada_fishery_2009,food_and_agriculture_organization_of_the_united_nations_precautionary_1996,magnuson-stevens_act_magnuson-stevens_2007}. 
+
+ 
+Harvest control rules can be generally grouped into three categories: fixed escapement, fixed exploitation rates and threshold harvest control rules \citep{punt_harvest_2010}. Fixed escapement rules imply that fishing should only occur if the biomass is higher than a given reference biomass, i.e. a given amount of exploitable biomass is allowed to ``escape'' harvest. This kind of harvest control rule is more commonly applied to salmonids \citep{hawkshaw_harvest_2015} and it has been shown to lead to high variability in yields and increased frequency of closures \citep{deroba_review_2008}. The fixed exploitation rate harvest control rules works by adjusting the yield in proportion to the population size. Fixed exploitation rate harvest control rules reduce inter annual fishery variability when compared to fixed escapement harvest control rules \citep{hilborn_comparison_1986}. Finally the threshold harvest control rules are usually designed to produce stepwise changes in exploitation rate as biomass decreases below some threshold; many such control rules also include a minimum escapement threshold i.e. the harvest rate is set to zero if biomass is below a limit level. Threshold harvest control rules are popular among many fisheries management agencies \citep{punt_harvest_2010} because they tend to maintain higher biomass and allow for faster rebuilding of depleted stocks \citep{quinn_ii_threshold_1990}. 
+
+
+ Ideally, the choice of harvest control rule is based on an evaluation process that optimizes a set of performance metrics associated with the objectives of a fishery, some examples of commonly used performance metrics include average expected yield, annual average variability in yield  and minimum biomass threshold \citep{punt_management_2014}. This process usually also exposes the trade-offs between potentially conflicting objectives. The evaluation of harvest control rules is usually done through closed-loop simulations \citep[e.g.][]{walters_evaluation_1998,ishimura_management_2005} which are computer models used to simulate the fisheries management system and evaluate the performance of management options given the best available understanding of dynamic of the resource as well as observation and implementation error models. 
+
+
+
+ The performance of a harvest control rule is often evaluated for an entire stock \citep[e.g.][]{ishimura_management_2005,tong_evaluation_2014,hawkshaw_harvest_2015}. However, in the case of transboundary stocks the aggregate evaluation of performance metrics may not reflect the outcomes experienced by each nation separately. This is especially true if the distribution of the fished stock varies systematically with abundance. For example, many stocks exhibit range contraction as abundance decreases \citep[e.g.][]{brodie_effect_1998}. This can affect the availability of the resource in a given area even when the biomass is considered to be above the aggregate stock reference points. In other stocks, spatial distribution may be a function of ontogeny, usually with larger individuals performing more extensive migrations \citep[e.g.][]{ressler_pacific_2007}. These populations too can become less available to a given fishing nation if the population age or size structure becomes truncated due to fishing mortality, even if such fishing pressure is equal to target exploitation goals for the aggregate stock. These effects are usually not accounted for in international fisheries management treaties despite the fact that treaties are often designed with the intention of securing equitable benefits of the resource to all the parties. When the application of a harvest control rule results in a change in the distribution of the stock, then it is possible that the benefits of the treaty will not be realized by one or more parties. In such situations, it may be useful to consider the relationship between biomass, age/size composition and spatial distribution of the stock when managing transboundary stocks. This would enable us to address the following questions: Is it possible to optimize a set of performance metrics across all nations that share the resource? If not, what are the trade-offs between the performance metrics for each of the nations sharing the resource? The explicit consideration of these trade-offs can help in designing effective management strategies in that it illustrates the potential realized outcome of applying a given management procedure in each nation separately.
+
+
+ 
+Pacific hake (\emph{Merluccius productus}) is an example of a transboundary stock whose spatial distribution is thought to be affected by changes in age structure. It exhibits seasonal migratory behavior with spawning occurring off southern California during the winter and fish migrating north between spring and fall to feed \citep{ressler_pacific_2007}. Larger fish, typically older than age-4, migrate longer distances and are found to be more abundant in Canadian waters \citep{methot_biology_1995}. Fish age-3 years and younger tend to remain in U.S. waters off the coast of California and Oregon \citep{methot_biology_1995,ressler_pacific_2007}. 
+
+
+
+Management of the Pacific hake stock follows the regulations determined in an international treaty between Canada and the U.S.A. \citep{united_states_state_department_agreement_2004}. The treaty establishes that the coastwide Total Allowable Catches (TAC) should be calculated following a 40:10 threshold harvest control rule. The treaty also determines that the TAC be split between the two countries following a fixed allocation, 73.88\% to the U.S.A. and 26.12\% to Canada.  Given the spatial dynamics of the resource and location of the spawning grounds, the American fishing fleet has first access to the incoming cohorts. This has the potential to cause conflicts between the two nations as the American fishing fleet could potentially growth overfish the stock (i.e., excessively harvest small fish) leading to limited availability of the resource in Canadian waters. Despite the potential for conflict associated with harvest levels and spatial distribution, the impacts of the current treaty based management procedures have only been evaluated for the aggregate stock \citep{ishimura_management_2005,punt_evaluation_2008,taylor_status_2014,hicks_conservation_2016}.
+
+
+
+In this paper, we evaluate the performance of a large set of harvest control rules for the Pacific hake stock using a spatially explicit model in a closed-loop simulation routine. We illustrate some differences between harvest control rule performance, in terms of yield and conservation based criteria,  for the whole stock and relative to each individual nation. We map the tradeoffs between alternative harvest policies for the two nations sharing the Pacific hake resource. 
+
+
+
+
+ 
+\section{Methods}
+
+In order to evaluate the performance of various harvest control rules we performed a series of closed-loop simulations. We simulated data every year with a spatial operating model. Observations on the stock status were generated with process and observation error. Harvest control rules were then applied, resulting in total allowable catches that were used to set the catch limits in the following year.  In the following sections we describe each one of these components in detail. 
+
+
+
+\subsection{The simulation model}
+
+
+We used the spatial model described by \citet{wor_lagrangian_2017} as an operating model to describe the population dynamics of the Pacific hake resource. The Lagrangian model used in this study allows the fish to move in a seasonally cyclic manner that is characteristic of the Pacific hake offshore stock \citep{ressler_pacific_2007}. This model applies a sine function to model the cyclic the movement of each individual cohort along the coast of U.S.A. and Canada.  The mean position of an individual cohort at a given time step $t$ is given by $\bar{X}_{a,t}$, which is a function of the mean minimum position $\bar{X}_{min}$, the mean maximum cohort specific position $\bar{X}_{max,a}$, the number of time steps within a migration cycle $t_{max}$  and the time step at which the migration cycle starts ${t}_{0}$ (Equation \ref{movement}).  
+
+\begin{align}
+ {\bar{X}_{a,t}} = \bar{X}_{min} + \left(\bar{X}_{max,a} - \bar{X}_{min}\right) \cdot \left(0.5+0.5*\sin \left(t \cdot \frac{2 \pi}{t_{max}} - {t}_{0} \cdot \frac{2 \pi}{t_{max}} -\frac{\pi}{2}\right) \right)
+\label{movement}
+\end{align}
+
+
+As noted above, the mean maximum position $\bar{X}_{max,a}$ is specific for each separate cohort. The extent of the migrations is given by a logistic function of age, similar to the one used in \citet{methot_biology_1995}  (Equation \ref{Xmax}), which allows older (and larger) fish to move further away from the spawning grounds. In the following function the parameters $a_{50}$ and $\sigma_{X_{max}}$ are the logistic function parameters and $\sigma_{vt}$ is normally distributed random error component.
+
+\begin{equation}
+\bar{X}_{max,a} = \frac{1}{1+exp(-(a-a_{50})/\sigma_{X_{max}})} \cdot e^{(vt \sim \mathcal{N}(0,\sigma_{vt}))}
+\label{Xmax}
+\end{equation}
+
+For a more detailed description of the movement model, as well as the population dynamics components and effort dynamics components of the operating model using in this study, we  recommend that the reader refer to \citet{wor_lagrangian_2017}.  In this study we used the multiple groups version of the \citet{wor_lagrangian_2017} model. The model parameterization was extracted from the 2017 stock assessment \citep{berger_status_2017} and the movement parameters were set to approximate the movement dynamics of Pacific hake described in the literature \citep{methot_biology_1995,ressler_pacific_2007}. All parameter values are given in Table \ref{tab:hakedat}. In order to mimic the historical trends in abundance we set the historical catch limits for the historical data equal to the realized catches by each nation.  
+
+The operating model, therefore has the ability to model Pacific hake movement and effort distribution allowing the characterization of the relationship between fishing mortality, strong recruitment events and cohort targeting on the distribution of the stock, and hence the realized performance in each nation. As the fishing mortality increases, the age structure of the population will tend to become truncated (due to the cumulative effects of fishing mortality) and therefore the mean biomass distribution of the stock might shift southwards, reducing the availability of the resource in Northern waters. 
+
+
+The Pacific hake stock distribution is also affected by the recruitment dynamics. When a strong recruitment event occurs, the mean biomass distribution of the resource will be strongly linked to the age of that strong cohort, i.e., the mean biomass distribution of the stock will tend to shift north as that cohort grows.  Strong recruitment events occur recurrently for the Pacific hake offshore stock \citep{berger_status_2017,ressler_pacific_2007}. These strong recruitment events usually increase the overall biomass of the stock significantly and individuals from strong cohorts dominate the fisheries catch for a few years. Despite the intermittent strong recruitment events in the Pacific hake time series, the causes for such strong recruitment events are unknown so predictions of when a strong recruitment will occur in the future are unreliable. In order to model this uncertainty we opted to simulate three possible recruitment scenarios based on the historical recruitment time series reported by \citet{berger_status_2017}. We repeated the last 30 years of recruitment deviations reported by \citet{berger_status_2017} twice to generate the recruitment for the next 60 projection years. These projection recruitment time series were modified to generate three scenarios: no strong recruitment events, one strong recruitment event per decade and two strong recruitment events per decade. 
+  
+
+The historical population was reconstructed for the years 1966 to 2016 by simulating the population dynamics using the stock assessment parameters reported in \citet{berger_status_2017} and setting the historical catches equal to those extracted by the U.S.A. and Canada fleets during that period. Catches for both nations for the historical period were also reported by \citet{berger_status_2017}. Then the population was projected for 60 years into the future. For the projections, we assume that TAC allocation between nations remains constant as determined in the Pacific hake treaty, 73.88\% to the U.S.A. and 26.12\% to Canada.
+
+\begin{table}
+  %\centering\begin{table}
+  %\centering
+\caption{ Pacific hake operating model dimensions and parameter values}\label{tab:hakedat}
+\begin{tabular}{p{1.cm} p{5.8cm} p{7.8cm} } 
+\hline
+  Symbol & Value or Range & Description  \\  
+\hline
+ &Model Dimensions &   \\  
+$t$ & $1-12$ & Time steps within a migration cycle  \\
+$y$ & $50- 160$ & Years \\
+$Y$ & $60$ & Total Number of projection years \\
+$hy$ & $50-100$ & Historical years \\
+$a$ & $1-20$ & Age  \\
+$r$ & $ 30-60 $ Area   \\
+$k$ &  $5$ &Fishing grounds \\
+$kb$ & $42$, $46$, $48.5$ and $51$ & Fishing ground boundaries in Latitude degrees\\\
+$n$ & 2& Number of nations \\
+ & 48.5& Nation boundary in Latitude degrees\\
+$g$ & $1-20$ & Groups \\
+$dr$ & $1$ & Interval between two adjacent areas  \\
+\hline
+ &Population dynamics parameters &   \\ 
+$M$ & 0.223 & Annual natural mortality \\
+$R_0$ & 2923 thousand tons & Average Unfished Recruitment \\
+$steepness$ & 0.814 &  Beverton \& Holt recruitment steepness \\
+$\sigma_R$ & 1.4 & Standard deviation for recruitment deviations - used in bias correction only\\
+\hline
+&Movement parameters&   \\ 
+${t}_{0}$& 1& Time step at which individuals are at their minimum average position\\
+ $CV$& 0.07 &  Coefficient of variation for position at at age\\
+ $a_{50}$& 4.0 & Inflection point for maximum average position logistic function\\
+ $\sigma_{X_{max}}$& 2.0 & Standard deviation for maximum average position logistic function \\
+ \hline
+ &error levels&   \\ 
+ $\sigma_{wx}$ & 0.08 & Standard deviation for lognormal variation around the maximum average position   \\
+ $\sigma_{vt}$ & 0.1 & Standard deviation for lognormal variation around the effort scaler \\
+ \hline
+ &Effort parameters&   \\ 
+ ${E}_{y,n}$& 1 for nation 1 and 0.35 for nation 2  & Yearly effort scaler - constant for all years  \\
+${E}_{t,k}$& (0,0,0,0,0.5,1.0,1.0,1.0,0.5,0.1,0.0,0.0) for $k={1,2,3}$ and 
+(0,0,0,0,0,1.0,1.0,1.0,0.5,0.3,0,0) for $k={4,5}$ & Monthly effort scaler \\
+$q$& 3 & Effort scaler \\
+\hline
+\end{tabular}
+\end{table}
+
+
+The observation model was represented by adding uncertainty around the model predictions of relative spawning biomass, i.e. spawning biomass levels in relation to the unfished average.  This uncertainty was represented by adding autocorrelated and normally distributed error around the model predictions of true  biomass and spawning biomass (Equation \ref{obsBt} and \ref{autocorr}). \citet{walters_simple_2004} shows that  estimates of biomass from stock assessments are usually autocorrelated over time; we assumed that the autocorrelation coefficient, $\rho$, was 0.5. This approach was chosen because of computational convenience, i.e. faster simulation running time than the simulation of the stock assessment methodology. We believe that the high autocorrelation coefficient we use provides a comparable effect to that of using more complicated assessment models.  
+
+\begin{align}
+\label{obsBt}
+\widehat{B_t}= B_t \cdot e^{\varepsilon_t}\\
+\label{autocorr}
+\widehat{\frac{SB_t}{SB_0}}=\frac{SB_t}{SB_0} \cdot e^{\varepsilon_t}\\
+\varepsilon_t= \rho \cdot \varepsilon_{t-1} + \nu_t \\
+\nu_t \sim \mathcal{N}(0,\sigma=0.3)
+\end{align}
+
+
+\subsection{The 40:10 harvest control rule}
+
+
+The Pacific hake treaty determines that the annual quota for the stock should be determined according to a 40:10 threshold harvest control rule \citep{united_states_state_department_agreement_2004,hicks_conservation_2016}.  The 40:10 harvest control rule used in the Pacific hake agreement determines that the coast wide total allowable catches are calculated using a proxy for the fishing mortality the will produce maximum sustainable yield ($F_{MSY}$) whenever the spawning biomass is above 40\% of average unfished levels. The 40:10 adjustment refers to the reduction in harvest rate when the spawning biomass falls below 40\% of unfished average equilibrium level. The harvest rate adjustment corresponds to a linear decrease in TAC if the spawning biomass is between 40\% and 10\% of unfished spawning biomass and set to zero if spawning biomass is below the 10\% threshold. We used the same formulation as the one described by \citet{hicks_conservation_2016}.
+
+
+The 40:10 harvest control rule results in very high quota recommendations when the stock abundance is high, which happens whenever a strong cohort reaches maturity (around age 3). However, in reality the actual quotas recommended by the Pacific hake joint management committee are usually capped and tend not to exceed 600 thousand metric tonnes \citep{hicks_conservation_2016}. For this reason, we implemented a cap on the 40:10 harvest control rules recommendations to 600 thousand tonnes. 
+
+
+
+
+\subsection{Linear harvest control-rules}
+
+
+ We evaluate a series of harvest control rules that are given by a linear relationship between relative spawning biomass ($SB_t/SB_0$) and TAC. This relationship is given in Equation \ref{TAClinear}. The $slope$ is the harvest rate at which the stock biomass is harvested. The $intercept$ is the relative spawning biomass threshold (biomass threshold, for short). The biomass threshold is the minimum relative spawning stock biomass level required for harvest to occur. The $\widehat{B_t}$ is the observed total biomass in the last year of data and $SB_0$ is the unfished average spawning biomass.  Analogously to what was implemented for the 40:10 harvest control rule described in the previous section, we impose a cap on TAC so that it does not exceed 600 thousand tonnes. 
+
+\begin{align}
+\label{TAClinear}
+TAC= slope \cdot \widehat{B_t} \cdot \frac{(\widehat{SB_t} - SB_0 \cdot
+intercept)}{SB_0}
+\end{align}
+
+
+
+
+%Figure \ref{examplehcr} shows three harvest control  rules examples with varying slopes and intercepts. 
+
+
+%\begin{center} %left bottom right top,
+%\begin{figure}[H]
+%\centering         
+%    \includegraphics[trim= 0mm 0mm 0mm 0mm, scale=.6]{../../report/HCR_coarse/HCR_example.pdf}  
+%    \caption{Example harvest control rules with various values of intercept and slope.}  
+%     \label{examplehcr}               
+%\end{figure}
+%\end{center}
+
+
+To evaluate and compare the performance of linear harvest control rules, we systematically calculated a series of performance metrics over a range of 10 slopes (from 0.05 to 0.5 in 0.05 intervals) and 6 intercepts (from 0.0 to 0.5 in 0.1 intervals). We then mapped the performance metrics values over the slope-intercept surface. We computed the performance metrics for 54 combinations of slope and intercept and the 40:10 harvest control rule. Each combination is evaluated with 100 simulation runs with the same set of random number seeds for each harvest control rule. 
+
+\subsection{Performance metrics}
+
+In order to evaluate the harvest control rules we evaluate a set of performance metric for the aggregate fisheries and for each nation's fleet separately. The performance metrics that were calculated for each nation separately include log utility (log of yield plus a small value), total yield and annual average variability in yield (AAV) (Table \ref{tab:perfom_metrics}). Total yield and AAV were chosen to illustrate potential impacts of the magnitude and variability of yield, respectively. Log utility was included to represent a composite view of these two quantities as it increases as yield increases, but it also strongly penalizes fisheries closures (i.e. yield equal to zero). In addition, we computed the following performance metrics for the stock as an aggregate (both nations combined), \% of times the fishery closed, \% of times the total biomass was below 40\% of average unfished levels (Table \ref{tab:perfom_metrics}). 
+
+This set of performance metrics were chosen based of potential objectives that have been analyzed in other closed loop simulations for hake \citep{taylor_status_2014,hicks_conservation_2016} and other fisheries \citep{cox_roles_2013,punt_evaluation_2008}: preference for higher average yield, stability (i.e. low inter annual variation in TAC), avoidance of fisheries closures, and the conservation objective of maintaining the biomass at or above the target level.  
+
+
+\begin{table}
+  %\centering
+  \large
+\caption{Equations used to calculate Performance metrics for evaluation of harvest control rules. All quantities were averaged across simulation runs.}\label{tab:perfom_metrics} 
+\tableEq
+    \begin{align}
+       \hline
+        &\mbox{Average log utility} &\nonumber \\ 
+        &log(U) = \frac{\sum^{y}{log(Yield_{y}+1)}}{Y} \label{PM.LU}\\
+        \hline
+        &\mbox{Average annual yield } & \nonumber \\ 
+        &Yield  = \frac{\sum^{y}{Yield_{y}}}{Y} \label{PM.Y}\\
+        \hline
+        &\mbox{\% of closures } & \nonumber \\ 
+        & \% Closure  =  \sum^{y}{CL}/Y \label{PM.CL}\\
+        \hline
+        &\mbox{Mean Annual Average Variability in Yield } & \nonumber \\
+        &AAV  =  mean(\frac{|Yield_i-Yield_{i-1}|}{\sum^{i=y}_{i=y-1}{Yield_i}}) \label{PM.AAV}\\
+        \hline
+        &\mbox{\% of years with of stock spawning biomass below 40\% of $SB_o$ } & \nonumber \\ 
+        &\% B < 40\%  =  \frac{\sum^{y}{B<40\%SB_o}}{Y} \label{PM.B40Bo}\\
+        \hline \hline \nonumber
+    \end{align}
+    \normalEq
+\end{table}
+
+
+
+
+The analysis presented in this study include 183 unique simulation configurations (61 harvest control rules and three recruitment scenarios). For each one of these configurations we compute the five performance metrics listed above. In order to summarize the outputs we chose to compute the average performance over the projection years and the simulation runs for each harvest control rule and recruitment scenario configuration. 
+
+
+For both yield and log utility, we compare the relative performance by nation by using trade-off plots, i.e., by contrasting the relative performance of each metric by nation. The average performance metrics for each nation is rescaled so that the maximum value is set to one. For these trade-offs plots, we limit the linear harvest control rules to those with intercept (biomass threshold) equal or below 0.3. This threshold was chosen so that the figures would be more easily interpretable. 
+
+To compare the performance of the linear and 40:10 harvest control rules in terms of AAV, \% of times the fishery closed, and \% of times the total biomass was below 40\% we created surface maps where the x and y axes represent the values for biomass threshold and harvest rate for the linear harvest control rules and the z axis (color gradient) represents the values obtained for each performance metric. We also indicated in the surface which of the linear harvest control rules produced the minimum or maximum (the optimum) performance metric. The performance metric value obtained with the 40:10 rule was also mapped to that surface, i.e., the 40:10 indicator was placed on the point that more closely matched the performance metric value obtained with the 40:10 rule. 
+
+
+
+
+\section{Results}
+
+Each combination of harvest control rule and recruitment scenario gives rise to a biomass and yield trajectory. As an example we show three of these catch trajectories under the scenario with no strong recruitment events (Figure \ref{Yield_traj} ). These trajectories represent  median and 95\% intervals for catch trajectories simulated under the 40:10 rule and for the linear harvest control rules with 0.1 biomass threshold and 0.1 and 0.5 harvest rates. Figure \ref{Yield_traj} shows that the linear harvest control rule with 0.1 biomass threshold and 0.1 harvest rate (red line, Figure \ref{Yield_traj} ) produces lower catches than the 40:10 rule for both nations. However, the linear harvest control rule with higher harvest rate (0.5 - blue line, Figure \ref{Yield_traj}) produces higher median yields than the 40:10 rule for the nation 1 (U.S.A.) and lower median yield than the 40:10 rule for nation 2 (Canada). This result is an indication of how high harvest rates decrease the availability of the resource in northern areas, leading to lower yield to Canada.  Reproducing Figure \ref{Yield_traj} for all harvest control rules evaluated in this study would be a formidable task. For this reason, we chose to summarize the results for all scenarios and harvest control rules by comparing the mean performance across projection years and accross simulation runs. 
+
+\begin{figure}\centering         
+    \includegraphics[trim= 0mm 0mm 0mm 0mm, scale=.58]{Figurec4_1.pdf}  
+    \caption{Historical and median and 95\% intervals for projected catches for three example harvest control rules under the "nos strong recruitment" scenario. Harvest control rules include the 40:10 rule with cap, and two linear harvest control rules with biomass threshold ($SB_t/SB_o$) of 0.1 and exploitation rates of 0.1 and 0.5. }
+    \label{Yield_traj}               
+\end{figure}
+
+
+ In Figure \ref{nationTO} we show the differences in mean performance when it comes to average log utility and average yield for the two nations sharing the resource. If no interaction between harvest levels and spatial distribution of the stock existed the lines shown in Figure \ref{nationTO} would be straight, following a 1:1 ratio. However, the lines tend to bend for low biomass threshold and higher harvest rates, indicating that Canada (Nation 2) experiences lower than expected catches. This is a result of decreased availability of the Pacific hake resource in Canadian waters. As the harvest rate increases, the population age structure will become more truncated and it becomes harder for the Canadian fleet to catch its full quota. In general the difference in performance between nations and harvest control rules become more important as the incidence of strong recruitment decreases (\ref{nationTO}). In terms of log utility, the 40:10 harvest control rule tends to  perform near optimum for both nations across all scenarios (Figure \ref{nationTO}). However, when it comes to average yield, the 40:10 harvest control rule performs relatively better for Canada than the U.S.A. (Figure \ref{nationTO}). For the U.S.A (Nation 1 - x axis on Figure \ref{nationTO}), both yield and log utility tend to increase as harvest rate increases and biomass threshold decreases.  For Canada (Nation 2 - y axis on Figure \ref{nationTO}) results for log utility and yield indicate that better performance is obtained at harvest rates between 0.1 and 0.25 for the no strong recruitment scenario and higher harvest rates for the other recruitment scenarios (Figure \ref{nationTO}).
+
+
+
+\begin{landscape} %left bottom right top,
+\begin{figure}\centering         
+    \includegraphics[trim= 0mm 0mm 0mm 0mm, scale=.5]{Figurec4_2.pdf}  
+    \caption{Comparison of relative performance of average log yield (log utility) and average yield between nations (trade-offs). Quantities were normalized by the maximum observation per nation and scenario for comparison.  Nation 1 = U.S.A and Nation 2 = Canada. Colors indicate harvest rates for linear harvest control rules and point shape indicate biomass threshold relative to unfished spawning biomass ($SB_t/SB_o$). Text indicates performance of the 40:10 harvest control rule.}  
+    \label{nationTO}               
+\end{figure}
+\end{landscape}
+
+
+The AAV values increased as the incidence of strong recruitment events decreased (see color scale legend on Figure \ref{AAV}). Across all recruitment scenarios, the minimum variability occurs at lower values of biomass threshold and high harvest rates  (Figure \ref{AAV}). 
+
+
+The 40:10 rule AAV gets closer to the point where minimum AAV is found as the incidence of high recruitment events increase (Figure \ref{AAV}). Fisheries closures were only computed for the aggregate stock, as closures are determined based on the total biomass threshold. As expected, closure rates decrease as biomass threshold decreases (Figure \ref{closure}). Also, the area with very low closure percentage (blue area in the colored surface) increases as the occurrence of strong recruitment events increases. This happens because when strong recruitment events occur the population biomass tends to increase considerably, rendering it unlikely that the biomass levels will fall below the threshold. The 40:10 also performed very well in avoiding fisheries closures, with performance comparable to the minimum closure percentage across all scenarios (Figure \ref{closure}).
+
+With reference to the conservation performance metric, the \% of time that biomass is below 40\% of unfished levels, minimum values occurred for high biomass threshold values (Figure \ref{B40} - blue area). For the scenario with two strong recruitment events per decade low harvest rates also produced low \% of biomass below 40\%. In relation to the 40:10 rule performance, the difference between the 40:10 rule and the minimum \% of time that biomass is below 40\% of unfished levels tended to increase as the number of strong recruitments per decade decreased (Figure \ref{B40}). For the scenarios where no strong recruitments occur biomass was predicted to be below 40\% of unfished levels about 86\% of the time. 
+
+
+
+ %left bottom right top,
+\begin{figure}[ht]
+\centering         
+    \includegraphics[trim= 0mm 0mm 0mm 0mm, scale=.42]{Figurec4_3.pdf} 
+    \caption{Median Average Annual Variability in yield (AAV). Surfaces indicate performance for linear harvest control rules. White circle indicates performance level comparable to the 40:10 harvest control rule. Minimum value along the surface is indicated with black square. Recruitment scenarios are indicated on the rows. Nation 1 = U.S.A and Nation 2 = Canada.Total is aggregate result.}  
+     \label{AAV}               
+\end{figure}
+
+%\begin{center} %left bottom right top,
+\begin{figure}
+\centering      
+    \includegraphics[trim= 0mm 0mm 0mm 0mm, scale=.4]{Figurec4_4.pdf}  
+    \caption{\% closures for total fisheries over the 60 years of simulation. Surfaces indicate performance for linear harvest control rules. White circle indicates performance level comparable to the 40:10 harvest control rule. Minimum value along the surface is indicated with a black square. Recruitment scenarios are indicated on the columns: A - no strong recruitments, B - one strong recruitment per decade,C - two strong recruitments per decade.}  
+     \label{closure}               
+\end{figure}
+%\end{center}
+
+%\begin{center} %left bottom right top,
+\begin{figure}
+\centering         
+    \includegraphics[trim= 0mm 0mm 0mm 0mm, scale=.45]{Figurec4_5.pdf}  
+    \caption{\% of time that Biomass is above 40\% of average unfished levels. Surfaces indicate performance for linear harvest control rules. White circle indicates performance level comparable to the 40:10 harvest control rule. Minimum value along the surface is indicated with a black square. Recruitment scenarios are indicated on the columns: A - no strong recruitments, B - one strong recruitment per decade,C - two strong recruitments per decade.}  
+     \label{B40}               
+\end{figure}
+%\end{center}
+
+\section{Discussion}
+
+The results shown in this study corroborate those presented by \citet{ishimura_management_2005} in that lower values of both biomass thresholds and harvest rates tend to produce higher yields and lower variability in yield for the aggregate stock. The present results are also in agreement with \citet{ishimura_management_2005} in pointing that the 40:10 harvest control rule performs similarly to the low harvest rate and low biomass threshold alternatives in terms of maximizing yield and minimizing yield variability (bottom left are of the heat maps). The results obtained for the 40:10 harvest control rule with cap also corroborate with those presented \citet{taylor_status_2014} and \citet{hicks_conservation_2016}, indicating that the 40:10 harvest control rule, with cap,  performs well in the long term; i.e., it secures yield while minimizing fisheries closures and maintaining the biomass above the 10\% of unfished levels threshold. 
+
+However, in addition to evaluating the performance of harvest control rules for the stock as an aggregate, we also evaluated the impacts experienced by each nation individually. We show that there is a difference in performance between the two fishing nations when the log utility and sum of yields metrics are considered. In general, the U.S.A. has higher yield and log utility when fishing at higher harvest rates when compared to Canada. These differences diminish as the frequency of strong recruitment events increase. This result is associated with the migration of the stock because the Pacific hake migration is associated with age and size of the fish \citep{ressler_pacific_2007}. As harvest rates increase, the overall age structure of the population will become more truncated, i.e. older and larger fish become less abundant; therefore the resource becomes less abundant in the northern range of the distribution  which corresponds to waters off Washington state and Canada. This effect is minimized as the frequency of strong recruitment events increase because of a combination of higher overall abundance and reduced harvest rates induced by the 600 thousand tons cap imposed on all harvest control rules.   
+
+Overall the 40:10 harvest control rule seems to be a good compromise between the two nations and it seems to perform relatively well across all performance metrics considered in this study.  In the scenario where no strong recruitment events occurred, the 40:10 rule tended to reduce the biomass below the 40\% target about 86\% of the time. However even when no strong recruitment events were considered the biomass rarely went below 10\% of unfished levels. The results presented here for the 40:10 and other harvest control rules seem to be more optimistic than those presented by the Pacific hake Joint Technical Committee management strategy evaluation \citep{taylor_status_2014}. This effect is due to the fact that we imposed a maximum cap of 600 thousand tons for all harvest control rules, which were not included in the \citet{taylor_status_2014} study. Our results are similar to those obtained by \citet{hicks_conservation_2016}, who considered even lower TAC caps for the aggregate stock; they also found that the value chosen for the TAC cap is inversely related to the conservation metrics, with lower caps resulting in more conservative outcomes. We suggest that the adoption of a formal TAC cap for the Pacific hake fishery is likely to result in long term benefits for the fishery, such as prevention of fishery closures, prevention of severe depletion of the stock (i.e. stock biomass falling below 10-20\% of average unfished levels) and the provision of a more stable distribution of the resource (given limited exploitation rates on strong cohorts).
+
+
+
+The present study has two major limitations. These are the limited sensitivity analyses for the key biological parameters and the simplified representation of measurement and observation error in the analyses. We assume that the biological population parameters for the Pacific hake stock are stable over time (i.e., fixed and subject to random variability only) and equal to those reported in the 2017 stock assessment \citep{berger_status_2017}. \citet{punt_evaluation_2008} shows that uncertainty in stock recruitment parameters, more specifically, productivity and recruitment variability, can have an impact on various performance metrics, including the percentage of time that biomass is above some threshold quantity. We observed similar results regarding changes in productivity when comparing the results across the three recruitment scenarios considered in this study.  We also parameterized the movement dynamics of the resource based on literature documentation instead of using a statistical model fit to data. \citet{wor_lagrangian_2017} showed that the movement parameters can be estimated if spatial catch at age composition data is available. An expansion of this study should include an evaluation of uncertainties in other key population dynamics parameters, such as the growth rates (and how they might vary for strong cohorts), as well as an estimation and/or sensitivity analysis of the movement parameters which are likely to affect the difference in performance between the two fishing nations. 
+
+In this study we used an auto-correlated error time series to represent the measurement error, i.e. the error associated with stock assessments. This methodology was suggested by \citet{walters_simple_2004} and employed in other studies of evaluation of harvest control rules \citep[e.g.][]{punt_evaluation_2008}. However, even though we believe that the results shown here are representative of the overall trends and trade-offs between performance metrics experienced by each nation, the results might undergo change if other levels of autocorrelation and variance are used in the observation model. In a sensitivity analysis (results not shown), we found that if lower observation error variances are considered, the long term yields become higher and the difference in performance between the U.S.A. and Canada become more pronounced. \citet{moxnes_uncertain_2003} reviews evidence of this phenomenon when using a policy optimization model to investigate the impacts of measurement error and stock uncertainty in policy outcomes. \citep{moxnes_uncertain_2003} found that if stock measurements are more uncertain, the revenue from a fishery tends to decrease and the optimum policies become more conservative.
+
+
+
+In addition to the weaknesses described above, we would like to also emphasize that the performance metrics chosen for this study are somewhat arbitrary and chosen by the authors of this study as a potential representation of the fishery objectives. The performance metrics used in this study are equal or similar to the ones used in the management strategy evaluation process carrier out by the  Pacific hake Joint Technical Committee \citep{taylor_status_2014,hicks_conservation_2016}. However, we would like to note that if a similar exercise is to be used to evaluate management options in the Pacific hake fishery, it is important that objectives and associated performance metrics come as the product of an extensive consultation with the fishery's stakeholders, especially in relation to the spatially related objectives and performance metrics. Such a process is important not only to foster stakeholder trust in the process, but to ensure that the issues of interest are appropriately evaluated \citep{ludwig_ecology_2001,deroba_review_2008}. 
+
+
+Other studies have evaluated management options for migratory and transboundary fish stocks, usually accounting for the spatial effect indirectly. For example, \citet{jones_stakeholder-centered_2016} implemented closed-loop simulations for the lake Eerie walleye fisheries with the objective of comparing the performance of alternative harvest control rules and report trade-offs between the Canadian commercial fisheries and the U.S. recreational fisheries. To account for changes in availability associated with fish movement, they included time varying catchability in their non-spatial model. In addition, in recent years there has been increased interest in investigating the effects of spatial structure on stock assessment outcomes and management benchmarks \citep{berger_space_2017}. Many simulation evaluation studies have been done to assess the impacts of spatial structure and movement dynamics on stock assessment performance and reference points \citep[e.g.][]{lee_evaluation_2017,goethel_accounting_2017,kerr_modeling_2017,carruthers_modelling_2015,taylor_atlantic_2011}. However the use of spatially explicit models in closed loop simulations remain relatively scarce, in part due to difficulties in fitting spatially structured models to data \citep{goethel_incorporating_2016}. 
+
+%\citet{lee_evaluation_2017} did a simulation evaluation study to investigate the performance of a series of stock assessment models in accounting for age-based movement. They found that a simpler non-spatial model including the fleets as areas method performed well and sometimes better than some more complex spatial stock assessment models. \citet{goethel_accounting_2017} investigate the impacts of misidentification of spatial structure on the estimation of reference points. 
+
+ 
+
+
+This study focused on Pacific hake as a case study and, for this reason,  the model parameterization and structure set to mimic the dynamic of that resource.  However we believe that the framework designed here can be applied to many other transboundary resources that are subject to size segregation and/or migration range variability. The issue of management of transboundary stocks susceptible to changes in migration range has been explored in the literature under a game theory approach \citep[e.g.][]{bailey_can_2013,hannesson_sharing_2013,liu_sharing_2016}. These studies generally point out that cooperative approaches to management perform better over the long term. However, \citet{bjorndal_management_2014} point out that changes in migration range and spatial distribution are likely to impact international management agreements. Here, we present a framework that can aid cooperative management agreements to evaluate the impacts of harvest control rules and other management procedures on the distribution of the stock. This tool can be used to search for management procedures that minimize change in stock distribution and consequently, ensure equitable access to the resource by the parties sharing the stock. 
+
+
+
+In summary, we believe that the framework and evaluation exercise presented in this study are valuable for the management of the Pacific hake resource and to the management of migratory transboundary species in general. For the Pacific hake resource, we demonstrate the potential implications of population size truncation and change in migration range that can arise from using different harvest control rules. We also demonstrate the effectiveness of the 40:10 harvest control rule and the potential benefits of imposing a TAC cap.  For migratory transboundary species in general, we present a framework to aid the identification of effective management procedures, that promote the sustainability of the stock and stable spatial distribution of the resource. 
+
+
+
+\begin{notes}[Acknowledgements]
+This work was funded by the NSERC Canadian Fisheries Research Network. 
+\end{notes}
+
+
+
+\bibliographystyle{cjfas}
+\bibliography{references.bib}
+  
+
+\end{document}

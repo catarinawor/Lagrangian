@@ -1,0 +1,2227 @@
+cbind(data.frame(time=sim$propVBarea[,1],#
+  area=sim$propVBarea[,2]), sim$propVBarea[,3:ncol(sim$propVBarea)])
+head(cbind(data.frame(time=sim$propVBarea[,1],#
+  area=sim$propVBarea[,2]), sim$propVBarea[,3:ncol(sim$propVBarea)]))
+head(data.frame(time=sim$propVBarea[,1],#
+  area=sim$propVBarea[,2],#
+  for(i in 3:ncol(sim$propVBarea)]){#
+    i-2=sim$propVBarea[,i]#
+  }#
+  ))
+head(data.frame(time=sim$propVBarea[,1],#
+  area=sim$propVBarea[,2],#
+  for(i in 3:ncol(sim$propVBarea)){#
+    i-2=sim$propVBarea[,i]#
+  }#
+  ))
+head(data.frame(time=sim$propVBarea[,1],#
+  area=sim$propVBarea[,2],#
+  for(i in 3:ncol(sim$propVBarea)){#
+    as.factor(i-2)=sim$propVBarea[,i]#
+  }#
+  ))
+paste("A",i-2)
+paste("A",i-2, sep="")
+sim$propVBarea[,3]
+paste("A",i-2, sep="")<-sim$propVBarea[,3]
+head(cbind(data.frame(time=sim$propVBarea[,1],#
+  area=sim$propVBarea[,2]),#
+  sim$propVBarea[,3:ncol(sim$propVBarea)])
+head(cbind(data.frame(time=sim$propVBarea[,1],#
+  area=sim$propVBarea[,2]),#
+  sim$propVBarea[,3:ncol(sim$propVBarea)]))
+simvb<-(cbind(data.frame(time=sim$propVBarea[,1],#
+  area=sim$propVBarea[,2]),#
+  sim$propVBarea[,3:ncol(sim$propVBarea)]))
+names(sim)
+paste("A",sim$sage:sim$nage)
+names(simvb)[3:ncol(sim$propVBarea)]<-paste("A",sim$sage:sim$, sep="")
+paste("A",sim$sage:sim$, sep="")
+names(simvb)[3:ncol(sim$propVBarea)]<-paste("A",sim$sage:sim$nage, sep="")
+head(simvb)
+melt(simvb)
+?melt
+melt(simvb, id.vars=list("area", "time"))
+molsimvb<-melt(simvb, id.vars=list("area", "time"))
+head(molsimvb)
+simvb<-(cbind(data.frame(time=sim$propVBarea[,1],#
+  area=sim$propVBarea[,2]),#
+  type="simple"#
+  sim$propVBarea[,3:ncol(sim$propVBarea)]))
+simvb<-(cbind(data.frame(time=sim$propVBarea[,1],#
+  area=sim$propVBarea[,2]),#
+  type="simple",#
+  sim$propVBarea[,3:ncol(sim$propVBarea)]))#
+names(simvb)[3:ncol(sim$propVBarea)]<-paste("A",sim$sage:sim$nage, sep="")#
+#
+head(simvb)#
+molsimvb<-melt(simvb, id.vars=list("area", "time", "type"))#
+head(molsimvb)
+simvb<-(cbind(data.frame(time=sim$propVBarea[,1],#
+  area=sim$propVBarea[,2]),#
+  type="simple",#
+  sim$propVBarea[,3:ncol(sim$propVBarea)]))
+names(simvb)[4:ncol(sim$propVBarea)]<-paste("A",sim$sage:sim$nage, sep="")
+names(simvb)[4:ncol(simvb)]<-paste("A",sim$sage:sim$nage, sep="")
+head(simvb)
+molsimvb<-melt(simvb, id.vars=list("area", "time", "type"))
+head(molsimvb)
+sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")
+names(sim_gtg)
+gtgvb<-(cbind(data.frame(time=sim_gtg$propVBarea[,1],#
+  group=sim_gtg$propVBarea[,2]),#
+  area=sim_gtg$propVBarea[,3]),  #
+  type="gtg",#
+  sim$propVBarea[,4:ncol(sim_gtg$propVBarea)]))
+gtgvb<-(cbind(data.frame(time=sim_gtg$propVBarea[,1],#
+  group=sim_gtg$propVBarea[,2],#
+  area=sim_gtg$propVBarea[,3],  #
+  type="gtg"),#
+  sim$propVBarea[,4:ncol(sim_gtg$propVBarea)])
+)
+cbind(data.frame(time=sim_gtg$propVBarea[,1],#
+  group=sim_gtg$propVBarea[,2],#
+  area=sim_gtg$propVBarea[,3],  #
+  type="gtg"),#
+  sim$propVBarea[,4:ncol(sim_gtg$propVBarea)])
+gtgvb<-cbind(data.frame(time=sim_gtg$propVBarea[,1],#
+  group=sim_gtg$propVBarea[,2],#
+  area=sim_gtg$propVBarea[,3],  #
+  type="gtg"),#
+  sim_gtg$propVBarea[,4:ncol(sim_gtg$propVBarea)])
+names(gtgvb)[5:ncol(gtgvb)]<-paste("A",sim_gtg$sage:sim_gtg$nage, sep="")
+aggregate(gtgvb, by=list(group), sum)
+aggregate(gtgvb, by=list(gtgvb$group), sum)
+ngtgvb<-aggregate(gtgvb, by=list(gtgvb$time,gtgvb$area,gtgvb$type), sum)
+head(gtgvb)
+ngtgvb<-aggregate(gtgvb[,-c(2)], by=list(gtgvb$time,gtgvb$area,gtgvb$type), sum)
+ngtgvb<-aggregate(gtgvb[,5:ncol(gtgvb)], by=list(gtgvb$time,gtgvb$area,gtgvb$type), sum)
+head(ngtgvb)
+names(gtgvb)[3]<-"type"
+names(gtgvb)[2]<-"area"
+names(gtgvb)[1]<-"time"
+head(ngtgvb)
+ngtgvb<-aggregate(gtgvb[,5:ncol(gtgvb)], by=list(gtgvb$time,gtgvb$area,gtgvb$type), sum)
+gtgvb<-cbind(data.frame(time=sim_gtg$propVBarea[,1],#
+  group=sim_gtg$propVBarea[,2],#
+  area=sim_gtg$propVBarea[,3],  #
+  type="gtg"),#
+  sim_gtg$propVBarea[,4:ncol(sim_gtg$propVBarea)])#
+#
+names(gtgvb)[5:ncol(gtgvb)]<-paste("A",sim_gtg$sage:sim_gtg$nage, sep="")#
+head(gtgvb)#
+#
+ngtgvb<-aggregate(gtgvb[,5:ncol(gtgvb)], by=list(gtgvb$time,gtgvb$area,gtgvb$type), sum)#
+#
+head(ngtgvb)#
+#
+names(ngtgvb)[1]<-"time"#
+names(ngtgvb)[2]<-"area"#
+names(ngtgvb)[3]<-"type"
+molgtgvb<-melt(ngtgvb, id.vars=list("area", "time", "type"))
+gtgvb<-cbind(data.frame(time=sim_gtg$propVBarea[,1],#
+  group=sim_gtg$propVBarea[,2],#
+  area=sim_gtg$propVBarea[,3],  #
+  type="gtg"),#
+  sim_gtg$propVBarea[,4:ncol(sim_gtg$propVBarea)])#
+#
+names(gtgvb)[5:ncol(gtgvb)]<-paste("A",sim_gtg$sage:sim_gtg$nage, sep="")#
+head(gtgvb)#
+#
+ngtgvb<-aggregate(gtgvb[,5:ncol(gtgvb)], by=list(gtgvb$time,gtgvb$area,gtgvb$type), sum)#
+#
+head(ngtgvb)#
+#
+names(ngtgvb)[1]<-"time"#
+names(ngtgvb)[2]<-"area"#
+names(ngtgvb)[3]<-"type"#
+#
+molgtgvb<-melt(ngtgvb, id.vars=list("area", "time", "type"))#
+head(molgtgvb)
+df1<-rbind(molgtgvb,molsimvb)
+df2<-df1[df1$variable=="A1"|df1$variable=="A5"|,]
+df2<-df1[df1$variable=="A1"|df1$variable=="A5",]
+summary(df2)
+df2$time<-indmonth[df2$time]
+summary(df2)
+df2<-df1[df1$variable=="A1"|df1$variable=="A5",]
+df2$time2<-indmonth[df2$time]
+df2<-df2[df2$time>1188,]
+df2
+p<-ggplot(df2, aes(x=area,y=value))
+p<-p+geom_line(aes(color=variable))
+p<-p+facet_wrap(~as.factor(time2))
+p
+p<-ggplot(df2, aes(x=area,y=value))#
+p<-p+geom_line(aes(color=variable, lty=type))#
+p<-p+facet_wrap(~as.factor(time2))#
+p
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+sim <- read.rep("../admb/OM/simple/lagrangian_OM.rep")#
+sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")#
+#
+names(sim)#
+dim(sim$propVBarea)#
+head(sim$propVBarea)#
+simvb<-(cbind(data.frame(time=sim$propVBarea[,1],#
+  area=sim$propVBarea[,2],#
+  type="simple"),#
+  sim$propVBarea[,3:ncol(sim$propVBarea)]))#
+names(simvb)[4:ncol(simvb)]<-paste("A",sim$sage:sim$nage, sep="")#
+#
+head(simvb)#
+molsimvb<-melt(simvb, id.vars=list("area", "time", "type"))#
+head(molsimvb)#
+names(sim_gtg)#
+#
+gtgvb<-cbind(data.frame(time=sim_gtg$propVBarea[,1],#
+  group=sim_gtg$propVBarea[,2],#
+  area=sim_gtg$propVBarea[,3],  #
+  type="gtg"),#
+  sim_gtg$propVBarea[,4:ncol(sim_gtg$propVBarea)])#
+#
+names(gtgvb)[5:ncol(gtgvb)]<-paste("A",sim_gtg$sage:sim_gtg$nage, sep="")#
+head(gtgvb)#
+#
+ngtgvb<-aggregate(gtgvb[,5:ncol(gtgvb)], by=list(gtgvb$time,gtgvb$area,gtgvb$type), sum)#
+#
+head(ngtgvb)#
+#
+names(ngtgvb)[1]<-"time"#
+names(ngtgvb)[2]<-"area"#
+names(ngtgvb)[3]<-"type"#
+#
+molgtgvb<-melt(ngtgvb, id.vars=list("area", "time", "type"))#
+head(molgtgvb)#
+#
+df1<-rbind(molgtgvb,molsimvb)#
+#
+df2<-df1[df1$variable=="A1"|df1$variable=="A5",]#
+df2$time2<-indmonth[df2$time]#
+#
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+p<-ggplot(df2, aes(x=area,y=value))#
+p<-p+geom_line(aes(color=variable, lty=type))#
+p<-p+facet_wrap(~as.factor(time2))#
+p
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+sim <- read.rep("../admb/OM/simple/lagrangian_OM.rep")#
+sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")#
+#
+names(sim)#
+dim(sim$propVBarea)#
+head(sim$propVBarea)#
+simvb<-(cbind(data.frame(time=sim$propVBarea[,1],#
+  area=sim$propVBarea[,2],#
+  type="simple"),#
+  sim$propVBarea[,3:ncol(sim$propVBarea)]))#
+names(simvb)[4:ncol(simvb)]<-paste("A",sim$sage:sim$nage, sep="")#
+#
+head(simvb)#
+molsimvb<-melt(simvb, id.vars=list("area", "time", "type"))#
+head(molsimvb)#
+names(sim_gtg)#
+#
+gtgvb<-cbind(data.frame(time=sim_gtg$propVBarea[,1],#
+  group=sim_gtg$propVBarea[,2],#
+  area=sim_gtg$propVBarea[,3],  #
+  type="gtg"),#
+  sim_gtg$propVBarea[,4:ncol(sim_gtg$propVBarea)])#
+#
+names(gtgvb)[5:ncol(gtgvb)]<-paste("A",sim_gtg$sage:sim_gtg$nage, sep="")#
+head(gtgvb)#
+#
+ngtgvb<-aggregate(gtgvb[,5:ncol(gtgvb)], by=list(gtgvb$time,gtgvb$area,gtgvb$type), sum)#
+#
+head(ngtgvb)#
+#
+names(ngtgvb)[1]<-"time"#
+names(ngtgvb)[2]<-"area"#
+names(ngtgvb)[3]<-"type"#
+#
+molgtgvb<-melt(ngtgvb, id.vars=list("area", "time", "type"))#
+head(molgtgvb)#
+#
+df1<-rbind(molgtgvb,molsimvb)#
+#
+df2<-df1[df1$variable=="A1"|df1$variable=="A5",]#
+df2$time2<-indmonth[df2$time]#
+#
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+p<-ggplot(df2, aes(x=area,y=value))#
+p<-p+geom_line(aes(color=variable, lty=type))#
+p<-p+facet_wrap(~as.factor(time2))#
+p
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+sim <- read.rep("../admb/OM/simple/lagrangian_OM.rep")#
+sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")#
+#
+names(sim)#
+dim(sim$propVBarea)#
+head(sim$propVBarea)#
+simvb<-(cbind(data.frame(time=sim$propVBarea[,1],#
+  area=sim$propVBarea[,2],#
+  type="simple"),#
+  sim$propVBarea[,3:ncol(sim$propVBarea)]))#
+names(simvb)[4:ncol(simvb)]<-paste("A",sim$sage:sim$nage, sep="")#
+#
+head(simvb)#
+molsimvb<-melt(simvb, id.vars=list("area", "time", "type"))#
+head(molsimvb)#
+names(sim_gtg)#
+#
+gtgvb<-cbind(data.frame(time=sim_gtg$propVBarea[,1],#
+  group=sim_gtg$propVBarea[,2],#
+  area=sim_gtg$propVBarea[,3],  #
+  type="gtg"),#
+  sim_gtg$propVBarea[,4:ncol(sim_gtg$propVBarea)])#
+#
+names(gtgvb)[5:ncol(gtgvb)]<-paste("A",sim_gtg$sage:sim_gtg$nage, sep="")#
+head(gtgvb)#
+#
+ngtgvb<-aggregate(gtgvb[,5:ncol(gtgvb)], by=list(gtgvb$time,gtgvb$area,gtgvb$type), sum)#
+#
+head(ngtgvb)#
+#
+names(ngtgvb)[1]<-"time"#
+names(ngtgvb)[2]<-"area"#
+names(ngtgvb)[3]<-"type"#
+#
+molgtgvb<-melt(ngtgvb, id.vars=list("area", "time", "type"))#
+head(molgtgvb)#
+#
+df1<-rbind(molgtgvb,molsimvb)#
+#
+df2<-df1[df1$variable=="A1"|df1$variable=="A5",]#
+df2$time2<-indmonth[df2$time]#
+#
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+p<-ggplot(df2, aes(x=area,y=value))#
+p<-p+geom_line(aes(color=variable, lty=type))#
+p<-p+facet_wrap(~as.factor(time2))#
+p
+df2$variables<-df2$variable/max(df2$variable)
+p<-ggplot(df2, aes(x=area,y=value))#
+p<-p+geom_line(aes(color=variable, lty=type))#
+p<-p+facet_wrap(~as.factor(time2))#
+p
+p<-ggplot(df2, aes(x=area,y=value))#
+p<-p+geom_line(aes(color=variables, lty=type))#
+p<-p+facet_wrap(~as.factor(time2))#
+p
+df2$variables<-df2$variable/max(df2$variable)
+summary(df2)
+df2$values<-df2$value/max(df2$value)
+df2$values<-df2$value/max(df2$value)#
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=variable, lty=type))#
+p<-p+facet_wrap(~as.factor(time2))#
+p
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+sim <- read.rep("../admb/OM/simple/lagrangian_OM.rep")
+sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")
+names(sim)#
+dim(sim$propVBarea)#
+head(sim$propVBarea)#
+simvb<-(cbind(data.frame(time=sim$propVBarea[,1],#
+  area=sim$propVBarea[,2],#
+  type="simple"),#
+  sim$propVBarea[,3:ncol(sim$propVBarea)]))#
+names(simvb)[4:ncol(simvb)]<-paste("A",sim$sage:sim$nage, sep="")#
+#
+head(simvb)#
+molsimvb<-melt(simvb, id.vars=list("area", "time", "type"))#
+head(molsimvb)#
+names(sim_gtg)#
+#
+gtgvb<-cbind(data.frame(time=sim_gtg$propVBarea[,1],#
+  group=sim_gtg$propVBarea[,2],#
+  area=sim_gtg$propVBarea[,3],  #
+  type="gtg"),#
+  sim_gtg$propVBarea[,4:ncol(sim_gtg$propVBarea)])#
+#
+names(gtgvb)[5:ncol(gtgvb)]<-paste("A",sim_gtg$sage:sim_gtg$nage, sep="")#
+head(gtgvb)#
+#
+ngtgvb<-aggregate(gtgvb[,5:ncol(gtgvb)], by=list(gtgvb$time,gtgvb$area,gtgvb$type), sum)#
+#
+head(ngtgvb)#
+#
+names(ngtgvb)[1]<-"time"#
+names(ngtgvb)[2]<-"area"#
+names(ngtgvb)[3]<-"type"#
+#
+molgtgvb<-melt(ngtgvb, id.vars=list("area", "time", "type"))#
+head(molgtgvb)#
+#
+df1<-rbind(molgtgvb,molsimvb)#
+#
+df2<-df1[df1$variable=="A1"|df1$variable=="A5",]#
+df2$time2<-indmonth[df2$time]#
+#
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+#
+df2$values<-df2$value/max(df2$value)#
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=variable, lty=type))#
+p<-p+facet_wrap(~as.factor(time2))#
+p
+names(sim)#
+dim(sim$propVBarea)#
+head(sim$propVBarea)#
+simvb<-(cbind(data.frame(time=sim$propVBarea[,1],#
+  area=sim$propVBarea[,2],#
+  type="simple"),#
+  sim$propVBarea[,3:ncol(sim$propVBarea)]))#
+names(simvb)[4:ncol(simvb)]<-paste("A",sim$sage:sim$nage, sep="")#
+#
+head(simvb)#
+molsimvb<-melt(simvb, id.vars=list("area", "time", "type"))#
+head(molsimvb)#
+names(sim_gtg)#
+#
+gtgvb<-cbind(data.frame(time=sim_gtg$propVBarea[,1],#
+  group=sim_gtg$propVBarea[,2],#
+  area=sim_gtg$propVBarea[,3],  #
+  type="gtg"),#
+  sim_gtg$propVBarea[,4:ncol(sim_gtg$propVBarea)])#
+#
+names(gtgvb)[5:ncol(gtgvb)]<-paste("A",sim_gtg$sage:sim_gtg$nage, sep="")#
+head(gtgvb)#
+#
+ngtgvb<-aggregate(gtgvb[,5:ncol(gtgvb)], by=list(gtgvb$time,gtgvb$area,gtgvb$type), sum)#
+#
+head(ngtgvb)#
+#
+names(ngtgvb)[1]<-"time"#
+names(ngtgvb)[2]<-"area"#
+names(ngtgvb)[3]<-"type"#
+#
+molgtgvb<-melt(ngtgvb, id.vars=list("area", "time", "type"))#
+head(molgtgvb)#
+#
+df1<-rbind(molgtgvb,molsimvb)#
+#
+df2<-df1[df1$variable=="A1"|df1$variable=="A5",]#
+df2$time2<-indmonth[df2$time]#
+#
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+#
+df2$values<-df2$value/max(df2$value)#
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=variable, lty=type))#
+p<-p+facet_wrap(~as.factor(time2))#
+p
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+sim <- read.rep("../admb/OM/simple/lagrangian_OM.rep")#
+sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")#
+#
+names(sim)#
+dim(sim$propVBarea)#
+head(sim$propVBarea)#
+simvb<-(cbind(data.frame(time=sim$propVBarea[,1],#
+  area=sim$propVBarea[,2],#
+  type="simple"),#
+  sim$propVBarea[,3:ncol(sim$propVBarea)]))#
+names(simvb)[4:ncol(simvb)]<-paste("A",sim$sage:sim$nage, sep="")#
+#
+head(simvb)#
+molsimvb<-melt(simvb, id.vars=list("area", "time", "type"))#
+head(molsimvb)#
+names(sim_gtg)#
+#
+gtgvb<-cbind(data.frame(time=sim_gtg$propVBarea[,1],#
+  group=sim_gtg$propVBarea[,2],#
+  area=sim_gtg$propVBarea[,3],  #
+  type="gtg"),#
+  sim_gtg$propVBarea[,4:ncol(sim_gtg$propVBarea)])#
+#
+names(gtgvb)[5:ncol(gtgvb)]<-paste("A",sim_gtg$sage:sim_gtg$nage, sep="")#
+head(gtgvb)#
+#
+ngtgvb<-aggregate(gtgvb[,5:ncol(gtgvb)], by=list(gtgvb$time,gtgvb$area,gtgvb$type), sum)#
+#
+head(ngtgvb)#
+#
+names(ngtgvb)[1]<-"time"#
+names(ngtgvb)[2]<-"area"#
+names(ngtgvb)[3]<-"type"#
+#
+molgtgvb<-melt(ngtgvb, id.vars=list("area", "time", "type"))#
+head(molgtgvb)#
+#
+df1<-rbind(molgtgvb,molsimvb)#
+#
+df2<-df1[df1$variable=="A1"|df1$variable=="A5",]#
+df2$time2<-indmonth[df2$time]#
+#
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+#
+df2$values<-df2$value/max(df2$value)#
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=variable, lty=type))#
+p<-p+facet_wrap(~as.factor(time2))#
+p
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=variable, lty=type))#
+p<-p+facet_wrap(~as.factor(time2))#
+p<-p+geom_vline(aes(xintercept=48))#
+p
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+sim <- read.rep("../admb/OM/simple/lagrangian_OM.rep")#
+sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")#
+#
+names(sim)#
+dim(sim$propVBarea)#
+head(sim$propVBarea)#
+simvb<-(cbind(data.frame(time=sim$propVBarea[,1],#
+  area=sim$propVBarea[,2],#
+  type="simple"),#
+  sim$propVBarea[,3:ncol(sim$propVBarea)]))#
+names(simvb)[4:ncol(simvb)]<-paste("A",sim$sage:sim$nage, sep="")#
+#
+head(simvb)#
+molsimvb<-melt(simvb, id.vars=list("area", "time", "type"))#
+head(molsimvb)#
+names(sim_gtg)#
+#
+gtgvb<-cbind(data.frame(time=sim_gtg$propVBarea[,1],#
+  group=sim_gtg$propVBarea[,2],#
+  area=sim_gtg$propVBarea[,3],  #
+  type="gtg"),#
+  sim_gtg$propVBarea[,4:ncol(sim_gtg$propVBarea)])#
+#
+names(gtgvb)[5:ncol(gtgvb)]<-paste("A",sim_gtg$sage:sim_gtg$nage, sep="")#
+head(gtgvb)#
+#
+ngtgvb<-aggregate(gtgvb[,5:ncol(gtgvb)], by=list(gtgvb$time,gtgvb$area,gtgvb$type), sum)#
+#
+head(ngtgvb)#
+#
+names(ngtgvb)[1]<-"time"#
+names(ngtgvb)[2]<-"area"#
+names(ngtgvb)[3]<-"type"#
+#
+molgtgvb<-melt(ngtgvb, id.vars=list("area", "time", "type"))#
+head(molgtgvb)#
+#
+df1<-rbind(molgtgvb,molsimvb)#
+#
+df2<-df1[df1$variable=="A1"|df1$variable=="A5",]#
+df2$time2<-indmonth[df2$time]#
+#
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+#
+df2$values<-df2$value/max(df2$value)#
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=variable, lty=type))#
+p<-p+facet_wrap(~as.factor(time2))#
+p<-p+geom_vline(aes(xintercept=48))#
+p
+df2$values[df1$variable=="A1"]<-df2$value[df1$variable=="A1"]/max(df2$value[df1$variable=="A1"])
+df2$values[df1$variable=="A5"]<-df2$value[df1$variable=="A5"]/max(df2$value[df1$variable=="A5"])
+df2<-df2[df2$time>1188,]
+summary(df2)
+df2$values<-df2$value/max(df2$value)
+df2$values[df2$variable=="A1"]<-df2$value[df2$variable=="A1"]/max(df2$value[df2$variable=="A1"])
+df2$values[df2$variable=="A5"]<-df2$value[df2$variable=="A5"]/max(df2$value[df2$variable=="A5"])
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=variable, lty=type))#
+p<-p+facet_wrap(~as.factor(time2))#
+p<-p+geom_vline(aes(xintercept=48))#
+p
+df2$value[df2$variable=="A1"]
+df2$values[df2$variable=="A1"&df2$type=="gtg"]<-df2$value[df2$variable=="A1"&df2$type=="gtg"]/max(df2$value[df2$variable=="A1"&df2$type=="gtg"])
+df2$values[df2$variable=="A1"&df2$type=="simple"]<-df2$value[df2$variable=="A1"&df2$type=="simple"]/max(df2$value[df2$variable=="A1"&df2$type=="simple"])
+df2$values[df2$variable=="A1"&df2$type=="gtg"]<-df2$value[df2$variable=="A1"&df2$type=="gtg"]/max(df2$value[df2$variable=="A1"&df2$type=="gtg"])
+df2$values[df2$variable=="A1"&df2$type=="simple"]<-df2$value[df2$variable=="A1"&df2$type=="simple"]/max(df2$value[df2$variable=="A1"&df2$type=="simple"])
+df2$values[df2$variable=="A5"&df2$type=="gtg"]<-df2$value[df2$variable=="A5"&df2$type=="gtg"]/max(df2$value[df2$variable=="A5"&df2$type=="gtg"])
+df2$values[df2$variable=="A5"&df2$type=="simple"]<-df2$value[df2$variable=="A5"&df2$type=="simple"]/max(df2$value[df2$variable=="A5"&df2$type=="simple"])
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=variable, lty=type))#
+p<-p+facet_wrap(~as.factor(time2))#
+p<-p+geom_vline(aes(xintercept=48))#
+p
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+sim <- read.rep("../admb/OM/simple/lagrangian_OM.rep")#
+sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")#
+#
+names(sim)#
+dim(sim$propVBarea)#
+head(sim$propVBarea)#
+simvb<-(cbind(data.frame(time=sim$propVBarea[,1],#
+  area=sim$propVBarea[,2],#
+  type="simple"),#
+  sim$propVBarea[,3:ncol(sim$propVBarea)]))#
+names(simvb)[4:ncol(simvb)]<-paste("A",sim$sage:sim$nage, sep="")#
+#
+head(simvb)#
+molsimvb<-melt(simvb, id.vars=list("area", "time", "type"))#
+head(molsimvb)#
+names(sim_gtg)#
+#
+gtgvb<-cbind(data.frame(time=sim_gtg$propVBarea[,1],#
+  group=sim_gtg$propVBarea[,2],#
+  area=sim_gtg$propVBarea[,3],  #
+  type="gtg"),#
+  sim_gtg$propVBarea[,4:ncol(sim_gtg$propVBarea)])#
+#
+names(gtgvb)[5:ncol(gtgvb)]<-paste("A",sim_gtg$sage:sim_gtg$nage, sep="")#
+head(gtgvb)#
+#
+ngtgvb<-aggregate(gtgvb[,5:ncol(gtgvb)], by=list(gtgvb$time,gtgvb$area,gtgvb$type), sum)#
+#
+head(ngtgvb)#
+#
+names(ngtgvb)[1]<-"time"#
+names(ngtgvb)[2]<-"area"#
+names(ngtgvb)[3]<-"type"#
+#
+molgtgvb<-melt(ngtgvb, id.vars=list("area", "time", "type"))#
+head(molgtgvb)#
+#
+df1<-rbind(molgtgvb,molsimvb)#
+#
+df2<-df1[df1$variable=="A1"|df1$variable=="A5",]#
+df2$time2<-indmonth[df2$time]#
+#
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+#
+df2$values<-df2$value/max(df2$value)#
+#
+df2$values[df2$variable=="A1"&df2$type=="gtg"]<-df2$value[df2$variable=="A1"&df2$type=="gtg"]/max(df2$value[df2$variable=="A1"&df2$type=="gtg"])#
+df2$values[df2$variable=="A1"&df2$type=="simple"]<-df2$value[df2$variable=="A1"&df2$type=="simple"]/max(df2$value[df2$variable=="A1"&df2$type=="simple"])#
+#
+df2$values[df2$variable=="A5"&df2$type=="gtg"]<-df2$value[df2$variable=="A5"&df2$type=="gtg"]/max(df2$value[df2$variable=="A5"&df2$type=="gtg"])#
+df2$values[df2$variable=="A5"&df2$type=="simple"]<-df2$value[df2$variable=="A5"&df2$type=="simple"]/max(df2$value[df2$variable=="A5"&df2$type=="simple"])#
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=variable, lty=type))#
+p<-p+facet_wrap(~as.factor(time2))#
+p<-p+geom_vline(aes(xintercept=48))#
+p
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+sim <- read.rep("../admb/OM/simple/lagrangian_OM.rep")#
+sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")#
+#
+names(sim)#
+dim(sim$propVBarea)#
+head(sim$propVBarea)#
+simvb<-(cbind(data.frame(time=sim$propVBarea[,1],#
+  area=sim$propVBarea[,2],#
+  type="simple"),#
+  sim$propVBarea[,3:ncol(sim$propVBarea)]))#
+names(simvb)[4:ncol(simvb)]<-paste("A",sim$sage:sim$nage, sep="")#
+#
+head(simvb)#
+molsimvb<-melt(simvb, id.vars=list("area", "time", "type"))#
+head(molsimvb)#
+names(sim_gtg)#
+#
+gtgvb<-cbind(data.frame(time=sim_gtg$propVBarea[,1],#
+  group=sim_gtg$propVBarea[,2],#
+  area=sim_gtg$propVBarea[,3],  #
+  type="gtg"),#
+  sim_gtg$propVBarea[,4:ncol(sim_gtg$propVBarea)])#
+#
+names(gtgvb)[5:ncol(gtgvb)]<-paste("A",sim_gtg$sage:sim_gtg$nage, sep="")#
+head(gtgvb)#
+#
+ngtgvb<-aggregate(gtgvb[,5:ncol(gtgvb)], by=list(gtgvb$time,gtgvb$area,gtgvb$type), sum)#
+#
+head(ngtgvb)#
+#
+names(ngtgvb)[1]<-"time"#
+names(ngtgvb)[2]<-"area"#
+names(ngtgvb)[3]<-"type"#
+#
+molgtgvb<-melt(ngtgvb, id.vars=list("area", "time", "type"))#
+head(molgtgvb)#
+#
+df1<-rbind(molgtgvb,molsimvb)#
+#
+df2<-df1[df1$variable=="A1"|df1$variable=="A5",]#
+df2$time2<-indmonth[df2$time]#
+#
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+#
+df2$values<-df2$value/max(df2$value)#
+#
+df2$values[df2$variable=="A1"&df2$type=="gtg"]<-df2$value[df2$variable=="A1"&df2$type=="gtg"]/max(df2$value[df2$variable=="A1"&df2$type=="gtg"])#
+df2$values[df2$variable=="A1"&df2$type=="simple"]<-df2$value[df2$variable=="A1"&df2$type=="simple"]/max(df2$value[df2$variable=="A1"&df2$type=="simple"])#
+#
+df2$values[df2$variable=="A5"&df2$type=="gtg"]<-df2$value[df2$variable=="A5"&df2$type=="gtg"]/max(df2$value[df2$variable=="A5"&df2$type=="gtg"])#
+df2$values[df2$variable=="A5"&df2$type=="simple"]<-df2$value[df2$variable=="A5"&df2$type=="simple"]/max(df2$value[df2$variable=="A5"&df2$type=="simple"])#
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=variable, lty=type))#
+p<-p+facet_wrap(~as.factor(time2))#
+p<-p+geom_vline(aes(xintercept=48))#
+p
+molgtgvb<-melt(ngtgvb, id.vars=list("area", "time", "type"))#
+head(molgtgvb)#
+#
+df1<-rbind(molgtgvb,molsimvb)#
+#
+df2<-df1[df1$variable=="A2"|df1$variable=="A5",]#
+df2$time2<-indmonth[df2$time]#
+#
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+#
+df2$values<-df2$value/max(df2$value)#
+#
+df2$values[df2$variable=="A2"&df2$type=="gtg"]<-df2$value[df2$variable=="A1"&df2$type=="gtg"]/max(df2$value[df2$variable=="A1"&df2$type=="gtg"])#
+df2$values[df2$variable=="A2"&df2$type=="simple"]<-df2$value[df2$variable=="A1"&df2$type=="simple"]/max(df2$value[df2$variable=="A1"&df2$type=="simple"])#
+#
+df2$values[df2$variable=="A5"&df2$type=="gtg"]<-df2$value[df2$variable=="A5"&df2$type=="gtg"]/max(df2$value[df2$variable=="A5"&df2$type=="gtg"])#
+df2$values[df2$variable=="A5"&df2$type=="simple"]<-df2$value[df2$variable=="A5"&df2$type=="simple"]/max(df2$value[df2$variable=="A5"&df2$type=="simple"])#
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=variable, lty=type))#
+p<-p+facet_wrap(~as.factor(time2))#
+p<-p+geom_vline(aes(xintercept=48))#
+p
+df2$values<-df2$value/max(df2$value)#
+#
+df2$values[df2$variable=="A2"&df2$type=="gtg"]<-df2$value[df2$variable=="A2"&df2$type=="gtg"]/max(df2$value[df2$variable=="A2"&df2$type=="gtg"])#
+df2$values[df2$variable=="A2"&df2$type=="simple"]<-df2$value[df2$variable=="A2"&df2$type=="simple"]/max(df2$value[df2$variable=="A2"&df2$type=="simple"])#
+#
+df2$values[df2$variable=="A5"&df2$type=="gtg"]<-df2$value[df2$variable=="A5"&df2$type=="gtg"]/max(df2$value[df2$variable=="A5"&df2$type=="gtg"])#
+df2$values[df2$variable=="A5"&df2$type=="simple"]<-df2$value[df2$variable=="A5"&df2$type=="simple"]/max(df2$value[df2$variable=="A5"&df2$type=="simple"])#
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=variable, lty=type))#
+p<-p+facet_wrap(~as.factor(time2))#
+p<-p+geom_vline(aes(xintercept=48))#
+p
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+sim <- read.rep("../admb/OM/simple/lagrangian_OM.rep")#
+sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")#
+#
+names(sim)#
+dim(sim$propVBarea)#
+head(sim$propVBarea)#
+simvb<-(cbind(data.frame(time=sim$propVBarea[,1],#
+  area=sim$propVBarea[,2],#
+  type="simple"),#
+  sim$propVBarea[,3:ncol(sim$propVBarea)]))#
+names(simvb)[4:ncol(simvb)]<-paste("A",sim$sage:sim$nage, sep="")#
+#
+head(simvb)#
+molsimvb<-melt(simvb, id.vars=list("area", "time", "type"))#
+head(molsimvb)#
+names(sim_gtg)#
+#
+gtgvb<-cbind(data.frame(time=sim_gtg$propVBarea[,1],#
+  group=sim_gtg$propVBarea[,2],#
+  area=sim_gtg$propVBarea[,3],  #
+  type="gtg"),#
+  sim_gtg$propVBarea[,4:ncol(sim_gtg$propVBarea)])#
+#
+names(gtgvb)[5:ncol(gtgvb)]<-paste("A",sim_gtg$sage:sim_gtg$nage, sep="")#
+head(gtgvb)#
+#
+ngtgvb<-aggregate(gtgvb[,5:ncol(gtgvb)], by=list(gtgvb$time,gtgvb$area,gtgvb$type), sum)#
+#
+head(ngtgvb)#
+#
+names(ngtgvb)[1]<-"time"#
+names(ngtgvb)[2]<-"area"#
+names(ngtgvb)[3]<-"type"#
+#
+molgtgvb<-melt(ngtgvb, id.vars=list("area", "time", "type"))#
+head(molgtgvb)#
+#
+df1<-rbind(molgtgvb,molsimvb)#
+#
+df2<-df1[df1$variable=="A2"|df1$variable=="A5",]#
+df2$time2<-indmonth[df2$time]#
+#
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+#
+df2$values<-df2$value/max(df2$value)#
+#
+df2$values[df2$variable=="A2"&df2$type=="gtg"]<-df2$value[df2$variable=="A2"&df2$type=="gtg"]/max(df2$value[df2$variable=="A2"&df2$type=="gtg"])#
+df2$values[df2$variable=="A2"&df2$type=="simple"]<-df2$value[df2$variable=="A2"&df2$type=="simple"]/max(df2$value[df2$variable=="A2"&df2$type=="simple"])#
+#
+df2$values[df2$variable=="A5"&df2$type=="gtg"]<-df2$value[df2$variable=="A5"&df2$type=="gtg"]/max(df2$value[df2$variable=="A5"&df2$type=="gtg"])#
+df2$values[df2$variable=="A5"&df2$type=="simple"]<-df2$value[df2$variable=="A5"&df2$type=="simple"]/max(df2$value[df2$variable=="A5"&df2$type=="simple"])#
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=variable, lty=type))#
+p<-p+facet_wrap(~as.factor(time2))#
+p<-p+geom_vline(aes(xintercept=48))#
+p
+names(sim)
+sim$Effarea
+dim(sim$Effarea)
+head(sim$Effarea)
+try<-melt(sim$Effarea, id.vars=list("indmonth"))
+head(try)
+try[1:100]
+try[1:100,]
+dim(try)
+summary(df2)
+summary(try)
+try<-melt(sim$Effarea)
+summary(try)
+effSim<-melt(sim$Effarea)
+effsim<-melt(sim$Effarea)
+summary(df2)
+summary(effsim)
+names(effsim)[1]<-"time"
+names(effsim)[2]<-"area"
+names(effsim)[3]<-"values"
+summary(effsim)
+as.numeric(effsim$area)
+effsim$area<-as.numeric(effsim$area)+29
+summary(effsim$area)
+effgtg<-melt(sim_gtg$Effarea)
+summary(effgtg)
+names(effgtg)[1]<-"time"#
+names(effgtg)[2]<-"area"#
+names(effgtg)[3]<-"values"
+summary(effgtg)
+effgtg$area<-as.numeric(effgtg$area)+29
+summary(effgtg$area)
+effgtg$dat<-"effort"
+effgtg$type<-"gtg"
+summary(effgtg)
+summary(effgtg)
+summary(df2)
+Eff<-rbind(effsim,effgtg)
+effsim<-melt(sim$Effarea)#
+#
+summary(effsim)#
+#
+names(effsim)[1]<-"time"#
+names(effsim)[2]<-"area"#
+names(effsim)[3]<-"values"#
+#
+summary(effsim)#
+#
+effsim$area<-as.numeric(effsim$area)+29#
+summary(effsim$area)#
+effsim$dat<-"effort"#
+effsim$type<-"simple"#
+effgtg<-melt(sim_gtg$Effarea)#
+names(effgtg)[1]<-"time"#
+names(effgtg)[2]<-"area"#
+names(effgtg)[3]<-"values"#
+effgtg$area<-as.numeric(effgtg$area)+29#
+effgtg$dat<-"effort"#
+effgtg$type<-"gtg"#
+#
+summary(effgtg)#
+Eff<-rbind(effsim,effgtg)
+summary(Eff)
+Eff<-Eff[Eff$time>1188,]
+summary(Eff)
+Eff$time2<-indmonth[Eff$time]
+summary(Eff)
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=variable, lty=type))#
+p<-p+facet_wrap(~as.factor(time2))#
+p<-p+geom_vline(aes(xintercept=48))#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,color=type))#
+p
+?geom_bar
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=variable, lty=type))#
+p<-p+facet_wrap(~as.factor(time2))#
+p<-p+geom_vline(aes(xintercept=48))#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,color=type,stat = "identity"))#
+p
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=variable, lty=type))#
+p<-p+facet_wrap(~as.factor(time2))#
+p<-p+geom_vline(aes(xintercept=48))#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,color=type),stat = "identity")#
+p
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=variable, lty=type))#
+p<-p+facet_wrap(~as.factor(time2))#
+p<-p+geom_vline(aes(xintercept=48))#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,color=type, position=position_dodge()),stat = "identity")#
+p
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=variable, lty=type))#
+p<-p+facet_wrap(~as.factor(time2))#
+p<-p+geom_vline(aes(xintercept=48))#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,color=type),stat = "identity", position=position_dodge())#
+p
+summary(Eff)
+Eff$values<-Eff$values/max(Eff$values)
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=variable, lty=type))#
+p<-p+facet_wrap(~as.factor(time2))#
+p<-p+geom_vline(aes(xintercept=48))#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,color=type),stat = "identity", position=position_dodge())#
+p
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=variable, lty=type))#
+p<-p+facet_wrap(~as.factor(time2))#
+p<-p+geom_vline(aes(xintercept=48))#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),stat = "identity", position=position_dodge())#
+p
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=variable, lty=type), size=2)#
+p<-p+facet_wrap(~as.factor(time2))#
+p<-p+geom_vline(aes(xintercept=48))#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),stat = "identity", position=position_dodge())#
+p
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=variable, lty=type), size=1.5)#
+p<-p+facet_wrap(~as.factor(time2))#
+p<-p+geom_vline(aes(xintercept=48))#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),stat = "identity", position=position_dodge())#
+p
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=variable, lty=type), size=1.5)#
+p<-p+facet_wrap(~as.factor(time2))#
+p<-p+geom_vline(aes(xintercept=48))#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),stat = "identity", position=position_dodge())#
+p<-p+ theme_bw(16)#
+p
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=variable, lty=type), size=1.5)#
+p<-p+facet_wrap(~as.factor(time2))#
+p<-p+geom_vline(aes(xintercept=48))#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),stat = "identity", position=position_dodge())#
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank(), axis.text.x = element_blank(),#
+        axis.title.x= element_blank())#
+p
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=variable, lty=type), size=1.5)#
+p<-p+facet_wrap(~as.factor(time2))#
+p<-p+geom_vline(aes(xintercept=48))#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),stat = "identity", position=position_dodge())#
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank(), axis.text.x = element_blank(),#
+        axis.title.x= element_blank())#
+p<-p+scale_fill_grey() +scale_color_grey() #
+p
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=variable, lty=type), size=1.5)#
+p<-p+facet_wrap(~as.factor(time2))#
+p<-p+geom_vline(aes(xintercept=48))#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),stat = "identity", position=position_dodge())#
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p<-p+scale_fill_grey() +scale_color_grey() #
+p
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+sim <- read.rep("../admb/OM/simple/lagrangian_OM.rep")#
+sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")#
+#
+names(sim)#
+dim(sim$propVBarea)#
+head(sim$propVBarea)#
+simvb<-(cbind(data.frame(time=sim$propVBarea[,1],#
+  area=sim$propVBarea[,2],#
+  type="simple"),#
+  sim$propVBarea[,3:ncol(sim$propVBarea)]))#
+names(simvb)[4:ncol(simvb)]<-paste("A",sim$sage:sim$nage, sep="")#
+#
+head(simvb)#
+molsimvb<-melt(simvb, id.vars=list("area", "time", "type"))#
+head(molsimvb)#
+names(sim_gtg)#
+#
+gtgvb<-cbind(data.frame(time=sim_gtg$propVBarea[,1],#
+  group=sim_gtg$propVBarea[,2],#
+  area=sim_gtg$propVBarea[,3],  #
+  type="gtg"),#
+  sim_gtg$propVBarea[,4:ncol(sim_gtg$propVBarea)])#
+#
+names(gtgvb)[5:ncol(gtgvb)]<-paste("A",sim_gtg$sage:sim_gtg$nage, sep="")#
+head(gtgvb)#
+#
+ngtgvb<-aggregate(gtgvb[,5:ncol(gtgvb)], by=list(gtgvb$time,gtgvb$area,gtgvb$type), sum)#
+#
+head(ngtgvb)#
+#
+names(ngtgvb)[1]<-"time"#
+names(ngtgvb)[2]<-"area"#
+names(ngtgvb)[3]<-"type"#
+#
+molgtgvb<-melt(ngtgvb, id.vars=list("area", "time", "type"))#
+head(molgtgvb)#
+#
+df1<-rbind(molgtgvb,molsimvb)#
+#
+df2<-df1[df1$variable=="A2"|df1$variable=="A5",]#
+df2$time2<-indmonth[df2$time]#
+#
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+#
+df2$values<-df2$value/max(df2$value)#
+#
+df2$values[df2$variable=="A2"&df2$type=="gtg"]<-df2$value[df2$variable=="A2"&df2$type=="gtg"]/max(df2$value[df2$variable=="A2"&df2$type=="gtg"])#
+df2$values[df2$variable=="A2"&df2$type=="simple"]<-df2$value[df2$variable=="A2"&df2$type=="simple"]/max(df2$value[df2$variable=="A2"&df2$type=="simple"])#
+#
+df2$values[df2$variable=="A5"&df2$type=="gtg"]<-df2$value[df2$variable=="A5"&df2$type=="gtg"]/max(df2$value[df2$variable=="A5"&df2$type=="gtg"])#
+df2$values[df2$variable=="A5"&df2$type=="simple"]<-df2$value[df2$variable=="A5"&df2$type=="simple"]/max(df2$value[df2$variable=="A5"&df2$type=="simple"])#
+names(sim)#
+sim$Effarea#
+dim(sim$Effarea)#
+head(sim$Effarea)#
+#
+effsim<-melt(sim$Effarea)#
+#
+summary(effsim)#
+#
+names(effsim)[1]<-"time"#
+names(effsim)[2]<-"area"#
+names(effsim)[3]<-"values"#
+#
+summary(effsim)#
+#
+effsim$area<-as.numeric(effsim$area)+29#
+summary(effsim$area)#
+effsim$dat<-"effort"#
+effsim$type<-"simple"#
+effgtg<-melt(sim_gtg$Effarea)#
+names(effgtg)[1]<-"time"#
+names(effgtg)[2]<-"area"#
+names(effgtg)[3]<-"values"#
+effgtg$area<-as.numeric(effgtg$area)+29#
+effgtg$dat<-"effort"#
+effgtg$type<-"gtg"#
+#
+summary(effgtg)#
+Eff<-rbind(effsim,effgtg)#
+Eff<-Eff[Eff$time>1188,]#
+#
+Eff$time2<-indmonth[Eff$time]#
+Eff$values<-Eff$values/max(Eff$values)#
+summary(Eff)#
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=variable, lty=type), size=1.5)#
+p<-p+facet_wrap(~as.factor(time2))#
+p<-p+geom_vline(aes(xintercept=48))#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),stat = "identity", position=position_dodge())#
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p<-p+scale_fill_grey() +scale_color_grey() #
+p
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+sim <- read.rep("../admb/OM/simple/lagrangian_OM.rep")#
+sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")#
+#
+names(sim)#
+dim(sim$propVBarea)#
+head(sim$propVBarea)#
+simvb<-(cbind(data.frame(time=sim$propVBarea[,1],#
+  area=sim$propVBarea[,2],#
+  type="simple"),#
+  sim$propVBarea[,3:ncol(sim$propVBarea)]))#
+names(simvb)[4:ncol(simvb)]<-paste("A",sim$sage:sim$nage, sep="")#
+#
+head(simvb)#
+molsimvb<-melt(simvb, id.vars=list("area", "time", "type"))#
+head(molsimvb)#
+names(sim_gtg)#
+#
+gtgvb<-cbind(data.frame(time=sim_gtg$propVBarea[,1],#
+  group=sim_gtg$propVBarea[,2],#
+  area=sim_gtg$propVBarea[,3],  #
+  type="gtg"),#
+  sim_gtg$propVBarea[,4:ncol(sim_gtg$propVBarea)])#
+#
+names(gtgvb)[5:ncol(gtgvb)]<-paste("A",sim_gtg$sage:sim_gtg$nage, sep="")#
+head(gtgvb)#
+#
+ngtgvb<-aggregate(gtgvb[,5:ncol(gtgvb)], by=list(gtgvb$time,gtgvb$area,gtgvb$type), sum)#
+#
+head(ngtgvb)#
+#
+names(ngtgvb)[1]<-"time"#
+names(ngtgvb)[2]<-"area"#
+names(ngtgvb)[3]<-"type"#
+#
+molgtgvb<-melt(ngtgvb, id.vars=list("area", "time", "type"))#
+head(molgtgvb)#
+#
+df1<-rbind(molgtgvb,molsimvb)#
+#
+df2<-df1[df1$variable=="A2"|df1$variable=="A5",]#
+df2$time2<-indmonth[df2$time]#
+#
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+#
+df2$values<-df2$value/max(df2$value)#
+#
+df2$values[df2$variable=="A2"&df2$type=="gtg"]<-df2$value[df2$variable=="A2"&df2$type=="gtg"]/max(df2$value[df2$variable=="A2"&df2$type=="gtg"])#
+df2$values[df2$variable=="A2"&df2$type=="simple"]<-df2$value[df2$variable=="A2"&df2$type=="simple"]/max(df2$value[df2$variable=="A2"&df2$type=="simple"])#
+#
+df2$values[df2$variable=="A5"&df2$type=="gtg"]<-df2$value[df2$variable=="A5"&df2$type=="gtg"]/max(df2$value[df2$variable=="A5"&df2$type=="gtg"])#
+df2$values[df2$variable=="A5"&df2$type=="simple"]<-df2$value[df2$variable=="A5"&df2$type=="simple"]/max(df2$value[df2$variable=="A5"&df2$type=="simple"])#
+names(sim)#
+sim$Effarea#
+dim(sim$Effarea)#
+head(sim$Effarea)#
+#
+effsim<-melt(sim$Effarea)#
+#
+summary(effsim)#
+#
+names(effsim)[1]<-"time"#
+names(effsim)[2]<-"area"#
+names(effsim)[3]<-"values"#
+#
+summary(effsim)#
+#
+effsim$area<-as.numeric(effsim$area)+29#
+summary(effsim$area)#
+effsim$dat<-"effort"#
+effsim$type<-"simple"#
+effgtg<-melt(sim_gtg$Effarea)#
+names(effgtg)[1]<-"time"#
+names(effgtg)[2]<-"area"#
+names(effgtg)[3]<-"values"#
+effgtg$area<-as.numeric(effgtg$area)+29#
+effgtg$dat<-"effort"#
+effgtg$type<-"gtg"#
+#
+summary(effgtg)#
+Eff<-rbind(effsim,effgtg)#
+Eff<-Eff[Eff$time>1188,]#
+#
+Eff$time2<-indmonth[Eff$time]#
+Eff$values<-Eff$values/max(Eff$values)#
+summary(Eff)#
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=variable, lty=type), size=1.5)#
+p<-p+facet_wrap(~as.factor(time2))#
+p<-p+geom_vline(aes(xintercept=48))#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),stat = "identity", position=position_dodge())#
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p<-p+scale_fill_grey() +scale_color_grey() #
+p
+gtgvb<-cbind(data.frame(time=sim_gtg$propVBarea[,1],#
+  group=sim_gtg$propVBarea[,2],#
+  area=sim_gtg$propVBarea[,3],  #
+  type="gtg"),#
+  sim_gtg$propVBarea[,4:ncol(sim_gtg$propVBarea)])#
+#
+names(gtgvb)[5:ncol(gtgvb)]<-paste("A",sim_gtg$sage:sim_gtg$nage, sep="")#
+head(gtgvb)#
+#
+ngtgvb<-aggregate(gtgvb[,5:ncol(gtgvb)], by=list(gtgvb$time,gtgvb$area,gtgvb$type), sum)#
+#
+head(ngtgvb)#
+#
+names(ngtgvb)[1]<-"time"#
+names(ngtgvb)[2]<-"area"#
+names(ngtgvb)[3]<-"type"#
+#
+molgtgvb<-melt(ngtgvb, id.vars=list("area", "time", "type"))#
+head(molgtgvb)#
+#
+df1<-rbind(molgtgvb,molsimvb)#
+#
+df2<-df1[df1$variable=="A2"|df1$variable=="A5",]#
+df2$time2<-indmonth[df2$time]#
+#
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+#
+df2$values<-df2$value/max(df2$value)#
+#
+#df2$values[df2$variable=="A2"&df2$type=="gtg"]<-df2$value[df2$variable=="A2"&df2$type=="gtg"]/max(df2$value[df2$variable=="A2"&df2$type=="gtg"])#
+#df2$values[df2$variable=="A2"&df2$type=="simple"]<-df2$value[df2$variable=="A2"&df2$type=="simple"]/max(df2$value[df2$variable=="A2"&df2$type=="simple"])#
+#
+#df2$values[df2$variable=="A5"&df2$type=="gtg"]<-df2$value[df2$variable=="A5"&df2$type=="gtg"]/max(df2$value[df2$variable=="A5"&df2$type=="gtg"])#
+#df2$values[df2$variable=="A5"&df2$type=="simple"]<-df2$value[df2$variable=="A5"&df2$type=="simple"]/max(df2$value[df2$variable=="A5"&df2$type=="simple"])#
+names(sim)#
+sim$Effarea#
+dim(sim$Effarea)#
+head(sim$Effarea)#
+#
+effsim<-melt(sim$Effarea)#
+#
+summary(effsim)#
+#
+names(effsim)[1]<-"time"#
+names(effsim)[2]<-"area"#
+names(effsim)[3]<-"values"#
+#
+summary(effsim)#
+#
+effsim$area<-as.numeric(effsim$area)+29#
+summary(effsim$area)#
+effsim$dat<-"effort"#
+effsim$type<-"simple"#
+effgtg<-melt(sim_gtg$Effarea)#
+names(effgtg)[1]<-"time"#
+names(effgtg)[2]<-"area"#
+names(effgtg)[3]<-"values"#
+effgtg$area<-as.numeric(effgtg$area)+29#
+effgtg$dat<-"effort"#
+effgtg$type<-"gtg"#
+#
+summary(effgtg)#
+Eff<-rbind(effsim,effgtg)#
+Eff<-Eff[Eff$time>1188,]#
+#
+Eff$time2<-indmonth[Eff$time]#
+Eff$values<-Eff$values/max(Eff$values)#
+summary(Eff)#
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=type.convert, lty=variable), size=1.)#
+p<-p+facet_wrap(~as.factor(time2), ncol =3,)#
+p<-p+geom_vline(aes(xintercept=48))#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),stat = "identity", position=position_dodge())#
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p<-p+scale_fill_grey() +scale_color_grey() #
+p
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=type, lty=variable), size=1.)#
+p<-p+facet_wrap(~as.factor(time2), ncol =3,)#
+p<-p+geom_vline(aes(xintercept=48))#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),stat = "identity", position=position_dodge())#
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p<-p+scale_fill_grey() +scale_color_grey() #
+p
+names(sim)#
+sim$Effarea#
+dim(sim$Effarea)#
+head(sim$Effarea)#
+#
+effsim<-melt(sim$Effarea)#
+#
+summary(effsim)#
+#
+names(effsim)[1]<-"time"#
+names(effsim)[2]<-"area"#
+names(effsim)[3]<-"values"#
+#
+summary(effsim)#
+#
+effsim$area<-as.numeric(effsim$area)+29#
+summary(effsim$area)#
+effsim$dat<-"effort"#
+effsim$type<-"simple"#
+effgtg<-melt(sim_gtg$Effarea)#
+names(effgtg)[1]<-"time"#
+names(effgtg)[2]<-"area"#
+names(effgtg)[3]<-"values"#
+effgtg$area<-as.numeric(effgtg$area)+29#
+effgtg$dat<-"effort"#
+effgtg$type<-"gtg"#
+#
+summary(effgtg)#
+Eff<-rbind(effsim,effgtg)#
+Eff<-Eff[Eff$time>1188,]#
+#
+Eff$time2<-indmonth[Eff$time]#
+Eff$values<-Eff$values/max(Eff$values)#
+summary(Eff)#
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=type, lty=variable), size=1.)#
+p<-p+facet_wrap(~as.factor(time2), ncol =3,)#
+p<-p+geom_vline(aes(xintercept=48))#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),stat = "identity", position=position_dodge())#
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p<-p+scale_fill_grey() +scale_color_grey() #
+p
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+sim <- read.rep("../admb/OM/simple/lagrangian_OM.rep")#
+sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")#
+#
+names(sim)#
+dim(sim$propVBarea)#
+head(sim$propVBarea)#
+simvb<-(cbind(data.frame(time=sim$propVBarea[,1],#
+  area=sim$propVBarea[,2],#
+  type="simple"),#
+  sim$propVBarea[,3:ncol(sim$propVBarea)]))#
+names(simvb)[4:ncol(simvb)]<-paste("A",sim$sage:sim$nage, sep="")#
+#
+head(simvb)#
+molsimvb<-melt(simvb, id.vars=list("area", "time", "type"))#
+head(molsimvb)#
+names(sim_gtg)#
+#
+gtgvb<-cbind(data.frame(time=sim_gtg$propVBarea[,1],#
+  group=sim_gtg$propVBarea[,2],#
+  area=sim_gtg$propVBarea[,3],  #
+  type="gtg"),#
+  sim_gtg$propVBarea[,4:ncol(sim_gtg$propVBarea)])#
+#
+names(gtgvb)[5:ncol(gtgvb)]<-paste("A",sim_gtg$sage:sim_gtg$nage, sep="")#
+head(gtgvb)#
+#
+ngtgvb<-aggregate(gtgvb[,5:ncol(gtgvb)], by=list(gtgvb$time,gtgvb$area,gtgvb$type), sum)#
+#
+head(ngtgvb)#
+#
+names(ngtgvb)[1]<-"time"#
+names(ngtgvb)[2]<-"area"#
+names(ngtgvb)[3]<-"type"#
+#
+molgtgvb<-melt(ngtgvb, id.vars=list("area", "time", "type"))#
+head(molgtgvb)#
+#
+df1<-rbind(molgtgvb,molsimvb)#
+#
+df2<-df1[df1$variable=="A2"|df1$variable=="A5",]#
+df2$time2<-indmonth[df2$time]#
+#
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+#
+#df2$values<-df2$value/max(df2$value)#
+#
+#df2$values[df2$variable=="A2"&df2$type=="gtg"]<-df2$value[df2$variable=="A2"&df2$type=="gtg"]/max(df2$value[df2$variable=="A2"&df2$type=="gtg"])#
+#df2$values[df2$variable=="A2"&df2$type=="simple"]<-df2$value[df2$variable=="A2"&df2$type=="simple"]/max(df2$value[df2$variable=="A2"&df2$type=="simple"])#
+#
+#df2$values[df2$variable=="A5"&df2$type=="gtg"]<-df2$value[df2$variable=="A5"&df2$type=="gtg"]/max(df2$value[df2$variable=="A5"&df2$type=="gtg"])#
+#df2$values[df2$variable=="A5"&df2$type=="simple"]<-df2$value[df2$variable=="A5"&df2$type=="simple"]/max(df2$value[df2$variable=="A5"&df2$type=="simple"])#
+names(sim)#
+sim$Effarea#
+dim(sim$Effarea)#
+head(sim$Effarea)#
+#
+effsim<-melt(sim$Effarea)#
+#
+summary(effsim)#
+#
+names(effsim)[1]<-"time"#
+names(effsim)[2]<-"area"#
+names(effsim)[3]<-"values"#
+#
+summary(effsim)#
+#
+effsim$area<-as.numeric(effsim$area)+29#
+summary(effsim$area)#
+effsim$dat<-"effort"#
+effsim$type<-"simple"#
+effgtg<-melt(sim_gtg$Effarea)#
+names(effgtg)[1]<-"time"#
+names(effgtg)[2]<-"area"#
+names(effgtg)[3]<-"values"#
+effgtg$area<-as.numeric(effgtg$area)+29#
+effgtg$dat<-"effort"#
+effgtg$type<-"gtg"#
+#
+summary(effgtg)#
+Eff<-rbind(effsim,effgtg)#
+Eff<-Eff[Eff$time>1188,]#
+#
+Eff$time2<-indmonth[Eff$time]#
+Eff$values<-Eff$values/max(Eff$values)#
+summary(Eff)#
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=type, lty=variable), size=1.)#
+p<-p+facet_wrap(~as.factor(time2), ncol =3,)#
+p<-p+geom_vline(aes(xintercept=48))#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),stat = "identity", position=position_dodge())#
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p<-p+scale_fill_grey() +scale_color_grey() #
+p
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=type, lty=variable), size=1.)#
+p<-p+facet_wrap(~as.factor(time2), ncol =3,)#
+p<-p+geom_vline(aes(xintercept=48))#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),stat = "identity", position=position_dodge())#
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p<-p+scale_fill_grey() +scale_color_grey() #
+p<- p+ scale_fill_discrete("")+ scale_color_discrete("")#
+p
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+sim <- read.rep("../admb/OM/simple/lagrangian_OM.rep")#
+sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")#
+#
+names(sim)#
+dim(sim$propVBarea)#
+head(sim$propVBarea)#
+simvb<-(cbind(data.frame(time=sim$propVBarea[,1],#
+  area=sim$propVBarea[,2],#
+  type="simple"),#
+  sim$propVBarea[,3:ncol(sim$propVBarea)]))#
+names(simvb)[4:ncol(simvb)]<-paste("A",sim$sage:sim$nage, sep="")#
+#
+head(simvb)#
+molsimvb<-melt(simvb, id.vars=list("area", "time", "type"))#
+head(molsimvb)#
+names(sim_gtg)#
+#
+gtgvb<-cbind(data.frame(time=sim_gtg$propVBarea[,1],#
+  group=sim_gtg$propVBarea[,2],#
+  area=sim_gtg$propVBarea[,3],  #
+  type="gtg"),#
+  sim_gtg$propVBarea[,4:ncol(sim_gtg$propVBarea)])#
+#
+names(gtgvb)[5:ncol(gtgvb)]<-paste("A",sim_gtg$sage:sim_gtg$nage, sep="")#
+head(gtgvb)#
+#
+ngtgvb<-aggregate(gtgvb[,5:ncol(gtgvb)], by=list(gtgvb$time,gtgvb$area,gtgvb$type), sum)#
+#
+head(ngtgvb)#
+#
+names(ngtgvb)[1]<-"time"#
+names(ngtgvb)[2]<-"area"#
+names(ngtgvb)[3]<-"type"#
+#
+molgtgvb<-melt(ngtgvb, id.vars=list("area", "time", "type"))#
+head(molgtgvb)#
+#
+df1<-rbind(molgtgvb,molsimvb)#
+#
+df2<-df1[df1$variable=="A2"|df1$variable=="A5",]#
+df2$time2<-indmonth[df2$time]#
+#
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+#
+df2$values<-df2$value#/max(df2$value)#
+#df2$values<-df2$value/max(df2$value)#
+#
+#df2$values[df2$variable=="A2"&df2$type=="gtg"]<-df2$value[df2$variable=="A2"&df2$type=="gtg"]/max(df2$value[df2$variable=="A2"&df2$type=="gtg"])#
+#df2$values[df2$variable=="A2"&df2$type=="simple"]<-df2$value[df2$variable=="A2"&df2$type=="simple"]/max(df2$value[df2$variable=="A2"&df2$type=="simple"])#
+#
+#df2$values[df2$variable=="A5"&df2$type=="gtg"]<-df2$value[df2$variable=="A5"&df2$type=="gtg"]/max(df2$value[df2$variable=="A5"&df2$type=="gtg"])#
+#df2$values[df2$variable=="A5"&df2$type=="simple"]<-df2$value[df2$variable=="A5"&df2$type=="simple"]/max(df2$value[df2$variable=="A5"&df2$type=="simple"])#
+names(sim)#
+sim$Effarea#
+dim(sim$Effarea)#
+head(sim$Effarea)#
+#
+effsim<-melt(sim$Effarea)#
+#
+summary(effsim)#
+#
+names(effsim)[1]<-"time"#
+names(effsim)[2]<-"area"#
+names(effsim)[3]<-"values"#
+#
+summary(effsim)#
+#
+effsim$area<-as.numeric(effsim$area)+29#
+summary(effsim$area)#
+effsim$dat<-"effort"#
+effsim$type<-"simple"#
+effgtg<-melt(sim_gtg$Effarea)#
+names(effgtg)[1]<-"time"#
+names(effgtg)[2]<-"area"#
+names(effgtg)[3]<-"values"#
+effgtg$area<-as.numeric(effgtg$area)+29#
+effgtg$dat<-"effort"#
+effgtg$type<-"gtg"#
+#
+summary(effgtg)#
+Eff<-rbind(effsim,effgtg)#
+Eff<-Eff[Eff$time>1188,]#
+#
+Eff$time2<-indmonth[Eff$time]#
+Eff$values<-Eff$values/max(Eff$values)#
+summary(Eff)#
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=type, lty=variable), size=1.)#
+p<-p+facet_wrap(~as.factor(time2), ncol =3,)#
+p<-p+geom_vline(aes(xintercept=48))#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),stat = "identity", position=position_dodge())#
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p<-p+scale_fill_grey() +scale_color_grey() #
+p<- p+ scale_fill_discrete("")+ scale_color_discrete("")#
+p
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=type, lty=variable), size=1.)#
+p<-p+facet_wrap(~as.factor(time2), ncol =3,)#
+p<-p+geom_vline(aes(xintercept=48))#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),stat = "identity", position=position_dodge())#
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p<-p+scale_fill_grey("") +scale_color_grey("") #
+p
+df2$values<-df2$value/max(df2$value)#
+#
+#df2$values[df2$variable=="A2"&df2$type=="gtg"]<-df2$value[df2$variable=="A2"&df2$type=="gtg"]/max(df2$value[df2$variable=="A2"&df2$type=="gtg"])#
+#df2$values[df2$variable=="A2"&df2$type=="simple"]<-df2$value[df2$variable=="A2"&df2$type=="simple"]/max(df2$value[df2$variable=="A2"&df2$type=="simple"])#
+#
+#df2$values[df2$variable=="A5"&df2$type=="gtg"]<-df2$value[df2$variable=="A5"&df2$type=="gtg"]/max(df2$value[df2$variable=="A5"&df2$type=="gtg"])#
+#df2$values[df2$variable=="A5"&df2$type=="simple"]<-df2$value[df2$variable=="A5"&df2$type=="simple"]/max(df2$value[df2$variable=="A5"&df2$type=="simple"])#
+names(sim)#
+sim$Effarea#
+dim(sim$Effarea)#
+head(sim$Effarea)#
+#
+effsim<-melt(sim$Effarea)#
+#
+summary(effsim)#
+#
+names(effsim)[1]<-"time"#
+names(effsim)[2]<-"area"#
+names(effsim)[3]<-"values"#
+#
+summary(effsim)#
+#
+effsim$area<-as.numeric(effsim$area)+29#
+summary(effsim$area)#
+effsim$dat<-"effort"#
+effsim$type<-"simple"#
+effgtg<-melt(sim_gtg$Effarea)#
+names(effgtg)[1]<-"time"#
+names(effgtg)[2]<-"area"#
+names(effgtg)[3]<-"values"#
+effgtg$area<-as.numeric(effgtg$area)+29#
+effgtg$dat<-"effort"#
+effgtg$type<-"gtg"#
+#
+summary(effgtg)#
+Eff<-rbind(effsim,effgtg)#
+Eff<-Eff[Eff$time>1188,]#
+#
+Eff$time2<-indmonth[Eff$time]#
+Eff$values<-Eff$values/max(Eff$values)#
+summary(Eff)#
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=type, lty=variable), size=1.)#
+p<-p+facet_wrap(~as.factor(time2), ncol =3,)#
+p<-p+geom_vline(aes(xintercept=48))#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),stat = "identity", position=position_dodge())#
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p<-p+scale_fill_grey("") +scale_color_grey("") #
+p
+df2$values[df2$variable=="A2"&df2$type=="gtg"]<-df2$value[df2$variable=="A2"&df2$type=="gtg"]/max(df2$value[df2$variable=="A2"&df2$type=="gtg"])#
+df2$values[df2$variable=="A2"&df2$type=="simple"]<-df2$value[df2$variable=="A2"&df2$type=="simple"]/max(df2$value[df2$variable=="A2"&df2$type=="simple"])#
+#
+df2$values[df2$variable=="A5"&df2$type=="gtg"]<-df2$value[df2$variable=="A5"&df2$type=="gtg"]/max(df2$value[df2$variable=="A5"&df2$type=="gtg"])#
+df2$values[df2$variable=="A5"&df2$type=="simple"]<-df2$value[df2$variable=="A5"&df2$type=="simple"]/max(df2$value[df2$variable=="A5"&df2$type=="simple"])#
+names(sim)#
+sim$Effarea#
+dim(sim$Effarea)#
+head(sim$Effarea)#
+#
+effsim<-melt(sim$Effarea)#
+#
+summary(effsim)#
+#
+names(effsim)[1]<-"time"#
+names(effsim)[2]<-"area"#
+names(effsim)[3]<-"values"#
+#
+summary(effsim)#
+#
+effsim$area<-as.numeric(effsim$area)+29#
+summary(effsim$area)#
+effsim$dat<-"effort"#
+effsim$type<-"simple"#
+effgtg<-melt(sim_gtg$Effarea)#
+names(effgtg)[1]<-"time"#
+names(effgtg)[2]<-"area"#
+names(effgtg)[3]<-"values"#
+effgtg$area<-as.numeric(effgtg$area)+29#
+effgtg$dat<-"effort"#
+effgtg$type<-"gtg"#
+#
+summary(effgtg)#
+Eff<-rbind(effsim,effgtg)#
+Eff<-Eff[Eff$time>1188,]#
+#
+Eff$time2<-indmonth[Eff$time]#
+Eff$values<-Eff$values/max(Eff$values)#
+summary(Eff)#
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=type, lty=variable), size=1.)#
+p<-p+facet_wrap(~as.factor(time2), ncol =3,)#
+p<-p+geom_vline(aes(xintercept=48))#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),stat = "identity", position=position_dodge())#
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p<-p+scale_fill_grey("") +scale_color_grey("") #
+p
+p<-p+scale_fill_grey("") +scale_color_grey("") +scale_linetype_manual(values=c(2,1))
+p
+df2$values[df2$variable=="A2"]<-df2$value[df2$variable=="A2"]/max(df2$value[df2$variable=="A2"])
+df2$values[df2$variable=="A5"]<-df2$value[df2$variable=="A5"]/max(df2$value[df2$variable=="A5"])
+df2$time2<-indmonth[df2$time]#
+#
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+#
+#df2$values<-df2$value#/max(df2$value)#
+df2$values<-df2$value/max(df2$value)#
+#
+df2$values[df2$variable=="A2"]<-df2$value[df2$variable=="A2"]/max(df2$value[df2$variable=="A2"])#
+df2$values[df2$variable=="A5"]<-df2$value[df2$variable=="A5"]/max(df2$value[df2$variable=="A5"])
+names(sim)#
+sim$Effarea#
+dim(sim$Effarea)#
+head(sim$Effarea)#
+#
+effsim<-melt(sim$Effarea)#
+#
+summary(effsim)#
+#
+names(effsim)[1]<-"time"#
+names(effsim)[2]<-"area"#
+names(effsim)[3]<-"values"#
+#
+summary(effsim)#
+#
+effsim$area<-as.numeric(effsim$area)+29#
+summary(effsim$area)#
+effsim$dat<-"effort"#
+effsim$type<-"simple"#
+effgtg<-melt(sim_gtg$Effarea)#
+names(effgtg)[1]<-"time"#
+names(effgtg)[2]<-"area"#
+names(effgtg)[3]<-"values"#
+effgtg$area<-as.numeric(effgtg$area)+29#
+effgtg$dat<-"effort"#
+effgtg$type<-"gtg"#
+#
+summary(effgtg)#
+Eff<-rbind(effsim,effgtg)#
+Eff<-Eff[Eff$time>1188,]#
+#
+Eff$time2<-indmonth[Eff$time]#
+Eff$values<-Eff$values/max(Eff$values)#
+summary(Eff)#
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=type, lty=variable), size=1.)#
+p<-p+facet_wrap(~as.factor(time2), ncol =3,)#
+p<-p+geom_vline(aes(xintercept=48))#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),stat = "identity", position=position_dodge())#
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p<-p+scale_fill_grey("") +scale_color_grey("") +scale_linetype_manual(values=c(2,1)) #
+p
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+sim <- read.rep("../admb/OM/simple/lagrangian_OM.rep")#
+sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")#
+#
+names(sim)#
+dim(sim$propVBarea)#
+head(sim$propVBarea)#
+simvb<-(cbind(data.frame(time=sim$propVBarea[,1],#
+  area=sim$propVBarea[,2],#
+  type="simple"),#
+  sim$propVBarea[,3:ncol(sim$propVBarea)]))#
+names(simvb)[4:ncol(simvb)]<-paste("A",sim$sage:sim$nage, sep="")#
+#
+head(simvb)#
+molsimvb<-melt(simvb, id.vars=list("area", "time", "type"))#
+head(molsimvb)#
+names(sim_gtg)#
+#
+gtgvb<-cbind(data.frame(time=sim_gtg$propVBarea[,1],#
+  group=sim_gtg$propVBarea[,2],#
+  area=sim_gtg$propVBarea[,3],  #
+  type="gtg"),#
+  sim_gtg$propVBarea[,4:ncol(sim_gtg$propVBarea)])#
+#
+names(gtgvb)[5:ncol(gtgvb)]<-paste("A",sim_gtg$sage:sim_gtg$nage, sep="")#
+head(gtgvb)#
+#
+ngtgvb<-aggregate(gtgvb[,5:ncol(gtgvb)], by=list(gtgvb$time,gtgvb$area,gtgvb$type), sum)#
+#
+head(ngtgvb)#
+#
+names(ngtgvb)[1]<-"time"#
+names(ngtgvb)[2]<-"area"#
+names(ngtgvb)[3]<-"type"#
+#
+molgtgvb<-melt(ngtgvb, id.vars=list("area", "time", "type"))#
+head(molgtgvb)#
+#
+df1<-rbind(molgtgvb,molsimvb)#
+#
+df2<-df1[df1$variable=="A2"|df1$variable=="A5",]
+df2<-df1[df1$variable=="A1"|df1$variable=="A5",]
+df2$time2<-indmonth[df2$time]#
+#
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+#
+#df2$values<-df2$value#/max(df2$value)#
+df2$values<-df2$value/max(df2$value)#
+#
+#df2$values[df2$variable=="A1"]<-df2$value[df2$variable=="A1"]/max(df2$value[df2$variable=="A1"])#
+#df2$values[df2$variable=="A5"]<-df2$value[df2$variable=="A5"]/max(df2$value[df2$variable=="A5"])#
+#df2$values[df2$variable=="A2"&df2$type=="gtg"]<-df2$value[df2$variable=="A2"&df2$type=="gtg"]/max(df2$value[df2$variable=="A2"&df2$type=="gtg"])#
+#df2$values[df2$variable=="A2"&df2$type=="simple"]<-df2$value[df2$variable=="A2"&df2$type=="simple"]/max(df2$value[df2$variable=="A2"&df2$type=="simple"])#
+#
+#df2$values[df2$variable=="A5"&df2$type=="gtg"]<-df2$value[df2$variable=="A5"&df2$type=="gtg"]/max(df2$value[df2$variable=="A5"&df2$type=="gtg"])#
+#df2$values[df2$variable=="A5"&df2$type=="simple"]<-df2$value[df2$variable=="A5"&df2$type=="simple"]/max(df2$value[df2$variable=="A5"&df2$type=="simple"])#
+names(sim)#
+sim$Effarea#
+dim(sim$Effarea)#
+head(sim$Effarea)#
+#
+effsim<-melt(sim$Effarea)#
+#
+summary(effsim)#
+#
+names(effsim)[1]<-"time"#
+names(effsim)[2]<-"area"#
+names(effsim)[3]<-"values"#
+#
+summary(effsim)#
+#
+effsim$area<-as.numeric(effsim$area)+29#
+summary(effsim$area)#
+effsim$dat<-"effort"#
+effsim$type<-"simple"#
+effgtg<-melt(sim_gtg$Effarea)#
+names(effgtg)[1]<-"time"#
+names(effgtg)[2]<-"area"#
+names(effgtg)[3]<-"values"#
+effgtg$area<-as.numeric(effgtg$area)+29#
+effgtg$dat<-"effort"#
+effgtg$type<-"gtg"#
+#
+summary(effgtg)#
+Eff<-rbind(effsim,effgtg)#
+Eff<-Eff[Eff$time>1188,]#
+#
+Eff$time2<-indmonth[Eff$time]#
+Eff$values<-Eff$values/max(Eff$values)#
+summary(Eff)#
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=type, lty=variable), size=1.)#
+p<-p+facet_wrap(~as.factor(time2), ncol =3,)#
+p<-p+geom_vline(aes(xintercept=48))#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),stat = "identity", position=position_dodge())#
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p<-p+scale_fill_grey("") +scale_color_grey("") +scale_linetype_manual(values=c(2,1)) #
+p
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=type, lty=variable), size=1.)#
+p<-p+facet_wrap(~as.factor(time2), ncol =3,)#
+p <- p + geom_vline(xintercept=48.5, linetype=3,alpha=0.3)#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),stat = "identity", position=position_dodge())#
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p<-p+scale_fill_grey("") +scale_color_grey("") #
+p <- p + scale_linetype_manual(breaks=c("1","5"), values=c(3,1))#
+p <- p + ylab("Relative Biomass/Effort")#
+#
+p
+p<-p+facet_wrap(~as.factor(time2), ncol =3)
+p
+summary(df2)
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=type, lty=variable), size=1.)#
+p<-p+facet_wrap(~as.factor(time2), ncol =3)#
+p <- p + geom_vline(xintercept=48.5, linetype=3,alpha=0.3)#
+p
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=type, lty=variable), size=1.)#
+p<-p+facet_wrap(~as.factor(time2), ncol =3)#
+p
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=type, lty=variable), size=1.)#
+p<-p+facet_wrap(~as.factor(time2), ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.3)#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),stat = "identity", position=position_dodge())#
+p
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=type, lty=variable), size=1.)#
+p<-p+facet_wrap(~as.factor(time2), ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.3)#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),stat = "identity", position=position_dodge())#
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=type, lty=variable), size=1.)#
+p<-p+facet_wrap(~as.factor(time2), ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.3)#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),stat = "identity", position=position_dodge())#
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p<-p+scale_fill_grey("") +scale_color_grey("") #
+p <- p + scale_linetype_manual(breaks=c("1","5"), values=c(3,1))#
+p <- p + ylab("Relative Biomass/Effort")#
+#
+p
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=type, lty=variable), size=1.)#
+p<-p+facet_wrap(~as.factor(time2), ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.3)#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),stat = "identity", position=position_dodge())#
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p<-p+scale_fill_grey("") +scale_color_grey("") #
+p <- p + scale_linetype_manual(breaks=c("1","5"), values=c(3,1))#
+p <- p + ylab("Relative Biomass/Effort")#
+p <- p + xlab("Latitude")#
+#
+p
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=type, lty=variable), size=1.)#
+p<-p+facet_wrap(~as.factor(time2), ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.3)#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),stat = "identity", position=position_dodge())#
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p <- p + scale_color_grey("") #
+p <- p + scale_linetype_manual(breaks=c("1","5"), values=c(3,1))#
+p <- p + ylab("Relative Biomass/Effort")#
+p <- p + xlab("Latitude")#
+#
+p
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=type, lty=variable), size=1.)#
+p<-p+facet_wrap(~as.factor(time2), ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.3)#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),stat = "identity", position=position_dodge())#
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p <- p + scale_color_grey("") + scale_fill_grey("")#
+p <- p + scale_linetype_manual(breaks=c("1","5"), values=c(3,1))#
+p <- p + ylab("Relative Biomass/Effort")#
+p <- p + xlab("Latitude")
+names(sim)#
+dim(sim$propVBarea)#
+head(sim$propVBarea)#
+simvb<-(cbind(data.frame(time=sim$propVBarea[,1],#
+  area=sim$propVBarea[,2],#
+  type="single"),#
+  sim$propVBarea[,3:ncol(sim$propVBarea)]))#
+names(simvb)[4:ncol(simvb)]<-paste("A",sim$sage:sim$nage, sep="")#
+#
+head(simvb)#
+molsimvb<-melt(simvb, id.vars=list("area", "time", "type"))#
+head(molsimvb)#
+names(sim_gtg)#
+#
+gtgvb<-cbind(data.frame(time=sim_gtg$propVBarea[,1],#
+  group=sim_gtg$propVBarea[,2],#
+  area=sim_gtg$propVBarea[,3],  #
+  type="multiple"),#
+  sim_gtg$propVBarea[,4:ncol(sim_gtg$propVBarea)])#
+#
+names(gtgvb)[5:ncol(gtgvb)]<-paste("A",sim_gtg$sage:sim_gtg$nage, sep="")#
+head(gtgvb)#
+#
+ngtgvb<-aggregate(gtgvb[,5:ncol(gtgvb)], by=list(gtgvb$time,gtgvb$area,gtgvb$type), sum)#
+#
+head(ngtgvb)#
+#
+names(ngtgvb)[1]<-"time"#
+names(ngtgvb)[2]<-"area"#
+names(ngtgvb)[3]<-"type"#
+#
+molgtgvb<-melt(ngtgvb, id.vars=list("area", "time", "type"))#
+head(molgtgvb)#
+#
+df1<-rbind(molgtgvb,molsimvb)#
+#
+df2<-df1[df1$variable=="A1"|df1$variable=="A5",]#
+df2$time2<-indmonth[df2$time]#
+#
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+df2$age<-as.numeric(df2$variable)#
+#df2$values<-df2$value#/max(df2$value)#
+df2$values<-df2$value/max(df2$value)#
+#
+#df2$values[df2$variable=="A1"]<-df2$value[df2$variable=="A1"]/max(df2$value[df2$variable=="A1"])#
+#df2$values[df2$variable=="A5"]<-df2$value[df2$variable=="A5"]/max(df2$value[df2$variable=="A5"])#
+#df2$values[df2$variable=="A2"&df2$type=="gtg"]<-df2$value[df2$variable=="A2"&df2$type=="gtg"]/max(df2$value[df2$variable=="A2"&df2$type=="gtg"])#
+#df2$values[df2$variable=="A2"&df2$type=="simple"]<-df2$value[df2$variable=="A2"&df2$type=="simple"]/max(df2$value[df2$variable=="A2"&df2$type=="simple"])#
+#
+#df2$values[df2$variable=="A5"&df2$type=="gtg"]<-df2$value[df2$variable=="A5"&df2$type=="gtg"]/max(df2$value[df2$variable=="A5"&df2$type=="gtg"])#
+#df2$values[df2$variable=="A5"&df2$type=="simple"]<-df2$value[df2$variable=="A5"&df2$type=="simple"]/max(df2$value[df2$variable=="A5"&df2$type=="simple"])#
+names(sim)#
+sim$Effarea#
+dim(sim$Effarea)#
+head(sim$Effarea)#
+#
+effsim<-melt(sim$Effarea)#
+#
+summary(effsim)#
+#
+names(effsim)[1]<-"time"#
+names(effsim)[2]<-"area"#
+names(effsim)[3]<-"values"#
+#
+summary(effsim)#
+#
+effsim$area<-as.numeric(effsim$area)+29#
+summary(effsim$area)#
+effsim$dat<-"effort"#
+effsim$type<-"single"#
+effgtg<-melt(sim_gtg$Effarea)#
+names(effgtg)[1]<-"time"#
+names(effgtg)[2]<-"area"#
+names(effgtg)[3]<-"values"#
+effgtg$area<-as.numeric(effgtg$area)+29#
+effgtg$dat<-"effort"#
+effgtg$type<-"multiple"#
+#
+summary(effgtg)#
+Eff<-rbind(effsim,effgtg)#
+Eff<-Eff[Eff$time>1188,]#
+#
+Eff$time2<-indmonth[Eff$time]#
+Eff$values<-Eff$values/max(Eff$values)#
+summary(Eff)#
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=type, lty=variable), size=1.)#
+p<-p+facet_wrap(~as.factor(time2), ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.3)#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),stat = "identity", position=position_dodge())#
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p <- p + scale_color_grey("") + scale_fill_grey("")#
+p <- p + scale_linetype_manual(breaks=c("1","5"), values=c(3,1))#
+p <- p + ylab("Relative Biomass/Effort")#
+p <- p + xlab("Latitude")#
+#
+p
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=type, lty=age), size=1.)#
+p<-p+facet_wrap(~as.factor(time2), ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.3)#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),stat = "identity", position=position_dodge())#
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p <- p + scale_color_grey("") + scale_fill_grey("")#
+p <- p + scale_linetype_manual(breaks=c("1","5"), values=c(3,1))#
+p <- p + ylab("Relative Biomass/Effort")#
+p <- p + xlab("Latitude")#
+#
+p
+df2$age<-as.factor(as.numeric(df2$variable))
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=type, lty=age), size=1.)#
+p<-p+facet_wrap(~as.factor(time2), ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.3)#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),stat = "identity", position=position_dodge())#
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p <- p + scale_color_grey("") + scale_fill_grey("")#
+p <- p + scale_linetype_manual(breaks=c("1","5"), values=c(3,1))#
+p <- p + ylab("Relative Biomass/Effort")#
+p <- p + xlab("Latitude")#
+#
+p
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=type, lty=age),alpha=0.3, size=1.)#
+p<-p+facet_wrap(~as.factor(time2), ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.3)#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),alpha=0.3,stat = "identity", position=position_dodge())#
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p <- p + scale_color_grey("") + scale_fill_grey("")#
+p <- p + scale_linetype_manual(breaks=c("1","5"), values=c(3,1))#
+p <- p + ylab("Relative Biomass/Effort")#
+p <- p + xlab("Latitude")#
+#
+p
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=type, lty=age),alpha=0.8, size=1.)#
+p<-p+facet_wrap(~as.factor(time2), ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),alpha=0.3,stat = "identity", position=position_dodge())#
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p <- p + scale_color_grey("") + scale_fill_grey("")#
+p <- p + scale_linetype_manual(breaks=c("1","5"), values=c(3,1))#
+p <- p + ylab("Relative Biomass/Effort")#
+p <- p + xlab("Latitude")#
+#
+p
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=type, lty=age),alpha=0.8, size=1.)#
+p<-p+facet_wrap(~as.factor(time2), ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),alpha=0.8,stat = "identity", position=position_dodge())#
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p <- p + scale_color_grey("") + scale_fill_grey("")#
+p <- p + scale_linetype_manual(breaks=c("1","5"), values=c(3,1))#
+p <- p + ylab("Relative Biomass/Effort")#
+p <- p + xlab("Latitude")#
+#
+p
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=type, lty=age),alpha=0.8, size=1.)#
+p<-p+facet_wrap(~as.factor(time2), ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),alpha=0.8,stat = "identity", position=position_dodge())#
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p <- p + scale_color_grey("") + scale_fill_grey("")#
+p <- p + scale_linetype_manual(breaks=c("1","5"), values=c(3,1))#
+p <- p + ylab("Relative Biomass/Effort")#
+p <- p + xlab("Latitude")#
+#
+p
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+df2$time2<-meses[indmonth[df2$time]]
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+df2$age<-as.factor(as.numeric(df2$variable))#
+#df2$values<-df2$value#/max(df2$value)#
+df2$values<-df2$value/max(df2$value)#
+#
+#df2$values[df2$variable=="A1"]<-df2$value[df2$variable=="A1"]/max(df2$value[df2$variable=="A1"])#
+#df2$values[df2$variable=="A5"]<-df2$value[df2$variable=="A5"]/max(df2$value[df2$variable=="A5"])#
+#df2$values[df2$variable=="A2"&df2$type=="gtg"]<-df2$value[df2$variable=="A2"&df2$type=="gtg"]/max(df2$value[df2$variable=="A2"&df2$type=="gtg"])#
+#df2$values[df2$variable=="A2"&df2$type=="simple"]<-df2$value[df2$variable=="A2"&df2$type=="simple"]/max(df2$value[df2$variable=="A2"&df2$type=="simple"])#
+#
+#df2$values[df2$variable=="A5"&df2$type=="gtg"]<-df2$value[df2$variable=="A5"&df2$type=="gtg"]/max(df2$value[df2$variable=="A5"&df2$type=="gtg"])#
+#df2$values[df2$variable=="A5"&df2$type=="simple"]<-df2$value[df2$variable=="A5"&df2$type=="simple"]/max(df2$value[df2$variable=="A5"&df2$type=="simple"])#
+names(sim)#
+sim$Effarea#
+dim(sim$Effarea)#
+head(sim$Effarea)#
+#
+effsim<-melt(sim$Effarea)#
+#
+summary(effsim)#
+#
+names(effsim)[1]<-"time"#
+names(effsim)[2]<-"area"#
+names(effsim)[3]<-"values"#
+#
+summary(effsim)#
+#
+effsim$area<-as.numeric(effsim$area)+29#
+summary(effsim$area)#
+effsim$dat<-"effort"#
+effsim$type<-"single"#
+effgtg<-melt(sim_gtg$Effarea)#
+names(effgtg)[1]<-"time"#
+names(effgtg)[2]<-"area"#
+names(effgtg)[3]<-"values"#
+effgtg$area<-as.numeric(effgtg$area)+29#
+effgtg$dat<-"effort"#
+effgtg$type<-"multiple"#
+#
+summary(effgtg)#
+Eff<-rbind(effsim,effgtg)#
+Eff<-Eff[Eff$time>1188,]
+Eff$time2<-meses[indmonth[Eff$time]]#
+Eff$values<-Eff$values/max(Eff$values)#
+summary(Eff)
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=type, lty=age),alpha=0.8, size=1.)#
+p<-p+facet_wrap(~as.factor(time2), ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),alpha=0.8,stat = "identity", position=position_dodge())#
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p <- p + scale_color_grey("") + scale_fill_grey("")#
+p <- p + scale_linetype_manual(breaks=c("1","5"), values=c(3,1))#
+p <- p + ylab("Relative Biomass/Effort")#
+p <- p + xlab("Latitude")#
+#
+p
+Eff<-arrange(transform(Eff,Month=factor(time2,levels=meses)),Month)
+summary(Eff)
+df2<-arrange(transform(df2,Month=factor(time2,levels=meses)),Month)
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=type, lty=age),alpha=0.8, size=1.)#
+p<-p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),alpha=0.8,stat = "identity", position=position_dodge())#
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p <- p + scale_color_grey("") + scale_fill_grey("")#
+p <- p + scale_linetype_manual(breaks=c("1","5"), values=c(3,1))#
+p <- p + ylab("Relative Biomass/Effort")#
+p <- p + xlab("Latitude")#
+#
+p
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=type, lty=age),alpha=0.8, size=1.)#
+p<-p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),alpha=0.8,stat = "identity", position=position_dodge())#
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p <- p + scale_color_grey("") + scale_fill_grey("")#
+p <- p + scale_linetype_manual(breaks=c("1","5"), values=c(3,1))#
+p <- p + ylab("Relative Biomass/Effort")#
+p <- p + xlab("Latitude")#
+p#
+setwd("/Users/catarinawor/Documents/hake/Lag_Model_paper")#
+ggsave(file="Figure2.pdf")
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=type, lty=age),alpha=0.8, size=1.)#
+p<-p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),alpha=0.8,stat = "identity", position=position_dodge())#
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p <- p + scale_color_grey("model") + scale_fill_grey("")#
+p <- p + scale_linetype_manual(breaks=c("1","5"), values=c(3,1))#
+p <- p + ylab("Relative Biomass/Effort")#
+p <- p + xlab("Latitude")#
+p
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=type, lty=age),alpha=0.8, size=1.)#
+p<-p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),alpha=0.8,stat = "identity", position=position_dodge())#
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p <- p + scale_color_grey("model") + scale_fill_grey("model")#
+p <- p + scale_linetype_manual(breaks=c("1","5"), values=c(3,1))#
+p <- p + ylab("Relative Biomass/Effort")#
+p <- p + xlab("Latitude")#
+p
+setwd("/Users/catarinawor/Documents/hake/Lag_Model_paper")
+ggsave(file="Figure2.pdf")
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=type, lty=age),alpha=0.8, size=1.)#
+p<-p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),alpha=0.8,stat = "identity", position=position_dodge())#
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p <- p + scale_color_grey("model") + scale_fill_grey("model")#
+p <- p + scale_linetype_manual(breaks=c("1","5"), values=c(3,1))#
+p <- p + ylab("Relative Biomass/Effort")#
+p <- p + xlab("Latitude (areas)")#
+p
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=type, lty=age),alpha=0.8, size=1.)#
+p<-p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),alpha=0.8,stat = "identity", position=position_dodge())#
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p <- p + scale_color_grey("model") + scale_fill_grey("model")#
+p <- p + scale_linetype_manual(breaks=c("1","5"), values=c(3,1))#
+p <- p + ylab("Relative Biomass/Effort")#
+p <- p + xlab("Latitude (areas)")#
+p
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=type, lty=age),alpha=0.8, size=1.)#
+p<-p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),alpha=0.8,stat = "identity", position=position_dodge())#
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p <- p + scale_color_grey("model") + scale_fill_grey("model")#
+p <- p + scale_linetype_manual(breaks=c("1","5"), values=c(3,1))#
+p <- p + ylab("Relative Biomass/Effort")#
+p <- p + xlab("Latitude (areas)")#
+p
+setwd("/Users/catarinawor/Documents/hake/Lag_Model_paper")#
+ggsave(file="Figure2.pdf")
+del<-6/20
+del
+del*(1:20-20/2)
+del*(1:10-10/2)
+del<-6/10
+del*(1:10-10/2)
+del
+x<- c(100,400, 600, 300, 50)
+x/sum(x)
+(x^2)/sum(x^2)
+sum((x^2)/sum(x^2))
+library(plyr)#
+library(data.table)#
+library(ggplot2)#
+library(reshape2)#
+library(animation)#
+library(ggmap)#
+#if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")#
+setwd("/Users/catarinawor/Documents/Lagrangian")#
+source("R/read.admb.R")
+basemap<-get_map(location = c(lon = -125, lat = 45),#
+    zoom = 5, maptype = "terrain")#
+p2<-  ggmap(basemap,#
+    extent = "panel",#
+    ylab = "Latitude",#
+    xlab = "Longitude")#
+p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
+p2
+instal.packages(ggmap)
+install.packages(ggmap)
+install.packages("ggmap")
+library(plyr)#
+library(data.table)#
+library(ggplot2)#
+library(reshape2)#
+library(animation)#
+library(ggmap)#
+#if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")#
+setwd("/Users/catarinawor/Documents/Lagrangian")#
+source("R/read.admb.R")#
+basemap<-get_map(location = c(lon = -125, lat = 45),#
+    zoom = 5, maptype = "terrain")#
+p2<-  ggmap(basemap,#
+    extent = "panel",#
+    ylab = "Latitude",#
+    xlab = "Longitude")#
+p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")p2 <- p2 + scale_size_area(limits=c(minVB,maxVB),max_size = 10,breaks = c(50,100,200,400,600), labels = c(50,100,200,400,600), name = "vulnerable biomass")#
+print(p2)
+?ggmap
+?get_map
+devtools::install_github("dkahle/ggmap")
+basemap<-get_map(location = c(lon = -125, lat = 45),#
+    zoom = 5, maptype = "terrain")#
+p2<-  ggmap(basemap,#
+    extent = "panel",#
+    ylab = "Latitude",#
+    xlab = "Longitude")#
+p2
+library(ggplot2)
+basemap<-get_map(location = c(lon = -125, lat = 45),#
+    zoom = 5, maptype = "terrain")#
+p2<-  ggmap(basemap,#
+    extent = "panel",#
+    ylab = "Latitude",#
+    xlab = "Longitude")#
+p2
+library(ggmap)
+install.packages("ggmap")
+library(ggmap)
+library("ggmap")

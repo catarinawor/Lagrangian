@@ -14,5 +14,9 @@
 *.htp
 *.log
 *.Rdata
+*.pdf
+*.xlsx
+*.csv
+*.png
 environ/environTS.R
 environ/PDO.csv

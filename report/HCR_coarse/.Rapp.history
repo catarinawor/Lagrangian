@@ -1,0 +1,2843 @@
+p <- ggplot(df)#
+p <- p + geom_line(aes(x=Uocean,y=value, col=ntype))#
+p <- p + geom_point(aes(x=Uocean,y=value, col=ntype))#
+p <- p + scale_y_continuous("Yield", sec.axis =  sec_axis( ~ . /max(Ytotal)*max(noverfished), name = "# of overfished and extinct stocks"),labels = scales::comma)#
+p <- p + theme_bw(16)#
+p <- p + xlab("mixed stock exploitation rate")#
+p
+p <- ggplot(df)#
+p <- p + geom_line(aes(x=Uocean,y=value, col=ntype))#
+p <- p + geom_point(aes(x=Uocean,y=value, col=ntype))#
+p <- p + scale_y_continuous("Yield", sec.axis =  sec_axis( ~ . /max(Ytotal)*max(noverfished), name = "# of overfished and extinct stocks"),labels = scales::comma)#
+p <- p + theme_bw(16)#
+p <- p + xlab("mixed stock exploitation rate")#
+p <- p + scale_color_discrete(breaks=c("# overfished","# extinct"," Yield terminal","Yield total")))#
+p
+p <- ggplot(df)#
+p <- p + geom_line(aes(x=Uocean,y=value, col=ntype))#
+p <- p + geom_point(aes(x=Uocean,y=value, col=ntype))#
+p <- p + scale_y_continuous("Yield", sec.axis =  sec_axis( ~ . /max(Ytotal)*max(noverfished), name = "# of overfished and extinct stocks"),labels = scales::comma)#
+p <- p + theme_bw(16)#
+p <- p + xlab("mixed stock exploitation rate")#
+p <- p + scale_color_discrete(breaks=c("# overfished","# extinct"," Yield terminal","Yield total"))#
+p
+p <- p + scale_color_discrete(breaks=c("# overfished","# extinct"," Yield terminal","Yield total"), title="")
+p
+p <- ggplot(df)#
+p <- p + geom_line(aes(x=Uocean,y=value, col=ntype))#
+p <- p + geom_point(aes(x=Uocean,y=value, col=ntype))#
+p <- p + scale_y_continuous("Yield", sec.axis =  sec_axis( ~ . /max(Ytotal)*max(noverfished), name = "# of overfished and extinct stocks"),labels = scales::comma)#
+p <- p + theme_bw(16)#
+p <- p + xlab("mixed stock exploitation rate")#
+p <- p + scale_color_discrete(breaks=c("# overfished","# extinct"," Yield terminal","Yield total"), title="")#
+p <- p + theme(legend.title=element_blank())#
+p
+p <- ggplot(df)#
+p <- p + geom_line(aes(x=Uocean,y=value, col=ntype))#
+p <- p + geom_point(aes(x=Uocean,y=value, col=ntype))#
+p <- p + scale_y_continuous("Yield", sec.axis =  sec_axis( ~ . /max(Ytotal)*max(noverfished), name = "# of overfished and extinct stocks"),labels = scales::comma)#
+p <- p + theme_bw(16)#
+p <- p + xlab("mixed stock exploitation rate")#
+p <- p + scale_color_discrete(breaks=c("# overfished","# extinct"," Yield terminal","Yield total"))#
+p <- p + theme(legend.title=element_blank())#
+p
+DIRS<-c("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_nostRec_m2"#
+,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_nostRec_m2")#
+#DIRS<-c("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_nostRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_onestRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_twostRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_nostRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_onestRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_twostRec_limit")#
+#DIRS<-c("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_nostRec"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_onestRec"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_twostRec"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_nostRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_onestRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_twostRec_limit")#
+#DIRS<-c("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_Best_nostRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_Best_onestRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_Best_twostRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_nostRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_onestRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_twostRec_m2")#
+Rfiles<-list()#
+SIMSdat<-list()#
+#
+for(d in 1:length(DIRS)){#
+#
+    Rfiles[[d]]<-list.files(DIRS[[d]],pattern="\\.Rdata",full.name=TRUE)#
+#
+    tmp_SIMS<-list()#
+    for(i in 1:length(Rfiles[[d]])){#
+        load(Rfiles[[d]][i])#
+        tmp_SIMS[[i]]<-sims#
+    }#
+    SIMSdat[[d]]<-tmp_SIMS#
+#
+}#
+plotlib<-"/Users/catarinawor/Documents/Lagrangian/R/plot_routines/HCR_noerror"#
+plotfiles <- list.files(plotlib,pattern="plot",full.name=TRUE)#
+#load graphing routinesfor#
+for(p in 1:length(plotfiles)){#
+    source(plotfiles[p])#
+}#
+#
+M<-SIMSdat[[1]]#
+Msq<-SIMSdat[[2]]
+M1<-SIMSdat[[1]]#
+Msq1<-SIMSdat[[2]]#
+M2<-SIMSdat[[1]]#
+Msq2<-SIMSdat[[2]]#
+M3<-SIMSdat[[1]]#
+Msq3<-SIMSdat[[2]]
+require(reshape2)#
+require(tidyr)#
+require(ggplot2)#
+library(scales)#
+library(RColorBrewer)#
+library(cowplot)
+cat("plot_tradeoff")#
+#
+    n <- c(length( M1 ),length( M2 ),length( M3 ))#
+#
+    mm<-list(M1 ,M2,M3)#
+    mmsq<-list(Msq1,Msq2,Msq3)#
+#
+    slope_hcr<-NULL#
+    intercept_hcr<-NULL#
+    utility_total<-NULL#
+    utility_total2<-NULL#
+    utility_nat1<-NULL#
+    utility_nat2<-NULL#
+    yield_total<-NULL#
+    yield_nat1<-NULL#
+    yield_nat2<-NULL#
+    B40_total<-NULL#
+    scenario<-NULL#
+#
+    i=1#
+    for(d in 1:3){#
+#
+        M<-mm[[d]]#
+#
+        for(ii in 1:n[d]){#
+#
+            iniyr<-M[[ii]][[1]]$"nyr"+1#
+            fimyr<-M[[ii]][[1]]$"proj_yr"#
+            B40_total[i]<-sum((M[[ii]][[1]]$ytB/M[[ii]][[1]]$Bo)[iniyr:fimyr]<0.4)/length(iniyr:fimyr)#
+#
+            slope_hcr[i]<-M[[ii]][[1]]$slope_hcr#
+            intercept_hcr[i]<-M[[ii]][[1]]$intercept_hcr#
+            utility_total[i]<-mean(log(apply(M[[ii]][[1]]$yYieldNat[101:160,],1,sum)+1))#
+            utility_total2[i]<-mean(log(M[[ii]][[1]]$yYieldNat[101:160,1]+1))*sum(log(M[[ii]][[1]]$yYieldNat[101:160,2]+1))#
+            utility_nat1[i]<-mean(log(M[[ii]][[1]]$yYieldNat[101:160,1]+1))#
+            utility_nat2[i]<-mean(log(M[[ii]][[1]]$yYieldNat[101:160,2]+1))#
+            yield_total[i]<-mean(apply(M[[ii]][[1]]$yYieldNat[101:160,],1,sum))#
+            yield_nat1[i]<-mean((M[[ii]][[1]]$yYieldNat[101:160,1]))#
+            yield_nat2[i]<-mean((M[[ii]][[1]]$yYieldNat[101:160,2]))#
+#
+            scenario[i]<-d#
+            i=i+1#
+        }#
+#
+    }#
+#
+    length(slope_hcr)#
+    slope_hcr_sq<-NULL#
+    intercept_hcr_sq<-NULL#
+    utility_total_sq<-NULL#
+    utility_total2_sq<-NULL#
+    utility_nat1_sq<-NULL#
+    utility_nat2_sq<-NULL#
+    yield_total_sq<-NULL#
+    yield_nat1_sq<-NULL#
+    yield_nat2_sq<-NULL#
+    B40_total_sq<-NULL#
+    scenario_sq<-NULL#
+#
+    nsq<- c(length( Msq1 ),length( Msq2 ),length( Msq3 ))#
+    y<-1#
+#
+    for(dd in 1:3){#
+#
+        Msq<-mmsq[[dd]]#
+#
+        for(yy in 1:nsq[[dd]]){#
+#
+            slope_hcr_sq[y]<-999#
+            intercept_hcr_sq[y]<-999#
+            utility_total_sq[y]<-sum(log(apply(Msq[[yy]][[1]]$yYieldNat[101:160,],1,sum)+1))#
+            utility_total2_sq[y]<-mean(log(Msq[[yy]][[1]]$yYieldNat[101:160,1]+1))*sum(log(Msq[[yy]][[1]]$yYieldNat[101:160,2]+1))#
+            utility_nat1_sq[y]<-mean(log(Msq[[yy]][[1]]$yYieldNat[101:160,1]+1))#
+            utility_nat2_sq[y]<-mean(log(Msq[[yy]][[1]]$yYieldNat[101:160,2]+1))#
+            yield_total_sq[y]<-mean(apply(Msq[[yy]][[1]]$yYieldNat[101:160,],1,sum))#
+            yield_nat1_sq[y]<-mean((Msq[[yy]][[1]]$yYieldNat[101:160,1]))#
+            yield_nat2_sq[y]<-mean((Msq[[yy]][[1]]$yYieldNat[101:160,2]))#
+            B40_total_sq[y]<-sum((Msq[[yy]][[1]]$ytB/Msq[[yy]][[1]]$Bo)[iniyr:fimyr]<0.4)/length(iniyr:fimyr)#
+            scenario_sq[y]<-dd#
+            y=y+1#
+        }#
+#
+    }#
+#
+    dflu<-data.frame(slope_hcr=slope_hcr,intercept_hcr=intercept_hcr,#
+        utility_total2=utility_total2,utility_total=utility_total,utility_nat1=utility_nat1,#
+        utility_nat2=utility_nat2,yield_total=yield_total,yield_nat1=yield_nat1,#
+        yield_nat2=yield_nat2,  b40=B40_total, scenario=scenario)#
+#
+    dflusq<-data.frame(slope_hcr=slope_hcr_sq,intercept_hcr=intercept_hcr_sq,#
+        utility_total2=utility_total2_sq,utility_total=utility_total_sq,utility_nat1=utility_nat1_sq,#
+        utility_nat2=utility_nat2_sq,yield_total=yield_total_sq,yield_nat1=yield_nat1_sq,#
+        yield_nat2=yield_nat2_sq,b40=B40_total_sq,scenario=scenario_sq)#
+#
+    dflu_plot<-aggregate(dflu,list(dflu$slope_hcr,dflu$intercept_hcr, dflu$scenario), mean)#
+#
+    dflu_plotsq<-aggregate(dflusq,list(dflusq$slope_hcr,dflusq$intercept_hcr, dflusq$scenario), mean)#
+    summary(dflu_plot)#
+    head(dflu_plotsq)#
+#
+    dflu_selec<-dflu_plot#
+#
+    dfa<-rbind(dflu_selec,dflu_plotsq)#
+#
+    dfa$slope<-as.character(dfa$slope_hcr)#
+    dfa$slope[dfa$slope=="999"]<-"40:10"#
+#
+    dfa$intercept<-as.character(dfa$intercept_hcr)#
+    dfa$intercept[dfa$intercept=="999"]<-"40:10"#
+#
+    dfa$ut2tf<- -999#
+    dfa$ut2tf[which(dfa$slope=="40:10")]<-dfa$utility_total2[which(dfa$slope=="40:10")]#
+#
+    dfa$nt1tf<- -999#
+    dfa$nt1tf[which(dfa$slope=="40:10")]<-dfa$utility_nat1[which(dfa$slope=="40:10")]#
+#
+    dfa$nt2tf<- -999#
+    dfa$nt2tf[which(dfa$slope=="40:10")]<-dfa$utility_nat2[which(dfa$slope=="40:10")]#
+#
+    dfa$scn<-"no strong recruitment"#
+    dfa$scn[dfa$scenario==2]<-"one strong recruitment"#
+    dfa$scn[dfa$scenario==3]<-"two strong recruitments"#
+#
+    dfa$b40tf<- -999#
+    dfa$b40tf[dfa$slope=="40:10"]<-dfa$b40[which(dfa$slope=="40:10")]#
+#
+summary(dfa)#
+#
+    dfc<-dfa[dfa$intercept_hcr<0.4|dfa$intercept_hcr>2,] #
+    dfcr<-dfc#
+    summary(dfcr)#
+#
+    dfcr$slope<-as.factor(dfcr$slope)#
+    dfcr$intercept<-as.factor(dfcr$intercept)#
+    levels(dfcr$intercept)#
+#
+    dfcr$utility_nat2_sc[dfcr$scenario==1]<-dfcr$utility_nat2[dfcr$scenario==1]/max(dfcr$utility_nat2[dfcr$scenario==1])#
+    dfcr$utility_nat2_sc[dfcr$scenario==2]<-dfcr$utility_nat2[dfcr$scenario==2]/max(dfcr$utility_nat2[dfcr$scenario==2])#
+    dfcr$utility_nat2_sc[dfcr$scenario==3]<-dfcr$utility_nat2[dfcr$scenario==3]/max(dfcr$utility_nat2[dfcr$scenario==3])#
+    dfcr$utility_nat1_sc[dfcr$scenario==1]<-dfcr$utility_nat1[dfcr$scenario==1]/max(dfcr$utility_nat1[dfcr$scenario==1])#
+    dfcr$utility_nat1_sc[dfcr$scenario==2]<-dfcr$utility_nat1[dfcr$scenario==2]/max(dfcr$utility_nat1[dfcr$scenario==2])#
+    dfcr$utility_nat1_sc[dfcr$scenario==3]<-dfcr$utility_nat1[dfcr$scenario==3]/max(dfcr$utility_nat1[dfcr$scenario==3])#
+    dfcr$yield_nat2_sc[dfcr$scenario==1]<-dfcr$yield_nat2[dfcr$scenario==1]/max(dfcr$yield_nat2[dfcr$scenario==1])#
+    dfcr$yield_nat2_sc[dfcr$scenario==2]<-dfcr$yield_nat2[dfcr$scenario==2]/max(dfcr$yield_nat2[dfcr$scenario==2])#
+    dfcr$yield_nat2_sc[dfcr$scenario==3]<-dfcr$yield_nat2[dfcr$scenario==3]/max(dfcr$yield_nat2[dfcr$scenario==3])#
+    dfcr$yield_nat1_sc[dfcr$scenario==1]<-dfcr$yield_nat1[dfcr$scenario==1]/max(dfcr$yield_nat1[dfcr$scenario==1])#
+    dfcr$yield_nat1_sc[dfcr$scenario==2]<-dfcr$yield_nat1[dfcr$scenario==2]/max(dfcr$yield_nat1[dfcr$scenario==2])#
+    dfcr$yield_nat1_sc[dfcr$scenario==3]<-dfcr$yield_nat1[dfcr$scenario==3]/max(dfcr$yield_nat1[dfcr$scenario==3])#
+    dfcr<-dfcr[order(dfcr$intercept),]#
+#
+    dft<-dfcr[dfcr$slope_hcr==999,]#
+#
+    p<-ggplot(dfcr)#
+    p<-p+geom_path(aes(y=utility_nat2_sc,x=utility_nat1_sc,color=slope))#
+    p<-p+geom_point(aes(y=utility_nat2_sc,x=utility_nat1_sc,color=slope, shape=intercept),size=4,alpha=.6)#
+    p<-p+ geom_text(data=dft,aes(y=dft$utility_nat2_sc,x=dft$utility_nat1_sc,label="40:10"),fontface = "bold",colour="black")               #
+    p<-p + facet_wrap(~scn, scales="free")#
+    p<-p+ ylab("average log utility - Nation 2") + xlab("average log utility - Nation 1")#
+    p <- p  + theme_bw(16)+ theme(legend.position = "none")#
+    p <- p + guides(color=guide_legend("harvest rate"))#
+    p#
+    p1 <- ggplot(dfcr)#
+    p1 <- p1+geom_path(aes(y=yield_nat2_sc,x=yield_nat1_sc,color=slope))#
+    p1 <- p1+geom_point(aes(y=yield_nat2_sc,x=yield_nat1_sc,color=slope, shape=intercept),size=4,alpha=.6)#
+    #p1 <- p1+ geom_text(data=dft,aes(y=dft$yield_nat2_sc,x=dft$yield_nat1_sc,label="40:10"),fontface = "bold",colour="black")              #
+    p1 <- p1+facet_wrap(~scn, scales="free")#
+    p1 <- p1+ ylab(" average yield - Nation 2") + xlab(" average yield - Nation 1")#
+    p1 <- p1  + theme_bw(16)+ theme(legend.position = "bottom")#
+    p1 <- p1 + guides(color=guide_legend("harvest rate"), shape=guide_legend("biomass threshold"),size=guide_legend("none"))#
+    p1#
+    #p<-p+ geom_text(aes(y=nt2tf,x=nt1tf,label="10:40"),fontface = "bold",colour="black", position = position_nudge(y = -0.02))             #
+    #, size=guide_legend("biomass threshold")#
+#
+    pto<-plot_grid(p,p1,nrow=2,rel_heights  = c(1, 1.3))#
+    pto
+sel<-c(0.1,0.2,0.7,1,1.,5)
+nn<-100*exp(-.2)
+nn
+nn<-100*exp(-.2*0:5)
+nn
+sum(nn*sel)*(1-exp(-2))
+sum(nn*(1-exp(-2*sel)))
+sum(nn*1.1*(1-exp(-2*sel)))
+sum(nn*(1-exp(-2*sel)))*1.1
+sum(nn*(1-exp(-.2*sel)))*1.1
+sum(nn*1.1*(1-exp(-.2*sel)))
+sum(nn*(1-exp(-.2*sel)))
+sum(nn*sel)*(1-exp(-.2))
+DIRS<-c("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_nostRec_m2"#
+,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_nostRec_m2")#
+#DIRS<-c("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_nostRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_onestRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_twostRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_nostRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_onestRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_twostRec_limit")#
+#DIRS<-c("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_nostRec"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_onestRec"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_twostRec"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_nostRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_onestRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_twostRec_limit")#
+#DIRS<-c("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_Best_nostRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_Best_onestRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_Best_twostRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_nostRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_onestRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_twostRec_m2")#
+Rfiles<-list()#
+SIMSdat<-list()#
+#
+for(d in 1:length(DIRS)){#
+#
+    Rfiles[[d]]<-list.files(DIRS[[d]],pattern="\\.Rdata",full.name=TRUE)#
+#
+    tmp_SIMS<-list()#
+    for(i in 1:length(Rfiles[[d]])){#
+        load(Rfiles[[d]][i])#
+        tmp_SIMS[[i]]<-sims#
+    }#
+    SIMSdat[[d]]<-tmp_SIMS#
+#
+}#
+plotlib<-"/Users/catarinawor/Documents/Lagrangian/R/plot_routines/HCR_noerror"#
+plotfiles <- list.files(plotlib,pattern="plot",full.name=TRUE)#
+#load graphing routinesfor#
+for(p in 1:length(plotfiles)){#
+    source(plotfiles[p])#
+}#
+#
+M<-SIMSdat[[1]]#
+Msq<-SIMSdat[[2]]
+M1<-SIMSdat[[1]]#
+Msq1<-SIMSdat[[2]]#
+M2<-SIMSdat[[1]]#
+Msq2<-SIMSdat[[2]]#
+M3<-SIMSdat[[1]]#
+Msq3<-SIMSdat[[2]]#
+#
+require(reshape2)#
+require(tidyr)#
+require(ggplot2)#
+library(scales)#
+library(RColorBrewer)#
+library(cowplot)
+n <- c(length( M1 ),length( M2 ),length( M3 ))#
+#
+    mm<-list(M1 ,M2,M3)#
+    mmsq<-list(Msq1,Msq2,Msq3)#
+#
+    slope_hcr<-NULL#
+    intercept_hcr<-NULL#
+    utility_total<-NULL#
+    utility_total2<-NULL#
+    utility_nat1<-NULL#
+    utility_nat2<-NULL#
+    yield_total<-NULL#
+    yield_nat1<-NULL#
+    yield_nat2<-NULL#
+    B40_total<-NULL#
+    scenario<-NULL#
+#
+    i=1#
+    for(d in 1:3){#
+#
+        M<-mm[[d]]#
+#
+        for(ii in 1:n[d]){#
+#
+            iniyr<-M[[ii]][[1]]$"nyr"+1#
+            fimyr<-M[[ii]][[1]]$"proj_yr"#
+            B40_total[i]<-sum((M[[ii]][[1]]$ytB/M[[ii]][[1]]$Bo)[iniyr:fimyr]<0.4)/length(iniyr:fimyr)#
+#
+            slope_hcr[i]<-M[[ii]][[1]]$slope_hcr#
+            intercept_hcr[i]<-M[[ii]][[1]]$intercept_hcr#
+            utility_total[i]<-mean(log(apply(M[[ii]][[1]]$yYieldNat[101:160,],1,sum)+1))#
+            utility_total2[i]<-mean(log(M[[ii]][[1]]$yYieldNat[101:160,1]+1))*sum(log(M[[ii]][[1]]$yYieldNat[101:160,2]+1))#
+            utility_nat1[i]<-mean(log(M[[ii]][[1]]$yYieldNat[101:160,1]+1))#
+            utility_nat2[i]<-mean(log(M[[ii]][[1]]$yYieldNat[101:160,2]+1))#
+            yield_total[i]<-mean(apply(M[[ii]][[1]]$yYieldNat[101:160,],1,sum))#
+            yield_nat1[i]<-mean((M[[ii]][[1]]$yYieldNat[101:160,1]))#
+            yield_nat2[i]<-mean((M[[ii]][[1]]$yYieldNat[101:160,2]))#
+#
+            scenario[i]<-d#
+            i=i+1#
+        }#
+#
+    }#
+#
+    length(slope_hcr)#
+    slope_hcr_sq<-NULL#
+    intercept_hcr_sq<-NULL#
+    utility_total_sq<-NULL#
+    utility_total2_sq<-NULL#
+    utility_nat1_sq<-NULL#
+    utility_nat2_sq<-NULL#
+    yield_total_sq<-NULL#
+    yield_nat1_sq<-NULL#
+    yield_nat2_sq<-NULL#
+    B40_total_sq<-NULL#
+    scenario_sq<-NULL#
+#
+    nsq<- c(length( Msq1 ),length( Msq2 ),length( Msq3 ))#
+    y<-1#
+#
+    for(dd in 1:3){#
+#
+        Msq<-mmsq[[dd]]#
+#
+        for(yy in 1:nsq[[dd]]){#
+#
+            slope_hcr_sq[y]<-999#
+            intercept_hcr_sq[y]<-999#
+            utility_total_sq[y]<-sum(log(apply(Msq[[yy]][[1]]$yYieldNat[101:160,],1,sum)+1))#
+            utility_total2_sq[y]<-mean(log(Msq[[yy]][[1]]$yYieldNat[101:160,1]+1))*sum(log(Msq[[yy]][[1]]$yYieldNat[101:160,2]+1))#
+            utility_nat1_sq[y]<-mean(log(Msq[[yy]][[1]]$yYieldNat[101:160,1]+1))#
+            utility_nat2_sq[y]<-mean(log(Msq[[yy]][[1]]$yYieldNat[101:160,2]+1))#
+            yield_total_sq[y]<-mean(apply(Msq[[yy]][[1]]$yYieldNat[101:160,],1,sum))#
+            yield_nat1_sq[y]<-mean((Msq[[yy]][[1]]$yYieldNat[101:160,1]))#
+            yield_nat2_sq[y]<-mean((Msq[[yy]][[1]]$yYieldNat[101:160,2]))#
+            B40_total_sq[y]<-sum((Msq[[yy]][[1]]$ytB/Msq[[yy]][[1]]$Bo)[iniyr:fimyr]<0.4)/length(iniyr:fimyr)#
+            scenario_sq[y]<-dd#
+            y=y+1#
+        }#
+#
+    }#
+#
+    dflu<-data.frame(slope_hcr=slope_hcr,intercept_hcr=intercept_hcr,#
+        utility_total2=utility_total2,utility_total=utility_total,utility_nat1=utility_nat1,#
+        utility_nat2=utility_nat2,yield_total=yield_total,yield_nat1=yield_nat1,#
+        yield_nat2=yield_nat2,  b40=B40_total, scenario=scenario)#
+#
+    dflusq<-data.frame(slope_hcr=slope_hcr_sq,intercept_hcr=intercept_hcr_sq,#
+        utility_total2=utility_total2_sq,utility_total=utility_total_sq,utility_nat1=utility_nat1_sq,#
+        utility_nat2=utility_nat2_sq,yield_total=yield_total_sq,yield_nat1=yield_nat1_sq,#
+        yield_nat2=yield_nat2_sq,b40=B40_total_sq,scenario=scenario_sq)#
+#
+    dflu_plot<-aggregate(dflu,list(dflu$slope_hcr,dflu$intercept_hcr, dflu$scenario), mean)#
+#
+    dflu_plotsq<-aggregate(dflusq,list(dflusq$slope_hcr,dflusq$intercept_hcr, dflusq$scenario), mean)#
+    summary(dflu_plot)#
+    head(dflu_plotsq)#
+#
+    dflu_selec<-dflu_plot#
+#
+    dfa<-rbind(dflu_selec,dflu_plotsq)#
+#
+    dfa$slope<-as.character(dfa$slope_hcr)#
+    dfa$slope[dfa$slope=="999"]<-"40:10"#
+#
+    dfa$intercept<-as.character(dfa$intercept_hcr)#
+    dfa$intercept[dfa$intercept=="999"]<-"40:10"#
+#
+    dfa$ut2tf<- -999#
+    dfa$ut2tf[which(dfa$slope=="40:10")]<-dfa$utility_total2[which(dfa$slope=="40:10")]#
+#
+    dfa$nt1tf<- -999#
+    dfa$nt1tf[which(dfa$slope=="40:10")]<-dfa$utility_nat1[which(dfa$slope=="40:10")]#
+#
+    dfa$nt2tf<- -999#
+    dfa$nt2tf[which(dfa$slope=="40:10")]<-dfa$utility_nat2[which(dfa$slope=="40:10")]#
+#
+    dfa$scn<-"no strong recruitment"#
+    dfa$scn[dfa$scenario==2]<-"one strong recruitment"#
+    dfa$scn[dfa$scenario==3]<-"two strong recruitments"#
+#
+    dfa$b40tf<- -999#
+    dfa$b40tf[dfa$slope=="40:10"]<-dfa$b40[which(dfa$slope=="40:10")]#
+#
+summary(dfa)#
+#
+    dfc<-dfa[dfa$intercept_hcr<0.4|dfa$intercept_hcr>2,] #
+    dfcr<-dfc#
+    summary(dfcr)#
+#
+    dfcr$slope<-as.factor(dfcr$slope)#
+    dfcr$intercept<-as.factor(dfcr$intercept)#
+    levels(dfcr$intercept)#
+#
+    dfcr$utility_nat2_sc[dfcr$scenario==1]<-dfcr$utility_nat2[dfcr$scenario==1]/max(dfcr$utility_nat2[dfcr$scenario==1])#
+    dfcr$utility_nat2_sc[dfcr$scenario==2]<-dfcr$utility_nat2[dfcr$scenario==2]/max(dfcr$utility_nat2[dfcr$scenario==2])#
+    dfcr$utility_nat2_sc[dfcr$scenario==3]<-dfcr$utility_nat2[dfcr$scenario==3]/max(dfcr$utility_nat2[dfcr$scenario==3])#
+    dfcr$utility_nat1_sc[dfcr$scenario==1]<-dfcr$utility_nat1[dfcr$scenario==1]/max(dfcr$utility_nat1[dfcr$scenario==1])#
+    dfcr$utility_nat1_sc[dfcr$scenario==2]<-dfcr$utility_nat1[dfcr$scenario==2]/max(dfcr$utility_nat1[dfcr$scenario==2])#
+    dfcr$utility_nat1_sc[dfcr$scenario==3]<-dfcr$utility_nat1[dfcr$scenario==3]/max(dfcr$utility_nat1[dfcr$scenario==3])#
+    dfcr$yield_nat2_sc[dfcr$scenario==1]<-dfcr$yield_nat2[dfcr$scenario==1]/max(dfcr$yield_nat2[dfcr$scenario==1])#
+    dfcr$yield_nat2_sc[dfcr$scenario==2]<-dfcr$yield_nat2[dfcr$scenario==2]/max(dfcr$yield_nat2[dfcr$scenario==2])#
+    dfcr$yield_nat2_sc[dfcr$scenario==3]<-dfcr$yield_nat2[dfcr$scenario==3]/max(dfcr$yield_nat2[dfcr$scenario==3])#
+    dfcr$yield_nat1_sc[dfcr$scenario==1]<-dfcr$yield_nat1[dfcr$scenario==1]/max(dfcr$yield_nat1[dfcr$scenario==1])#
+    dfcr$yield_nat1_sc[dfcr$scenario==2]<-dfcr$yield_nat1[dfcr$scenario==2]/max(dfcr$yield_nat1[dfcr$scenario==2])#
+    dfcr$yield_nat1_sc[dfcr$scenario==3]<-dfcr$yield_nat1[dfcr$scenario==3]/max(dfcr$yield_nat1[dfcr$scenario==3])#
+    dfcr<-dfcr[order(dfcr$intercept),]#
+#
+    dft<-dfcr[dfcr$slope_hcr==999,]#
+#
+    p<-ggplot(dfcr)#
+    p<-p+geom_path(aes(y=utility_nat2_sc,x=utility_nat1_sc,color=slope))#
+    p<-p+geom_point(aes(y=utility_nat2_sc,x=utility_nat1_sc,color=slope, shape=intercept),size=4,alpha=.6)#
+    p<-p+ geom_text(data=dft,aes(y=dft$utility_nat2_sc,x=dft$utility_nat1_sc,label="40:10"),fontface = "bold",colour="black")               #
+    p<-p + facet_wrap(~scn, scales="free")#
+    p<-p+ ylab("average log utility - Nation 2") + xlab("average log utility - Nation 1")#
+    p <- p  + theme_bw(16)+ theme(legend.position = "none")#
+    p <- p + guides(color=guide_legend("harvest rate"))#
+    p#
+    p1 <- ggplot(dfcr)#
+    p1 <- p1+geom_path(aes(y=yield_nat2_sc,x=yield_nat1_sc,color=slope))#
+    p1 <- p1+geom_point(aes(y=yield_nat2_sc,x=yield_nat1_sc,color=slope, shape=intercept),size=4,alpha=.6)#
+    #p1 <- p1+ geom_text(data=dft,aes(y=dft$yield_nat2_sc,x=dft$yield_nat1_sc,label="40:10"),fontface = "bold",colour="black")              #
+    p1 <- p1+facet_wrap(~scn, scales="free")#
+    p1 <- p1+ ylab(" average yield - Nation 2") + xlab(" average yield - Nation 1")#
+    p1 <- p1  + theme_bw(16)+ theme(legend.position = "bottom")#
+    p1 <- p1 + guides(color=guide_legend("harvest rate"), shape=guide_legend("biomass threshold"),size=guide_legend("none"))#
+    p1#
+    #p<-p+ geom_text(aes(y=nt2tf,x=nt1tf,label="10:40"),fontface = "bold",colour="black", position = position_nudge(y = -0.02))             #
+    #, size=guide_legend("biomass threshold")#
+#
+    pto<-plot_grid(p,p1,nrow=2,rel_heights  = c(1, 1.3))#
+    pto
+cat("plot_Bnat_TAC")#
+#
+    gg_color_hue <- function(n) {#
+        hues = seq(15, 375, length = n + 1)#
+        hcl(h = hues, l = 65, c = 88)[1:n]#
+    }#
+    n <- length( M )#
+    slope_hcr<-NULL#
+    intercept_hcr<-NULL#
+    Yield_total<-matrix(ncol=n, nrow=111)#
+    Yield_nat1<-matrix(ncol=n, nrow=111)#
+    Yield_nat2<-matrix(ncol=n, nrow=111)#
+    for(i in 1:n){#
+#
+        slope_hcr[i]<-M[[i]][[1]]$slope_hcr#
+        intercept_hcr[i]<-M[[i]][[1]]$intercept_hcr#
+        Yield_total[,i]<-(apply(M[[i]][[1]]$yYieldNat[50:160,],1,sum))#
+        Yield_nat1[,i]<-(M[[i]][[1]]$yYieldNat[50:160,1])#
+        Yield_nat2[,i]<-(M[[i]][[1]]$yYieldNat[50:160,2])#
+    }#
+    nsq<- length( Msq )#
+#
+    slope_hcr_sq<-NULL#
+    intercept_hcr_sq<-NULL#
+    Yield_total_sq<-matrix(ncol=nsq, nrow=111)#
+    Yield_nat1_sq<-matrix(ncol=nsq, nrow=111)#
+    Yield_nat2_sq<-matrix(ncol=nsq, nrow=111)#
+    for(y in 1:nsq){#
+#
+        slope_hcr_sq[y]<-999#
+        intercept_hcr_sq[y]<-999#
+        Yield_total_sq[,y]<-apply(Msq[[y]][[1]]$yYieldNat[50:160,],1,sum)#
+        Yield_nat1_sq[,y]<-Msq[[y]][[1]]$yYieldNat[50:160,1]#
+        Yield_nat2_sq[,y]<-Msq[[y]][[1]]$yYieldNat[50:160,2]#
+    }#
+    length(50:160)#
+    sp<- unique(slope_hcr)#
+    int<-unique(intercept_hcr)#
+    Yield_lo_nat2<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_hi_nat2<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_avg_nat2<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+#
+    Yield_lo_nat1<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_hi_nat1<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_avg_nat1<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+#
+    Yield_lo_tot<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_hi_tot<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_avg_tot<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_m_tot<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+#
+    intercept_dois<- NULL#
+    slope_dois<-NULL#
+#
+    a <-1#
+    for(si in 1:length(sp)){#
+        for(ii in 1:length(int)){#
+#
+            intercept_dois[a]<-int[ii]#
+            slope_dois[a]<-sp[si]#
+            ncol(Yield_nat2)#
+#
+            tmp2<-Yield_nat2[,intersect(which(intercept_hcr==int[ii]),which(slope_hcr==sp[si]))]#
+            Yield_lo_nat2[a,]<-apply(tmp2,1,calc_quantile)[1,]#
+            Yield_hi_nat2[a,]<-apply(tmp2,1,calc_quantile)[5,]#
+            Yield_avg_nat2[a,]<-apply(tmp2,1,calc_quantile)[3,]#
+#
+            tmp1<-Yield_nat1[,intersect(which(intercept_hcr==int[ii]),which(slope_hcr==sp[si]))]#
+            Yield_lo_nat1[a,]<-apply(tmp1,1,calc_quantile)[1,]#
+            Yield_hi_nat1[a,]<-apply(tmp1,1,calc_quantile)[5,]#
+            Yield_avg_nat1[a,]<-apply(tmp1,1,calc_quantile)[3,]#
+            tmp0<-Yield_total[,intersect(which(intercept_hcr==int[ii]),which(slope_hcr==sp[si]))]#
+            Yield_lo_tot[a,]<-apply(tmp0,1,calc_quantile)[1,]#
+            Yield_hi_tot[a,]<-apply(tmp0,1,calc_quantile)[5,]#
+            Yield_avg_tot[a,]<-apply(tmp0,1,calc_quantile)[3,]#
+            Yield_m_tot[a,]<-apply(tmp0,1,mean)#
+#
+            a <- a+1#
+        }#
+    }#
+#
+    intercept_dois[a]<-4010#
+    slope_dois[a]<-4010#
+#
+    tmp2<-Yield_nat2_sq#
+#
+    Yield_lo_nat2[a,]<-apply(tmp2,1,calc_quantile)[1,]#
+    Yield_hi_nat2[a,]<-apply(tmp2,1,calc_quantile)[5,]#
+    Yield_avg_nat2[a,]<-apply(tmp2,1,calc_quantile)[3,]#
+    tmp1<-Yield_nat1_sq#
+    Yield_lo_nat1[a,]<-apply(tmp1,1,calc_quantile)[1,]#
+    Yield_hi_nat1[a,]<-apply(tmp1,1,calc_quantile)[5,]#
+    Yield_avg_nat1[a,]<-apply(tmp1,1,calc_quantile)[3,]#
+    tmp0<-Yield_total_sq#
+    Yield_lo_tot[a,]<-apply(tmp0,1,calc_quantile)[1,]#
+    Yield_hi_tot[a,]<-apply(tmp0,1,calc_quantile)[5,]#
+    Yield_avg_tot[a,]<-apply(tmp0,1,calc_quantile)[3,]#
+    Yield_m_tot[a,]<-apply(tmp0,1,mean)#
+#
+    lonat2<-melt(Yield_lo_nat2)#
+    hinat2<-melt(Yield_hi_nat2)#
+    avgnat2<-melt(Yield_avg_nat2)#
+    nat2<- data.frame(year=(1966:2076)[avgnat2$Var2], hcr=avgnat2$Var1,#
+         intercept=intercept_dois[avgnat2$Var1],slope=slope_dois[avgnat2$Var1],#
+        mean=avgnat2$value,high=hinat2$value,low=lonat2$value)#
+#
+    nat2$high[nat2$year<2016]=NA#
+    nat2$low[nat2$year<2016]=NA#
+#
+    nat2_o<-nat2[(nat2$intercept==.1|nat2$intercept==4010)&(nat2$slope==.1|nat2$slope==.5|nat2$intercept==4010),]#
+    p<- ggplot(nat2_o)#
+    p<- p+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)#
+    p<- p+geom_line(aes(x=year,y=mean, color=as.factor(slope))) #
+    p<- p +scale_color_manual(values = c(gg_color_hue(2),"black") ,name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p<- p +scale_fill_manual(values = c(gg_color_hue(2),"black"),name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p <- p + labs(x= "", y= " Yield (1000t) ")#
+    p <- p + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())#
+    p#
+    lonat1<-melt(Yield_lo_nat1)#
+    hinat1<-melt(Yield_hi_nat1)#
+    avgnat1<-melt(Yield_avg_nat1)#
+    nat1<- data.frame(year=(1966:2076)[avgnat1$Var2], hcr=avgnat1$Var1,#
+         intercept=intercept_dois[avgnat1$Var1],slope=slope_dois[avgnat1$Var1],#
+        mean=avgnat1$value,high=hinat1$value,low=lonat1$value)#
+#
+    nat1$high[nat1$year<2016]=NA#
+    nat1$low[nat1$year<2016]=NA#
+#
+    nat1_o<-nat1[(nat1$intercept==.1|nat1$intercept==4010)&(nat1$slope==.1|nat1$slope==.5|nat1$intercept==4010),]#
+    p1<- ggplot(nat1_o)#
+    p1<- p1+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)#
+    p1<- p1+geom_line(aes(x=year,y=mean, color=as.factor(slope)))   #
+    p1<- p1 +scale_color_manual(values = c(gg_color_hue(2),"black") ,name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p1<- p1 +scale_fill_manual(values = c(gg_color_hue(2),"black"),name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p1 <- p1 + labs(x= "Year", y= " Yield (1000t) ")#
+    p1 <- p1 + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())#
+#
+    p1#
+    plun<-plot_grid(p1,p,nrow=2,labels=c("Nation 1","Nation 2"),hjust = -1.5,vjust = 3)#
+        print(plun)
+DIRS<-c("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_nostRec_m2"#
+,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_nostRec_m2")#
+#DIRS<-c("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_nostRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_onestRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_twostRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_nostRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_onestRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_twostRec_limit")#
+#DIRS<-c("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_nostRec"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_onestRec"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_twostRec"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_nostRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_onestRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_twostRec_limit")#
+#DIRS<-c("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_Best_nostRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_Best_onestRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_Best_twostRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_nostRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_onestRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_twostRec_m2")#
+Rfiles<-list()#
+SIMSdat<-list()#
+#
+for(d in 1:length(DIRS)){#
+#
+    Rfiles[[d]]<-list.files(DIRS[[d]],pattern="\\.Rdata",full.name=TRUE)#
+#
+    tmp_SIMS<-list()#
+    for(i in 1:length(Rfiles[[d]])){#
+        load(Rfiles[[d]][i])#
+        tmp_SIMS[[i]]<-sims#
+    }#
+    SIMSdat[[d]]<-tmp_SIMS#
+#
+}#
+plotlib<-"/Users/catarinawor/Documents/Lagrangian/R/plot_routines/HCR_noerror"#
+plotfiles <- list.files(plotlib,pattern="plot",full.name=TRUE)#
+#load graphing routinesfor#
+for(p in 1:length(plotfiles)){#
+    source(plotfiles[p])#
+}#
+#
+M<-SIMSdat[[1]]#
+Msq<-SIMSdat[[2]]
+M1<-SIMSdat[[1]]#
+Msq1<-SIMSdat[[2]]#
+M2<-SIMSdat[[1]]#
+Msq2<-SIMSdat[[2]]#
+M3<-SIMSdat[[1]]#
+Msq3<-SIMSdat[[2]]#
+#
+require(reshape2)#
+require(tidyr)#
+require(ggplot2)#
+library(scales)#
+library(RColorBrewer)#
+library(cowplot)
+n <- c(length( M1 ),length( M2 ),length( M3 ))#
+#
+    mm<-list(M1 ,M2,M3)#
+    mmsq<-list(Msq1,Msq2,Msq3)#
+#
+    slope_hcr<-NULL#
+    intercept_hcr<-NULL#
+    utility_total<-NULL#
+    utility_total2<-NULL#
+    utility_nat1<-NULL#
+    utility_nat2<-NULL#
+    yield_total<-NULL#
+    yield_nat1<-NULL#
+    yield_nat2<-NULL#
+    B40_total<-NULL#
+    scenario<-NULL#
+#
+    i=1#
+    for(d in 1:3){#
+#
+        M<-mm[[d]]#
+#
+        for(ii in 1:n[d]){#
+#
+            iniyr<-M[[ii]][[1]]$"nyr"+1#
+            fimyr<-M[[ii]][[1]]$"proj_yr"#
+            B40_total[i]<-sum((M[[ii]][[1]]$ytB/M[[ii]][[1]]$Bo)[iniyr:fimyr]<0.4)/length(iniyr:fimyr)#
+#
+            slope_hcr[i]<-M[[ii]][[1]]$slope_hcr#
+            intercept_hcr[i]<-M[[ii]][[1]]$intercept_hcr#
+            utility_total[i]<-mean(log(apply(M[[ii]][[1]]$yYieldNat[101:160,],1,sum)+1))#
+            utility_total2[i]<-mean(log(M[[ii]][[1]]$yYieldNat[101:160,1]+1))*sum(log(M[[ii]][[1]]$yYieldNat[101:160,2]+1))#
+            utility_nat1[i]<-mean(log(M[[ii]][[1]]$yYieldNat[101:160,1]+1))#
+            utility_nat2[i]<-mean(log(M[[ii]][[1]]$yYieldNat[101:160,2]+1))#
+            yield_total[i]<-mean(apply(M[[ii]][[1]]$yYieldNat[101:160,],1,sum))#
+            yield_nat1[i]<-mean((M[[ii]][[1]]$yYieldNat[101:160,1]))#
+            yield_nat2[i]<-mean((M[[ii]][[1]]$yYieldNat[101:160,2]))#
+#
+            scenario[i]<-d#
+            i=i+1#
+        }#
+#
+    }#
+#
+    length(slope_hcr)#
+    slope_hcr_sq<-NULL#
+    intercept_hcr_sq<-NULL#
+    utility_total_sq<-NULL#
+    utility_total2_sq<-NULL#
+    utility_nat1_sq<-NULL#
+    utility_nat2_sq<-NULL#
+    yield_total_sq<-NULL#
+    yield_nat1_sq<-NULL#
+    yield_nat2_sq<-NULL#
+    B40_total_sq<-NULL#
+    scenario_sq<-NULL#
+#
+    nsq<- c(length( Msq1 ),length( Msq2 ),length( Msq3 ))#
+    y<-1#
+#
+    for(dd in 1:3){#
+#
+        Msq<-mmsq[[dd]]#
+#
+        for(yy in 1:nsq[[dd]]){#
+#
+            slope_hcr_sq[y]<-999#
+            intercept_hcr_sq[y]<-999#
+            utility_total_sq[y]<-sum(log(apply(Msq[[yy]][[1]]$yYieldNat[101:160,],1,sum)+1))#
+            utility_total2_sq[y]<-mean(log(Msq[[yy]][[1]]$yYieldNat[101:160,1]+1))*sum(log(Msq[[yy]][[1]]$yYieldNat[101:160,2]+1))#
+            utility_nat1_sq[y]<-mean(log(Msq[[yy]][[1]]$yYieldNat[101:160,1]+1))#
+            utility_nat2_sq[y]<-mean(log(Msq[[yy]][[1]]$yYieldNat[101:160,2]+1))#
+            yield_total_sq[y]<-mean(apply(Msq[[yy]][[1]]$yYieldNat[101:160,],1,sum))#
+            yield_nat1_sq[y]<-mean((Msq[[yy]][[1]]$yYieldNat[101:160,1]))#
+            yield_nat2_sq[y]<-mean((Msq[[yy]][[1]]$yYieldNat[101:160,2]))#
+            B40_total_sq[y]<-sum((Msq[[yy]][[1]]$ytB/Msq[[yy]][[1]]$Bo)[iniyr:fimyr]<0.4)/length(iniyr:fimyr)#
+            scenario_sq[y]<-dd#
+            y=y+1#
+        }#
+#
+    }#
+#
+    dflu<-data.frame(slope_hcr=slope_hcr,intercept_hcr=intercept_hcr,#
+        utility_total2=utility_total2,utility_total=utility_total,utility_nat1=utility_nat1,#
+        utility_nat2=utility_nat2,yield_total=yield_total,yield_nat1=yield_nat1,#
+        yield_nat2=yield_nat2,  b40=B40_total, scenario=scenario)#
+#
+    dflusq<-data.frame(slope_hcr=slope_hcr_sq,intercept_hcr=intercept_hcr_sq,#
+        utility_total2=utility_total2_sq,utility_total=utility_total_sq,utility_nat1=utility_nat1_sq,#
+        utility_nat2=utility_nat2_sq,yield_total=yield_total_sq,yield_nat1=yield_nat1_sq,#
+        yield_nat2=yield_nat2_sq,b40=B40_total_sq,scenario=scenario_sq)#
+#
+    dflu_plot<-aggregate(dflu,list(dflu$slope_hcr,dflu$intercept_hcr, dflu$scenario), mean)#
+#
+    dflu_plotsq<-aggregate(dflusq,list(dflusq$slope_hcr,dflusq$intercept_hcr, dflusq$scenario), mean)#
+    summary(dflu_plot)#
+    head(dflu_plotsq)#
+#
+    dflu_selec<-dflu_plot#
+#
+    dfa<-rbind(dflu_selec,dflu_plotsq)#
+#
+    dfa$slope<-as.character(dfa$slope_hcr)#
+    dfa$slope[dfa$slope=="999"]<-"40:10"#
+#
+    dfa$intercept<-as.character(dfa$intercept_hcr)#
+    dfa$intercept[dfa$intercept=="999"]<-"40:10"#
+#
+    dfa$ut2tf<- -999#
+    dfa$ut2tf[which(dfa$slope=="40:10")]<-dfa$utility_total2[which(dfa$slope=="40:10")]#
+#
+    dfa$nt1tf<- -999#
+    dfa$nt1tf[which(dfa$slope=="40:10")]<-dfa$utility_nat1[which(dfa$slope=="40:10")]#
+#
+    dfa$nt2tf<- -999#
+    dfa$nt2tf[which(dfa$slope=="40:10")]<-dfa$utility_nat2[which(dfa$slope=="40:10")]#
+#
+    dfa$scn<-"no strong recruitment"#
+    dfa$scn[dfa$scenario==2]<-"one strong recruitment"#
+    dfa$scn[dfa$scenario==3]<-"two strong recruitments"#
+#
+    dfa$b40tf<- -999#
+    dfa$b40tf[dfa$slope=="40:10"]<-dfa$b40[which(dfa$slope=="40:10")]#
+#
+summary(dfa)#
+#
+    dfc<-dfa[dfa$intercept_hcr<0.4|dfa$intercept_hcr>2,] #
+    dfcr<-dfc#
+    summary(dfcr)#
+#
+    dfcr$slope<-as.factor(dfcr$slope)#
+    dfcr$intercept<-as.factor(dfcr$intercept)#
+    levels(dfcr$intercept)#
+#
+    dfcr$utility_nat2_sc[dfcr$scenario==1]<-dfcr$utility_nat2[dfcr$scenario==1]/max(dfcr$utility_nat2[dfcr$scenario==1])#
+    dfcr$utility_nat2_sc[dfcr$scenario==2]<-dfcr$utility_nat2[dfcr$scenario==2]/max(dfcr$utility_nat2[dfcr$scenario==2])#
+    dfcr$utility_nat2_sc[dfcr$scenario==3]<-dfcr$utility_nat2[dfcr$scenario==3]/max(dfcr$utility_nat2[dfcr$scenario==3])#
+    dfcr$utility_nat1_sc[dfcr$scenario==1]<-dfcr$utility_nat1[dfcr$scenario==1]/max(dfcr$utility_nat1[dfcr$scenario==1])#
+    dfcr$utility_nat1_sc[dfcr$scenario==2]<-dfcr$utility_nat1[dfcr$scenario==2]/max(dfcr$utility_nat1[dfcr$scenario==2])#
+    dfcr$utility_nat1_sc[dfcr$scenario==3]<-dfcr$utility_nat1[dfcr$scenario==3]/max(dfcr$utility_nat1[dfcr$scenario==3])#
+    dfcr$yield_nat2_sc[dfcr$scenario==1]<-dfcr$yield_nat2[dfcr$scenario==1]/max(dfcr$yield_nat2[dfcr$scenario==1])#
+    dfcr$yield_nat2_sc[dfcr$scenario==2]<-dfcr$yield_nat2[dfcr$scenario==2]/max(dfcr$yield_nat2[dfcr$scenario==2])#
+    dfcr$yield_nat2_sc[dfcr$scenario==3]<-dfcr$yield_nat2[dfcr$scenario==3]/max(dfcr$yield_nat2[dfcr$scenario==3])#
+    dfcr$yield_nat1_sc[dfcr$scenario==1]<-dfcr$yield_nat1[dfcr$scenario==1]/max(dfcr$yield_nat1[dfcr$scenario==1])#
+    dfcr$yield_nat1_sc[dfcr$scenario==2]<-dfcr$yield_nat1[dfcr$scenario==2]/max(dfcr$yield_nat1[dfcr$scenario==2])#
+    dfcr$yield_nat1_sc[dfcr$scenario==3]<-dfcr$yield_nat1[dfcr$scenario==3]/max(dfcr$yield_nat1[dfcr$scenario==3])#
+    dfcr<-dfcr[order(dfcr$intercept),]#
+#
+    dft<-dfcr[dfcr$slope_hcr==999,]#
+#
+    p<-ggplot(dfcr)#
+    p<-p+geom_path(aes(y=utility_nat2_sc,x=utility_nat1_sc,color=slope))#
+    p<-p+geom_point(aes(y=utility_nat2_sc,x=utility_nat1_sc,color=slope, shape=intercept),size=4,alpha=.6)#
+    p<-p+ geom_text(data=dft,aes(y=dft$utility_nat2_sc,x=dft$utility_nat1_sc,label="40:10"),fontface = "bold",colour="black")               #
+    p<-p + facet_wrap(~scn, scales="free")#
+    p<-p+ ylab("average log utility - Nation 2") + xlab("average log utility - Nation 1")#
+    p <- p  + theme_bw(16)+ theme(legend.position = "none")#
+    p <- p + guides(color=guide_legend("harvest rate"))#
+    p#
+    p1 <- ggplot(dfcr)#
+    p1 <- p1+geom_path(aes(y=yield_nat2_sc,x=yield_nat1_sc,color=slope))#
+    p1 <- p1+geom_point(aes(y=yield_nat2_sc,x=yield_nat1_sc,color=slope, shape=intercept),size=4,alpha=.6)#
+    #p1 <- p1+ geom_text(data=dft,aes(y=dft$yield_nat2_sc,x=dft$yield_nat1_sc,label="40:10"),fontface = "bold",colour="black")              #
+    p1 <- p1+facet_wrap(~scn, scales="free")#
+    p1 <- p1+ ylab(" average yield - Nation 2") + xlab(" average yield - Nation 1")#
+    p1 <- p1  + theme_bw(16)+ theme(legend.position = "bottom")#
+    p1 <- p1 + guides(color=guide_legend("harvest rate"), shape=guide_legend("biomass threshold"),size=guide_legend("none"))#
+    p1#
+    #p<-p+ geom_text(aes(y=nt2tf,x=nt1tf,label="10:40"),fontface = "bold",colour="black", position = position_nudge(y = -0.02))             #
+    #, size=guide_legend("biomass threshold")#
+#
+    pto<-plot_grid(p,p1,nrow=2,rel_heights  = c(1, 1.3))#
+    pto
+myfunc<-function(maxPos50,maxPossd){#
+#
+    age<-1:20#
+#
+    x<-(1./(1.+exp(-(age-maxPos50)/maxPossd)))#
+#
+    x<-x* (30-32)+32#
+#
+    return(x)#
+}#
+plot(myfunc(3.5,1.5))
+myfunc<-function(maxPos50,maxPossd){#
+#
+    age<-1:20#
+#
+    x<-(1./(1.+exp(-(age-maxPos50)/maxPossd)))#
+#
+    x<-x* (60-32)+32#
+#
+    return(x)#
+}#
+plot(myfunc(3.5,1.5))
+lines(myfunc(5,1.5))
+lines(myfunc(5,2))
+hline(y=49)
+abline(h=49)
+plot(myfunc(3.5,1.5))#
+lines(myfunc(5,2))#
+abline(h=49)#
+abline(h=4)
+abline(v=4)
+points(myfunc(5,2), col="blue")
+points(myfunc(4,2), col="blue")
+points(myfunc(4,1.5), col="blue")
+plot(myfunc(3.5,1.5))#
+points(myfunc(4,1.5), col="blue")#
+abline(h=49)#
+abline(v=4)
+points(myfunc(4,2), col="blue")
+plot(myfunc(3.5,1.5))
+plot(myfunc(3.5,1.5))#
+points(myfunc(4,1.5), col="red")#
+points(myfunc(4,2), col="blue")#
+abline(h=49)#
+abline(v=4)
+DIRS<-c("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_nostRec_m2"#
+,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_nostRec_m2")#
+#DIRS<-c("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_nostRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_onestRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_twostRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_nostRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_onestRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_twostRec_limit")#
+#DIRS<-c("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_nostRec"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_onestRec"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_twostRec"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_nostRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_onestRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_twostRec_limit")#
+#DIRS<-c("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_Best_nostRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_Best_onestRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_Best_twostRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_nostRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_onestRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_twostRec_m2")#
+Rfiles<-list()#
+SIMSdat<-list()#
+#
+for(d in 1:length(DIRS)){#
+#
+    Rfiles[[d]]<-list.files(DIRS[[d]],pattern="\\.Rdata",full.name=TRUE)#
+#
+    tmp_SIMS<-list()#
+    for(i in 1:length(Rfiles[[d]])){#
+        load(Rfiles[[d]][i])#
+        tmp_SIMS[[i]]<-sims#
+    }#
+    SIMSdat[[d]]<-tmp_SIMS#
+#
+}#
+plotlib<-"/Users/catarinawor/Documents/Lagrangian/R/plot_routines/HCR_noerror"#
+plotfiles <- list.files(plotlib,pattern="plot",full.name=TRUE)#
+#load graphing routinesfor#
+for(p in 1:length(plotfiles)){#
+    source(plotfiles[p])#
+}#
+#
+M<-SIMSdat[[1]]#
+Msq<-SIMSdat[[2]]
+M1<-SIMSdat[[1]]#
+Msq1<-SIMSdat[[2]]#
+M2<-SIMSdat[[1]]#
+Msq2<-SIMSdat[[2]]#
+M3<-SIMSdat[[1]]#
+Msq3<-SIMSdat[[2]]#
+#
+require(reshape2)#
+require(tidyr)#
+require(ggplot2)#
+library(scales)#
+library(RColorBrewer)#
+library(cowplot)
+n <- c(length( M1 ),length( M2 ),length( M3 ))#
+#
+    mm<-list(M1 ,M2,M3)#
+    mmsq<-list(Msq1,Msq2,Msq3)#
+#
+    slope_hcr<-NULL#
+    intercept_hcr<-NULL#
+    utility_total<-NULL#
+    utility_total2<-NULL#
+    utility_nat1<-NULL#
+    utility_nat2<-NULL#
+    yield_total<-NULL#
+    yield_nat1<-NULL#
+    yield_nat2<-NULL#
+    B40_total<-NULL#
+    scenario<-NULL#
+#
+    i=1#
+    for(d in 1:3){#
+#
+        M<-mm[[d]]#
+#
+        for(ii in 1:n[d]){#
+#
+            iniyr<-M[[ii]][[1]]$"nyr"+1#
+            fimyr<-M[[ii]][[1]]$"proj_yr"#
+            B40_total[i]<-sum((M[[ii]][[1]]$ytB/M[[ii]][[1]]$Bo)[iniyr:fimyr]<0.4)/length(iniyr:fimyr)#
+#
+            slope_hcr[i]<-M[[ii]][[1]]$slope_hcr#
+            intercept_hcr[i]<-M[[ii]][[1]]$intercept_hcr#
+            utility_total[i]<-mean(log(apply(M[[ii]][[1]]$yYieldNat[101:160,],1,sum)+1))#
+            utility_total2[i]<-mean(log(M[[ii]][[1]]$yYieldNat[101:160,1]+1))*sum(log(M[[ii]][[1]]$yYieldNat[101:160,2]+1))#
+            utility_nat1[i]<-mean(log(M[[ii]][[1]]$yYieldNat[101:160,1]+1))#
+            utility_nat2[i]<-mean(log(M[[ii]][[1]]$yYieldNat[101:160,2]+1))#
+            yield_total[i]<-mean(apply(M[[ii]][[1]]$yYieldNat[101:160,],1,sum))#
+            yield_nat1[i]<-mean((M[[ii]][[1]]$yYieldNat[101:160,1]))#
+            yield_nat2[i]<-mean((M[[ii]][[1]]$yYieldNat[101:160,2]))#
+#
+            scenario[i]<-d#
+            i=i+1#
+        }#
+#
+    }#
+#
+    length(slope_hcr)#
+    slope_hcr_sq<-NULL#
+    intercept_hcr_sq<-NULL#
+    utility_total_sq<-NULL#
+    utility_total2_sq<-NULL#
+    utility_nat1_sq<-NULL#
+    utility_nat2_sq<-NULL#
+    yield_total_sq<-NULL#
+    yield_nat1_sq<-NULL#
+    yield_nat2_sq<-NULL#
+    B40_total_sq<-NULL#
+    scenario_sq<-NULL#
+#
+    nsq<- c(length( Msq1 ),length( Msq2 ),length( Msq3 ))#
+    y<-1#
+#
+    for(dd in 1:3){#
+#
+        Msq<-mmsq[[dd]]#
+#
+        for(yy in 1:nsq[[dd]]){#
+#
+            slope_hcr_sq[y]<-999#
+            intercept_hcr_sq[y]<-999#
+            utility_total_sq[y]<-sum(log(apply(Msq[[yy]][[1]]$yYieldNat[101:160,],1,sum)+1))#
+            utility_total2_sq[y]<-mean(log(Msq[[yy]][[1]]$yYieldNat[101:160,1]+1))*sum(log(Msq[[yy]][[1]]$yYieldNat[101:160,2]+1))#
+            utility_nat1_sq[y]<-mean(log(Msq[[yy]][[1]]$yYieldNat[101:160,1]+1))#
+            utility_nat2_sq[y]<-mean(log(Msq[[yy]][[1]]$yYieldNat[101:160,2]+1))#
+            yield_total_sq[y]<-mean(apply(Msq[[yy]][[1]]$yYieldNat[101:160,],1,sum))#
+            yield_nat1_sq[y]<-mean((Msq[[yy]][[1]]$yYieldNat[101:160,1]))#
+            yield_nat2_sq[y]<-mean((Msq[[yy]][[1]]$yYieldNat[101:160,2]))#
+            B40_total_sq[y]<-sum((Msq[[yy]][[1]]$ytB/Msq[[yy]][[1]]$Bo)[iniyr:fimyr]<0.4)/length(iniyr:fimyr)#
+            scenario_sq[y]<-dd#
+            y=y+1#
+        }#
+#
+    }#
+#
+    dflu<-data.frame(slope_hcr=slope_hcr,intercept_hcr=intercept_hcr,#
+        utility_total2=utility_total2,utility_total=utility_total,utility_nat1=utility_nat1,#
+        utility_nat2=utility_nat2,yield_total=yield_total,yield_nat1=yield_nat1,#
+        yield_nat2=yield_nat2,  b40=B40_total, scenario=scenario)#
+#
+    dflusq<-data.frame(slope_hcr=slope_hcr_sq,intercept_hcr=intercept_hcr_sq,#
+        utility_total2=utility_total2_sq,utility_total=utility_total_sq,utility_nat1=utility_nat1_sq,#
+        utility_nat2=utility_nat2_sq,yield_total=yield_total_sq,yield_nat1=yield_nat1_sq,#
+        yield_nat2=yield_nat2_sq,b40=B40_total_sq,scenario=scenario_sq)#
+#
+    dflu_plot<-aggregate(dflu,list(dflu$slope_hcr,dflu$intercept_hcr, dflu$scenario), mean)#
+#
+    dflu_plotsq<-aggregate(dflusq,list(dflusq$slope_hcr,dflusq$intercept_hcr, dflusq$scenario), mean)#
+    summary(dflu_plot)#
+    head(dflu_plotsq)#
+#
+    dflu_selec<-dflu_plot#
+#
+    dfa<-rbind(dflu_selec,dflu_plotsq)#
+#
+    dfa$slope<-as.character(dfa$slope_hcr)#
+    dfa$slope[dfa$slope=="999"]<-"40:10"#
+#
+    dfa$intercept<-as.character(dfa$intercept_hcr)#
+    dfa$intercept[dfa$intercept=="999"]<-"40:10"#
+#
+    dfa$ut2tf<- -999#
+    dfa$ut2tf[which(dfa$slope=="40:10")]<-dfa$utility_total2[which(dfa$slope=="40:10")]#
+#
+    dfa$nt1tf<- -999#
+    dfa$nt1tf[which(dfa$slope=="40:10")]<-dfa$utility_nat1[which(dfa$slope=="40:10")]#
+#
+    dfa$nt2tf<- -999#
+    dfa$nt2tf[which(dfa$slope=="40:10")]<-dfa$utility_nat2[which(dfa$slope=="40:10")]#
+#
+    dfa$scn<-"no strong recruitment"#
+    dfa$scn[dfa$scenario==2]<-"one strong recruitment"#
+    dfa$scn[dfa$scenario==3]<-"two strong recruitments"#
+#
+    dfa$b40tf<- -999#
+    dfa$b40tf[dfa$slope=="40:10"]<-dfa$b40[which(dfa$slope=="40:10")]#
+#
+summary(dfa)#
+#
+    dfc<-dfa[dfa$intercept_hcr<0.4|dfa$intercept_hcr>2,] #
+    dfcr<-dfc#
+    summary(dfcr)#
+#
+    dfcr$slope<-as.factor(dfcr$slope)#
+    dfcr$intercept<-as.factor(dfcr$intercept)#
+    levels(dfcr$intercept)#
+#
+    dfcr$utility_nat2_sc[dfcr$scenario==1]<-dfcr$utility_nat2[dfcr$scenario==1]/max(dfcr$utility_nat2[dfcr$scenario==1])#
+    dfcr$utility_nat2_sc[dfcr$scenario==2]<-dfcr$utility_nat2[dfcr$scenario==2]/max(dfcr$utility_nat2[dfcr$scenario==2])#
+    dfcr$utility_nat2_sc[dfcr$scenario==3]<-dfcr$utility_nat2[dfcr$scenario==3]/max(dfcr$utility_nat2[dfcr$scenario==3])#
+    dfcr$utility_nat1_sc[dfcr$scenario==1]<-dfcr$utility_nat1[dfcr$scenario==1]/max(dfcr$utility_nat1[dfcr$scenario==1])#
+    dfcr$utility_nat1_sc[dfcr$scenario==2]<-dfcr$utility_nat1[dfcr$scenario==2]/max(dfcr$utility_nat1[dfcr$scenario==2])#
+    dfcr$utility_nat1_sc[dfcr$scenario==3]<-dfcr$utility_nat1[dfcr$scenario==3]/max(dfcr$utility_nat1[dfcr$scenario==3])#
+    dfcr$yield_nat2_sc[dfcr$scenario==1]<-dfcr$yield_nat2[dfcr$scenario==1]/max(dfcr$yield_nat2[dfcr$scenario==1])#
+    dfcr$yield_nat2_sc[dfcr$scenario==2]<-dfcr$yield_nat2[dfcr$scenario==2]/max(dfcr$yield_nat2[dfcr$scenario==2])#
+    dfcr$yield_nat2_sc[dfcr$scenario==3]<-dfcr$yield_nat2[dfcr$scenario==3]/max(dfcr$yield_nat2[dfcr$scenario==3])#
+    dfcr$yield_nat1_sc[dfcr$scenario==1]<-dfcr$yield_nat1[dfcr$scenario==1]/max(dfcr$yield_nat1[dfcr$scenario==1])#
+    dfcr$yield_nat1_sc[dfcr$scenario==2]<-dfcr$yield_nat1[dfcr$scenario==2]/max(dfcr$yield_nat1[dfcr$scenario==2])#
+    dfcr$yield_nat1_sc[dfcr$scenario==3]<-dfcr$yield_nat1[dfcr$scenario==3]/max(dfcr$yield_nat1[dfcr$scenario==3])#
+    dfcr<-dfcr[order(dfcr$intercept),]#
+#
+    dft<-dfcr[dfcr$slope_hcr==999,]#
+#
+    p<-ggplot(dfcr)#
+    p<-p+geom_path(aes(y=utility_nat2_sc,x=utility_nat1_sc,color=slope))#
+    p<-p+geom_point(aes(y=utility_nat2_sc,x=utility_nat1_sc,color=slope, shape=intercept),size=4,alpha=.6)#
+    p<-p+ geom_text(data=dft,aes(y=dft$utility_nat2_sc,x=dft$utility_nat1_sc,label="40:10"),fontface = "bold",colour="black")               #
+    p<-p + facet_wrap(~scn, scales="free")#
+    p<-p+ ylab("average log utility - Nation 2") + xlab("average log utility - Nation 1")#
+    p <- p  + theme_bw(16)+ theme(legend.position = "none")#
+    p <- p + guides(color=guide_legend("harvest rate"))#
+    p#
+    p1 <- ggplot(dfcr)#
+    p1 <- p1+geom_path(aes(y=yield_nat2_sc,x=yield_nat1_sc,color=slope))#
+    p1 <- p1+geom_point(aes(y=yield_nat2_sc,x=yield_nat1_sc,color=slope, shape=intercept),size=4,alpha=.6)#
+    #p1 <- p1+ geom_text(data=dft,aes(y=dft$yield_nat2_sc,x=dft$yield_nat1_sc,label="40:10"),fontface = "bold",colour="black")              #
+    p1 <- p1+facet_wrap(~scn, scales="free")#
+    p1 <- p1+ ylab(" average yield - Nation 2") + xlab(" average yield - Nation 1")#
+    p1 <- p1  + theme_bw(16)+ theme(legend.position = "bottom")#
+    p1 <- p1 + guides(color=guide_legend("harvest rate"), shape=guide_legend("biomass threshold"),size=guide_legend("none"))#
+    p1#
+    #p<-p+ geom_text(aes(y=nt2tf,x=nt1tf,label="10:40"),fontface = "bold",colour="black", position = position_nudge(y = -0.02))             #
+    #, size=guide_legend("biomass threshold")#
+#
+    pto<-plot_grid(p,p1,nrow=2,rel_heights  = c(1, 1.3))#
+    pto
+plot(myfunc(3.5,1.5))#
+points(myfunc(4,1.5), col="red")#
+points(myfunc(4,2), col="blue")#
+abline(h=49)#
+abline(v=4)
+plot(myfunc(3.5,1.5))#
+points(myfunc(3.5,2), col="red")#
+points(myfunc(4,2), col="blue")#
+abline(h=49)#
+abline(v=4)
+plot(myfunc(3.5,1.5))#
+points(myfunc(5,2), col="red")
+abline(h=49)
+plot(myfunc(3,1.5))
+points(myfunc(5,2), col="red")
+abline(h=49)
+plot(myfunc(3,1.5))#
+points(myfunc(3.5,2), col="red")#
+points(myfunc(4,2), col="blue")#
+abline(h=49)#
+abline(v=4)
+plot(myfunc(3.5,1.5))#
+points(myfunc(3.5,2), col="red")
+points(myfunc(4,2), col="blue")
+DIRS<-c("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_nostRec_m2"#
+,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_nostRec_m2")#
+#DIRS<-c("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_nostRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_onestRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_twostRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_nostRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_onestRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_twostRec_limit")#
+#DIRS<-c("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_nostRec"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_onestRec"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_twostRec"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_nostRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_onestRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_twostRec_limit")#
+#DIRS<-c("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_Best_nostRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_Best_onestRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_Best_twostRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_nostRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_onestRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_twostRec_m2")#
+Rfiles<-list()#
+SIMSdat<-list()#
+#
+for(d in 1:length(DIRS)){#
+#
+    Rfiles[[d]]<-list.files(DIRS[[d]],pattern="\\.Rdata",full.name=TRUE)#
+#
+    tmp_SIMS<-list()#
+    for(i in 1:length(Rfiles[[d]])){#
+        load(Rfiles[[d]][i])#
+        tmp_SIMS[[i]]<-sims#
+    }#
+    SIMSdat[[d]]<-tmp_SIMS#
+#
+}#
+plotlib<-"/Users/catarinawor/Documents/Lagrangian/R/plot_routines/HCR_noerror"#
+plotfiles <- list.files(plotlib,pattern="plot",full.name=TRUE)#
+#load graphing routinesfor#
+for(p in 1:length(plotfiles)){#
+    source(plotfiles[p])#
+}#
+#
+M<-SIMSdat[[1]]#
+Msq<-SIMSdat[[2]]
+no<-plot_logUtility( SIMSdat[[1]],SIMSdat[[2]] , sv=TRUE, nome="nostrongrec",nations=TRUE)
+M1<-SIMSdat[[1]]#
+Msq1<-SIMSdat[[2]]#
+M2<-SIMSdat[[1]]#
+Msq2<-SIMSdat[[2]]#
+M3<-SIMSdat[[1]]#
+Msq3<-SIMSdat[[2]]#
+#
+require(reshape2)#
+require(tidyr)#
+require(ggplot2)#
+library(scales)#
+library(RColorBrewer)#
+library(cowplot)
+cat("plot_tradeoff")#
+#
+    n <- c(length( M1 ),length( M2 ),length( M3 ))#
+#
+    mm<-list(M1 ,M2,M3)#
+    mmsq<-list(Msq1,Msq2,Msq3)#
+#
+    slope_hcr<-NULL#
+    intercept_hcr<-NULL#
+    utility_total<-NULL#
+    utility_total2<-NULL#
+    utility_nat1<-NULL#
+    utility_nat2<-NULL#
+    yield_total<-NULL#
+    yield_nat1<-NULL#
+    yield_nat2<-NULL#
+    B40_total<-NULL#
+    scenario<-NULL#
+#
+    i=1#
+    for(d in 1:3){#
+#
+        M<-mm[[d]]#
+#
+        for(ii in 1:n[d]){#
+#
+            iniyr<-M[[ii]][[1]]$"nyr"+1#
+            fimyr<-M[[ii]][[1]]$"proj_yr"#
+            B40_total[i]<-sum((M[[ii]][[1]]$ytB/M[[ii]][[1]]$Bo)[iniyr:fimyr]<0.4)/length(iniyr:fimyr)#
+#
+            slope_hcr[i]<-M[[ii]][[1]]$slope_hcr#
+            intercept_hcr[i]<-M[[ii]][[1]]$intercept_hcr#
+            utility_total[i]<-mean(log(apply(M[[ii]][[1]]$yYieldNat[101:160,],1,sum)+1))#
+            utility_total2[i]<-mean(log(M[[ii]][[1]]$yYieldNat[101:160,1]+1))*sum(log(M[[ii]][[1]]$yYieldNat[101:160,2]+1))#
+            utility_nat1[i]<-mean(log(M[[ii]][[1]]$yYieldNat[101:160,1]+1))#
+            utility_nat2[i]<-mean(log(M[[ii]][[1]]$yYieldNat[101:160,2]+1))#
+            yield_total[i]<-mean(apply(M[[ii]][[1]]$yYieldNat[101:160,],1,sum))#
+            yield_nat1[i]<-mean((M[[ii]][[1]]$yYieldNat[101:160,1]))#
+            yield_nat2[i]<-mean((M[[ii]][[1]]$yYieldNat[101:160,2]))#
+#
+            scenario[i]<-d#
+            i=i+1#
+        }#
+#
+    }#
+#
+    length(slope_hcr)#
+    slope_hcr_sq<-NULL#
+    intercept_hcr_sq<-NULL#
+    utility_total_sq<-NULL#
+    utility_total2_sq<-NULL#
+    utility_nat1_sq<-NULL#
+    utility_nat2_sq<-NULL#
+    yield_total_sq<-NULL#
+    yield_nat1_sq<-NULL#
+    yield_nat2_sq<-NULL#
+    B40_total_sq<-NULL#
+    scenario_sq<-NULL#
+#
+    nsq<- c(length( Msq1 ),length( Msq2 ),length( Msq3 ))#
+    y<-1#
+#
+    for(dd in 1:3){#
+#
+        Msq<-mmsq[[dd]]#
+#
+        for(yy in 1:nsq[[dd]]){#
+#
+            slope_hcr_sq[y]<-999#
+            intercept_hcr_sq[y]<-999#
+            utility_total_sq[y]<-sum(log(apply(Msq[[yy]][[1]]$yYieldNat[101:160,],1,sum)+1))#
+            utility_total2_sq[y]<-mean(log(Msq[[yy]][[1]]$yYieldNat[101:160,1]+1))*sum(log(Msq[[yy]][[1]]$yYieldNat[101:160,2]+1))#
+            utility_nat1_sq[y]<-mean(log(Msq[[yy]][[1]]$yYieldNat[101:160,1]+1))#
+            utility_nat2_sq[y]<-mean(log(Msq[[yy]][[1]]$yYieldNat[101:160,2]+1))#
+            yield_total_sq[y]<-mean(apply(Msq[[yy]][[1]]$yYieldNat[101:160,],1,sum))#
+            yield_nat1_sq[y]<-mean((Msq[[yy]][[1]]$yYieldNat[101:160,1]))#
+            yield_nat2_sq[y]<-mean((Msq[[yy]][[1]]$yYieldNat[101:160,2]))#
+            B40_total_sq[y]<-sum((Msq[[yy]][[1]]$ytB/Msq[[yy]][[1]]$Bo)[iniyr:fimyr]<0.4)/length(iniyr:fimyr)#
+            scenario_sq[y]<-dd#
+            y=y+1#
+        }#
+#
+    }#
+#
+    dflu<-data.frame(slope_hcr=slope_hcr,intercept_hcr=intercept_hcr,#
+        utility_total2=utility_total2,utility_total=utility_total,utility_nat1=utility_nat1,#
+        utility_nat2=utility_nat2,yield_total=yield_total,yield_nat1=yield_nat1,#
+        yield_nat2=yield_nat2,  b40=B40_total, scenario=scenario)#
+#
+    dflusq<-data.frame(slope_hcr=slope_hcr_sq,intercept_hcr=intercept_hcr_sq,#
+        utility_total2=utility_total2_sq,utility_total=utility_total_sq,utility_nat1=utility_nat1_sq,#
+        utility_nat2=utility_nat2_sq,yield_total=yield_total_sq,yield_nat1=yield_nat1_sq,#
+        yield_nat2=yield_nat2_sq,b40=B40_total_sq,scenario=scenario_sq)#
+#
+    dflu_plot<-aggregate(dflu,list(dflu$slope_hcr,dflu$intercept_hcr, dflu$scenario), mean)#
+#
+    dflu_plotsq<-aggregate(dflusq,list(dflusq$slope_hcr,dflusq$intercept_hcr, dflusq$scenario), mean)#
+    summary(dflu_plot)#
+    head(dflu_plotsq)#
+#
+    dflu_selec<-dflu_plot#
+#
+    dfa<-rbind(dflu_selec,dflu_plotsq)#
+#
+    dfa$slope<-as.character(dfa$slope_hcr)#
+    dfa$slope[dfa$slope=="999"]<-"40:10"#
+#
+    dfa$intercept<-as.character(dfa$intercept_hcr)#
+    dfa$intercept[dfa$intercept=="999"]<-"40:10"#
+#
+    dfa$ut2tf<- -999#
+    dfa$ut2tf[which(dfa$slope=="40:10")]<-dfa$utility_total2[which(dfa$slope=="40:10")]#
+#
+    dfa$nt1tf<- -999#
+    dfa$nt1tf[which(dfa$slope=="40:10")]<-dfa$utility_nat1[which(dfa$slope=="40:10")]#
+#
+    dfa$nt2tf<- -999#
+    dfa$nt2tf[which(dfa$slope=="40:10")]<-dfa$utility_nat2[which(dfa$slope=="40:10")]#
+#
+    dfa$scn<-"no strong recruitment"#
+    dfa$scn[dfa$scenario==2]<-"one strong recruitment"#
+    dfa$scn[dfa$scenario==3]<-"two strong recruitments"#
+#
+    dfa$b40tf<- -999#
+    dfa$b40tf[dfa$slope=="40:10"]<-dfa$b40[which(dfa$slope=="40:10")]#
+#
+summary(dfa)#
+#
+    dfc<-dfa[dfa$intercept_hcr<0.4|dfa$intercept_hcr>2,] #
+    dfcr<-dfc#
+    summary(dfcr)#
+#
+    dfcr$slope<-as.factor(dfcr$slope)#
+    dfcr$intercept<-as.factor(dfcr$intercept)#
+    levels(dfcr$intercept)#
+#
+    dfcr$utility_nat2_sc[dfcr$scenario==1]<-dfcr$utility_nat2[dfcr$scenario==1]/max(dfcr$utility_nat2[dfcr$scenario==1])#
+    dfcr$utility_nat2_sc[dfcr$scenario==2]<-dfcr$utility_nat2[dfcr$scenario==2]/max(dfcr$utility_nat2[dfcr$scenario==2])#
+    dfcr$utility_nat2_sc[dfcr$scenario==3]<-dfcr$utility_nat2[dfcr$scenario==3]/max(dfcr$utility_nat2[dfcr$scenario==3])#
+    dfcr$utility_nat1_sc[dfcr$scenario==1]<-dfcr$utility_nat1[dfcr$scenario==1]/max(dfcr$utility_nat1[dfcr$scenario==1])#
+    dfcr$utility_nat1_sc[dfcr$scenario==2]<-dfcr$utility_nat1[dfcr$scenario==2]/max(dfcr$utility_nat1[dfcr$scenario==2])#
+    dfcr$utility_nat1_sc[dfcr$scenario==3]<-dfcr$utility_nat1[dfcr$scenario==3]/max(dfcr$utility_nat1[dfcr$scenario==3])#
+    dfcr$yield_nat2_sc[dfcr$scenario==1]<-dfcr$yield_nat2[dfcr$scenario==1]/max(dfcr$yield_nat2[dfcr$scenario==1])#
+    dfcr$yield_nat2_sc[dfcr$scenario==2]<-dfcr$yield_nat2[dfcr$scenario==2]/max(dfcr$yield_nat2[dfcr$scenario==2])#
+    dfcr$yield_nat2_sc[dfcr$scenario==3]<-dfcr$yield_nat2[dfcr$scenario==3]/max(dfcr$yield_nat2[dfcr$scenario==3])#
+    dfcr$yield_nat1_sc[dfcr$scenario==1]<-dfcr$yield_nat1[dfcr$scenario==1]/max(dfcr$yield_nat1[dfcr$scenario==1])#
+    dfcr$yield_nat1_sc[dfcr$scenario==2]<-dfcr$yield_nat1[dfcr$scenario==2]/max(dfcr$yield_nat1[dfcr$scenario==2])#
+    dfcr$yield_nat1_sc[dfcr$scenario==3]<-dfcr$yield_nat1[dfcr$scenario==3]/max(dfcr$yield_nat1[dfcr$scenario==3])#
+    dfcr<-dfcr[order(dfcr$intercept),]#
+#
+    dft<-dfcr[dfcr$slope_hcr==999,]#
+#
+    p<-ggplot(dfcr)#
+    p<-p+geom_path(aes(y=utility_nat2_sc,x=utility_nat1_sc,color=slope))#
+    p<-p+geom_point(aes(y=utility_nat2_sc,x=utility_nat1_sc,color=slope, shape=intercept),size=4,alpha=.6)#
+    p<-p+ geom_text(data=dft,aes(y=dft$utility_nat2_sc,x=dft$utility_nat1_sc,label="40:10"),fontface = "bold",colour="black")               #
+    p<-p + facet_wrap(~scn, scales="free")#
+    p<-p+ ylab("average log utility - Nation 2") + xlab("average log utility - Nation 1")#
+    p <- p  + theme_bw(16)+ theme(legend.position = "none")#
+    p <- p + guides(color=guide_legend("harvest rate"))#
+    p#
+    p1 <- ggplot(dfcr)#
+    p1 <- p1+geom_path(aes(y=yield_nat2_sc,x=yield_nat1_sc,color=slope))#
+    p1 <- p1+geom_point(aes(y=yield_nat2_sc,x=yield_nat1_sc,color=slope, shape=intercept),size=4,alpha=.6)#
+    #p1 <- p1+ geom_text(data=dft,aes(y=dft$yield_nat2_sc,x=dft$yield_nat1_sc,label="40:10"),fontface = "bold",colour="black")              #
+    p1 <- p1+facet_wrap(~scn, scales="free")#
+    p1 <- p1+ ylab(" average yield - Nation 2") + xlab(" average yield - Nation 1")#
+    p1 <- p1  + theme_bw(16)+ theme(legend.position = "bottom")#
+    p1 <- p1 + guides(color=guide_legend("harvest rate"), shape=guide_legend("biomass threshold"),size=guide_legend("none"))#
+    p1#
+    #p<-p+ geom_text(aes(y=nt2tf,x=nt1tf,label="10:40"),fontface = "bold",colour="black", position = position_nudge(y = -0.02))             #
+    #, size=guide_legend("biomass threshold")#
+#
+    pto<-plot_grid(p,p1,nrow=2,rel_heights  = c(1, 1.3))#
+    pto
+DIRS<-c("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_nostRec_m2"#
+,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_nostRec_m2")#
+#DIRS<-c("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_nostRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_onestRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_twostRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_nostRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_onestRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_twostRec_limit")#
+#DIRS<-c("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_nostRec"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_onestRec"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_twostRec"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_nostRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_onestRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_twostRec_limit")#
+#DIRS<-c("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_Best_nostRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_Best_onestRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_Best_twostRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_nostRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_onestRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_twostRec_m2")#
+Rfiles<-list()#
+SIMSdat<-list()#
+#
+for(d in 1:length(DIRS)){#
+#
+    Rfiles[[d]]<-list.files(DIRS[[d]],pattern="\\.Rdata",full.name=TRUE)#
+#
+    tmp_SIMS<-list()#
+    for(i in 1:length(Rfiles[[d]])){#
+        load(Rfiles[[d]][i])#
+        tmp_SIMS[[i]]<-sims#
+    }#
+    SIMSdat[[d]]<-tmp_SIMS#
+#
+}#
+plotlib<-"/Users/catarinawor/Documents/Lagrangian/R/plot_routines/HCR_noerror"#
+plotfiles <- list.files(plotlib,pattern="plot",full.name=TRUE)#
+#load graphing routinesfor#
+for(p in 1:length(plotfiles)){#
+    source(plotfiles[p])#
+}#
+#
+M<-SIMSdat[[1]]#
+Msq<-SIMSdat[[2]]
+M1<-SIMSdat[[1]]#
+Msq1<-SIMSdat[[2]]#
+M2<-SIMSdat[[1]]#
+Msq2<-SIMSdat[[2]]#
+M3<-SIMSdat[[1]]#
+Msq3<-SIMSdat[[2]]#
+#
+require(reshape2)#
+require(tidyr)#
+require(ggplot2)#
+library(scales)#
+library(RColorBrewer)#
+library(cowplot)
+n <- c(length( M1 ),length( M2 ),length( M3 ))#
+#
+    mm<-list(M1 ,M2,M3)#
+    mmsq<-list(Msq1,Msq2,Msq3)#
+#
+    slope_hcr<-NULL#
+    intercept_hcr<-NULL#
+    utility_total<-NULL#
+    utility_total2<-NULL#
+    utility_nat1<-NULL#
+    utility_nat2<-NULL#
+    yield_total<-NULL#
+    yield_nat1<-NULL#
+    yield_nat2<-NULL#
+    B40_total<-NULL#
+    scenario<-NULL#
+#
+    i=1#
+    for(d in 1:3){#
+#
+        M<-mm[[d]]#
+#
+        for(ii in 1:n[d]){#
+#
+            iniyr<-M[[ii]][[1]]$"nyr"+1#
+            fimyr<-M[[ii]][[1]]$"proj_yr"#
+            B40_total[i]<-sum((M[[ii]][[1]]$ytB/M[[ii]][[1]]$Bo)[iniyr:fimyr]<0.4)/length(iniyr:fimyr)#
+#
+            slope_hcr[i]<-M[[ii]][[1]]$slope_hcr#
+            intercept_hcr[i]<-M[[ii]][[1]]$intercept_hcr#
+            utility_total[i]<-mean(log(apply(M[[ii]][[1]]$yYieldNat[101:160,],1,sum)+1))#
+            utility_total2[i]<-mean(log(M[[ii]][[1]]$yYieldNat[101:160,1]+1))*sum(log(M[[ii]][[1]]$yYieldNat[101:160,2]+1))#
+            utility_nat1[i]<-mean(log(M[[ii]][[1]]$yYieldNat[101:160,1]+1))#
+            utility_nat2[i]<-mean(log(M[[ii]][[1]]$yYieldNat[101:160,2]+1))#
+            yield_total[i]<-mean(apply(M[[ii]][[1]]$yYieldNat[101:160,],1,sum))#
+            yield_nat1[i]<-mean((M[[ii]][[1]]$yYieldNat[101:160,1]))#
+            yield_nat2[i]<-mean((M[[ii]][[1]]$yYieldNat[101:160,2]))#
+#
+            scenario[i]<-d#
+            i=i+1#
+        }#
+#
+    }#
+#
+    length(slope_hcr)#
+    slope_hcr_sq<-NULL#
+    intercept_hcr_sq<-NULL#
+    utility_total_sq<-NULL#
+    utility_total2_sq<-NULL#
+    utility_nat1_sq<-NULL#
+    utility_nat2_sq<-NULL#
+    yield_total_sq<-NULL#
+    yield_nat1_sq<-NULL#
+    yield_nat2_sq<-NULL#
+    B40_total_sq<-NULL#
+    scenario_sq<-NULL#
+#
+    nsq<- c(length( Msq1 ),length( Msq2 ),length( Msq3 ))#
+    y<-1#
+#
+    for(dd in 1:3){#
+#
+        Msq<-mmsq[[dd]]#
+#
+        for(yy in 1:nsq[[dd]]){#
+#
+            slope_hcr_sq[y]<-999#
+            intercept_hcr_sq[y]<-999#
+            utility_total_sq[y]<-sum(log(apply(Msq[[yy]][[1]]$yYieldNat[101:160,],1,sum)+1))#
+            utility_total2_sq[y]<-mean(log(Msq[[yy]][[1]]$yYieldNat[101:160,1]+1))*sum(log(Msq[[yy]][[1]]$yYieldNat[101:160,2]+1))#
+            utility_nat1_sq[y]<-mean(log(Msq[[yy]][[1]]$yYieldNat[101:160,1]+1))#
+            utility_nat2_sq[y]<-mean(log(Msq[[yy]][[1]]$yYieldNat[101:160,2]+1))#
+            yield_total_sq[y]<-mean(apply(Msq[[yy]][[1]]$yYieldNat[101:160,],1,sum))#
+            yield_nat1_sq[y]<-mean((Msq[[yy]][[1]]$yYieldNat[101:160,1]))#
+            yield_nat2_sq[y]<-mean((Msq[[yy]][[1]]$yYieldNat[101:160,2]))#
+            B40_total_sq[y]<-sum((Msq[[yy]][[1]]$ytB/Msq[[yy]][[1]]$Bo)[iniyr:fimyr]<0.4)/length(iniyr:fimyr)#
+            scenario_sq[y]<-dd#
+            y=y+1#
+        }#
+#
+    }#
+#
+    dflu<-data.frame(slope_hcr=slope_hcr,intercept_hcr=intercept_hcr,#
+        utility_total2=utility_total2,utility_total=utility_total,utility_nat1=utility_nat1,#
+        utility_nat2=utility_nat2,yield_total=yield_total,yield_nat1=yield_nat1,#
+        yield_nat2=yield_nat2,  b40=B40_total, scenario=scenario)#
+#
+    dflusq<-data.frame(slope_hcr=slope_hcr_sq,intercept_hcr=intercept_hcr_sq,#
+        utility_total2=utility_total2_sq,utility_total=utility_total_sq,utility_nat1=utility_nat1_sq,#
+        utility_nat2=utility_nat2_sq,yield_total=yield_total_sq,yield_nat1=yield_nat1_sq,#
+        yield_nat2=yield_nat2_sq,b40=B40_total_sq,scenario=scenario_sq)#
+#
+    dflu_plot<-aggregate(dflu,list(dflu$slope_hcr,dflu$intercept_hcr, dflu$scenario), mean)#
+#
+    dflu_plotsq<-aggregate(dflusq,list(dflusq$slope_hcr,dflusq$intercept_hcr, dflusq$scenario), mean)#
+    summary(dflu_plot)#
+    head(dflu_plotsq)#
+#
+    dflu_selec<-dflu_plot#
+#
+    dfa<-rbind(dflu_selec,dflu_plotsq)#
+#
+    dfa$slope<-as.character(dfa$slope_hcr)#
+    dfa$slope[dfa$slope=="999"]<-"40:10"#
+#
+    dfa$intercept<-as.character(dfa$intercept_hcr)#
+    dfa$intercept[dfa$intercept=="999"]<-"40:10"#
+#
+    dfa$ut2tf<- -999#
+    dfa$ut2tf[which(dfa$slope=="40:10")]<-dfa$utility_total2[which(dfa$slope=="40:10")]#
+#
+    dfa$nt1tf<- -999#
+    dfa$nt1tf[which(dfa$slope=="40:10")]<-dfa$utility_nat1[which(dfa$slope=="40:10")]#
+#
+    dfa$nt2tf<- -999#
+    dfa$nt2tf[which(dfa$slope=="40:10")]<-dfa$utility_nat2[which(dfa$slope=="40:10")]#
+#
+    dfa$scn<-"no strong recruitment"#
+    dfa$scn[dfa$scenario==2]<-"one strong recruitment"#
+    dfa$scn[dfa$scenario==3]<-"two strong recruitments"#
+#
+    dfa$b40tf<- -999#
+    dfa$b40tf[dfa$slope=="40:10"]<-dfa$b40[which(dfa$slope=="40:10")]#
+#
+summary(dfa)#
+#
+    dfc<-dfa[dfa$intercept_hcr<0.4|dfa$intercept_hcr>2,] #
+    dfcr<-dfc#
+    summary(dfcr)#
+#
+    dfcr$slope<-as.factor(dfcr$slope)#
+    dfcr$intercept<-as.factor(dfcr$intercept)#
+    levels(dfcr$intercept)#
+#
+    dfcr$utility_nat2_sc[dfcr$scenario==1]<-dfcr$utility_nat2[dfcr$scenario==1]/max(dfcr$utility_nat2[dfcr$scenario==1])#
+    dfcr$utility_nat2_sc[dfcr$scenario==2]<-dfcr$utility_nat2[dfcr$scenario==2]/max(dfcr$utility_nat2[dfcr$scenario==2])#
+    dfcr$utility_nat2_sc[dfcr$scenario==3]<-dfcr$utility_nat2[dfcr$scenario==3]/max(dfcr$utility_nat2[dfcr$scenario==3])#
+    dfcr$utility_nat1_sc[dfcr$scenario==1]<-dfcr$utility_nat1[dfcr$scenario==1]/max(dfcr$utility_nat1[dfcr$scenario==1])#
+    dfcr$utility_nat1_sc[dfcr$scenario==2]<-dfcr$utility_nat1[dfcr$scenario==2]/max(dfcr$utility_nat1[dfcr$scenario==2])#
+    dfcr$utility_nat1_sc[dfcr$scenario==3]<-dfcr$utility_nat1[dfcr$scenario==3]/max(dfcr$utility_nat1[dfcr$scenario==3])#
+    dfcr$yield_nat2_sc[dfcr$scenario==1]<-dfcr$yield_nat2[dfcr$scenario==1]/max(dfcr$yield_nat2[dfcr$scenario==1])#
+    dfcr$yield_nat2_sc[dfcr$scenario==2]<-dfcr$yield_nat2[dfcr$scenario==2]/max(dfcr$yield_nat2[dfcr$scenario==2])#
+    dfcr$yield_nat2_sc[dfcr$scenario==3]<-dfcr$yield_nat2[dfcr$scenario==3]/max(dfcr$yield_nat2[dfcr$scenario==3])#
+    dfcr$yield_nat1_sc[dfcr$scenario==1]<-dfcr$yield_nat1[dfcr$scenario==1]/max(dfcr$yield_nat1[dfcr$scenario==1])#
+    dfcr$yield_nat1_sc[dfcr$scenario==2]<-dfcr$yield_nat1[dfcr$scenario==2]/max(dfcr$yield_nat1[dfcr$scenario==2])#
+    dfcr$yield_nat1_sc[dfcr$scenario==3]<-dfcr$yield_nat1[dfcr$scenario==3]/max(dfcr$yield_nat1[dfcr$scenario==3])#
+    dfcr<-dfcr[order(dfcr$intercept),]#
+#
+    dft<-dfcr[dfcr$slope_hcr==999,]#
+#
+    p<-ggplot(dfcr)#
+    p<-p+geom_path(aes(y=utility_nat2_sc,x=utility_nat1_sc,color=slope))#
+    p<-p+geom_point(aes(y=utility_nat2_sc,x=utility_nat1_sc,color=slope, shape=intercept),size=4,alpha=.6)#
+    p<-p+ geom_text(data=dft,aes(y=dft$utility_nat2_sc,x=dft$utility_nat1_sc,label="40:10"),fontface = "bold",colour="black")               #
+    p<-p + facet_wrap(~scn, scales="free")#
+    p<-p+ ylab("average log utility - Nation 2") + xlab("average log utility - Nation 1")#
+    p <- p  + theme_bw(16)+ theme(legend.position = "none")#
+    p <- p + guides(color=guide_legend("harvest rate"))#
+    p#
+    p1 <- ggplot(dfcr)#
+    p1 <- p1+geom_path(aes(y=yield_nat2_sc,x=yield_nat1_sc,color=slope))#
+    p1 <- p1+geom_point(aes(y=yield_nat2_sc,x=yield_nat1_sc,color=slope, shape=intercept),size=4,alpha=.6)#
+    #p1 <- p1+ geom_text(data=dft,aes(y=dft$yield_nat2_sc,x=dft$yield_nat1_sc,label="40:10"),fontface = "bold",colour="black")              #
+    p1 <- p1+facet_wrap(~scn, scales="free")#
+    p1 <- p1+ ylab(" average yield - Nation 2") + xlab(" average yield - Nation 1")#
+    p1 <- p1  + theme_bw(16)+ theme(legend.position = "bottom")#
+    p1 <- p1 + guides(color=guide_legend("harvest rate"), shape=guide_legend("biomass threshold"),size=guide_legend("none"))#
+    p1#
+    #p<-p+ geom_text(aes(y=nt2tf,x=nt1tf,label="10:40"),fontface = "bold",colour="black", position = position_nudge(y = -0.02))             #
+    #, size=guide_legend("biomass threshold")#
+#
+    pto<-plot_grid(p,p1,nrow=2,rel_heights  = c(1, 1.3))#
+    pto
+noY<-plot_Yield( SIMSdat[[1]],SIMSdat[[2]] , sv=FALSE, nome="clnostrongrec",nations=TRUE)
+no<-plot_logUtility( SIMSdat[[1]],SIMSdat[[2]] , sv=TRUE, nome="nostrongrec",nations=TRUE)
+cat("plot_Bnat_TAC")#
+#
+    gg_color_hue <- function(n) {#
+        hues = seq(15, 375, length = n + 1)#
+        hcl(h = hues, l = 65, c = 88)[1:n]#
+    }#
+    n <- length( M )#
+    slope_hcr<-NULL#
+    intercept_hcr<-NULL#
+    Yield_total<-matrix(ncol=n, nrow=111)#
+    Yield_nat1<-matrix(ncol=n, nrow=111)#
+    Yield_nat2<-matrix(ncol=n, nrow=111)#
+    for(i in 1:n){#
+#
+        slope_hcr[i]<-M[[i]][[1]]$slope_hcr#
+        intercept_hcr[i]<-M[[i]][[1]]$intercept_hcr#
+        Yield_total[,i]<-(apply(M[[i]][[1]]$yYieldNat[50:160,],1,sum))#
+        Yield_nat1[,i]<-(M[[i]][[1]]$yYieldNat[50:160,1])#
+        Yield_nat2[,i]<-(M[[i]][[1]]$yYieldNat[50:160,2])#
+    }#
+    nsq<- length( Msq )#
+#
+    slope_hcr_sq<-NULL#
+    intercept_hcr_sq<-NULL#
+    Yield_total_sq<-matrix(ncol=nsq, nrow=111)#
+    Yield_nat1_sq<-matrix(ncol=nsq, nrow=111)#
+    Yield_nat2_sq<-matrix(ncol=nsq, nrow=111)#
+    for(y in 1:nsq){#
+#
+        slope_hcr_sq[y]<-999#
+        intercept_hcr_sq[y]<-999#
+        Yield_total_sq[,y]<-apply(Msq[[y]][[1]]$yYieldNat[50:160,],1,sum)#
+        Yield_nat1_sq[,y]<-Msq[[y]][[1]]$yYieldNat[50:160,1]#
+        Yield_nat2_sq[,y]<-Msq[[y]][[1]]$yYieldNat[50:160,2]#
+    }#
+    length(50:160)#
+    sp<- unique(slope_hcr)#
+    int<-unique(intercept_hcr)#
+    Yield_lo_nat2<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_hi_nat2<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_avg_nat2<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+#
+    Yield_lo_nat1<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_hi_nat1<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_avg_nat1<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+#
+    Yield_lo_tot<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_hi_tot<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_avg_tot<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_m_tot<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+#
+    intercept_dois<- NULL#
+    slope_dois<-NULL#
+#
+    a <-1#
+    for(si in 1:length(sp)){#
+        for(ii in 1:length(int)){#
+#
+            intercept_dois[a]<-int[ii]#
+            slope_dois[a]<-sp[si]#
+            ncol(Yield_nat2)#
+#
+            tmp2<-Yield_nat2[,intersect(which(intercept_hcr==int[ii]),which(slope_hcr==sp[si]))]#
+            Yield_lo_nat2[a,]<-apply(tmp2,1,calc_quantile)[1,]#
+            Yield_hi_nat2[a,]<-apply(tmp2,1,calc_quantile)[5,]#
+            Yield_avg_nat2[a,]<-apply(tmp2,1,calc_quantile)[3,]#
+#
+            tmp1<-Yield_nat1[,intersect(which(intercept_hcr==int[ii]),which(slope_hcr==sp[si]))]#
+            Yield_lo_nat1[a,]<-apply(tmp1,1,calc_quantile)[1,]#
+            Yield_hi_nat1[a,]<-apply(tmp1,1,calc_quantile)[5,]#
+            Yield_avg_nat1[a,]<-apply(tmp1,1,calc_quantile)[3,]#
+            tmp0<-Yield_total[,intersect(which(intercept_hcr==int[ii]),which(slope_hcr==sp[si]))]#
+            Yield_lo_tot[a,]<-apply(tmp0,1,calc_quantile)[1,]#
+            Yield_hi_tot[a,]<-apply(tmp0,1,calc_quantile)[5,]#
+            Yield_avg_tot[a,]<-apply(tmp0,1,calc_quantile)[3,]#
+            Yield_m_tot[a,]<-apply(tmp0,1,mean)#
+#
+            a <- a+1#
+        }#
+    }#
+#
+    intercept_dois[a]<-4010#
+    slope_dois[a]<-4010#
+#
+    tmp2<-Yield_nat2_sq#
+#
+    Yield_lo_nat2[a,]<-apply(tmp2,1,calc_quantile)[1,]#
+    Yield_hi_nat2[a,]<-apply(tmp2,1,calc_quantile)[5,]#
+    Yield_avg_nat2[a,]<-apply(tmp2,1,calc_quantile)[3,]#
+    tmp1<-Yield_nat1_sq#
+    Yield_lo_nat1[a,]<-apply(tmp1,1,calc_quantile)[1,]#
+    Yield_hi_nat1[a,]<-apply(tmp1,1,calc_quantile)[5,]#
+    Yield_avg_nat1[a,]<-apply(tmp1,1,calc_quantile)[3,]#
+    tmp0<-Yield_total_sq#
+    Yield_lo_tot[a,]<-apply(tmp0,1,calc_quantile)[1,]#
+    Yield_hi_tot[a,]<-apply(tmp0,1,calc_quantile)[5,]#
+    Yield_avg_tot[a,]<-apply(tmp0,1,calc_quantile)[3,]#
+    Yield_m_tot[a,]<-apply(tmp0,1,mean)#
+#
+    lonat2<-melt(Yield_lo_nat2)#
+    hinat2<-melt(Yield_hi_nat2)#
+    avgnat2<-melt(Yield_avg_nat2)#
+    nat2<- data.frame(year=(1966:2076)[avgnat2$Var2], hcr=avgnat2$Var1,#
+         intercept=intercept_dois[avgnat2$Var1],slope=slope_dois[avgnat2$Var1],#
+        mean=avgnat2$value,high=hinat2$value,low=lonat2$value)#
+#
+    nat2$high[nat2$year<2016]=NA#
+    nat2$low[nat2$year<2016]=NA#
+#
+    nat2_o<-nat2[(nat2$intercept==.1|nat2$intercept==4010)&(nat2$slope==.1|nat2$slope==.5|nat2$intercept==4010),]#
+    p<- ggplot(nat2_o)#
+    p<- p+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)#
+    p<- p+geom_line(aes(x=year,y=mean, color=as.factor(slope))) #
+    p<- p +scale_color_manual(values = c(gg_color_hue(2),"black") ,name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p<- p +scale_fill_manual(values = c(gg_color_hue(2),"black"),name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p <- p + labs(x= "", y= " Yield (1000t) ")#
+    p <- p + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())#
+    p#
+    lonat1<-melt(Yield_lo_nat1)#
+    hinat1<-melt(Yield_hi_nat1)#
+    avgnat1<-melt(Yield_avg_nat1)#
+    nat1<- data.frame(year=(1966:2076)[avgnat1$Var2], hcr=avgnat1$Var1,#
+         intercept=intercept_dois[avgnat1$Var1],slope=slope_dois[avgnat1$Var1],#
+        mean=avgnat1$value,high=hinat1$value,low=lonat1$value)#
+#
+    nat1$high[nat1$year<2016]=NA#
+    nat1$low[nat1$year<2016]=NA#
+#
+    nat1_o<-nat1[(nat1$intercept==.1|nat1$intercept==4010)&(nat1$slope==.1|nat1$slope==.5|nat1$intercept==4010),]#
+    p1<- ggplot(nat1_o)#
+    p1<- p1+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)#
+    p1<- p1+geom_line(aes(x=year,y=mean, color=as.factor(slope)))   #
+    p1<- p1 +scale_color_manual(values = c(gg_color_hue(2),"black") ,name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p1<- p1 +scale_fill_manual(values = c(gg_color_hue(2),"black"),name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p1 <- p1 + labs(x= "Year", y= " Yield (1000t) ")#
+    p1 <- p1 + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())#
+#
+    p1#
+    plun<-plot_grid(p1,p,nrow=2,labels=c("Nation 1","Nation 2"),hjust = -1.5,vjust = 3)#
+        print(plun)
+DIRS<-c("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_nostRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_onestRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_nostRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_nostRec_100",#
+)
+DIRS<-c("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_nostRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_onestRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_nostRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_nostRec_100"#
+)
+Rfiles<-list()#
+SIMSdat<-list()#
+#
+for(d in 1:length(DIRS)){#
+#
+    Rfiles[[d]]<-list.files(DIRS[[d]],pattern="\\.Rdata",full.name=TRUE)#
+#
+    tmp_SIMS<-list()#
+    for(i in 1:length(Rfiles[[d]])){#
+        load(Rfiles[[d]][i])#
+        tmp_SIMS[[i]]<-sims#
+    }#
+    SIMSdat[[d]]<-tmp_SIMS#
+#
+}
+M<-SIMSdat[[1]]#
+Msq<-SIMSdat[[3]]
+M1<-SIMSdat[[1]]
+M2<-SIMSdat[[2]]
+one<-plot_logUtility( SIMSdat[[2]],SIMSdat[[3]]  , sv=TRUE, nome="onestrongrec",nations=TRUE)
+M<-SIMSdat[[2]]
+Msq<-SIMSdat[[3]]
+cat("plot_logUtility")#
+    n <- length( M )#
+    slope_hcr<-NULL#
+    intercept_hcr<-NULL#
+    utility_total<-NULL#
+    utility_total2<-NULL#
+    utility_nat1<-NULL#
+    utility_nat2<-NULL#
+    for(i in 1:n){#
+#
+        slope_hcr[i]<-M[[i]][[1]]$slope_hcr#
+        intercept_hcr[i]<-M[[i]][[1]]$intercept_hcr#
+        utility_total[i]<-sum(log(apply(M[[i]][[1]]$yYieldNat[101:160,],1,sum)+0.01))#
+        utility_total2[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,1]+1))*sum(log(M[[i]][[1]]$yYieldNat[101:160,2]+1))#
+        utility_nat1[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,1]+0.01))#
+        utility_nat2[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,2]+0.01))#
+    }#
+    slope_hcr_sq<-NULL#
+    intercept_hcr_sq<-NULL#
+    utility_total_sq<-NULL#
+    utility_total2_sq<-NULL#
+    utility_nat1_sq<-NULL#
+    utility_nat2_sq<-NULL#
+#
+    nsq<- length( Msq )#
+#
+    for(y in 1:nsq){#
+#
+        slope_hcr_sq[y]<-999#
+        intercept_hcr_sq[y]<-999#
+        utility_total_sq[y]<-sum(log(apply(Msq[[y]][[1]]$yYieldNat[101:160,],1,sum)+0.01))#
+        utility_total2_sq[y]<-sum(log(Msq[[y]][[1]]$yYieldNat[101:160,1]+1))*sum(log(Msq[[y]][[1]]$yYieldNat[101:160,2]+1))#
+        utility_nat1_sq[y]<-sum(log(Msq[[y]][[1]]$yYieldNat[101:160,1]+0.01))#
+        utility_nat2_sq[y]<-sum(log(Msq[[y]][[1]]$yYieldNat[101:160,2]+0.01))#
+    }#
+    dflu<-data.frame(slope_hcr=slope_hcr,intercept_hcr=intercept_hcr,#
+        utility_total2=utility_total2,utility_total=utility_total,utility_nat1=utility_nat1,utility_nat2=utility_nat2)#
+#
+    dflusq<-data.frame(slope_hcr=slope_hcr_sq,intercept_hcr=intercept_hcr_sq,#
+        utility_total2=utility_total2_sq,utility_total=utility_total_sq,utility_nat1=utility_nat1_sq,utility_nat2=utility_nat2_sq)
+unique(dflu$intercept_hcr)
+unique(dflu$slope_hcr)
+nrow(dflu[dflu$slope_hcr==0.05,]
+)
+nrow(dflu[dflu$slope_hcr==0.1,])
+nrow(dflu[dflu$slope_hcr==0.10,])
+nrow(dflu[dflu$slope_hcr==0.25,])
+nrow(dflu[dflu$slope_hcr==0.30,])
+nrow(dflu[dflu$slope_hcr==0.45,])
+nrow(dflu[dflu$slope_hcr==0.5,])
+#M<-SIMSdat[[1]]
+M<-SIMSdat[[1]]
+n <- length( M )#
+    slope_hcr<-NULL#
+    intercept_hcr<-NULL#
+    utility_total<-NULL#
+    utility_total2<-NULL#
+    utility_nat1<-NULL#
+    utility_nat2<-NULL#
+    for(i in 1:n){#
+#
+        slope_hcr[i]<-M[[i]][[1]]$slope_hcr#
+        intercept_hcr[i]<-M[[i]][[1]]$intercept_hcr#
+        utility_total[i]<-sum(log(apply(M[[i]][[1]]$yYieldNat[101:160,],1,sum)+0.01))#
+        utility_total2[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,1]+1))*sum(log(M[[i]][[1]]$yYieldNat[101:160,2]+1))#
+        utility_nat1[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,1]+0.01))#
+        utility_nat2[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,2]+0.01))#
+    }#
+    slope_hcr_sq<-NULL#
+    intercept_hcr_sq<-NULL#
+    utility_total_sq<-NULL#
+    utility_total2_sq<-NULL#
+    utility_nat1_sq<-NULL#
+    utility_nat2_sq<-NULL#
+#
+    nsq<- length( Msq )#
+#
+    for(y in 1:nsq){#
+#
+        slope_hcr_sq[y]<-999#
+        intercept_hcr_sq[y]<-999#
+        utility_total_sq[y]<-sum(log(apply(Msq[[y]][[1]]$yYieldNat[101:160,],1,sum)+0.01))#
+        utility_total2_sq[y]<-sum(log(Msq[[y]][[1]]$yYieldNat[101:160,1]+1))*sum(log(Msq[[y]][[1]]$yYieldNat[101:160,2]+1))#
+        utility_nat1_sq[y]<-sum(log(Msq[[y]][[1]]$yYieldNat[101:160,1]+0.01))#
+        utility_nat2_sq[y]<-sum(log(Msq[[y]][[1]]$yYieldNat[101:160,2]+0.01))#
+    }#
+    dflu<-data.frame(slope_hcr=slope_hcr,intercept_hcr=intercept_hcr,#
+        utility_total2=utility_total2,utility_total=utility_total,utility_nat1=utility_nat1,utility_nat2=utility_nat2)#
+#
+    dflusq<-data.frame(slope_hcr=slope_hcr_sq,intercept_hcr=intercept_hcr_sq,#
+        utility_total2=utility_total2_sq,utility_total=utility_total_sq,utility_nat1=utility_nat1_sq,utility_nat2=utility_nat2_sq)
+unique(dflu$intercept_hcr)
+unique(dflu$slope_hcr)
+nrow(dflu[dflu$slope_hcr==0.05,])
+nrow(dflu[dflu$slope_hcr==0.1,])
+nrow(dflu[dflu$slope_hcr==0.15,])
+DIRS<-c("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_nostRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_onestRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_twostRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_nostRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_nostRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_nostRec_100"#
+)
+Rfiles<-list()#
+SIMSdat<-list()#
+#
+for(d in 1:length(DIRS)){#
+#
+    Rfiles[[d]]<-list.files(DIRS[[d]],pattern="\\.Rdata",full.name=TRUE)#
+#
+    tmp_SIMS<-list()#
+    for(i in 1:length(Rfiles[[d]])){#
+        load(Rfiles[[d]][i])#
+        tmp_SIMS[[i]]<-sims#
+    }#
+    SIMSdat[[d]]<-tmp_SIMS#
+#
+}#
+plotlib<-"/Users/catarinawor/Documents/Lagrangian/R/plot_routines/HCR_noerror"#
+plotfiles <- list.files(plotlib,pattern="plot",full.name=TRUE)#
+#load graphing routinesfor#
+for(p in 1:length(plotfiles)){#
+    source(plotfiles[p])#
+}
+M<-SIMSdat[[3]]
+Msq<-SIMSdat[[4]]
+n <- length( M )#
+    slope_hcr<-NULL#
+    intercept_hcr<-NULL#
+    utility_total<-NULL#
+    utility_total2<-NULL#
+    utility_nat1<-NULL#
+    utility_nat2<-NULL#
+    for(i in 1:n){#
+#
+        slope_hcr[i]<-M[[i]][[1]]$slope_hcr#
+        intercept_hcr[i]<-M[[i]][[1]]$intercept_hcr#
+        utility_total[i]<-sum(log(apply(M[[i]][[1]]$yYieldNat[101:160,],1,sum)+0.01))#
+        utility_total2[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,1]+1))*sum(log(M[[i]][[1]]$yYieldNat[101:160,2]+1))#
+        utility_nat1[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,1]+0.01))#
+        utility_nat2[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,2]+0.01))#
+    }#
+    slope_hcr_sq<-NULL#
+    intercept_hcr_sq<-NULL#
+    utility_total_sq<-NULL#
+    utility_total2_sq<-NULL#
+    utility_nat1_sq<-NULL#
+    utility_nat2_sq<-NULL#
+#
+    nsq<- length( Msq )#
+#
+    for(y in 1:nsq){#
+#
+        slope_hcr_sq[y]<-999#
+        intercept_hcr_sq[y]<-999#
+        utility_total_sq[y]<-sum(log(apply(Msq[[y]][[1]]$yYieldNat[101:160,],1,sum)+0.01))#
+        utility_total2_sq[y]<-sum(log(Msq[[y]][[1]]$yYieldNat[101:160,1]+1))*sum(log(Msq[[y]][[1]]$yYieldNat[101:160,2]+1))#
+        utility_nat1_sq[y]<-sum(log(Msq[[y]][[1]]$yYieldNat[101:160,1]+0.01))#
+        utility_nat2_sq[y]<-sum(log(Msq[[y]][[1]]$yYieldNat[101:160,2]+0.01))#
+    }#
+    dflu<-data.frame(slope_hcr=slope_hcr,intercept_hcr=intercept_hcr,#
+        utility_total2=utility_total2,utility_total=utility_total,utility_nat1=utility_nat1,utility_nat2=utility_nat2)#
+#
+    dflusq<-data.frame(slope_hcr=slope_hcr_sq,intercept_hcr=intercept_hcr_sq,#
+        utility_total2=utility_total2_sq,utility_total=utility_total_sq,utility_nat1=utility_nat1_sq,utility_nat2=utility_nat2_sq)#
+    unique(dflu$intercept_hcr)#
+    unique(dflu$slope_hcr)#
+#
+    nrow(dflu[dflu$slope_hcr==0.15,])
+nrow(dflu[dflu$slope_hcr==0.05,])
+nrow(dflu[dflu$slope_hcr==0.10,])
+dflu$intercept_hcr[dflu$slope_hcr==0.10]
+unique(dflu$intercept_hcr[dflu$slope_hcr==0.10])
+dflu$intercept_hcr[dflu$slope_hcr==0.10&dflu$intercept_hcr==0.0]
+length(dflu$intercept_hcr[dflu$slope_hcr==0.10&dflu$intercept_hcr==0.0])
+length(dflu$intercept_hcr[dflu$slope_hcr==0.10&dflu$intercept_hcr==0.1])
+length(dflu$intercept_hcr[dflu$slope_hcr==0.10&dflu$intercept_hcr==0.2])
+length(dflu$intercept_hcr[dflu$slope_hcr==0.10&dflu$intercept_hcr==0.3])
+length(dflu$intercept_hcr[dflu$slope_hcr==0.10&dflu$intercept_hcr==0.4])
+length(dflu$intercept_hcr[dflu$slope_hcr==0.10&dflu$intercept_hcr==0.5])
+length(dflu$intercept_hcr[dflu$slope_hcr==0.15&dflu$intercept_hcr==0.5])
+nrow(dflu[dflu$slope_hcr==0.15,])
+nrow(dflu[dflu$slope_hcr==0.20,])
+length(dflu$intercept_hcr[dflu$slope_hcr==0.25&dflu$intercept_hcr==0.1])
+length(dflu$intercept_hcr[dflu$slope_hcr==0.25&dflu$intercept_hcr==0.2])
+length(dflu$intercept_hcr[dflu$slope_hcr==0.25&dflu$intercept_hcr==0.3])
+length(dflu$intercept_hcr[dflu$slope_hcr==0.25&dflu$intercept_hcr==0.4])
+length(dflu$intercept_hcr[dflu$slope_hcr==0.25&dflu$intercept_hcr==0.5])
+nrow(dflu[dflu$slope_hcr==0.25,])
+nrow(dflu[dflu$slope_hcr==0.30,])
+length(dflu$intercept_hcr[dflu$slope_hcr==0.3&dflu$intercept_hcr==0.5])
+length(dflu$intercept_hcr[dflu$slope_hcr==0.3&dflu$intercept_hcr==0.4])
+length(dflu$intercept_hcr[dflu$slope_hcr==0.3&dflu$intercept_hcr==0.3])
+length(dflu$intercept_hcr[dflu$slope_hcr==0.3&dflu$intercept_hcr==0.2])
+length(dflu$intercept_hcr[dflu$slope_hcr==0.3&dflu$intercept_hcr==0.1])
+nrow(dflu[dflu$slope_hcr==0.35,])
+nrow(dflu[dflu$slope_hcr==0.4,])
+nrow(dflu[dflu$slope_hcr==0.44,])
+nrow(dflu[dflu$slope_hcr==0.45,])
+length(dflu$intercept_hcr[dflu$slope_hcr==0.45&dflu$intercept_hcr==0.1])
+length(dflu$intercept_hcr[dflu$slope_hcr==0.45&dflu$intercept_hcr==0.2])
+length(dflu$intercept_hcr[dflu$slope_hcr==0.45&dflu$intercept_hcr==0.3])
+length(dflu$intercept_hcr[dflu$slope_hcr==0.45&dflu$intercept_hcr==0.4])
+length(dflu$intercept_hcr[dflu$slope_hcr==0.45&dflu$intercept_hcr==0.5])
+nrow(dflu[dflu$slope_hcr==0.5,])
+length(dflu$intercept_hcr[dflu$slope_hcr==0.5&dflu$intercept_hcr==0.5])
+length(102:155)
+length(102:154)
+M<-SIMSdat[[3]]
+n <- length( M )#
+    slope_hcr<-NULL#
+    intercept_hcr<-NULL#
+    utility_total<-NULL#
+    utility_total2<-NULL#
+    utility_nat1<-NULL#
+    utility_nat2<-NULL#
+    for(i in 1:n){#
+#
+        slope_hcr[i]<-M[[i]][[1]]$slope_hcr#
+        intercept_hcr[i]<-M[[i]][[1]]$intercept_hcr#
+        utility_total[i]<-sum(log(apply(M[[i]][[1]]$yYieldNat[101:160,],1,sum)+0.01))#
+        utility_total2[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,1]+1))*sum(log(M[[i]][[1]]$yYieldNat[101:160,2]+1))#
+        utility_nat1[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,1]+0.01))#
+        utility_nat2[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,2]+0.01))#
+    }#
+    slope_hcr_sq<-NULL#
+    intercept_hcr_sq<-NULL#
+    utility_total_sq<-NULL#
+    utility_total2_sq<-NULL#
+    utility_nat1_sq<-NULL#
+    utility_nat2_sq<-NULL#
+#
+    nsq<- length( Msq )#
+#
+    for(y in 1:nsq){#
+#
+        slope_hcr_sq[y]<-999#
+        intercept_hcr_sq[y]<-999#
+        utility_total_sq[y]<-sum(log(apply(Msq[[y]][[1]]$yYieldNat[101:160,],1,sum)+0.01))#
+        utility_total2_sq[y]<-sum(log(Msq[[y]][[1]]$yYieldNat[101:160,1]+1))*sum(log(Msq[[y]][[1]]$yYieldNat[101:160,2]+1))#
+        utility_nat1_sq[y]<-sum(log(Msq[[y]][[1]]$yYieldNat[101:160,1]+0.01))#
+        utility_nat2_sq[y]<-sum(log(Msq[[y]][[1]]$yYieldNat[101:160,2]+0.01))#
+    }#
+    dflu<-data.frame(slope_hcr=slope_hcr,intercept_hcr=intercept_hcr,#
+        utility_total2=utility_total2,utility_total=utility_total,utility_nat1=utility_nat1,utility_nat2=utility_nat2)#
+#
+    dflusq<-data.frame(slope_hcr=slope_hcr_sq,intercept_hcr=intercept_hcr_sq,#
+        utility_total2=utility_total2_sq,utility_total=utility_total_sq,utility_nat1=utility_nat1_sq,utility_nat2=utility_nat2_sq)
+n
+nrow(dflu[dflu$slope_hcr==0.1,])
+length(dflu$intercept_hcr[dflu$slope_hcr==0.1&dflu$intercept_hcr==0.5])
+DIRS<-c("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_nostRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_onestRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_twostRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_nostRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_nostRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_nostRec_100"#
+)
+Rfiles<-list()#
+SIMSdat<-list()#
+#
+for(d in 1:length(DIRS)){#
+#
+    Rfiles[[d]]<-list.files(DIRS[[d]],pattern="\\.Rdata",full.name=TRUE)#
+#
+    tmp_SIMS<-list()#
+    for(i in 1:length(Rfiles[[d]])){#
+        load(Rfiles[[d]][i])#
+        tmp_SIMS[[i]]<-sims#
+    }#
+    SIMSdat[[d]]<-tmp_SIMS#
+#
+}#
+plotlib<-"/Users/catarinawor/Documents/Lagrangian/R/plot_routines/HCR_noerror"#
+plotfiles <- list.files(plotlib,pattern="plot",full.name=TRUE)#
+#load graphing routinesfor#
+for(p in 1:length(plotfiles)){#
+    source(plotfiles[p])#
+}
+M<-SIMSdat[[3]]
+n <- length( M )#
+    slope_hcr<-NULL#
+    intercept_hcr<-NULL#
+    utility_total<-NULL#
+    utility_total2<-NULL#
+    utility_nat1<-NULL#
+    utility_nat2<-NULL#
+    for(i in 1:n){#
+#
+        slope_hcr[i]<-M[[i]][[1]]$slope_hcr#
+        intercept_hcr[i]<-M[[i]][[1]]$intercept_hcr#
+        utility_total[i]<-sum(log(apply(M[[i]][[1]]$yYieldNat[101:160,],1,sum)+0.01))#
+        utility_total2[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,1]+1))*sum(log(M[[i]][[1]]$yYieldNat[101:160,2]+1))#
+        utility_nat1[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,1]+0.01))#
+        utility_nat2[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,2]+0.01))#
+    }#
+    slope_hcr_sq<-NULL#
+    intercept_hcr_sq<-NULL#
+    utility_total_sq<-NULL#
+    utility_total2_sq<-NULL#
+    utility_nat1_sq<-NULL#
+    utility_nat2_sq<-NULL#
+#
+    nsq<- length( Msq )#
+#
+    for(y in 1:nsq){#
+#
+        slope_hcr_sq[y]<-999#
+        intercept_hcr_sq[y]<-999#
+        utility_total_sq[y]<-sum(log(apply(Msq[[y]][[1]]$yYieldNat[101:160,],1,sum)+0.01))#
+        utility_total2_sq[y]<-sum(log(Msq[[y]][[1]]$yYieldNat[101:160,1]+1))*sum(log(Msq[[y]][[1]]$yYieldNat[101:160,2]+1))#
+        utility_nat1_sq[y]<-sum(log(Msq[[y]][[1]]$yYieldNat[101:160,1]+0.01))#
+        utility_nat2_sq[y]<-sum(log(Msq[[y]][[1]]$yYieldNat[101:160,2]+0.01))#
+    }#
+    dflu<-data.frame(slope_hcr=slope_hcr,intercept_hcr=intercept_hcr,#
+        utility_total2=utility_total2,utility_total=utility_total,utility_nat1=utility_nat1,utility_nat2=utility_nat2)#
+#
+    dflusq<-data.frame(slope_hcr=slope_hcr_sq,intercept_hcr=intercept_hcr_sq,#
+        utility_total2=utility_total2_sq,utility_total=utility_total_sq,utility_nat1=utility_nat1_sq,utility_nat2=utility_nat2_sq)
+nrow(dflu[dflu$slope_hcr==0.1,])
+length(dflu$intercept_hcr[dflu$slope_hcr==0.1&dflu$intercept_hcr==0.5])
+names(M[[i]][[1]])
+M[[i]][[1]]$seed
+n <- length( M )#
+    slope_hcr<-NULL#
+    intercept_hcr<-NULL#
+    utility_total<-NULL#
+    utility_total2<-NULL#
+    utility_nat1<-NULL#
+    utility_nat2<-NULL#
+#
+    myseed<-NULL#
+    for(i in 1:n){#
+#
+        slope_hcr[i]<-M[[i]][[1]]$slope_hcr#
+        intercept_hcr[i]<-M[[i]][[1]]$intercept_hcr#
+        utility_total[i]<-sum(log(apply(M[[i]][[1]]$yYieldNat[101:160,],1,sum)+0.01))#
+        utility_total2[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,1]+1))*sum(log(M[[i]][[1]]$yYieldNat[101:160,2]+1))#
+        utility_nat1[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,1]+0.01))#
+        utility_nat2[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,2]+0.01))#
+#
+        myseed<-M[[i]][[1]]$seed#
+    }
+myseed[dflu$slope_hcr==0.1&dflu$intercept_hcr==0.5]
+n <- length( M )#
+    slope_hcr<-NULL#
+    intercept_hcr<-NULL#
+    utility_total<-NULL#
+    utility_total2<-NULL#
+    utility_nat1<-NULL#
+    utility_nat2<-NULL#
+#
+    myseed<-NULL#
+    for(i in 1:n){#
+#
+        slope_hcr[i]<-M[[i]][[1]]$slope_hcr#
+        intercept_hcr[i]<-M[[i]][[1]]$intercept_hcr#
+        utility_total[i]<-sum(log(apply(M[[i]][[1]]$yYieldNat[101:160,],1,sum)+0.01))#
+        utility_total2[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,1]+1))*sum(log(M[[i]][[1]]$yYieldNat[101:160,2]+1))#
+        utility_nat1[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,1]+0.01))#
+        utility_nat2[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,2]+0.01))#
+#
+        myseed[i]<-M[[i]][[1]]$seed#
+    }
+dflu<-data.frame(slope_hcr=slope_hcr,intercept_hcr=intercept_hcr,#
+        utility_total2=utility_total2,utility_total=utility_total,utility_nat1=utility_nat1,utility_nat2=utility_nat2)#
+#
+    dflusq<-data.frame(slope_hcr=slope_hcr_sq,intercept_hcr=intercept_hcr_sq,#
+        utility_total2=utility_total2_sq,utility_total=utility_total_sq,utility_nat1=utility_nat1_sq,utility_nat2=utility_nat2_sq)
+myseed[dflu$slope_hcr==0.1&dflu$intercept_hcr==0.5]
+nrow(dflu[dflu$slope_hcr==0.1,])
+length(dflu$intercept_hcr[dflu$slope_hcr==0.1&dflu$intercept_hcr==0.5])
+M<-SIMSdat[[2]]
+n <- length( M )#
+    slope_hcr<-NULL#
+    intercept_hcr<-NULL#
+    utility_total<-NULL#
+    utility_total2<-NULL#
+    utility_nat1<-NULL#
+    utility_nat2<-NULL#
+#
+    myseed<-NULL#
+    for(i in 1:n){#
+#
+        slope_hcr[i]<-M[[i]][[1]]$slope_hcr#
+        intercept_hcr[i]<-M[[i]][[1]]$intercept_hcr#
+        utility_total[i]<-sum(log(apply(M[[i]][[1]]$yYieldNat[101:160,],1,sum)+0.01))#
+        utility_total2[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,1]+1))*sum(log(M[[i]][[1]]$yYieldNat[101:160,2]+1))#
+        utility_nat1[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,1]+0.01))#
+        utility_nat2[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,2]+0.01))#
+#
+        myseed[i]<-M[[i]][[1]]$seed#
+    }#
+    slope_hcr_sq<-NULL#
+    intercept_hcr_sq<-NULL#
+    utility_total_sq<-NULL#
+    utility_total2_sq<-NULL#
+    utility_nat1_sq<-NULL#
+    utility_nat2_sq<-NULL#
+#
+    nsq<- length( Msq )#
+#
+    for(y in 1:nsq){#
+#
+        slope_hcr_sq[y]<-999#
+        intercept_hcr_sq[y]<-999#
+        utility_total_sq[y]<-sum(log(apply(Msq[[y]][[1]]$yYieldNat[101:160,],1,sum)+0.01))#
+        utility_total2_sq[y]<-sum(log(Msq[[y]][[1]]$yYieldNat[101:160,1]+1))*sum(log(Msq[[y]][[1]]$yYieldNat[101:160,2]+1))#
+        utility_nat1_sq[y]<-sum(log(Msq[[y]][[1]]$yYieldNat[101:160,1]+0.01))#
+        utility_nat2_sq[y]<-sum(log(Msq[[y]][[1]]$yYieldNat[101:160,2]+0.01))#
+    }#
+    dflu<-data.frame(slope_hcr=slope_hcr,intercept_hcr=intercept_hcr,#
+        utility_total2=utility_total2,utility_total=utility_total,utility_nat1=utility_nat1,utility_nat2=utility_nat2)#
+#
+    dflusq<-data.frame(slope_hcr=slope_hcr_sq,intercept_hcr=intercept_hcr_sq,#
+        utility_total2=utility_total2_sq,utility_total=utility_total_sq,utility_nat1=utility_nat1_sq,utility_nat2=utility_nat2_sq)
+unique(dflu$intercept_hcr)
+unique(dflu$slope_hcr)
+nrow(dflu[dflu$slope_hcr==0.05,])
+nrow(dflu[dflu$slope_hcr==0.1,])
+length(dflu$intercept_hcr[dflu$slope_hcr==0.1&dflu$intercept_hcr==0.0])
+length(dflu$intercept_hcr[dflu$slope_hcr==0.1&dflu$intercept_hcr==0.1])
+length(dflu$intercept_hcr[dflu$slope_hcr==0.1&dflu$intercept_hcr==0.2])
+length(dflu$intercept_hcr[dflu$slope_hcr==0.1&dflu$intercept_hcr==0.3])
+length(dflu$intercept_hcr[dflu$slope_hcr==0.1&dflu$intercept_hcr==0.4])
+length(dflu$intercept_hcr[dflu$slope_hcr==0.1&dflu$intercept_hcr==0.5])
+myseed[dflu$slope_hcr==0.1&dflu$intercept_hcr==0.5]
+nrow(dflu[dflu$slope_hcr==0.15,])
+nrow(dflu[dflu$slope_hcr==0.20,])
+nrow(dflu[dflu$slope_hcr==0.25,])
+length(dflu$intercept_hcr[dflu$slope_hcr==0.25&dflu$intercept_hcr==0.5])
+nrow(dflu[dflu$slope_hcr==0.3,])
+length(dflu$intercept_hcr[dflu$slope_hcr==0.3&dflu$intercept_hcr==0.5])
+nrow(dflu[dflu$slope_hcr==0.35,])
+nrow(dflu[dflu$slope_hcr==0.4,])
+nrow(dflu[dflu$slope_hcr==0.45,])
+length(dflu$intercept_hcr[dflu$slope_hcr==0.45&dflu$intercept_hcr==0.5])
+nrow(dflu[dflu$slope_hcr==0.5,])
+length(dflu$intercept_hcr[dflu$slope_hcr==0.5&dflu$intercept_hcr==0.5])
+DIRS<-c("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_nostRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_onestRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_twostRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_nostRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_onestRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_twostRec_100"#
+)
+Rfiles<-list()#
+SIMSdat<-list()#
+#
+for(d in 1:length(DIRS)){#
+#
+    Rfiles[[d]]<-list.files(DIRS[[d]],pattern="\\.Rdata",full.name=TRUE)#
+#
+    tmp_SIMS<-list()#
+    for(i in 1:length(Rfiles[[d]])){#
+        load(Rfiles[[d]][i])#
+        tmp_SIMS[[i]]<-sims#
+    }#
+    SIMSdat[[d]]<-tmp_SIMS#
+#
+}#
+plotlib<-"/Users/catarinawor/Documents/Lagrangian/R/plot_routines/HCR_noerror"#
+plotfiles <- list.files(plotlib,pattern="plot",full.name=TRUE)#
+#load graphing routinesfor#
+for(p in 1:length(plotfiles)){#
+    source(plotfiles[p])#
+}
+length(DIRS)
+DIRS<-c("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_nostRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_onestRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_twostRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_nostRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_onestRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_twostRec_100"#
+)
+Rfiles<-list()#
+SIMSdat<-list()#
+#
+for(d in 1:cp){#
+#
+    Rfiles[[d]]<-list.files(DIRS[[d]],pattern="\\.Rdata",full.name=TRUE)#
+#
+    tmp_SIMS<-list()#
+    for(i in 1:length(Rfiles[[d]])){#
+        load(Rfiles[[d]][i])#
+        tmp_SIMS[[i]]<-sims#
+    }#
+    SIMSdat[[d]]<-tmp_SIMS#
+#
+}#
+plotlib<-"/Users/catarinawor/Documents/Lagrangian/R/plot_routines/HCR_noerror"#
+plotfiles <- list.files(plotlib,pattern="plot",full.name=TRUE)#
+#load graphing routinesfor#
+for(p in 1:length(plotfiles)){#
+    source(plotfiles[p])#
+}
+DIRS<-c("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_nostRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_onestRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_twostRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_nostRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_onestRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_twostRec_100"#
+)
+Rfiles<-list()#
+SIMSdat<-list()#
+#
+for(d in 1:length(DIRS)){#
+#
+    Rfiles[[d]]<-list.files(DIRS[[d]],pattern="\\.Rdata",full.name=TRUE)#
+#
+    tmp_SIMS<-list()#
+    for(i in 1:length(Rfiles[[d]])){#
+        load(Rfiles[[d]][i])#
+        tmp_SIMS[[i]]<-sims#
+    }#
+    SIMSdat[[d]]<-tmp_SIMS#
+#
+}#
+plotlib<-"/Users/catarinawor/Documents/Lagrangian/R/plot_routines/HCR_noerror"#
+plotfiles <- list.files(plotlib,pattern="plot",full.name=TRUE)#
+#load graphing routinesfor#
+for(p in 1:length(plotfiles)){#
+    source(plotfiles[p])#
+}#
+#
+M<-SIMSdat[[1]]#
+#
+M1<-SIMSdat[[1]]#
+M2<-SIMSdat[[2]]#
+M3<-SIMSdat[[3]]#
+Msq<-SIMSdat[[4]]#
+Msq1<-SIMSdat[[4]]#
+Msq2<-SIMSdat[[5]]#
+Msq3<-SIMSdat[[6]]
+d=1
+Rfiles[[d]]<-list.files(DIRS[[d]],pattern="\\.Rdata",full.name=TRUE)
+Rfiles<-list()#
+SIMSdat<-list()
+Rfiles[[d]]<-list.files(DIRS[[d]],pattern="\\.Rdata",full.name=TRUE)
+Rfiles[[d]]
+Rfiles[[d]]<-list.files(DIRS[[d]],pattern="\\.Rdata",full.name=TRUE)#
+#
+    tmp_SIMS<-list()#
+    for(i in 1:length(Rfiles[[d]])){#
+        load(Rfiles[[d]][i])#
+        tmp_SIMS[[i]]<-sims#
+    }#
+    SIMSdat[[d]]<-tmp_SIMS
+Rfiles<-list()#
+SIMSdat<-list()#
+#
+for(d in 1:length(DIRS)){#
+#
+    Rfiles[[d]]<-list.files(DIRS[[d]],pattern="\\.Rdata",full.name=TRUE)#
+#
+    tmp_SIMS<-list()#
+    for(i in 1:length(Rfiles[[d]])){#
+        load(Rfiles[[d]][i])#
+        tmp_SIMS[[i]]<-sims#
+    }#
+    SIMSdat[[d]]<-tmp_SIMS#
+#
+}
+plotlib<-"/Users/catarinawor/Documents/Lagrangian/R/plot_routines/HCR_noerror"#
+plotfiles <- list.files(plotlib,pattern="plot",full.name=TRUE)#
+#load graphing routinesfor#
+for(p in 1:length(plotfiles)){#
+    source(plotfiles[p])#
+}#
+#
+M<-SIMSdat[[1]]
+M<-SIMSdat
+Msq<-SIMSdat[[4]]
+cat("plot_Bnat_TAC")#
+#
+    gg_color_hue <- function(n) {#
+        hues = seq(15, 375, length = n + 1)#
+        hcl(h = hues, l = 65, c = 88)[1:n]#
+    }#
+    n <- length( M )#
+    slope_hcr<-NULL#
+    intercept_hcr<-NULL#
+    Yield_total<-matrix(ncol=n, nrow=111)#
+    Yield_nat1<-matrix(ncol=n, nrow=111)#
+    Yield_nat2<-matrix(ncol=n, nrow=111)#
+    for(i in 1:n){#
+#
+        slope_hcr[i]<-M[[i]][[1]]$slope_hcr#
+        intercept_hcr[i]<-M[[i]][[1]]$intercept_hcr#
+        Yield_total[,i]<-(apply(M[[i]][[1]]$yYieldNat[50:160,],1,sum))#
+        Yield_nat1[,i]<-(M[[i]][[1]]$yYieldNat[50:160,1])#
+        Yield_nat2[,i]<-(M[[i]][[1]]$yYieldNat[50:160,2])#
+    }#
+    nsq<- length( Msq )#
+#
+    slope_hcr_sq<-NULL#
+    intercept_hcr_sq<-NULL#
+    Yield_total_sq<-matrix(ncol=nsq, nrow=111)#
+    Yield_nat1_sq<-matrix(ncol=nsq, nrow=111)#
+    Yield_nat2_sq<-matrix(ncol=nsq, nrow=111)#
+    for(y in 1:nsq){#
+#
+        slope_hcr_sq[y]<-999#
+        intercept_hcr_sq[y]<-999#
+        Yield_total_sq[,y]<-apply(Msq[[y]][[1]]$yYieldNat[50:160,],1,sum)#
+        Yield_nat1_sq[,y]<-Msq[[y]][[1]]$yYieldNat[50:160,1]#
+        Yield_nat2_sq[,y]<-Msq[[y]][[1]]$yYieldNat[50:160,2]#
+    }#
+    length(50:160)#
+    sp<- unique(slope_hcr)#
+    int<-unique(intercept_hcr)#
+    Yield_lo_nat2<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_hi_nat2<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_avg_nat2<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+#
+    Yield_lo_nat1<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_hi_nat1<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_avg_nat1<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+#
+    Yield_lo_tot<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_hi_tot<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_avg_tot<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_m_tot<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+#
+    intercept_dois<- NULL#
+    slope_dois<-NULL#
+#
+    a <-1#
+    for(si in 1:length(sp)){#
+        for(ii in 1:length(int)){#
+#
+            intercept_dois[a]<-int[ii]#
+            slope_dois[a]<-sp[si]#
+            ncol(Yield_nat2)#
+#
+            tmp2<-Yield_nat2[,intersect(which(intercept_hcr==int[ii]),which(slope_hcr==sp[si]))]#
+            Yield_lo_nat2[a,]<-apply(tmp2,1,calc_quantile)[1,]#
+            Yield_hi_nat2[a,]<-apply(tmp2,1,calc_quantile)[5,]#
+            Yield_avg_nat2[a,]<-apply(tmp2,1,calc_quantile)[3,]#
+#
+            tmp1<-Yield_nat1[,intersect(which(intercept_hcr==int[ii]),which(slope_hcr==sp[si]))]#
+            Yield_lo_nat1[a,]<-apply(tmp1,1,calc_quantile)[1,]#
+            Yield_hi_nat1[a,]<-apply(tmp1,1,calc_quantile)[5,]#
+            Yield_avg_nat1[a,]<-apply(tmp1,1,calc_quantile)[3,]#
+            tmp0<-Yield_total[,intersect(which(intercept_hcr==int[ii]),which(slope_hcr==sp[si]))]#
+            Yield_lo_tot[a,]<-apply(tmp0,1,calc_quantile)[1,]#
+            Yield_hi_tot[a,]<-apply(tmp0,1,calc_quantile)[5,]#
+            Yield_avg_tot[a,]<-apply(tmp0,1,calc_quantile)[3,]#
+            Yield_m_tot[a,]<-apply(tmp0,1,mean)#
+#
+            a <- a+1#
+        }#
+    }#
+#
+    intercept_dois[a]<-4010#
+    slope_dois[a]<-4010#
+#
+    tmp2<-Yield_nat2_sq#
+#
+    Yield_lo_nat2[a,]<-apply(tmp2,1,calc_quantile)[1,]#
+    Yield_hi_nat2[a,]<-apply(tmp2,1,calc_quantile)[5,]#
+    Yield_avg_nat2[a,]<-apply(tmp2,1,calc_quantile)[3,]#
+    tmp1<-Yield_nat1_sq#
+    Yield_lo_nat1[a,]<-apply(tmp1,1,calc_quantile)[1,]#
+    Yield_hi_nat1[a,]<-apply(tmp1,1,calc_quantile)[5,]#
+    Yield_avg_nat1[a,]<-apply(tmp1,1,calc_quantile)[3,]#
+    tmp0<-Yield_total_sq#
+    Yield_lo_tot[a,]<-apply(tmp0,1,calc_quantile)[1,]#
+    Yield_hi_tot[a,]<-apply(tmp0,1,calc_quantile)[5,]#
+    Yield_avg_tot[a,]<-apply(tmp0,1,calc_quantile)[3,]#
+    Yield_m_tot[a,]<-apply(tmp0,1,mean)#
+#
+    lonat2<-melt(Yield_lo_nat2)#
+    hinat2<-melt(Yield_hi_nat2)#
+    avgnat2<-melt(Yield_avg_nat2)#
+    nat2<- data.frame(year=(1966:2076)[avgnat2$Var2], hcr=avgnat2$Var1,#
+         intercept=intercept_dois[avgnat2$Var1],slope=slope_dois[avgnat2$Var1],#
+        mean=avgnat2$value,high=hinat2$value,low=lonat2$value)#
+#
+    nat2$high[nat2$year<2016]=NA#
+    nat2$low[nat2$year<2016]=NA#
+#
+    nat2_o<-nat2[(nat2$intercept==.1|nat2$intercept==4010)&(nat2$slope==.1|nat2$slope==.5|nat2$intercept==4010),]#
+    p<- ggplot(nat2_o)#
+    p<- p+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)#
+    p<- p+geom_line(aes(x=year,y=mean, color=as.factor(slope))) #
+    p<- p +scale_color_manual(values = c(gg_color_hue(2),"black") ,name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p<- p +scale_fill_manual(values = c(gg_color_hue(2),"black"),name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p <- p + labs(x= "", y= " Yield (1000t) ")#
+    p <- p + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())#
+    p
+sp<- unique(slope_hcr)
+unique(slope_hcr)
+n <- length( M )#
+    slope_hcr<-NULL#
+    intercept_hcr<-NULL#
+    Yield_total<-matrix(ncol=n, nrow=111)#
+    Yield_nat1<-matrix(ncol=n, nrow=111)#
+    Yield_nat2<-matrix(ncol=n, nrow=111)#
+    for(i in 1:n){#
+#
+        slope_hcr[i]<-M[[i]][[1]]$slope_hcr#
+        intercept_hcr[i]<-M[[i]][[1]]$intercept_hcr#
+        Yield_total[,i]<-(apply(M[[i]][[1]]$yYieldNat[50:160,],1,sum))#
+        Yield_nat1[,i]<-(M[[i]][[1]]$yYieldNat[50:160,1])#
+        Yield_nat2[,i]<-(M[[i]][[1]]$yYieldNat[50:160,2])#
+    }
+M[[i]][[1]]$slope_hcr
+M<-SIMSdat[[1]]
+M[[i]][[1]]$slope_hcr
+gg_color_hue <- function(n) {#
+        hues = seq(15, 375, length = n + 1)#
+        hcl(h = hues, l = 65, c = 88)[1:n]#
+    }#
+    n <- length( M )#
+    slope_hcr<-NULL#
+    intercept_hcr<-NULL#
+    Yield_total<-matrix(ncol=n, nrow=111)#
+    Yield_nat1<-matrix(ncol=n, nrow=111)#
+    Yield_nat2<-matrix(ncol=n, nrow=111)#
+    for(i in 1:n){#
+#
+        slope_hcr[i]<-M[[i]][[1]]$slope_hcr#
+        intercept_hcr[i]<-M[[i]][[1]]$intercept_hcr#
+        Yield_total[,i]<-(apply(M[[i]][[1]]$yYieldNat[50:160,],1,sum))#
+        Yield_nat1[,i]<-(M[[i]][[1]]$yYieldNat[50:160,1])#
+        Yield_nat2[,i]<-(M[[i]][[1]]$yYieldNat[50:160,2])#
+    }#
+    nsq<- length( Msq )#
+#
+    slope_hcr_sq<-NULL#
+    intercept_hcr_sq<-NULL#
+    Yield_total_sq<-matrix(ncol=nsq, nrow=111)#
+    Yield_nat1_sq<-matrix(ncol=nsq, nrow=111)#
+    Yield_nat2_sq<-matrix(ncol=nsq, nrow=111)#
+    for(y in 1:nsq){#
+#
+        slope_hcr_sq[y]<-999#
+        intercept_hcr_sq[y]<-999#
+        Yield_total_sq[,y]<-apply(Msq[[y]][[1]]$yYieldNat[50:160,],1,sum)#
+        Yield_nat1_sq[,y]<-Msq[[y]][[1]]$yYieldNat[50:160,1]#
+        Yield_nat2_sq[,y]<-Msq[[y]][[1]]$yYieldNat[50:160,2]#
+    }#
+    sp<- unique(slope_hcr)#
+    int<-unique(intercept_hcr)#
+    Yield_lo_nat2<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_hi_nat2<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_avg_nat2<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+#
+    Yield_lo_nat1<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_hi_nat1<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_avg_nat1<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+#
+    Yield_lo_tot<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_hi_tot<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_avg_tot<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_m_tot<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+#
+    intercept_dois<- NULL#
+    slope_dois<-NULL
+a <-1#
+    for(si in 1:length(sp)){#
+        for(ii in 1:length(int)){#
+#
+            intercept_dois[a]<-int[ii]#
+            slope_dois[a]<-sp[si]#
+            ncol(Yield_nat2)#
+#
+            tmp2<-Yield_nat2[,intersect(which(intercept_hcr==int[ii]),which(slope_hcr==sp[si]))]#
+            Yield_lo_nat2[a,]<-apply(tmp2,1,calc_quantile)[1,]#
+            Yield_hi_nat2[a,]<-apply(tmp2,1,calc_quantile)[5,]#
+            Yield_avg_nat2[a,]<-apply(tmp2,1,calc_quantile)[3,]#
+#
+            tmp1<-Yield_nat1[,intersect(which(intercept_hcr==int[ii]),which(slope_hcr==sp[si]))]#
+            Yield_lo_nat1[a,]<-apply(tmp1,1,calc_quantile)[1,]#
+            Yield_hi_nat1[a,]<-apply(tmp1,1,calc_quantile)[5,]#
+            Yield_avg_nat1[a,]<-apply(tmp1,1,calc_quantile)[3,]#
+            tmp0<-Yield_total[,intersect(which(intercept_hcr==int[ii]),which(slope_hcr==sp[si]))]#
+            Yield_lo_tot[a,]<-apply(tmp0,1,calc_quantile)[1,]#
+            Yield_hi_tot[a,]<-apply(tmp0,1,calc_quantile)[5,]#
+            Yield_avg_tot[a,]<-apply(tmp0,1,calc_quantile)[3,]#
+            Yield_m_tot[a,]<-apply(tmp0,1,mean)#
+#
+            a <- a+1#
+        }#
+    }#
+#
+    intercept_dois[a]<-4010#
+    slope_dois[a]<-4010
+tmp2<-Yield_nat2_sq#
+#
+    Yield_lo_nat2[a,]<-apply(tmp2,1,calc_quantile)[1,]#
+    Yield_hi_nat2[a,]<-apply(tmp2,1,calc_quantile)[5,]#
+    Yield_avg_nat2[a,]<-apply(tmp2,1,calc_quantile)[3,]#
+    tmp1<-Yield_nat1_sq#
+    Yield_lo_nat1[a,]<-apply(tmp1,1,calc_quantile)[1,]#
+    Yield_hi_nat1[a,]<-apply(tmp1,1,calc_quantile)[5,]#
+    Yield_avg_nat1[a,]<-apply(tmp1,1,calc_quantile)[3,]#
+    tmp0<-Yield_total_sq#
+    Yield_lo_tot[a,]<-apply(tmp0,1,calc_quantile)[1,]#
+    Yield_hi_tot[a,]<-apply(tmp0,1,calc_quantile)[5,]#
+    Yield_avg_tot[a,]<-apply(tmp0,1,calc_quantile)[3,]#
+    Yield_m_tot[a,]<-apply(tmp0,1,mean)#
+#
+    lonat2<-melt(Yield_lo_nat2)#
+    hinat2<-melt(Yield_hi_nat2)#
+    avgnat2<-melt(Yield_avg_nat2)#
+    nat2<- data.frame(year=(1966:2076)[avgnat2$Var2], hcr=avgnat2$Var1,#
+         intercept=intercept_dois[avgnat2$Var1],slope=slope_dois[avgnat2$Var1],#
+        mean=avgnat2$value,high=hinat2$value,low=lonat2$value)#
+#
+    nat2$high[nat2$year<2016]=NA#
+    nat2$low[nat2$year<2016]=NA#
+#
+    nat2_o<-nat2[(nat2$intercept==.1|nat2$intercept==4010)&(nat2$slope==.1|nat2$slope==.5|nat2$intercept==4010),]#
+    p<- ggplot(nat2_o)#
+    p<- p+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)#
+    p<- p+geom_line(aes(x=year,y=mean, color=as.factor(slope))) #
+    p<- p +scale_color_manual(values = c(gg_color_hue(2),"black") ,name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p<- p +scale_fill_manual(values = c(gg_color_hue(2),"black"),name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p <- p + labs(x= "", y= " Yield (1000t) ")#
+    p <- p + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())#
+    p
+lonat1<-melt(Yield_lo_nat1)#
+    hinat1<-melt(Yield_hi_nat1)#
+    avgnat1<-melt(Yield_avg_nat1)#
+    nat1<- data.frame(year=(1966:2076)[avgnat1$Var2], hcr=avgnat1$Var1,#
+         intercept=intercept_dois[avgnat1$Var1],slope=slope_dois[avgnat1$Var1],#
+        mean=avgnat1$value,high=hinat1$value,low=lonat1$value)#
+#
+    nat1$high[nat1$year<2016]=NA#
+    nat1$low[nat1$year<2016]=NA#
+#
+    nat1_o<-nat1[(nat1$intercept==.1|nat1$intercept==4010)&(nat1$slope==.1|nat1$slope==.5|nat1$intercept==4010),]#
+    p1<- ggplot(nat1_o)#
+    p1<- p1+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)#
+    p1<- p1+geom_line(aes(x=year,y=mean, color=as.factor(slope)))   #
+    p1<- p1 +scale_color_manual(values = c(gg_color_hue(2),"black") ,name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p1<- p1 +scale_fill_manual(values = c(gg_color_hue(2),"black"),name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p1 <- p1 + labs(x= "Year", y= " Yield (1000t) ")#
+    p1 <- p1 + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())#
+#
+    p1#
+    plun<-plot_grid(p1,p,nrow=2,labels=c("Nation 1","Nation 2"),hjust = -1.5,vjust = 3)#
+        print(plun)
+setwd("/Users/catarinawor/Documents/Lagrangian/figures/HCR")
+ggsave(paste(nome,"catch_trajectory.pdf",sep=""), plot=plun, width = 10, height = 7)
+nome="""
+nome=""
+setwd("/Users/catarinawor/Documents/Lagrangian/figures/HCR")
+ggsave(paste(nome,"catch_trajectory.pdf",sep=""), plot=plun, width = 10, height = 7)
+library(cowplot)#
+DIRS<-c("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_nostRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_onestRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_twostRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_nostRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_onestRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_twostRec_100"#
+)#
+#DIRS<-c("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_nostRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_onestRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_twostRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_nostRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_onestRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_twostRec_limit")#
+#DIRS<-c("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_nostRec"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_onestRec"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_twostRec"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_nostRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_onestRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_twostRec_limit")#
+#DIRS<-c("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_Best_nostRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_Best_onestRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_Best_twostRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_nostRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_onestRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_twostRec_m2")#
+Rfiles<-list()#
+SIMSdat<-list()#
+#
+for(d in 1:length(DIRS)){#
+#
+    Rfiles[[d]]<-list.files(DIRS[[d]],pattern="\\.Rdata",full.name=TRUE)#
+#
+    tmp_SIMS<-list()#
+    for(i in 1:length(Rfiles[[d]])){#
+        load(Rfiles[[d]][i])#
+        tmp_SIMS[[i]]<-sims#
+    }#
+    SIMSdat[[d]]<-tmp_SIMS#
+#
+}
+plotlib<-"/Users/catarinawor/Documents/Lagrangian/R/plot_routines/HCR_noerror"#
+plotfiles <- list.files(plotlib,pattern="plot",full.name=TRUE)#
+#load graphing routinesfor#
+for(p in 1:length(plotfiles)){#
+    source(plotfiles[p])#
+}#
+#
+M<-SIMSdat[[1]]
+M1<-SIMSdat[[1]]#
+M2<-SIMSdat[[2]]#
+M3<-SIMSdat[[3]]#
+Msq<-SIMSdat[[4]]#
+Msq1<-SIMSdat[[4]]#
+Msq2<-SIMSdat[[5]]#
+Msq3<-SIMSdat[[6]]
+no<-plot_logUtility( SIMSdat[[1]],SIMSdat[[4]] , sv=TRUE, nome="nostrongrec",nations=TRUE)
+n <- length( M )#
+    slope_hcr<-NULL#
+    intercept_hcr<-NULL#
+    utility_total<-NULL#
+    utility_total2<-NULL#
+    utility_nat1<-NULL#
+    utility_nat2<-NULL#
+#
+    myseed<-NULL#
+    for(i in 1:n){#
+#
+        slope_hcr[i]<-M[[i]][[1]]$slope_hcr#
+        intercept_hcr[i]<-M[[i]][[1]]$intercept_hcr#
+        utility_total[i]<-sum(log(apply(M[[i]][[1]]$yYieldNat[101:160,],1,sum)+0.01))#
+        utility_total2[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,1]+1))*sum(log(M[[i]][[1]]$yYieldNat[101:160,2]+1))#
+        utility_nat1[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,1]+0.01))#
+        utility_nat2[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,2]+0.01))#
+#
+        myseed[i]<-M[[i]][[1]]$seed#
+    }#
+    slope_hcr_sq<-NULL#
+    intercept_hcr_sq<-NULL#
+    utility_total_sq<-NULL#
+    utility_total2_sq<-NULL#
+    utility_nat1_sq<-NULL#
+    utility_nat2_sq<-NULL#
+#
+    nsq<- length( Msq )#
+#
+    for(y in 1:nsq){#
+#
+        slope_hcr_sq[y]<-999#
+        intercept_hcr_sq[y]<-999#
+        utility_total_sq[y]<-sum(log(apply(Msq[[y]][[1]]$yYieldNat[101:160,],1,sum)+0.01))#
+        utility_total2_sq[y]<-sum(log(Msq[[y]][[1]]$yYieldNat[101:160,1]+1))*sum(log(Msq[[y]][[1]]$yYieldNat[101:160,2]+1))#
+        utility_nat1_sq[y]<-sum(log(Msq[[y]][[1]]$yYieldNat[101:160,1]+0.01))#
+        utility_nat2_sq[y]<-sum(log(Msq[[y]][[1]]$yYieldNat[101:160,2]+0.01))#
+    }#
+    dflu<-data.frame(slope_hcr=slope_hcr,intercept_hcr=intercept_hcr,#
+        utility_total2=utility_total2,utility_total=utility_total,utility_nat1=utility_nat1,utility_nat2=utility_nat2)#
+#
+    dflusq<-data.frame(slope_hcr=slope_hcr_sq,intercept_hcr=intercept_hcr_sq,#
+        utility_total2=utility_total2_sq,utility_total=utility_total_sq,utility_nat1=utility_nat1_sq,utility_nat2=utility_nat2_sq)#
+    unique(dflu$intercept_hcr)#
+    unique(dflu$slope_hcr)
+nrow(dflu[dflu$slope_hcr==0.5,])
+nrow(dflu[dflu$slope_hcr==0.45,])
+nrow(dflu[dflu$slope_hcr==0.4,])
+nrow(dflu[dflu$slope_hcr==0.35,])
+nrow(dflu[dflu$slope_hcr==0.3,])
+nrow(dflu[dflu$slope_hcr==0.25,])
+nrow(dflu[dflu$slope_hcr==0.2,])
+nrow(dflu[dflu$slope_hcr==0.15,])
+nrow(dflu[dflu$slope_hcr==0.1,])
+nrow(dflu[dflu$slope_hcr==0.05,])
+M<-SIMSdat[[2]]
+n <- length( M )#
+    slope_hcr<-NULL#
+    intercept_hcr<-NULL#
+    utility_total<-NULL#
+    utility_total2<-NULL#
+    utility_nat1<-NULL#
+    utility_nat2<-NULL#
+#
+    myseed<-NULL#
+    for(i in 1:n){#
+#
+        slope_hcr[i]<-M[[i]][[1]]$slope_hcr#
+        intercept_hcr[i]<-M[[i]][[1]]$intercept_hcr#
+        utility_total[i]<-sum(log(apply(M[[i]][[1]]$yYieldNat[101:160,],1,sum)+0.01))#
+        utility_total2[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,1]+1))*sum(log(M[[i]][[1]]$yYieldNat[101:160,2]+1))#
+        utility_nat1[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,1]+0.01))#
+        utility_nat2[i]<-sum(log(M[[i]][[1]]$yYieldNat[101:160,2]+0.01))#
+#
+        myseed[i]<-M[[i]][[1]]$seed#
+    }#
+    slope_hcr_sq<-NULL#
+    intercept_hcr_sq<-NULL#
+    utility_total_sq<-NULL#
+    utility_total2_sq<-NULL#
+    utility_nat1_sq<-NULL#
+    utility_nat2_sq<-NULL#
+#
+    nsq<- length( Msq )#
+#
+    for(y in 1:nsq){#
+#
+        slope_hcr_sq[y]<-999#
+        intercept_hcr_sq[y]<-999#
+        utility_total_sq[y]<-sum(log(apply(Msq[[y]][[1]]$yYieldNat[101:160,],1,sum)+0.01))#
+        utility_total2_sq[y]<-sum(log(Msq[[y]][[1]]$yYieldNat[101:160,1]+1))*sum(log(Msq[[y]][[1]]$yYieldNat[101:160,2]+1))#
+        utility_nat1_sq[y]<-sum(log(Msq[[y]][[1]]$yYieldNat[101:160,1]+0.01))#
+        utility_nat2_sq[y]<-sum(log(Msq[[y]][[1]]$yYieldNat[101:160,2]+0.01))#
+    }#
+    dflu<-data.frame(slope_hcr=slope_hcr,intercept_hcr=intercept_hcr,#
+        utility_total2=utility_total2,utility_total=utility_total,utility_nat1=utility_nat1,utility_nat2=utility_nat2)#
+#
+    dflusq<-data.frame(slope_hcr=slope_hcr_sq,intercept_hcr=intercept_hcr_sq,#
+        utility_total2=utility_total2_sq,utility_total=utility_total_sq,utility_nat1=utility_nat1_sq,utility_nat2=utility_nat2_sq)
+unique(dflu$intercept_hcr)
+unique(dflu$slope_hcr)
+nrow(dflu[dflu$slope_hcr==0.05,])
+nrow(dflu[dflu$slope_hcr==0.1,])
+nrow(dflu[dflu$slope_hcr==0.15,])
+nrow(dflu[dflu$slope_hcr==0.2,])
+nrow(dflu[dflu$slope_hcr==0.25,])
+nrow(dflu[dflu$slope_hcr==0.3,])
+nrow(dflu[dflu$slope_hcr==0.35,])
+nrow(dflu[dflu$slope_hcr==0.4,])
+nrow(dflu[dflu$slope_hcr==0.45,])
+nrow(dflu[dflu$slope_hcr==0.5,])
+M<-SIMSdat[[3]]

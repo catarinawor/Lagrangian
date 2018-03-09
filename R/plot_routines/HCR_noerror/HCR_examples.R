@@ -61,7 +61,7 @@ for(i in 1:length(yB)){
 }
 
 
-pdf("Figurec4_HCRex.pdf",width = 10, height = 8)
+#pdf("Figurec4_HCRex.pdf",width = 10, height = 8)
 
 plot(ySB/SBo,TAC,type="l",lwd=2, xlab= expression(SB[t]/SB[0]))
 text(x=0.32,75, labels ="slope = 0.2", adj=0.0,font=2)
@@ -74,7 +74,25 @@ text(x=0.55,200, labels ="intercept = 0.4", adj=0.0,col="gray40",font=2)
 lines(yB/SBo,TAC1040, lwd=2, lty=3,col="gray20")
 text(x=0.15,175, labels ="40:10 rule", adj=0.0,col="gray20",font=2)
 
-dev.off()
+#dev.off()
+
+
+
+
+par(las=1, mar=c(5,5,1,1))
+plot(ySB/SBo,TAC,type="l",lwd=5, xlab= expression(SB[t]/SB[0],font=2),
+ col="darkorange2", cex.lab=1.4,cex.axis=1.3,font.lab=2,font.axis=2)
+text(x=0.32,75, labels ="slope = 0.2", adj=0.0,font=2, col="darkorange2")
+text(x=0.32,100, labels ="intercept = 0.0", adj=0.0,font=2, col="darkorange2")
+
+lines(ySB/SBo,TAC3, lwd=5, lty=2,col="seagreen")
+text(x=0.55,175, labels ="slope = 0.5", adj=0.0,col="seagreen",font=2)
+text(x=0.55,200, labels ="intercept = 0.4", adj=0.0,col="seagreen",font=2)
+
+lines(yB/SBo,TAC1040, lwd=5, lty=1,col="dodgerblue4")
+text(x=0.15,175, labels ="40:10 rule", adj=0.0,col="dodgerblue4",font=2)
+
+
 
 
 #lines(ySB/SBo,TAC2, lwd=2,col="gray30")

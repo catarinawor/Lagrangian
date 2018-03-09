@@ -1,0 +1,7 @@
+ The logarithm of the determinant of the hessian = 3.62888
+ index   name           value      std.dev       1       2       3       4       5   
+     1   log_mo        9.3818e-03 2.1830e+00   1.0000
+     2   log_cvPos    -2.3355e+00 8.0219e-01  -0.1858  1.0000
+     3   log_maxPos50  1.0623e+00 8.5621e-01   0.0388  0.3104  1.0000
+     4   log_maxPossd  4.1917e-01 1.6463e+00   0.0713 -0.4254  0.4471  1.0000
+     5   log_Fmult     1.0442e+00 1.3910e+00  -0.0408  0.6330  0.1822 -0.7939  1.0000

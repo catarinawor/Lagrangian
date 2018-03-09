@@ -1,0 +1,2713 @@
+SPR
+SPR<- apply(t(t(NPR) * (1-OceanU*vulOcean) * maturity ),1,sum)*(1-Uterm)#
+if(useDeltaM==T){#
+#
+    Req <- aDeltaM+log(SPR))/(SPR*bNelson))#
+    Req[which(Req<0)]<-0#
+#
+}else{#
+    Req <- aNelson+log(SPR))/(SPR*bNelson))#
+    Req[which(Req<0)]<-0#
+}
+Req
+Req <- aDeltaM+log(SPR))/(SPR*bNelson))
+Req <- (aDeltaM+log(SPR))/(SPR*bNelson)
+Req
+Req[which(Req<0)]<-0
+Req
+weight*vulOcean*t(NPR)
+OceanU
+apply(t(weight*vulOcean*t(NPR)),1,sum)
+mixedYield<- Req * apply(t(weight*vulOcean*t(NPR)),1,sum)*OceanU
+mixedYield
+t(t(NPR)*((1-OceanU)*vulOcean)*maturity*weight)
+TerminalYield<- Req * apply(t(t(NPR)*((1-OceanU)*vulOcean)*maturity*weight),1,sum)*Uterm*valterm
+TerminalYield
+TotalYield<-mixedYield+TerminalYield
+?with
+#model dimensions and biometrics#
+a   <-  2.78#
+b   <-  0.465#
+#
+age       <- 2:5#
+nat_surv  <- c(.6,.7,.8,.9)#
+maturity  <- c(0,.3,.6,1)#
+vulOcean  <- c(.1,1,1,1)#
+length    <- c(57,80,87,90)#
+weight    <- 0.01*length^3/1000#
+valterm   <- 1#
+UmaxTerm  <- 1#
+OceanU    <- 0.1#
+pnrml     <- seq(.1,1,.1)#
+aNelson <- c(3.48,2.07,4.14,3.87,3.02,#
+             2.78,1.69,4.27,1.74,2.49,#
+             2.62,2.22,2.43,3.08,3.1,#
+             0.91,2.67,2.91,3.28,2.82)#
+#
+bNelson <- c(0.1,0.21,0.75,0.33,0.47,#
+             0.01,0.02,0.04,0.74,0.09,#
+             0.16,1.2,0.13,0.98,1.15,#
+             1.24,1.14,0.12,0.12,0.3)#
+#
+aDeltaM <- aNelson-deltaMFig8/2#
+#
+deltaMFig8 <- c(0.6,1,1,3,3,0.1,0.3,3.5,#
+                1,0.5,1.8,1.5,2,2.2,1,#
+                0.5,-1,1,1.3,1.5)#
+#
+StockName <- c("Cowichan","Puntledge","Nanaimo","Quinsam",#
+    "Qualicum","Harrison","Shuswap","Chilliwack","Skokomish",#
+    "Skagit","Snohomish","Stillaguamish","Green","Lake Washington",#
+    "Nisqually","Hoko","Elwha","Queets","Quillayute","Hoh")#
+#
+A<-list(a=a,b=b,#
+age = age,    #
+nat_surv = nat_surv,#
+maturity = maturity,#
+vulOcean = vulOcean,#
+length = length,    #
+weight = weight,    #
+valterm = valterm, #
+UmaxTerm = UmaxTerm,#
+OceanU = OceanU,    #
+pnrml = pnrml, #
+a_stock = aDeltaM,#
+bNelson = bNelson,#
+deltaMFig8 = deltaMFig8)     #
+calc_mixFisheries<-function(A){#
+#
+ with(A,#
+#
+    NperRec_o<- NULL#
+    NperRec_o[1]<-1#
+    for(y in 2:length(age)){#
+        NperRec_o[y]<-NperRec_o[y-1]*(1-maturity[y-1])*nat_surv[y-1]#
+    }#
+#
+    spro<-sum(maturity*NperRec_o)#
+    deltaM <- pnrml*a#
+    ae <- a-deltaM#
+#
+    No <- ae/b#
+    Umsy <- 0.5*ae-0.07*ae^2#
+    Smsy <- ae/b*(0.5-0.07*ae)#
+#
+    Smsy_No <- Smsy/No#
+#
+    Corr_Smsy <- (a_stock+log(spro))/bNelson*(0.5-0.07*a_stock)#
+    Corr_Umsy <- 0.5*(a_stock+log(spro))-0.07*(a_stock+log(spro))^2#
+#
+    Uterm<-NULL#
+    for(n in 1:length(StockName)){#
+        Uterm[n]<-min(UmaxTerm,max(0,Corr_Umsy[n]-OceanU))#
+    }#
+    Utot<-OceanU-Uterm#
+#
+    NPR <- matrix(NA, ncol=length(age),nrow=length(StockName))#
+#
+    NPR[,1] <- 1#
+    for(a in 2:(length(age))){#
+        NPR[,a] <- NPR[,a-1]*(1-OceanU*vulOcean[a-1])*(1-maturity[a-1])*nat_surv[a-1]   #
+    }#
+#
+    SPR<- apply(t(t(NPR) * (1-OceanU*vulOcean) * maturity ),1,sum)*(1-Uterm)#
+#
+    Req <- (a_stock+log(SPR))/(SPR*bNelson)#
+    Req[which(Req<0)]<-0#
+    Umax<-1-exp(-(a_stock+log(spro)))#
+    mixedYield<- Req * apply(t(weight*vulOcean*t(NPR)),1,sum)*OceanU#
+#
+    TerminalYield<- Req * apply(t(t(NPR)*((1-OceanU)*vulOcean)*maturity*weight),1,sum)*Uterm*valterm#
+#
+    TotalYield<-mixedYield+TerminalYield#
+#
+    Smsy_num<-SPR*Req#
+#
+    isoverfished<- Utot-Umsy#
+    isextinct<- Utot>Umax#
+#
+    B<-list(TotalYield=TotalYield,mixedYield=mixedYield,TerminalYield=TerminalYield,#
+        isoverfished=isoverfished,isextinct=isextinct)#
+)#
+#
+}
+a   <-  2.78#
+b   <-  0.465#
+#
+age       <- 2:5#
+nat_surv  <- c(.6,.7,.8,.9)#
+maturity  <- c(0,.3,.6,1)#
+vulOcean  <- c(.1,1,1,1)#
+length    <- c(57,80,87,90)#
+weight    <- 0.01*length^3/1000#
+valterm   <- 1#
+UmaxTerm  <- 1#
+OceanU    <- 0.1#
+pnrml     <- seq(.1,1,.1)#
+aNelson <- c(3.48,2.07,4.14,3.87,3.02,#
+             2.78,1.69,4.27,1.74,2.49,#
+             2.62,2.22,2.43,3.08,3.1,#
+             0.91,2.67,2.91,3.28,2.82)#
+#
+bNelson <- c(0.1,0.21,0.75,0.33,0.47,#
+             0.01,0.02,0.04,0.74,0.09,#
+             0.16,1.2,0.13,0.98,1.15,#
+             1.24,1.14,0.12,0.12,0.3)#
+#
+aDeltaM <- aNelson-deltaMFig8/2#
+#
+deltaMFig8 <- c(0.6,1,1,3,3,0.1,0.3,3.5,#
+                1,0.5,1.8,1.5,2,2.2,1,#
+                0.5,-1,1,1.3,1.5)#
+#
+StockName <- c("Cowichan","Puntledge","Nanaimo","Quinsam",#
+    "Qualicum","Harrison","Shuswap","Chilliwack","Skokomish",#
+    "Skagit","Snohomish","Stillaguamish","Green","Lake Washington",#
+    "Nisqually","Hoko","Elwha","Queets","Quillayute","Hoh")#
+#
+A<-list(a=a,b=b,#
+age = age,    #
+nat_surv = nat_surv,#
+maturity = maturity,#
+vulOcean = vulOcean,#
+length = length,    #
+weight = weight,    #
+valterm = valterm, #
+UmaxTerm = UmaxTerm,#
+OceanU = OceanU,    #
+pnrml = pnrml, #
+a_stock = aDeltaM,#
+bNelson = bNelson,#
+deltaMFig8 = deltaMFig8)
+calc_mixFisheries<-function(A){#
+#
+ with(A,#
+#
+    NperRec_o<- NULL#
+    NperRec_o[1]<-1#
+    for(y in 2:length(age)){#
+        NperRec_o[y]<-NperRec_o[y-1]*(1-maturity[y-1])*nat_surv[y-1]#
+    }#
+#
+    spro<-sum(maturity*NperRec_o)#
+    deltaM <- pnrml*a#
+    ae <- a-deltaM#
+#
+    No <- ae/b#
+    Umsy <- 0.5*ae-0.07*ae^2#
+    Smsy <- ae/b*(0.5-0.07*ae)#
+#
+    Smsy_No <- Smsy/No#
+#
+    Corr_Smsy <- (a_stock+log(spro))/bNelson*(0.5-0.07*a_stock)#
+    Corr_Umsy <- 0.5*(a_stock+log(spro))-0.07*(a_stock+log(spro))^2#
+#
+    Uterm<-NULL#
+    for(n in 1:length(StockName)){#
+        Uterm[n]<-min(UmaxTerm,max(0,Corr_Umsy[n]-OceanU))#
+    }#
+    Utot<-OceanU-Uterm#
+#
+    NPR <- matrix(NA, ncol=length(age),nrow=length(StockName))#
+#
+    NPR[,1] <- 1#
+    for(a in 2:(length(age))){#
+        NPR[,a] <- NPR[,a-1]*(1-OceanU*vulOcean[a-1])*(1-maturity[a-1])*nat_surv[a-1]   #
+    }#
+#
+    SPR<- apply(t(t(NPR) * (1-OceanU*vulOcean) * maturity ),1,sum)*(1-Uterm)#
+#
+    Req <- (a_stock+log(SPR))/(SPR*bNelson)#
+    Req[which(Req<0)]<-0#
+    Umax<-1-exp(-(a_stock+log(spro)))#
+    mixedYield<- Req * apply(t(weight*vulOcean*t(NPR)),1,sum)*OceanU#
+#
+    TerminalYield<- Req * apply(t(t(NPR)*((1-OceanU)*vulOcean)*maturity*weight),1,sum)*Uterm*valterm#
+#
+    TotalYield<-mixedYield+TerminalYield#
+#
+    Smsy_num<-SPR*Req#
+#
+    isoverfished<- Utot-Umsy#
+    isextinct<- Utot>Umax#
+#
+    B<-list(TotalYield=TotalYield,mixedYield=mixedYield,TerminalYield=TerminalYield,#
+        isoverfished=isoverfished,isextinct=isextinct)#
+)#
+#
+}
+.calc_mixFisheries<-function(A){#
+    with(A,#
+#
+    NperRec_o<- NULL#
+    NperRec_o[1]<-1#
+    for(y in 2:length(age)){#
+        NperRec_o[y]<-NperRec_o[y-1]*(1-maturity[y-1])*nat_surv[y-1]#
+    }#
+#
+    spro<-sum(maturity*NperRec_o)#
+    deltaM <- pnrml*a#
+    ae <- a-deltaM#
+#
+    No <- ae/b#
+    Umsy <- 0.5*ae-0.07*ae^2#
+    Smsy <- ae/b*(0.5-0.07*ae)#
+#
+    Smsy_No <- Smsy/No#
+#
+    Corr_Smsy <- (a_stock+log(spro))/bNelson*(0.5-0.07*a_stock)#
+    Corr_Umsy <- 0.5*(a_stock+log(spro))-0.07*(a_stock+log(spro))^2#
+#
+    Uterm<-NULL#
+    for(n in 1:length(StockName)){#
+        Uterm[n]<-min(UmaxTerm,max(0,Corr_Umsy[n]-OceanU))#
+    }#
+    Utot<-OceanU-Uterm#
+#
+    NPR <- matrix(NA, ncol=length(age),nrow=length(StockName))#
+#
+    NPR[,1] <- 1#
+    for(a in 2:(length(age))){#
+        NPR[,a] <- NPR[,a-1]*(1-OceanU*vulOcean[a-1])*(1-maturity[a-1])*nat_surv[a-1]   #
+    }#
+#
+    SPR<- apply(t(t(NPR) * (1-OceanU*vulOcean) * maturity ),1,sum)*(1-Uterm)#
+#
+    Req <- (a_stock+log(SPR))/(SPR*bNelson)#
+    Req[which(Req<0)]<-0#
+    Umax<-1-exp(-(a_stock+log(spro)))#
+    mixedYield<- Req * apply(t(weight*vulOcean*t(NPR)),1,sum)*OceanU#
+#
+    TerminalYield<- Req * apply(t(t(NPR)*((1-OceanU)*vulOcean)*maturity*weight),1,sum)*Uterm*valterm#
+#
+    TotalYield<-mixedYield+TerminalYield#
+#
+    Smsy_num<-SPR*Req#
+#
+    isoverfished<- Utot-Umsy#
+    isextinct<- Utot>Umax#
+#
+    B<-list(TotalYield=TotalYield,mixedYield=mixedYield,TerminalYield=TerminalYield,#
+        isoverfished=isoverfished,isextinct=isextinct)#
+)#
+#
+}
+.calc_mixFisheries<-function(A){#
+    with(A,#
+#
+    NperRec_o <-NULL#
+    NperRec_o[1]<-1#
+    for(y in 2:length(age)){#
+        NperRec_o[y]<-NperRec_o[y-1]*(1-maturity[y-1])*nat_surv[y-1]#
+    }#
+#
+    spro<-sum(maturity*NperRec_o)#
+    deltaM <- pnrml*a#
+    ae <- a-deltaM#
+#
+    No <- ae/b#
+    Umsy <
+.calc_mixFisheries<-function(A){#
+    with(A,{#
+#
+    NperRec_o <-NULL#
+    NperRec_o[1]<-1#
+    for(y in 2:length(age)){#
+        NperRec_o[y]<-NperRec_o[y-1]*(1-maturity[y-1])*nat_surv[y-1]#
+    }#
+#
+    spro<-sum(maturity*NperRec_o)#
+    deltaM <- pnrml*a#
+    ae <- a-deltaM#
+#
+    No <- ae/b#
+    Umsy <- 0.5*ae-0.07*ae^2#
+    Smsy <- ae/b*(0.5-0.07*ae)#
+#
+    Smsy_No <- Smsy/No#
+#
+    Corr_Smsy <- (a_stock+log(spro))/bNelson*(0.5-0.07*a_stock)#
+    Corr_Umsy <- 0.5*(a_stock+log(spro))-0.07*(a_stock+log(spro))^2#
+#
+    Uterm<-NULL#
+    for(n in 1:length(StockName)){#
+        Uterm[n]<-min(UmaxTerm,max(0,Corr_Umsy[n]-OceanU))#
+    }#
+    Utot<-OceanU-Uterm#
+#
+    NPR <- matrix(NA, ncol=length(age),nrow=length(StockName))#
+#
+    NPR[,1] <- 1#
+    for(a in 2:(length(age))){#
+        NPR[,a] <- NPR[,a-1]*(1-OceanU*vulOcean[a-1])*(1-maturity[a-1])*nat_surv[a-1]   #
+    }#
+#
+    SPR<- apply(t(t(NPR) * (1-OceanU*vulOcean) * maturity ),1,sum)*(1-Uterm)#
+#
+    Req <- (a_stock+log(SPR))/(SPR*bNelson)#
+    Req[which(Req<0)]<-0#
+    Umax<-1-exp(-(a_stock+log(spro)))#
+    mixedYield<- Req * apply(t(weight*vulOcean*t(NPR)),1,sum)*OceanU#
+#
+    TerminalYield<- Req * apply(t(t(NPR)*((1-OceanU)*vulOcean)*maturity*weight),1,sum)*Uterm*valterm#
+#
+    TotalYield<-mixedYield+TerminalYield#
+#
+    Smsy_num<-SPR*Req#
+#
+    isoverfished<- Utot-Umsy#
+    isextinct<- Utot>Umax#
+#
+    B<-list(TotalYield=TotalYield,mixedYield=mixedYield,TerminalYield=TerminalYield,#
+        isoverfished=isoverfished,isextinct=isextinct)#
+#
+    return(B)#
+})#
+#
+}
+calc_mixFisheries<-function(A){#
+    with(A,{#
+#
+    NperRec_o <-NULL#
+    NperRec_o[1]<-1#
+    for(y in 2:length(age)){#
+        NperRec_o[y]<-NperRec_o[y-1]*(1-maturity[y-1])*nat_surv[y-1]#
+    }#
+#
+    spro<-sum(maturity*NperRec_o)#
+    deltaM <- pnrml*a#
+    ae <- a-deltaM#
+#
+    No <- ae/b#
+    Umsy <- 0.5*ae-0.07*ae^2#
+    Smsy <- ae/b*(0.5-0.07*ae)#
+#
+    Smsy_No <- Smsy/No#
+#
+    Corr_Smsy <- (a_stock+log(spro))/bNelson*(0.5-0.07*a_stock)#
+    Corr_Umsy <- 0.5*(a_stock+log(spro))-0.07*(a_stock+log(spro))^2#
+#
+    Uterm<-NULL#
+    for(n in 1:length(StockName)){#
+        Uterm[n]<-min(UmaxTerm,max(0,Corr_Umsy[n]-OceanU))#
+    }#
+    Utot<-OceanU-Uterm#
+#
+    NPR <- matrix(NA, ncol=length(age),nrow=length(StockName))#
+#
+    NPR[,1] <- 1#
+    for(a in 2:(length(age))){#
+        NPR[,a] <- NPR[,a-1]*(1-OceanU*vulOcean[a-1])*(1-maturity[a-1])*nat_surv[a-1]   #
+    }#
+#
+    SPR<- apply(t(t(NPR) * (1-OceanU*vulOcean) * maturity ),1,sum)*(1-Uterm)#
+#
+    Req <- (a_stock+log(SPR))/(SPR*bNelson)#
+    Req[which(Req<0)]<-0#
+    Umax<-1-exp(-(a_stock+log(spro)))#
+    mixedYield<- Req * apply(t(weight*vulOcean*t(NPR)),1,sum)*OceanU#
+#
+    TerminalYield<- Req * apply(t(t(NPR)*((1-OceanU)*vulOcean)*maturity*weight),1,sum)*Uterm*valterm#
+#
+    TotalYield<-mixedYield+TerminalYield#
+#
+    Smsy_num<-SPR*Req#
+#
+    isoverfished<- Utot-Umsy#
+    isextinct<- Utot>Umax#
+#
+    B<-list(TotalYield=TotalYield,mixedYield=mixedYield,TerminalYield=TerminalYield,#
+        isoverfished=isoverfished,isextinct=isextinct)#
+#
+    return(B)#
+})#
+#
+}
+calc_mixFisheries(A)
+Uoceanvec<-seq(0,1,0.01)#
+Umixeffect<-list()#
+for(u in 1:length(Uoceanvec)){#
+#
+    Au<-list(a=a,b=b,#
+    age = age,    #
+    nat_surv = nat_surv,#
+    maturity = maturity,#
+    vulOcean = vulOcean,#
+    length = length,    #
+    weight = weight,    #
+    valterm = valterm, #
+    UmaxTerm = UmaxTerm,#
+    OceanU = Uoceanvec[u],  #
+    pnrml = pnrml, #
+    a_stock = aDeltaM,#
+    bNelson = bNelson,#
+    deltaMFig8 = deltaMFig8)#
+#
+    Umixeffect[[u]]<-calc_mixFisheries(Au)#
+#
+}
+Umixeffect[[u]]
+length(Umixeffect)
+calc_mixFisheries<-function(A){#
+    with(A,{#
+#
+    NperRec_o <-NULL#
+    NperRec_o[1]<-1#
+    for(y in 2:length(age)){#
+        NperRec_o[y]<-NperRec_o[y-1]*(1-maturity[y-1])*nat_surv[y-1]#
+    }#
+#
+    spro<-sum(maturity*NperRec_o)#
+    deltaM <- pnrml*a#
+    ae <- a-deltaM#
+#
+    No <- ae/b#
+    Umsy <- 0.5*ae-0.07*ae^2#
+    Smsy <- ae/b*(0.5-0.07*ae)#
+#
+    Smsy_No <- Smsy/No#
+#
+    Corr_Smsy <- (a_stock+log(spro))/bNelson*(0.5-0.07*a_stock)#
+    Corr_Umsy <- 0.5*(a_stock+log(spro))-0.07*(a_stock+log(spro))^2#
+#
+    Uterm<-NULL#
+    for(n in 1:length(StockName)){#
+        Uterm[n]<-min(UmaxTerm,max(0,Corr_Umsy[n]-OceanU))#
+    }#
+    Utot<-OceanU+Uterm#
+#
+    NPR <- matrix(NA, ncol=length(age),nrow=length(StockName))#
+#
+    NPR[,1] <- 1#
+    for(a in 2:(length(age))){#
+        NPR[,a] <- NPR[,a-1]*(1-OceanU*vulOcean[a-1])*(1-maturity[a-1])*nat_surv[a-1]   #
+    }#
+#
+    SPR<- apply(t(t(NPR) * (1-OceanU*vulOcean) * maturity ),1,sum)*(1-Uterm)#
+#
+    Req <- (a_stock+log(SPR))/(SPR*bNelson)#
+    Req[which(Req<0)]<-0#
+    Umax<-1-exp(-(a_stock+log(spro)))#
+    mixedYield<- Req * apply(t(weight*vulOcean*t(NPR)),1,sum)*OceanU#
+#
+    TerminalYield<- Req * apply(t(t(NPR)*((1-OceanU)*vulOcean)*maturity*weight),1,sum)*Uterm*valterm#
+#
+    TotalYield<-mixedYield+TerminalYield#
+#
+    Smsy_num<-SPR*Req#
+#
+    isoverfished<- Utot>Umsy#
+    isextinct<- Utot>Umax#
+#
+    B<-list(TotalYield=TotalYield,mixedYield=mixedYield,TerminalYield=TerminalYield,#
+        isoverfished=isoverfished,isextinct=isextinct)#
+#
+    return(B)#
+})#
+#
+}
+Uoceanvec<-seq(0,1,0.01)#
+Umixeffect<-list()#
+noverfished<-NULL#
+nextinct<-NULL#
+Yterminal<-NULL#
+Ytotal<-NULL#
+#
+for(u in 1:length(Uoceanvec)){#
+#
+    Au<-list(a=a,b=b,#
+    age = age,    #
+    nat_surv = nat_surv,#
+    maturity = maturity,#
+    vulOcean = vulOcean,#
+    length = length,    #
+    weight = weight,    #
+    valterm = valterm, #
+    UmaxTerm = UmaxTerm,#
+    OceanU = Uoceanvec[u],  #
+    pnrml = pnrml, #
+    a_stock = aDeltaM,#
+    bNelson = bNelson,#
+    deltaMFig8 = deltaMFig8)#
+#
+    Umixeffect[[u]]<-calc_mixFisheries(Au)#
+#
+    noverfished<-sum(Umixeffect[[u]]$isoverfished)#
+    nextinct<-sum(Umixeffect[[u]]$isextinct)#
+    Yterminal<-sum(Umixeffect[[u]]$TerminalYield#
+    Ytotal<-sum(Umixeffect[[u]]$TotalYield#
+}
+Uoceanvec<-seq(0,1,0.01)#
+Umixeffect<-list()#
+noverfished<-NULL#
+nextinct<-NULL#
+Yterminal<-NULL#
+Ytotal<-NULL#
+#
+for(u in 1:length(Uoceanvec)){#
+#
+    Au<-list(a=a,b=b,#
+    age = age,    #
+    nat_surv = nat_surv,#
+    maturity = maturity,#
+    vulOcean = vulOcean,#
+    length = length,    #
+    weight = weight,    #
+    valterm = valterm, #
+    UmaxTerm = UmaxTerm,#
+    OceanU = Uoceanvec[u],  #
+    pnrml = pnrml, #
+    a_stock = aDeltaM,#
+    bNelson = bNelson,#
+    deltaMFig8 = deltaMFig8)#
+#
+    Umixeffect[[u]]<-calc_mixFisheries(Au)#
+#
+    noverfished<-sum(Umixeffect[[u]]$isoverfished)#
+    nextinct<-sum(Umixeffect[[u]]$isextinct)#
+    Yterminal<-sum(Umixeffect[[u]]$TerminalYield)#
+    Ytotal<-sum(Umixeffect[[u]]$TotalYield)#
+}#
+#
+length(Umixeffect)
+df<-data.frame(noverfished=noverfished,#
+    nextinct=nextinct,Yterminal=Yterminal,Ytotal=Ytotal)
+df<-data.frame(value=c(noverfished,nextinct),ntype=rep(c("# overfished","# extinct"),each=length(noverfished)),#
+    ,Uocean=Uoceanvec,Yield=c(Yterminal,Ytotal),Ytype=rep(c("terminal","total"),each=length(noverfished)))
+df<-data.frame(value=c(noverfished,nextinct),#
+    ntype=rep(c("# overfished","# extinct"),each=length(noverfished)),#
+    Uocean=Uoceanvec,Yield=c(Yterminal,Ytotal),#
+    Ytype=rep(c("terminal","total"),each=length(noverfished)))
+c(noverfished,nextinct)
+Uoceanvec<-seq(0,1,0.01)#
+Umixeffect<-list()#
+noverfished<-NULL#
+nextinct<-NULL#
+Yterminal<-NULL#
+Ytotal<-NULL#
+#
+for(u in 1:length(Uoceanvec)){#
+#
+    Au<-list(a=a,b=b,#
+    age = age,    #
+    nat_surv = nat_surv,#
+    maturity = maturity,#
+    vulOcean = vulOcean,#
+    length = length,    #
+    weight = weight,    #
+    valterm = valterm, #
+    UmaxTerm = UmaxTerm,#
+    OceanU = Uoceanvec[u],  #
+    pnrml = pnrml, #
+    a_stock = aDeltaM,#
+    bNelson = bNelson,#
+    deltaMFig8 = deltaMFig8)#
+#
+    Umixeffect[[u]]<-calc_mixFisheries(Au)#
+#
+    noverfished[u]<-sum(Umixeffect[[u]]$isoverfished)#
+    nextinct[u]<-sum(Umixeffect[[u]]$isextinct)#
+    Yterminal[u]<-sum(Umixeffect[[u]]$TerminalYield)#
+    Ytotal[u]<-sum(Umixeffect[[u]]$TotalYield)#
+}
+df<-data.frame(value=c(noverfished,nextinct),#
+    ntype=rep(c("# overfished","# extinct"),each=length(noverfished)),#
+    Uocean=Uoceanvec,Yield=c(Yterminal,Ytotal),#
+    Ytype=rep(c("terminal","total"),each=length(noverfished)))
+p<-ggplot(df)#
+p<-geom_line(aes(x=Uocean,y=value, col=ntype))#
+p
+library(ggplot2)
+p<-ggplot(df)#
+p<-geom_line(aes(x=Uocean,y=value, col=ntype))#
+p
+p<-ggplot(df)#
+p<- p+geom_line(aes(x=Uocean,y=value, col=ntype))#
+p
+Uoceanvec<-seq(0,1,0.05)#
+Umixeffect<-list()#
+noverfished<-NULL#
+nextinct<-NULL#
+Yterminal<-NULL#
+Ytotal<-NULL#
+#
+for(u in 1:length(Uoceanvec)){#
+#
+    Au<-list(a=a,b=b,#
+    age = age,    #
+    nat_surv = nat_surv,#
+    maturity = maturity,#
+    vulOcean = vulOcean,#
+    length = length,    #
+    weight = weight,    #
+    valterm = valterm, #
+    UmaxTerm = UmaxTerm,#
+    OceanU = Uoceanvec[u],  #
+    pnrml = pnrml, #
+    a_stock = aDeltaM,#
+    bNelson = bNelson,#
+    deltaMFig8 = deltaMFig8)#
+#
+    Umixeffect[[u]]<-calc_mixFisheries(Au)#
+#
+    noverfished[u]<-sum(Umixeffect[[u]]$isoverfished)#
+    nextinct[u]<-sum(Umixeffect[[u]]$isextinct)#
+    Yterminal[u]<-sum(Umixeffect[[u]]$TerminalYield)#
+    Ytotal[u]<-sum(Umixeffect[[u]]$TotalYield)#
+}#
+#
+length(Umixeffect)#
+#
+#-===========================================================#
+#plots#
+#
+df<-data.frame(value=c(noverfished,nextinct),#
+    ntype=rep(c("# overfished","# extinct"),each=length(noverfished)),#
+    Uocean=Uoceanvec,Yield=c(Yterminal,Ytotal),#
+    Ytype=rep(c("terminal","total"),each=length(noverfished)))#
+p<-ggplot(df)#
+p<- p+geom_line(aes(x=Uocean,y=value, col=ntype))#
+p
+noverfished
+ae
+a_stock<-aDeltaM
+NperRec_o <-NULL#
+    NperRec_o[1]<-1#
+    for(y in 2:length(age)){#
+        NperRec_o[y]<-NperRec_o[y-1]*(1-maturity[y-1])*nat_surv[y-1]#
+    }#
+#
+    spro<-sum(maturity*NperRec_o)#
+    deltaM <- pnrml*a#
+    ae <- a-deltaM#
+#
+    No <- ae/b#
+    Umsy <- 0.5*ae-0.07*ae^2#
+    Smsy <- ae/b*(0.5-0.07*ae)#
+#
+    Smsy_No <- Smsy/No#
+#
+    Corr_Smsy <- (a_stock+log(spro))/bNelson*(0.5-0.07*a_stock)#
+    Corr_Umsy <- 0.5*(a_stock+log(spro))-0.07*(a_stock+log(spro))^2#
+#
+    Uterm<-NULL#
+    for(n in 1:length(StockName)){#
+        Uterm[n]<-min(UmaxTerm,max(0,Corr_Umsy[n]-OceanU))#
+    }#
+    Utot<-OceanU+Uterm
+NPR <- matrix(NA, ncol=length(age),nrow=length(StockName))#
+#
+    NPR[,1] <- 1#
+    for(a in 2:(length(age))){#
+        NPR[,a] <- NPR[,a-1]*(1-OceanU*vulOcean[a-1])*(1-maturity[a-1])*nat_surv[a-1]   #
+    }#
+#
+    SPR<- apply(t(t(NPR) * (1-OceanU*vulOcean) * maturity ),1,sum)*(1-Uterm)#
+#
+    Req <- (a_stock+log(SPR))/(SPR*bNelson)#
+    Req[which(Req<0)]<-0#
+    Umax<-1-exp(-(a_stock+log(spro)))#
+    mixedYield<- Req * apply(t(weight*vulOcean*t(NPR)),1,sum)*OceanU#
+#
+    TerminalYield<- Req * apply(t(t(NPR)*((1-OceanU)*vulOcean)*maturity*weight),1,sum)*Uterm*valterm#
+#
+    TotalYield<-mixedYield+TerminalYield#
+#
+    Smsy_num<-SPR*Req
+Umsy
+Smsy_num<-SPR*Req#
+#
+    isoverfished<- Utot>Umsy#
+    isextinct<- Utot>Umax
+isoverfished
+Utot
+Umsy
+deltaM
+Uoceanvec<-seq(0,1,0.05)#
+Umixeffect<-list()#
+noverfished<-NULL#
+nextinct<-NULL#
+Yterminal<-NULL#
+Ytotal<-NULL#
+#
+for(u in 1:length(Uoceanvec)){#
+#
+    Au<-list(a=a,b=b,#
+    age = age,    #
+    nat_surv = nat_surv,#
+    maturity = maturity,#
+    vulOcean = vulOcean,#
+    length = length,    #
+    weight = weight,    #
+    valterm = valterm, #
+    UmaxTerm = UmaxTerm,#
+    OceanU = Uoceanvec[u],  #
+    pnrml = pnrml, #
+    a_stock = aDeltaM,#
+    bNelson = bNelson,#
+    deltaM = deltaMFig8)#
+#
+    Umixeffect[[u]]<-calc_mixFisheries(Au)#
+#
+    noverfished[u]<-sum(Umixeffect[[u]]$isoverfished)#
+    nextinct[u]<-sum(Umixeffect[[u]]$isextinct)#
+    Yterminal[u]<-sum(Umixeffect[[u]]$TerminalYield)#
+    Ytotal[u]<-sum(Umixeffect[[u]]$TotalYield)#
+}#
+#
+length(Umixeffect)#
+#
+#-===========================================================#
+#plots#
+#
+df<-data.frame(value=c(noverfished,nextinct),#
+    ntype=rep(c("# overfished","# extinct"),each=length(noverfished)),#
+    Uocean=Uoceanvec,Yield=c(Yterminal,Ytotal),#
+    Ytype=rep(c("terminal","total"),each=length(noverfished)))#
+p<-ggplot(df)#
+p<- p+geom_line(aes(x=Uocean,y=value, col=ntype))#
+p
+deltaM = deltaMFig8
+aDeltaM <- aNelson-deltaMFig8/2
+A<-list(a=a,b=b,#
+age = age,    #
+nat_surv = nat_surv,#
+maturity = maturity,#
+vulOcean = vulOcean,#
+length = length,    #
+weight = weight,    #
+valterm = valterm, #
+UmaxTerm = UmaxTerm,#
+OceanU = OceanU,    #
+pnrml = pnrml, #
+a_stock = aDeltaM,#
+bNelson = bNelson,#
+deltaMFig8 = deltaMFig8)     #
+calc_mixFisheries<-function(A){#
+    with(A,{#
+#
+    NperRec_o <-NULL#
+    NperRec_o[1]<-1#
+    for(y in 2:length(age)){#
+        NperRec_o[y]<-NperRec_o[y-1]*(1-maturity[y-1])*nat_surv[y-1]#
+    }#
+#
+    spro<-sum(maturity*NperRec_o)#
+    deltaM <- pnrml*a#
+    ae <- a-deltaM#
+#
+    No <- ae/b#
+    Umsy <- 0.5*ae-0.07*ae^2#
+    Smsy <- ae/b*(0.5-0.07*ae)#
+#
+    Smsy_No <- Smsy/No#
+#
+    Corr_Smsy <- (a_stock+log(spro))/bNelson*(0.5-0.07*a_stock)#
+    Corr_Umsy <- 0.5*(a_stock+log(spro))-0.07*(a_stock+log(spro))^2#
+#
+    Uterm<-NULL#
+    for(n in 1:length(StockName)){#
+        Uterm[n]<-min(UmaxTerm,max(0,Corr_Umsy[n]-OceanU))#
+    }#
+    Utot<-OceanU+Uterm#
+#
+    NPR <- matrix(NA, ncol=length(age),nrow=length(StockName))#
+#
+    NPR[,1] <- 1#
+    for(a in 2:(length(age))){#
+        NPR[,a] <- NPR[,a-1]*(1-OceanU*vulOcean[a-1])*(1-maturity[a-1])*nat_surv[a-1]   #
+    }#
+#
+    SPR<- apply(t(t(NPR) * (1-OceanU*vulOcean) * maturity ),1,sum)*(1-Uterm)#
+#
+    Req <- (a_stock+log(SPR))/(SPR*bNelson)#
+    Req[which(Req<0)]<-0#
+    Umax<-1-exp(-(a_stock+log(spro)))#
+    mixedYield<- Req * apply(t(weight*vulOcean*t(NPR)),1,sum)*OceanU#
+#
+    TerminalYield<- Req * apply(t(t(NPR)*((1-OceanU)*vulOcean)*maturity*weight),1,sum)*Uterm*valterm#
+#
+    TotalYield<-mixedYield+TerminalYield#
+#
+    Smsy_num<-SPR*Req#
+#
+    isoverfished<- Utot>Corr_Umsy#
+    isextinct<- Utot>Umax#
+#
+    B<-list(TotalYield=TotalYield,mixedYield=mixedYield,TerminalYield=TerminalYield,#
+        isoverfished=isoverfished,isextinct=isextinct)#
+#
+    return(B)#
+})#
+#
+}#
+##
+Uoceanvec<-seq(0,1,0.05)#
+Umixeffect<-list()#
+noverfished<-NULL#
+nextinct<-NULL#
+Yterminal<-NULL#
+Ytotal<-NULL#
+#
+for(u in 1:length(Uoceanvec)){#
+#
+    Au<-list(a=a,b=b,#
+    age = age,    #
+    nat_surv = nat_surv,#
+    maturity = maturity,#
+    vulOcean = vulOcean,#
+    length = length,    #
+    weight = weight,    #
+    valterm = valterm, #
+    UmaxTerm = UmaxTerm,#
+    OceanU = Uoceanvec[u],  #
+    pnrml = pnrml, #
+    a_stock = aDeltaM,#
+    bNelson = bNelson,#
+    deltaM = deltaMFig8)#
+#
+    Umixeffect[[u]]<-calc_mixFisheries(Au)#
+#
+    noverfished[u]<-sum(Umixeffect[[u]]$isoverfished)#
+    nextinct[u]<-sum(Umixeffect[[u]]$isextinct)#
+    Yterminal[u]<-sum(Umixeffect[[u]]$TerminalYield)#
+    Ytotal[u]<-sum(Umixeffect[[u]]$TotalYield)#
+}#
+#
+length(Umixeffect)#
+#
+#-===========================================================#
+#plots#
+#
+df<-data.frame(value=c(noverfished,nextinct),#
+    ntype=rep(c("# overfished","# extinct"),each=length(noverfished)),#
+    Uocean=Uoceanvec,Yield=c(Yterminal,Ytotal),#
+    Ytype=rep(c("terminal","total"),each=length(noverfished)))#
+p<-ggplot(df)#
+p<- p+geom_line(aes(x=Uocean,y=value, col=ntype))#
+p
+noverfished
+Uoceanvec
+Ytotal
+cbind(noverfished,Uoceanvec)
+Umixeffect[[8]]$isoverfished
+Uoceanvec[8]
+sum(Umixeffect[[8]]$isoverfished)
+Umixeffect[[8]]$isoverfished
+Umixeffect[[7]]$isoverfished
+Umixeffect[[9]]$isoverfished
+Umixeffect[[8]]$isoverfished
+OceanU = .35
+NperRec_o <-NULL#
+    NperRec_o[1]<-1#
+    for(y in 2:length(age)){#
+        NperRec_o[y]<-NperRec_o[y-1]*(1-maturity[y-1])*nat_surv[y-1]#
+    }#
+#
+    spro<-sum(maturity*NperRec_o)#
+    deltaM <- pnrml*a#
+    ae <- a-deltaM#
+#
+    No <- ae/b#
+    Umsy <- 0.5*ae-0.07*ae^2#
+    Smsy <- ae/b*(0.5-0.07*ae)#
+#
+    Smsy_No <- Smsy/No#
+#
+    Corr_Smsy <- (a_stock+log(spro))/bNelson*(0.5-0.07*a_stock)#
+    Corr_Umsy <- 0.5*(a_stock+log(spro))-0.07*(a_stock+log(spro))^2#
+#
+    Uterm<-NULL#
+    for(n in 1:length(StockName)){#
+        Uterm[n]<-min(UmaxTerm,max(0,Corr_Umsy[n]-OceanU))#
+    }#
+    Utot<-OceanU+Uterm#
+#
+    NPR <- matrix(NA, ncol=length(age),nrow=length(StockName))#
+#
+    NPR[,1] <- 1#
+    for(a in 2:(length(age))){#
+        NPR[,a] <- NPR[,a-1]*(1-OceanU*vulOcean[a-1])*(1-maturity[a-1])*nat_surv[a-1]   #
+    }#
+#
+    SPR<- apply(t(t(NPR) * (1-OceanU*vulOcean) * maturity ),1,sum)*(1-Uterm)#
+#
+    Req <- (a_stock+log(SPR))/(SPR*bNelson)#
+    Req[which(Req<0)]<-0#
+    Umax<-1-exp(-(a_stock+log(spro)))#
+    mixedYield<- Req * apply(t(weight*vulOcean*t(NPR)),1,sum)*OceanU#
+#
+    TerminalYield<- Req * apply(t(t(NPR)*((1-OceanU)*vulOcean)*maturity*weight),1,sum)*Uterm*valterm#
+#
+    TotalYield<-mixedYield+TerminalYield#
+#
+    Smsy_num<-SPR*Req#
+#
+    isoverfished<- Utot>Corr_Umsy#
+    isextinct<- Utot>Umax
+Utot
+Corr_Umsy
+Utot>Corr_Umsy
+Uoceanvec<-seq(0,.9,0.05)#
+Umixeffect<-list()#
+noverfished<-NULL#
+nextinct<-NULL#
+Yterminal<-NULL#
+Ytotal<-NULL#
+#
+for(u in 1:length(Uoceanvec)){#
+#
+    Au<-list(a=a,b=b,#
+    age = age,    #
+    nat_surv = nat_surv,#
+    maturity = maturity,#
+    vulOcean = vulOcean,#
+    length = length,    #
+    weight = weight,    #
+    valterm = valterm, #
+    UmaxTerm = UmaxTerm,#
+    OceanU = Uoceanvec[u],  #
+    pnrml = pnrml, #
+    a_stock = aDeltaM,#
+    bNelson = bNelson,#
+    deltaM = deltaMFig8)#
+#
+    Umixeffect[[u]]<-calc_mixFisheries(Au)#
+#
+    noverfished[u]<-sum(Umixeffect[[u]]$isoverfished)#
+    nextinct[u]<-sum(Umixeffect[[u]]$isextinct)#
+    Yterminal[u]<-sum(Umixeffect[[u]]$TerminalYield)#
+    Ytotal[u]<-sum(Umixeffect[[u]]$TotalYield)#
+}
+Umixeffect[[8]]$isoverfished
+Uoceanvec[8]
+Umixeffect[[9]]$isoverfished
+OceanU = .4
+NperRec_o <-NULL#
+    NperRec_o[1]<-1#
+    for(y in 2:length(age)){#
+        NperRec_o[y]<-NperRec_o[y-1]*(1-maturity[y-1])*nat_surv[y-1]#
+    }#
+#
+    spro<-sum(maturity*NperRec_o)#
+    deltaM <- pnrml*a#
+    ae <- a-deltaM#
+#
+    No <- ae/b#
+    Umsy <- 0.5*ae-0.07*ae^2#
+    Smsy <- ae/b*(0.5-0.07*ae)#
+#
+    Smsy_No <- Smsy/No#
+#
+    Corr_Smsy <- (a_stock+log(spro))/bNelson*(0.5-0.07*a_stock)#
+    Corr_Umsy <- 0.5*(a_stock+log(spro))-0.07*(a_stock+log(spro))^2#
+#
+    Uterm<-NULL#
+    for(n in 1:length(StockName)){#
+        Uterm[n]<-min(UmaxTerm,max(0,Corr_Umsy[n]-OceanU))#
+    }#
+    Utot<-OceanU+Uterm#
+#
+    NPR <- matrix(NA, ncol=length(age),nrow=length(StockName))#
+#
+    NPR[,1] <- 1#
+    for(a in 2:(length(age))){#
+        NPR[,a] <- NPR[,a-1]*(1-OceanU*vulOcean[a-1])*(1-maturity[a-1])*nat_surv[a-1]   #
+    }#
+#
+    SPR<- apply(t(t(NPR) * (1-OceanU*vulOcean) * maturity ),1,sum)*(1-Uterm)#
+#
+    Req <- (a_stock+log(SPR))/(SPR*bNelson)#
+    Req[which(Req<0)]<-0#
+    Umax<-1-exp(-(a_stock+log(spro)))#
+    mixedYield<- Req * apply(t(weight*vulOcean*t(NPR)),1,sum)*OceanU#
+#
+    TerminalYield<- Req * apply(t(t(NPR)*((1-OceanU)*vulOcean)*maturity*weight),1,sum)*Uterm*valterm#
+#
+    TotalYield<-mixedYield+TerminalYield#
+#
+    Smsy_num<-SPR*Req#
+#
+    isoverfished<- Utot>Corr_Umsy#
+    isextinct<- Utot>Umax
+Corr_Umsy
+Utot
+Utot>Corr_Umsy
+OceanU = .35
+NperRec_o <-NULL#
+    NperRec_o[1]<-1#
+    for(y in 2:length(age)){#
+        NperRec_o[y]<-NperRec_o[y-1]*(1-maturity[y-1])*nat_surv[y-1]#
+    }#
+#
+    spro<-sum(maturity*NperRec_o)#
+    deltaM <- pnrml*a#
+    ae <- a-deltaM#
+#
+    No <- ae/b#
+    Umsy <- 0.5*ae-0.07*ae^2#
+    Smsy <- ae/b*(0.5-0.07*ae)#
+#
+    Smsy_No <- Smsy/No#
+#
+    Corr_Smsy <- (a_stock+log(spro))/bNelson*(0.5-0.07*a_stock)#
+    Corr_Umsy <- 0.5*(a_stock+log(spro))-0.07*(a_stock+log(spro))^2#
+#
+    Uterm<-NULL#
+    for(n in 1:length(StockName)){#
+        Uterm[n]<-min(UmaxTerm,max(0,Corr_Umsy[n]-OceanU))#
+    }#
+    Utot<-OceanU+Uterm#
+#
+    NPR <- matrix(NA, ncol=length(age),nrow=length(StockName))#
+#
+    NPR[,1] <- 1#
+    for(a in 2:(length(age))){#
+        NPR[,a] <- NPR[,a-1]*(1-OceanU*vulOcean[a-1])*(1-maturity[a-1])*nat_surv[a-1]   #
+    }#
+#
+    SPR<- apply(t(t(NPR) * (1-OceanU*vulOcean) * maturity ),1,sum)*(1-Uterm)#
+#
+    Req <- (a_stock+log(SPR))/(SPR*bNelson)#
+    Req[which(Req<0)]<-0#
+    Umax<-1-exp(-(a_stock+log(spro)))#
+    mixedYield<- Req * apply(t(weight*vulOcean*t(NPR)),1,sum)*OceanU#
+#
+    TerminalYield<- Req * apply(t(t(NPR)*((1-OceanU)*vulOcean)*maturity*weight),1,sum)*Uterm*valterm#
+#
+    TotalYield<-mixedYield+TerminalYield#
+#
+    Smsy_num<-SPR*Req#
+#
+    isoverfished<- Utot>Corr_Umsy#
+    isextinct<- Utot>Umax
+Utot>Corr_Umsy
+sum(Utot>Corr_Umsy)
+Uoceanvec[8]
+Umixeffect[[8]]$isoverfished
+calc_mixFisheries<-function(A){#
+    with(A,{#
+#
+    NperRec_o <-NULL#
+    NperRec_o[1]<-1#
+    for(y in 2:length(age)){#
+        NperRec_o[y]<-NperRec_o[y-1]*(1-maturity[y-1])*nat_surv[y-1]#
+    }#
+#
+    spro<-sum(maturity*NperRec_o)#
+    deltaM <- pnrml*a#
+    ae <- a-deltaM#
+#
+    No <- ae/b#
+    Umsy <- 0.5*ae-0.07*ae^2#
+    Smsy <- ae/b*(0.5-0.07*ae)#
+#
+    Smsy_No <- Smsy/No#
+#
+    Corr_Smsy <- (a_stock+log(spro))/bNelson*(0.5-0.07*a_stock)#
+    Corr_Umsy <- 0.5*(a_stock+log(spro))-0.07*(a_stock+log(spro))^2#
+#
+    Uterm<-NULL#
+    for(n in 1:length(StockName)){#
+        Uterm[n]<-min(UmaxTerm,max(0,Corr_Umsy[n]-OceanU))#
+    }#
+    Utot<-OceanU+Uterm#
+#
+    NPR <- matrix(NA, ncol=length(age),nrow=length(StockName))#
+#
+    NPR[,1] <- 1#
+    for(a in 2:(length(age))){#
+        NPR[,a] <- NPR[,a-1]*(1-OceanU*vulOcean[a-1])*(1-maturity[a-1])*nat_surv[a-1]   #
+    }#
+#
+    SPR<- apply(t(t(NPR) * (1-OceanU*vulOcean) * maturity ),1,sum)*(1-Uterm)#
+#
+    Req <- (a_stock+log(SPR))/(SPR*bNelson)#
+    Req[which(Req<0)]<-0#
+    Umax<-1-exp(-(a_stock+log(spro)))#
+    mixedYield<- Req * apply(t(weight*vulOcean*t(NPR)),1,sum)*OceanU#
+#
+    TerminalYield<- Req * apply(t(t(NPR)*((1-OceanU)*vulOcean)*maturity*weight),1,sum)*Uterm*valterm#
+#
+    TotalYield<-mixedYield+TerminalYield#
+#
+    Smsy_num<-SPR*Req#
+#
+    isoverfished<- Utot>Corr_Umsy#
+    isextinct<- Utot>Umax#
+#
+    B<-list(TotalYield=TotalYield,mixedYield=mixedYield,TerminalYield=TerminalYield,#
+        isoverfished=isoverfished,isextinct=isextinct)#
+#
+    return(B)#
+})#
+#
+}#
+##
+Uoceanvec<-seq(0,.9,0.05)#
+Umixeffect<-list()#
+noverfished<-NULL#
+nextinct<-NULL#
+Yterminal<-NULL#
+Ytotal<-NULL#
+#
+for(u in 1:length(Uoceanvec)){#
+#
+    Au<-list(a=a,b=b,#
+    age = age,    #
+    nat_surv = nat_surv,#
+    maturity = maturity,#
+    vulOcean = vulOcean,#
+    length = length,    #
+    weight = weight,    #
+    valterm = valterm, #
+    UmaxTerm = UmaxTerm,#
+    OceanU = Uoceanvec[u],  #
+    pnrml = pnrml, #
+    a_stock = aDeltaM,#
+    bNelson = bNelson,#
+    deltaM = deltaMFig8)#
+#
+    Umixeffect[[u]]<-calc_mixFisheries(Au)#
+#
+    noverfished[u]<-sum(Umixeffect[[u]]$isoverfished)#
+    nextinct[u]<-sum(Umixeffect[[u]]$isextinct)#
+    Yterminal[u]<-sum(Umixeffect[[u]]$TerminalYield)#
+    Ytotal[u]<-sum(Umixeffect[[u]]$TotalYield)#
+}
+Uoceanvec[8]
+Umixeffect[[8]]$isoverfished
+Umixeffect[[9]]$isoverfished
+Umixeffect[[u]]
+Umixeffect[[8]]
+Uoceanvec<-seq(0,.9,0.05)#
+Umixeffect<-list()#
+noverfished<-NULL#
+nextinct<-NULL#
+Yterminal<-NULL#
+Ytotal<-NULL#
+#
+for(u in 1:length(Uoceanvec)){#
+#
+    Au<-list(a=a,b=b,#
+    age = age,    #
+    nat_surv = nat_surv,#
+    maturity = maturity,#
+    vulOcean = vulOcean,#
+    length = length,    #
+    weight = weight,    #
+    valterm = valterm, #
+    UmaxTerm = UmaxTerm,#
+    OceanU = Uoceanvec[u],  #
+    pnrml = pnrml, #
+    a_stock = aDeltaM,#
+    bNelson = bNelson,#
+    deltaM = deltaMFig8)#
+#
+    Umixeffect[[u]]<-calc_mixFisheries(Au)#
+#
+    noverfished[u]<-sum(Umixeffect[[u]]$isoverfished)#
+    nextinct[u]<-sum(Umixeffect[[u]]$isextinct)#
+    Yterminal[u]<-sum(Umixeffect[[u]]$TerminalYield)#
+    Ytotal[u]<-sum(Umixeffect[[u]]$TotalYield)#
+}
+Umixeffect[[8]]$isoverfished
+Umixeffect[[9]]$isoverfished
+Utot>=Corr_Umsy
+Corr_Umsy
+Utot
+Corr_Umsy
+a   <-  2.78#
+b   <-  0.465#
+#
+age       <- 2:5#
+nat_surv  <- c(.6,.7,.8,.9)#
+maturity  <- c(0,.3,.6,1)#
+vulOcean  <- c(.1,1,1,1)#
+length    <- c(57,80,87,90)#
+weight    <- 0.01*length^3/1000#
+valterm   <- 1#
+UmaxTerm  <- 1#
+OceanU    <- 0.35#
+pnrml     <- seq(.1,1,.1)#
+aNelson <- c(3.48,2.07,4.14,3.87,3.02,#
+             2.78,1.69,4.27,1.74,2.49,#
+             2.62,2.22,2.43,3.08,3.1,#
+             0.91,2.67,2.91,3.28,2.82)#
+#
+bNelson <- c(0.1,0.21,0.75,0.33,0.47,#
+             0.01,0.02,0.04,0.74,0.09,#
+             0.16,1.2,0.13,0.98,1.15,#
+             1.24,1.14,0.12,0.12,0.3)#
+#a_stock<-aDeltaM#
+deltaMFig8 <- c(0.6,1,1,3,3,0.1,0.3,3.5,#
+                1,0.5,1.8,1.5,2,2.2,1,#
+                0.5,-1,1,1.3,1.5)#
+#
+aDeltaM <- aNelson-deltaMFig8/2#
+#
+StockName <- c("Cowichan","Puntledge","Nanaimo","Quinsam",#
+    "Qualicum","Harrison","Shuswap","Chilliwack","Skokomish",#
+    "Skagit","Snohomish","Stillaguamish","Green","Lake Washington",#
+    "Nisqually","Hoko","Elwha","Queets","Quillayute","Hoh"
+NperRec_o <-NULL#
+    NperRec_o[1]<-1#
+    for(y in 2:length(age)){#
+        NperRec_o[y]<-NperRec_o[y-1]*(1-maturity[y-1])*nat_surv[y-1]#
+    }#
+#
+    spro<-sum(maturity*NperRec_o)
+NperRec_o <-NULL
+NperRec_o[1]<-1
+for(y in 2:length(age)){#
+        NperRec_o[y]<-NperRec_o[y-1]*(1-maturity[y-1])*nat_surv[y-1]#
+    }
+spro<-sum(maturity*NperRec_o)
+spro
+deltaM <- pnrml*a#
+    ae <- a-deltaM#
+#
+    No <- ae/b#
+    Umsy <- 0.5*ae-0.07*ae^2#
+    Smsy <- ae/b*(0.5-0.07*ae)#
+#
+    Smsy_No <- Smsy/No#
+#
+    Corr_Smsy <- (a_stock+log(spro))/bNelson*(0.5-0.07*a_stock)#
+    Corr_Umsy <- 0.5*(a_stock+log(spro))-0.07*(a_stock+log(spro))^2#
+#
+    Uterm<-NULL#
+    for(n in 1:length(StockName)){#
+        Uterm[n]<-min(UmaxTerm,max(0,Corr_Umsy[n]-OceanU))#
+    }#
+    Utot<-OceanU+Uterm#
+#
+    NPR <- matrix(NA, ncol=length(age),nrow=length(StockName))#
+#
+    NPR[,1] <- 1#
+    for(a in 2:(length(age))){#
+        NPR[,a] <- NPR[,a-1]*(1-OceanU*vulOcean[a-1])*(1-maturity[a-1])*nat_surv[a-1]   #
+    }#
+#
+    SPR<- apply(t(t(NPR) * (1-OceanU*vulOcean) * maturity ),1,sum)*(1-Uterm)#
+#
+    Req <- (a_stock+log(SPR))/(SPR*bNelson)#
+    Req[which(Req<0)]<-0#
+    Umax<-1-exp(-(a_stock+log(spro)))#
+    mixedYield<- Req * apply(t(weight*vulOcean*t(NPR)),1,sum)*OceanU#
+#
+    TerminalYield<- Req * apply(t(t(NPR)*((1-OceanU)*vulOcean)*maturity*weight),1,sum)*Uterm*valterm#
+#
+    TotalYield<-mixedYield+TerminalYield#
+#
+    Smsy_num<-SPR*Req#
+#
+    isoverfished<- Utot>Corr_Umsy#
+    isextinct<- Utot>Umax
+isoverfished
+deltaM <- pnrml*a#
+    ae <- a-deltaM#
+#
+    No <- ae/b#
+    Umsy <- 0.5*ae-0.07*ae^2#
+    Smsy <- ae/b*(0.5-0.07*ae)#
+#
+    Smsy_No <- Smsy/No#
+#
+    Corr_Smsy <- (a_stock+log(spro))/bNelson*(0.5-0.07*a_stock)#
+    Corr_Umsy <- 0.5*(a_stock+log(spro))-0.07*(a_stock+log(spro))^2#
+#
+    Uterm<-NULL#
+    for(n in 1:length(StockName)){#
+        Uterm[n]<-min(UmaxTerm,max(0,Corr_Umsy[n]-OceanU))#
+    }
+a_stock<-aDeltaM
+deltaM <- pnrml*a#
+    ae <- a-deltaM#
+#
+    No <- ae/b#
+    Umsy <- 0.5*ae-0.07*ae^2#
+    Smsy <- ae/b*(0.5-0.07*ae)#
+#
+    Smsy_No <- Smsy/No#
+#
+    Corr_Smsy <- (a_stock+log(spro))/bNelson*(0.5-0.07*a_stock)#
+    Corr_Umsy <- 0.5*(a_stock+log(spro))-0.07*(a_stock+log(spro))^2#
+#
+    Uterm<-NULL#
+    for(n in 1:length(StockName)){#
+        Uterm[n]<-min(UmaxTerm,max(0,Corr_Umsy[n]-OceanU))#
+    }#
+    Utot<-OceanU+Uterm#
+#
+    NPR <- matrix(NA, ncol=length(age),nrow=length(StockName))#
+#
+    NPR[,1] <- 1#
+    for(a in 2:(length(age))){#
+        NPR[,a] <- NPR[,a-1]*(1-OceanU*vulOcean[a-1])*(1-maturity[a-1])*nat_surv[a-1]   #
+    }#
+#
+    SPR<- apply(t(t(NPR) * (1-OceanU*vulOcean) * maturity ),1,sum)*(1-Uterm)#
+#
+    Req <- (a_stock+log(SPR))/(SPR*bNelson)#
+    Req[which(Req<0)]<-0#
+    Umax<-1-exp(-(a_stock+log(spro)))#
+    mixedYield<- Req * apply(t(weight*vulOcean*t(NPR)),1,sum)*OceanU#
+#
+    TerminalYield<- Req * apply(t(t(NPR)*((1-OceanU)*vulOcean)*maturity*weight),1,sum)*Uterm*valterm#
+#
+    TotalYield<-mixedYield+TerminalYield#
+#
+    Smsy_num<-SPR*Req#
+#
+    isoverfished<- Utot>Corr_Umsy#
+    isextinct<- Utot>Umax
+isoverfished
+as.numeric(Utot>Corr_Umsy)
+Utot
+OceanU
+Uterm
+Uterm<-NULL
+for(n in 1:length(StockName)){#
+        Uterm[n]<-min(UmaxTerm,max(0,Corr_Umsy[n]-OceanU))#
+    }
+StockName <- c("Cowichan","Puntledge","Nanaimo","Quinsam",#
+    "Qualicum","Harrison","Shuswap","Chilliwack","Skokomish",#
+    "Skagit","Snohomish","Stillaguamish","Green","Lake Washington",#
+    "Nisqually","Hoko","Elwha","Queets","Quillayute","Hoh"
+Uterm<-NULL
+for(n in 1:length(StockName)){#
+        Uterm[n]<-min(UmaxTerm,max(0,Corr_Umsy[n]-OceanU))#
+    }
+StockName
+StockName <- c("Cowichan","Puntledge","Nanaimo","Quinsam",#
+    "Qualicum","Harrison","Shuswap","Chilliwack","Skokomish",#
+    "Skagit","Snohomish","Stillaguamish","Green","Lake Washington",#
+    "Nisqually","Hoko","Elwha","Queets","Quillayute","Hoh")
+Uterm<-NULL
+for(n in 1:length(StockName)){#
+        Uterm[n]<-min(UmaxTerm,max(0,Corr_Umsy[n]-OceanU))#
+    }
+Utot<-OceanU+Uterm
+Utot
+NPR <- matrix(NA, ncol=length(age),nrow=length(StockName))#
+#
+    NPR[,1] <- 1#
+    for(a in 2:(length(age))){#
+        NPR[,a] <- NPR[,a-1]*(1-OceanU*vulOcean[a-1])*(1-maturity[a-1])*nat_surv[a-1]   #
+    }#
+#
+    SPR<- apply(t(t(NPR) * (1-OceanU*vulOcean) * maturity ),1,sum)*(1-Uterm)#
+#
+    Req <- (a_stock+log(SPR))/(SPR*bNelson)#
+    Req[which(Req<0)]<-0#
+    Umax<-1-exp(-(a_stock+log(spro)))#
+    mixedYield<- Req * apply(t(weight*vulOcean*t(NPR)),1,sum)*OceanU#
+#
+    TerminalYield<- Req * apply(t(t(NPR)*((1-OceanU)*vulOcean)*maturity*weight),1,sum)*Uterm*valterm#
+#
+    TotalYield<-mixedYield+TerminalYield#
+#
+    Smsy_num<-SPR*Req#
+#
+    isoverfished <- as.numeric(Utot>Corr_Umsy)
+as.numeric(Utot>Corr_Umsy)
+library(ggplot2)#
+#
+#model dimensions and biometrics#
+a   <-  2.78#
+b   <-  0.465#
+#
+age       <- 2:5#
+nat_surv  <- c(.6,.7,.8,.9)#
+maturity  <- c(0,.3,.6,1)#
+vulOcean  <- c(.1,1,1,1)#
+length    <- c(57,80,87,90)#
+weight    <- 0.01*length^3/1000#
+valterm   <- 1#
+UmaxTerm  <- 1#
+OceanU    <- 0.1#
+pnrml     <- seq(.1,1,.1)#
+aNelson <- c(3.48,2.07,4.14,3.87,3.02,#
+             2.78,1.69,4.27,1.74,2.49,#
+             2.62,2.22,2.43,3.08,3.1,#
+             0.91,2.67,2.91,3.28,2.82)#
+#
+bNelson <- c(0.1,0.21,0.75,0.33,0.47,#
+             0.01,0.02,0.04,0.74,0.09,#
+             0.16,1.2,0.13,0.98,1.15,#
+             1.24,1.14,0.12,0.12,0.3)#
+#a_stock<-aDeltaM#
+deltaMFig8 <- c(0.6,1,1,3,3,0.1,0.3,3.5,#
+                1,0.5,1.8,1.5,2,2.2,1,#
+                0.5,-1,1,1.3,1.5)#
+#
+aDeltaM <- aNelson-deltaMFig8/2#
+#
+StockName <- c("Cowichan","Puntledge","Nanaimo","Quinsam",#
+    "Qualicum","Harrison","Shuswap","Chilliwack","Skokomish",#
+    "Skagit","Snohomish","Stillaguamish","Green","Lake Washington",#
+    "Nisqually","Hoko","Elwha","Queets","Quillayute","Hoh")#
+A<-list(a=a,b=b,#
+age = age,    #
+nat_surv = nat_surv,#
+maturity = maturity,#
+vulOcean = vulOcean,#
+length = length,    #
+weight = weight,    #
+valterm = valterm, #
+UmaxTerm = UmaxTerm,#
+OceanU = OceanU,    #
+pnrml = pnrml, #
+a_stock = aDeltaM,#
+bNelson = bNelson,#
+deltaMFig8 = deltaMFig8,#
+StockName=StockName)     #
+calc_mixFisheries_equil<-function(A){#
+    with(A,{#
+#
+    NperRec_o <-NULL#
+    NperRec_o[1]<-1#
+    for(y in 2:length(age)){#
+        NperRec_o[y]<-NperRec_o[y-1]*(1-maturity[y-1])*nat_surv[y-1]#
+    }#
+#
+    spro<-sum(maturity*NperRec_o)#
+    deltaM <- pnrml*a#
+    ae <- a-deltaM#
+#
+    No <- ae/b#
+    Umsy <- 0.5*ae-0.07*ae^2#
+    Smsy <- ae/b*(0.5-0.07*ae)#
+#
+    Smsy_No <- Smsy/No#
+#
+    Corr_Smsy <- (a_stock+log(spro))/bNelson*(0.5-0.07*a_stock)#
+    Corr_Umsy <- 0.5*(a_stock+log(spro))-0.07*(a_stock+log(spro))^2#
+#
+    Uterm<-NULL#
+    for(n in 1:length(StockName)){#
+        Uterm[n]<-min(UmaxTerm,max(0,Corr_Umsy[n]-OceanU))#
+    }#
+    Utot<-OceanU+Uterm#
+#
+    NPR <- matrix(NA, ncol=length(age),nrow=length(StockName))#
+#
+    NPR[,1] <- 1#
+    for(a in 2:(length(age))){#
+        NPR[,a] <- NPR[,a-1]*(1-OceanU*vulOcean[a-1])*(1-maturity[a-1])*nat_surv[a-1]   #
+    }#
+#
+    SPR<- apply(t(t(NPR) * (1-OceanU*vulOcean) * maturity ),1,sum)*(1-Uterm)#
+#
+    Req <- (a_stock+log(SPR))/(SPR*bNelson)#
+    Req[which(Req<0)]<-0#
+    Umax<-1-exp(-(a_stock+log(spro)))#
+    mixedYield<- Req * apply(t(weight*vulOcean*t(NPR)),1,sum)*OceanU#
+#
+    TerminalYield<- Req * apply(t(t(NPR)*((1-OceanU)*vulOcean)*maturity*weight),1,sum)*Uterm*valterm#
+#
+    TotalYield<-mixedYield+TerminalYield#
+#
+    Smsy_num<-SPR*Req#
+#
+    isoverfished <- as.numeric(Utot>Corr_Umsy)#
+    isextinct<- Utot>Umax#
+#
+    B<-list(TotalYield=TotalYield,mixedYield=mixedYield,TerminalYield=TerminalYield,#
+        isoverfished=isoverfished,isextinct=isextinct)#
+#
+    return(B)#
+})#
+#
+}#
+##
+Uoceanvec<-seq(0,.9,0.05)#
+Umixeffect<-list()#
+noverfished<-NULL#
+nextinct<-NULL#
+Yterminal<-NULL#
+Ytotal<-NULL#
+#
+for(u in 1:length(Uoceanvec)){#
+#
+    Au<-list(a=a,b=b,#
+    age = age,    #
+    nat_surv = nat_surv,#
+    maturity = maturity,#
+    vulOcean = vulOcean,#
+    length = length,    #
+    weight = weight,    #
+    valterm = valterm, #
+    UmaxTerm = UmaxTerm,#
+    OceanU = Uoceanvec[u],  #
+    pnrml = pnrml, #
+    a_stock = aDeltaM,#
+    bNelson = bNelson,#
+    deltaM = deltaMFig8)#
+#
+    Umixeffect[[u]]<-calc_mixFisheries(Au)#
+#
+    noverfished[u]<-sum(Umixeffect[[u]]$isoverfished)#
+    nextinct[u]<-sum(Umixeffect[[u]]$isextinct)#
+    Yterminal[u]<-sum(Umixeffect[[u]]$TerminalYield)#
+    Ytotal[u]<-sum(Umixeffect[[u]]$TotalYield)#
+}#
+#
+length(Umixeffect)#
+Uoceanvec[8]#
+Umixeffect[[8]]$isoverfished#
+Umixeffect[[9]]$isoverfished#
+#
+#-===========================================================#
+#plots#
+#
+df<-data.frame(value=c(noverfished,nextinct),#
+    ntype=rep(c("# overfished","# extinct"),each=length(noverfished)),#
+    Uocean=Uoceanvec,Yield=c(Yterminal,Ytotal),#
+    Ytype=rep(c("terminal","total"),each=length(noverfished)))#
+#
+cbind(noverfished,Uoceanvec)#
+#
+p<-ggplot(df)#
+p<- p+geom_line(aes(x=Uocean,y=value, col=ntype))#
+p
+Umixeffect[[8]]$isoverfished
+Umixeffect[[u]]$isextinct
+calc_mixFisheries(Au)
+Uoceanvec<-seq(0,.9,0.05)#
+Umixeffect<-list()#
+noverfished<-NULL#
+nextinct<-NULL#
+Yterminal<-NULL#
+Ytotal<-NULL#
+#
+for(u in 1:length(Uoceanvec)){#
+#
+    Au<-list(a=a,b=b,#
+    age = age,    #
+    nat_surv = nat_surv,#
+    maturity = maturity,#
+    vulOcean = vulOcean,#
+    length = length,    #
+    weight = weight,    #
+    valterm = valterm, #
+    UmaxTerm = UmaxTerm,#
+    OceanU = Uoceanvec[u],  #
+    pnrml = pnrml, #
+    a_stock = aDeltaM,#
+    bNelson = bNelson,#
+    deltaM = deltaMFig8)#
+#
+    Umixeffect[[u]]<-calc_mixFisheries_equil(Au)#
+#
+    noverfished[u]<-sum(Umixeffect[[u]]$isoverfished)#
+    nextinct[u]<-sum(Umixeffect[[u]]$isextinct)#
+    Yterminal[u]<-sum(Umixeffect[[u]]$TerminalYield)#
+    Ytotal[u]<-sum(Umixeffect[[u]]$TotalYield)#
+}
+length(Umixeffect)
+Uoceanvec[8]
+Umixeffect[[8]]$isoverfished
+Umixeffect[[9]]$isoverfished
+Au<-list(a=a,b=b,#
+    age = age,    #
+    nat_surv = nat_surv,#
+    maturity = maturity,#
+    vulOcean = vulOcean,#
+    length = length,    #
+    weight = weight,    #
+    valterm = valterm, #
+    UmaxTerm = UmaxTerm,#
+    OceanU = .35,   #
+    pnrml = pnrml, #
+    a_stock = aDeltaM,#
+    bNelson = bNelson,#
+    deltaM = deltaMFig8)
+Umixeffect[[u]]<-calc_mixFisheries_equil(Au)
+Umixeffect[[u]]$isoverfished
+Uoceanvec[8]
+Au<-list(a=a,b=b,#
+    age = age,    #
+    nat_surv = nat_surv,#
+    maturity = maturity,#
+    vulOcean = vulOcean,#
+    length = length,    #
+    weight = weight,    #
+    valterm = valterm, #
+    UmaxTerm = UmaxTerm,#
+    OceanU = Uoceanvec[8],  #
+    pnrml = pnrml, #
+    a_stock = aDeltaM,#
+    bNelson = bNelson,#
+    deltaM = deltaMFig8)
+Umixeffect[[u]]<-calc_mixFisheries_equil(Au)
+Umixeffect[[u]]$isoverfished
+Uoceanvec[8]
+Uoceanvec<-seq(0,.9,0.0500)#
+Umixeffect<-list()#
+noverfished<-NULL#
+nextinct<-NULL#
+Yterminal<-NULL#
+Ytotal<-NULL#
+#
+for(u in 1:length(Uoceanvec)){#
+#
+    Au<-list(a=a,b=b,#
+    age = age,    #
+    nat_surv = nat_surv,#
+    maturity = maturity,#
+    vulOcean = vulOcean,#
+    length = length,    #
+    weight = weight,    #
+    valterm = valterm, #
+    UmaxTerm = UmaxTerm,#
+    OceanU = Uoceanvec[8],  #
+    pnrml = pnrml, #
+    a_stock = aDeltaM,#
+    bNelson = bNelson,#
+    deltaM = deltaMFig8)#
+#
+    Umixeffect[[u]]<-calc_mixFisheries_equil(Au)#
+#
+    noverfished[u]<-sum(Umixeffect[[u]]$isoverfished)#
+    nextinct[u]<-sum(Umixeffect[[u]]$isextinct)#
+    Yterminal[u]<-sum(Umixeffect[[u]]$TerminalYield)#
+    Ytotal[u]<-sum(Umixeffect[[u]]$TotalYield)#
+}#
+#
+length(Umixeffect)#
+Uoceanvec[8]
+Umixeffect[[8]]$isoverfished
+Umixeffect[[9]]$isoverfished
+df<-data.frame(value=c(noverfished,nextinct),#
+    ntype=rep(c("# overfished","# extinct"),each=length(noverfished)),#
+    Uocean=Uoceanvec,Yield=c(Yterminal,Ytotal),#
+    Ytype=rep(c("terminal","total"),each=length(noverfished)))#
+#
+cbind(noverfished,Uoceanvec)#
+#
+p<-ggplot(df)#
+p<- p+geom_line(aes(x=Uocean,y=value, col=ntype))#
+p
+for(u in 1:length(Uoceanvec)){#
+#
+    Au<-list(a=a,b=b,#
+    age = age,    #
+    nat_surv = nat_surv,#
+    maturity = maturity,#
+    vulOcean = vulOcean,#
+    length = length,    #
+    weight = weight,    #
+    valterm = valterm, #
+    UmaxTerm = UmaxTerm,#
+    OceanU = Uoceanvec[u],  #
+    pnrml = pnrml, #
+    a_stock = aDeltaM,#
+    bNelson = bNelson,#
+    deltaM = deltaMFig8)#
+#
+    Umixeffect[[u]]<-calc_mixFisheries_equil(Au)#
+#
+    noverfished[u]<-sum(Umixeffect[[u]]$isoverfished)#
+    nextinct[u]<-sum(Umixeffect[[u]]$isextinct)#
+    Yterminal[u]<-sum(Umixeffect[[u]]$TerminalYield)#
+    Ytotal[u]<-sum(Umixeffect[[u]]$TotalYield)#
+}#
+#
+length(Umixeffect)#
+Uoceanvec[8]#
+Umixeffect[[8]]$isoverfished#
+Umixeffect[[9]]$isoverfished
+Uoceanvec<-seq(0.00,.9,0.0500)#
+Umixeffect<-list()#
+noverfished<-NULL#
+nextinct<-NULL#
+Yterminal<-NULL#
+Ytotal<-NULL#
+#
+for(u in 1:length(Uoceanvec)){#
+#
+    Au<-list(a=a,b=b,#
+    age = age,    #
+    nat_surv = nat_surv,#
+    maturity = maturity,#
+    vulOcean = vulOcean,#
+    length = length,    #
+    weight = weight,    #
+    valterm = valterm, #
+    UmaxTerm = UmaxTerm,#
+    OceanU = Uoceanvec[u],  #
+    pnrml = pnrml, #
+    a_stock = aDeltaM,#
+    bNelson = bNelson,#
+    deltaM = deltaMFig8)#
+#
+    Umixeffect[[u]]<-calc_mixFisheries_equil(Au)#
+#
+    noverfished[u]<-sum(Umixeffect[[u]]$isoverfished)#
+    nextinct[u]<-sum(Umixeffect[[u]]$isextinct)#
+    Yterminal[u]<-sum(Umixeffect[[u]]$TerminalYield)#
+    Ytotal[u]<-sum(Umixeffect[[u]]$TotalYield)#
+}#
+#
+length(Umixeffect)#
+Uoceanvec[8]#
+Umixeffect[[8]]$isoverfished#
+Umixeffect[[9]]$isoverfished
+Au<-list(a=a,b=b,#
+    age = age,    #
+    nat_surv = nat_surv,#
+    maturity = maturity,#
+    vulOcean = vulOcean,#
+    length = length,    #
+    weight = weight,    #
+    valterm = valterm, #
+    UmaxTerm = UmaxTerm,#
+    OceanU = 0.35,  #
+    pnrml = pnrml, #
+    a_stock = aDeltaM,#
+    bNelson = bNelson,#
+    deltaM = deltaMFig8)
+calc_mixFisheries_equil(Au)
+NperRec_o <-NULL#
+    NperRec_o[1]<-1#
+    for(y in 2:length(age)){#
+        NperRec_o[y]<-NperRec_o[y-1]*(1-maturity[y-1])*nat_surv[y-1]#
+    }#
+#
+    spro<-sum(maturity*NperRec_o)#
+    deltaM <- pnrml*a#
+    ae <- a-deltaM#
+#
+    No <- ae/b#
+    Umsy <- 0.5*ae-0.07*ae^2#
+    Smsy <- ae/b*(0.5-0.07*ae)#
+#
+    Smsy_No <- Smsy/No#
+#
+    Corr_Smsy <- (a_stock+log(spro))/bNelson*(0.5-0.07*a_stock)#
+    Corr_Umsy <- 0.5*(a_stock+log(spro))-0.07*(a_stock+log(spro))^2
+Corr_Umsy <- 0.5*(a_stock+log(spro))-0.07*(a_stock+log(spro))^2
+Corr_Umsy
+OceanU
+Uterm<-NULL#
+    for(n in 1:length(StockName)){#
+        Uterm[n]<-min(UmaxTerm,max(0,Corr_Umsy[n]-OceanU))#
+    }
+Uterm
+Utot<-OceanU+Uterm#
+#
+    NPR <- matrix(NA, ncol=length(age),nrow=length(StockName))#
+#
+    NPR[,1] <- 1#
+    for(a in 2:(length(age))){#
+        NPR[,a] <- NPR[,a-1]*(1-OceanU*vulOcean[a-1])*(1-maturity[a-1])*nat_surv[a-1]   #
+    }#
+#
+    SPR<- apply(t(t(NPR) * (1-OceanU*vulOcean) * maturity ),1,sum)*(1-Uterm)#
+#
+    Req <- (a_stock+log(SPR))/(SPR*bNelson)#
+    Req[which(Req<0)]<-0#
+    Umax<-1-exp(-(a_stock+log(spro)))#
+    mixedYield<- Req * apply(t(weight*vulOcean*t(NPR)),1,sum)*OceanU#
+#
+    TerminalYield<- Req * apply(t(t(NPR)*((1-OceanU)*vulOcean)*maturity*weight),1,sum)*Uterm*valterm#
+#
+    TotalYield<-mixedYield+TerminalYield
+TotalYield
+OceanU=.35
+NperRec_o <-NULL#
+    NperRec_o[1]<-1#
+    for(y in 2:length(age)){#
+        NperRec_o[y]<-NperRec_o[y-1]*(1-maturity[y-1])*nat_surv[y-1]#
+    }#
+#
+    spro<-sum(maturity*NperRec_o)#
+    deltaM <- pnrml*a#
+    ae <- a-deltaM#
+#
+    No <- ae/b#
+    Umsy <- 0.5*ae-0.07*ae^2#
+    Smsy <- ae/b*(0.5-0.07*ae)#
+#
+    Smsy_No <- Smsy/No#
+#
+    Corr_Smsy <- (a_stock+log(spro))/bNelson*(0.5-0.07*a_stock)#
+    Corr_Umsy <- 0.5*(a_stock+log(spro))-0.07*(a_stock+log(spro))^2#
+#
+    Uterm<-NULL#
+    for(n in 1:length(StockName)){#
+        Uterm[n]<-min(UmaxTerm,max(0,Corr_Umsy[n]-OceanU))#
+    }#
+    Utot<-OceanU+Uterm#
+#
+    NPR <- matrix(NA, ncol=length(age),nrow=length(StockName))#
+#
+    NPR[,1] <- 1#
+    for(a in 2:(length(age))){#
+        NPR[,a] <- NPR[,a-1]*(1-OceanU*vulOcean[a-1])*(1-maturity[a-1])*nat_surv[a-1]   #
+    }#
+#
+    SPR<- apply(t(t(NPR) * (1-OceanU*vulOcean) * maturity ),1,sum)*(1-Uterm)#
+#
+    Req <- (a_stock+log(SPR))/(SPR*bNelson)#
+    Req[which(Req<0)]<-0#
+    Umax<-1-exp(-(a_stock+log(spro)))#
+    mixedYield<- Req * apply(t(weight*vulOcean*t(NPR)),1,sum)*OceanU#
+#
+    TerminalYield<- Req * apply(t(t(NPR)*((1-OceanU)*vulOcean)*maturity*weight),1,sum)*Uterm*valterm#
+#
+    TotalYield<-mixedYield+TerminalYield#
+#
+    Smsy_num<-SPR*Req#
+#
+    isoverfished <- as.numeric(Utot>Corr_Umsy)#
+    isextinct<- as.numeric(Utot>Umax)
+isoverfished
+Utot
+Corr_Umsy
+cbind(Utot,Corr_Umsy)
+cbind(signif(Utot,7),Corr_Umsy)
+cbind(signif(Utot,8),Corr_Umsy)
+cbind(signif(Utot,9),Corr_Umsy)
+isoverfished <- as.numeric(Utot>Corr_Umsy)
+as.numeric(Utot>Corr_Umsy)
+calc_mixFisheries_equil<-function(A){#
+    with(A,{#
+#
+    NperRec_o <-NULL#
+    NperRec_o[1]<-1#
+    for(y in 2:length(age)){#
+        NperRec_o[y]<-NperRec_o[y-1]*(1-maturity[y-1])*nat_surv[y-1]#
+    }#
+#
+    spro<-sum(maturity*NperRec_o)#
+    deltaM <- pnrml*a#
+    ae <- a-deltaM#
+#
+    No <- ae/b#
+    Umsy <- 0.5*ae-0.07*ae^2#
+    Smsy <- ae/b*(0.5-0.07*ae)#
+#
+    Smsy_No <- Smsy/No#
+#
+    Corr_Smsy <- (a_stock+log(spro))/bNelson*(0.5-0.07*a_stock)#
+    Corr_Umsy <- 0.5*(a_stock+log(spro))-0.07*(a_stock+log(spro))^2#
+#
+    Uterm<-NULL#
+    for(n in 1:length(StockName)){#
+        Uterm[n]<-min(UmaxTerm,max(0,Corr_Umsy[n]-OceanU))#
+    }#
+    Utot<-OceanU+Uterm#
+#
+    NPR <- matrix(NA, ncol=length(age),nrow=length(StockName))#
+#
+    NPR[,1] <- 1#
+    for(a in 2:(length(age))){#
+        NPR[,a] <- NPR[,a-1]*(1-OceanU*vulOcean[a-1])*(1-maturity[a-1])*nat_surv[a-1]   #
+    }#
+#
+    SPR<- apply(t(t(NPR) * (1-OceanU*vulOcean) * maturity ),1,sum)*(1-Uterm)#
+#
+    Req <- (a_stock+log(SPR))/(SPR*bNelson)#
+    Req[which(Req<0)]<-0#
+    Umax<-1-exp(-(a_stock+log(spro)))#
+    mixedYield<- Req * apply(t(weight*vulOcean*t(NPR)),1,sum)*OceanU#
+#
+    TerminalYield<- Req * apply(t(t(NPR)*((1-OceanU)*vulOcean)*maturity*weight),1,sum)*Uterm*valterm#
+#
+    TotalYield<-mixedYield+TerminalYield#
+#
+    Smsy_num<-SPR*Req#
+#
+    isoverfished <- as.numeric(signif(Utot,9)>Corr_Umsy)#
+    #cbind(signif(Utot,9),Corr_Umsy)#
+    isextinct<- as.numeric(Utot>Umax)#
+#
+    B<-list(TotalYield=TotalYield,mixedYield=mixedYield,TerminalYield=TerminalYield,#
+        isoverfished=isoverfished,isextinct=isextinct)#
+#
+    return(B)#
+})#
+#
+}#
+##
+Uoceanvec<-seq(0.00,.9,0.0500)#
+Umixeffect<-list()#
+noverfished<-NULL#
+nextinct<-NULL#
+Yterminal<-NULL#
+Ytotal<-NULL
+for(u in 1:length(Uoceanvec)){#
+#
+    Au<-list(a=a,b=b,#
+    age = age,    #
+    nat_surv = nat_surv,#
+    maturity = maturity,#
+    vulOcean = vulOcean,#
+    length = length,    #
+    weight = weight,    #
+    valterm = valterm, #
+    UmaxTerm = UmaxTerm,#
+    OceanU = Uoceanvec[u],  #
+    pnrml = pnrml, #
+    a_stock = aDeltaM,#
+    bNelson = bNelson,#
+    deltaM = deltaMFig8)#
+#
+    Umixeffect[[u]]<-calc_mixFisheries_equil(Au)#
+#
+    noverfished[u]<-sum(Umixeffect[[u]]$isoverfished)#
+    nextinct[u]<-sum(Umixeffect[[u]]$isextinct)#
+    Yterminal[u]<-sum(Umixeffect[[u]]$TerminalYield)#
+    Ytotal[u]<-sum(Umixeffect[[u]]$TotalYield)#
+}#
+#
+length(Umixeffect)#
+Uoceanvec[8]#
+Umixeffect[[8]]$isoverfished#
+Umixeffect[[9]]$isoverfished
+df<-data.frame(value=c(noverfished,nextinct),#
+    ntype=rep(c("# overfished","# extinct"),each=length(noverfished)),#
+    Uocean=Uoceanvec,Yield=c(Yterminal,Ytotal),#
+    Ytype=rep(c("terminal","total"),each=length(noverfished)))#
+#
+cbind(noverfished,Uoceanvec)#
+#
+p<-ggplot(df)#
+p<- p+geom_line(aes(x=Uocean,y=value, col=ntype))#
+p
+calc_mixFisheries_equil<-function(A){#
+    with(A,{#
+#
+    NperRec_o <-NULL#
+    NperRec_o[1]<-1#
+    for(y in 2:length(age)){#
+        NperRec_o[y]<-NperRec_o[y-1]*(1-maturity[y-1])*nat_surv[y-1]#
+    }#
+#
+    spro<-sum(maturity*NperRec_o)#
+    deltaM <- pnrml*a#
+    ae <- a-deltaM#
+#
+    No <- ae/b#
+    Umsy <- 0.5*ae-0.07*ae^2#
+    Smsy <- ae/b*(0.5-0.07*ae)#
+#
+    Smsy_No <- Smsy/No#
+#
+    Corr_Smsy <- (a_stock+log(spro))/bNelson*(0.5-0.07*a_stock)#
+    Corr_Umsy <- 0.5*(a_stock+log(spro))-0.07*(a_stock+log(spro))^2#
+#
+    Uterm<-NULL#
+    for(n in 1:length(StockName)){#
+        Uterm[n]<-min(UmaxTerm,max(0,Corr_Umsy[n]-OceanU))#
+    }#
+    Utot<-OceanU+Uterm#
+#
+    NPR <- matrix(NA, ncol=length(age),nrow=length(StockName))#
+#
+    NPR[,1] <- 1#
+    for(a in 2:(length(age))){#
+        NPR[,a] <- NPR[,a-1]*(1-OceanU*vulOcean[a-1])*(1-maturity[a-1])*nat_surv[a-1]   #
+    }#
+#
+    SPR<- apply(t(t(NPR) * (1-OceanU*vulOcean) * maturity ),1,sum)*(1-Uterm)#
+#
+    Req <- (a_stock+log(SPR))/(SPR*bNelson)#
+    Req[which(Req<0)]<-0#
+    Umax<-1-exp(-(a_stock+log(spro)))#
+    mixedYield<- Req * apply(t(weight*vulOcean*t(NPR)),1,sum)*OceanU#
+#
+    TerminalYield<- Req * apply(t(t(NPR)*((1-OceanU)*vulOcean)*maturity*weight),1,sum)*Uterm*valterm#
+#
+    TotalYield<-mixedYield+TerminalYield#
+#
+    Smsy_num<-SPR*Req#
+#
+    isoverfished <- as.numeric(signif(Utot,9)>signif(Corr_Umsy,9))#
+    #cbind(signif(Utot,9),Corr_Umsy)#
+    isextinct<- as.numeric(Utot>Umax)#
+#
+    B<-list(TotalYield=TotalYield,mixedYield=mixedYield,TerminalYield=TerminalYield,#
+        isoverfished=isoverfished,isextinct=isextinct)#
+#
+    return(B)#
+})#
+#
+}#
+##
+Uoceanvec<-seq(0.00,.9,0.0500)#
+Umixeffect<-list()#
+noverfished<-NULL#
+nextinct<-NULL#
+Yterminal<-NULL#
+Ytotal<-NULL#
+#
+for(u in 1:length(Uoceanvec)){#
+#
+    Au<-list(a=a,b=b,#
+    age = age,    #
+    nat_surv = nat_surv,#
+    maturity = maturity,#
+    vulOcean = vulOcean,#
+    length = length,    #
+    weight = weight,    #
+    valterm = valterm, #
+    UmaxTerm = UmaxTerm,#
+    OceanU = Uoceanvec[u],  #
+    pnrml = pnrml, #
+    a_stock = aDeltaM,#
+    bNelson = bNelson,#
+    deltaM = deltaMFig8)#
+#
+    Umixeffect[[u]]<-calc_mixFisheries_equil(Au)#
+#
+    noverfished[u]<-sum(Umixeffect[[u]]$isoverfished)#
+    nextinct[u]<-sum(Umixeffect[[u]]$isextinct)#
+    Yterminal[u]<-sum(Umixeffect[[u]]$TerminalYield)#
+    Ytotal[u]<-sum(Umixeffect[[u]]$TotalYield)#
+}#
+#
+length(Umixeffect)#
+Uoceanvec[8]#
+Umixeffect[[8]]$isoverfished#
+Umixeffect[[9]]$isoverfished#
+#
+#-===========================================================#
+#plots#
+#
+df<-data.frame(value=c(noverfished,nextinct),#
+    ntype=rep(c("# overfished","# extinct"),each=length(noverfished)),#
+    Uocean=Uoceanvec,Yield=c(Yterminal,Ytotal),#
+    Ytype=rep(c("terminal","total"),each=length(noverfished)))
+df
+p<-ggplot(df)#
+p<- p+geom_line(aes(x=Uocean,y=value, col=ntype))#
+p
+df<-data.frame(value=c(noverfished,nextinct,Yterminal/max(Ytotal)*max(noverfished),Ytotal/max(Ytotal)*max(noverfished)),#
+    ntype=rep(c("# overfished","# extinct"," Yield terminal","Yield total"),each=length(noverfished)),#
+    Uocean=Uoceanvec)#
+#
+cbind(noverfished,Uoceanvec)#
+#
+p<-ggplot(df)#
+p<- p+geom_line(aes(x=Uocean,y=value, col=ntype))#
+p<- p+geom_point(aes(x=Uocean,y=value, col=ntype))#
+#
+p
+a   <-  2.78#
+b   <-  0.465#
+#
+age       <- 2:5#
+nat_surv  <- c(.6,.7,.8,.9)#
+maturity  <- c(0,.3,.6,1)#
+vulOcean  <- c(.1,1,1,1)#
+length    <- c(57,80,87,90)#
+weight    <- 0.01*length^3/1000#
+valterm   <- 1#
+UmaxTerm  <- 0#
+OceanU    <- 0.1#
+pnrml     <- seq(.1,1,.1)#
+aNelson <- c(3.48,2.07,4.14,3.87,3.02,#
+             2.78,1.69,4.27,1.74,2.49,#
+             2.62,2.22,2.43,3.08,3.1,#
+             0.91,2.67,2.91,3.28,2.82)#
+#
+bNelson <- c(0.1,0.21,0.75,0.33,0.47,#
+             0.01,0.02,0.04,0.74,0.09,#
+             0.16,1.2,0.13,0.98,1.15,#
+             1.24,1.14,0.12,0.12,0.3)#
+#a_stock<-aDeltaM#
+deltaMFig8 <- c(0.6,1,1,3,3,0.1,0.3,3.5,#
+                1,0.5,1.8,1.5,2,2.2,1,#
+                0.5,-1,1,1.3,1.5)#
+#
+aDeltaM <- aNelson-deltaMFig8/2#
+#
+StockName <- c("Cowichan","Puntledge","Nanaimo","Quinsam",#
+    "Qualicum","Harrison","Shuswap","Chilliwack","Skokomish",#
+    "Skagit","Snohomish","Stillaguamish","Green","Lake Washington",#
+    "Nisqually","Hoko","Elwha","Queets","Quillayute","Hoh")#
+A<-list(a=a,b=b,#
+age = age,    #
+nat_surv = nat_surv,#
+maturity = maturity,#
+vulOcean = vulOcean,#
+length = length,    #
+weight = weight,    #
+valterm = valterm, #
+UmaxTerm = UmaxTerm,#
+OceanU = OceanU,    #
+pnrml = pnrml, #
+a_stock = aDeltaM,#
+bNelson = bNelson,#
+deltaMFig8 = deltaMFig8,#
+StockName=StockName)     #
+calc_mixFisheries_equil<-function(A){#
+    with(A,{#
+#
+    NperRec_o <-NULL#
+    NperRec_o[1]<-1#
+    for(y in 2:length(age)){#
+        NperRec_o[y]<-NperRec_o[y-1]*(1-maturity[y-1])*nat_surv[y-1]#
+    }#
+#
+    spro<-sum(maturity*NperRec_o)#
+    deltaM <- pnrml*a#
+    ae <- a-deltaM#
+#
+    No <- ae/b#
+    Umsy <- 0.5*ae-0.07*ae^2#
+    Smsy <- ae/b*(0.5-0.07*ae)#
+#
+    Smsy_No <- Smsy/No#
+#
+    Corr_Smsy <- (a_stock+log(spro))/bNelson*(0.5-0.07*a_stock)#
+    Corr_Umsy <- 0.5*(a_stock+log(spro))-0.07*(a_stock+log(spro))^2#
+#
+    Uterm<-NULL#
+    for(n in 1:length(StockName)){#
+        Uterm[n]<-min(UmaxTerm,max(0,Corr_Umsy[n]-OceanU))#
+    }#
+    Utot<-OceanU+Uterm#
+#
+    NPR <- matrix(NA, ncol=length(age),nrow=length(StockName))#
+#
+    NPR[,1] <- 1#
+    for(a in 2:(length(age))){#
+        NPR[,a] <- NPR[,a-1]*(1-OceanU*vulOcean[a-1])*(1-maturity[a-1])*nat_surv[a-1]   #
+    }#
+#
+    SPR<- apply(t(t(NPR) * (1-OceanU*vulOcean) * maturity ),1,sum)*(1-Uterm)#
+#
+    Req <- (a_stock+log(SPR))/(SPR*bNelson)#
+    Req[which(Req<0)]<-0#
+    Umax<-1-exp(-(a_stock+log(spro)))#
+    mixedYield<- Req * apply(t(weight*vulOcean*t(NPR)),1,sum)*OceanU#
+#
+    TerminalYield<- Req * apply(t(t(NPR)*((1-OceanU)*vulOcean)*maturity*weight),1,sum)*Uterm*valterm#
+#
+    TotalYield<-mixedYield+TerminalYield#
+#
+    Smsy_num<-SPR*Req#
+#
+    isoverfished <- as.numeric(signif(Utot,9)>signif(Corr_Umsy,9))#
+    #cbind(signif(Utot,9),Corr_Umsy)#
+    isextinct<- as.numeric(Utot>Umax)#
+#
+    B<-list(TotalYield=TotalYield,mixedYield=mixedYield,TerminalYield=TerminalYield,#
+        isoverfished=isoverfished,isextinct=isextinct)#
+#
+    return(B)#
+})#
+#
+}#
+##
+Uoceanvec<-seq(0.00,.9,0.0500)#
+Umixeffect<-list()#
+noverfished<-NULL#
+nextinct<-NULL#
+Yterminal<-NULL#
+Ytotal<-NULL#
+#
+for(u in 1:length(Uoceanvec)){#
+#
+    Au<-list(a=a,b=b,#
+    age = age,    #
+    nat_surv = nat_surv,#
+    maturity = maturity,#
+    vulOcean = vulOcean,#
+    length = length,    #
+    weight = weight,    #
+    valterm = valterm, #
+    UmaxTerm = UmaxTerm,#
+    OceanU = Uoceanvec[u],  #
+    pnrml = pnrml, #
+    a_stock = aDeltaM,#
+    bNelson = bNelson,#
+    deltaM = deltaMFig8)#
+#
+    Umixeffect[[u]]<-calc_mixFisheries_equil(Au)#
+#
+    noverfished[u]<-sum(Umixeffect[[u]]$isoverfished)#
+    nextinct[u]<-sum(Umixeffect[[u]]$isextinct)#
+    Yterminal[u]<-sum(Umixeffect[[u]]$TerminalYield)#
+    Ytotal[u]<-sum(Umixeffect[[u]]$TotalYield)#
+}#
+#
+length(Umixeffect)#
+Uoceanvec[8]#
+Umixeffect[[8]]$isoverfished#
+Umixeffect[[9]]$isoverfished#
+#
+#-===========================================================#
+#plots#
+#
+df<-data.frame(value=c(noverfished,nextinct,Yterminal/max(Ytotal)*max(noverfished),Ytotal/max(Ytotal)*max(noverfished)),#
+    ntype=rep(c("# overfished","# extinct"," Yield terminal","Yield total"),each=length(noverfished)),#
+    Uocean=Uoceanvec)#
+#
+cbind(noverfished,Uoceanvec)#
+#
+p <- ggplot(df)#
+p <- p + geom_line(aes(x=Uocean,y=value, col=ntype))#
+p <- p + geom_point(aes(x=Uocean,y=value, col=ntype))#
+p <- p + scale_y_continuous("Sockeye Passage", sec.axis =  sec_axis( ~ . /max(df01_2008$High/100, na.rm=T), name = "% difference"),labels = scales::comma)#
+p
+p <- ggplot(df)#
+p <- p + geom_line(aes(x=Uocean,y=value, col=ntype))#
+p <- p + geom_point(aes(x=Uocean,y=value, col=ntype))#
+p
+p <- ggplot(df)#
+p <- p + geom_line(aes(x=Uocean,y=value, col=ntype))#
+p <- p + geom_point(aes(x=Uocean,y=value, col=ntype))#
+p <- p + scale_y_continuous("Yield", sec.axis =  sec_axis( ~ . /max(noverfished)*max(Ytotal), na.rm=T), name = "% difference"),labels = scales::comma)#
+p
+p <- ggplot(df)#
+p <- p + geom_line(aes(x=Uocean,y=value, col=ntype))#
+p <- p + geom_point(aes(x=Uocean,y=value, col=ntype))#
+p <- p + scale_y_continuous("Yield", sec.axis =  sec_axis( ~ . /max(noverfished)*max(Ytotal), name = "% difference"),labels = scales::comma)#
+p
+Ytotal
+df<-data.frame(value=c(noverfished/max(noverfished)*max(Ytotal),nextinct/max(noverfished)*max(Ytotal),Yterminal,Ytotal),#
+    ntype=rep(c("# overfished","# extinct"," Yield terminal","Yield total"),each=length(noverfished)),#
+    Uocean=Uoceanvec)#
+#
+cbind(noverfished,Uoceanvec)#
+#
+p <- ggplot(df)#
+p <- p + geom_line(aes(x=Uocean,y=value, col=ntype))#
+p <- p + geom_point(aes(x=Uocean,y=value, col=ntype))#
+p
+p <- ggplot(df)#
+p <- p + geom_line(aes(x=Uocean,y=value, col=ntype))#
+p <- p + geom_point(aes(x=Uocean,y=value, col=ntype))#
+p <- p + scale_y_continuous("Yield", sec.axis =  sec_axis( ~ . /max(Ytotal)*max(noverfished), name = "# of overfished and extinct stocks"),labels = scales::comma)#
+p
+p <- ggplot(df)#
+p <- p + geom_line(aes(x=Uocean,y=value, col=ntype))#
+p <- p + geom_point(aes(x=Uocean,y=value, col=ntype))#
+p <- p + scale_y_continuous("Yield", sec.axis =  sec_axis( ~ . /max(Ytotal)*max(noverfished), name = "# of overfished and extinct stocks"),labels = scales::comma)#
+p <- p + theme_bw(16)#
+p <- p + xlab("mixed stock exploitation rate")#
+p
+p <- ggplot(df)#
+p <- p + geom_line(aes(x=Uocean,y=value, col=ntype))#
+p <- p + geom_point(aes(x=Uocean,y=value, col=ntype))#
+p <- p + scale_y_continuous("Yield", sec.axis =  sec_axis( ~ . /max(Ytotal)*max(noverfished), name = "# of overfished and extinct stocks"),labels = scales::comma)#
+p <- p + theme_bw(16)#
+p <- p + xlab("mixed stock exploitation rate")#
+p <- p + scale_color_discrete(breaks=c("# overfished","# extinct"," Yield terminal","Yield total")))#
+p
+p <- ggplot(df)#
+p <- p + geom_line(aes(x=Uocean,y=value, col=ntype))#
+p <- p + geom_point(aes(x=Uocean,y=value, col=ntype))#
+p <- p + scale_y_continuous("Yield", sec.axis =  sec_axis( ~ . /max(Ytotal)*max(noverfished), name = "# of overfished and extinct stocks"),labels = scales::comma)#
+p <- p + theme_bw(16)#
+p <- p + xlab("mixed stock exploitation rate")#
+p <- p + scale_color_discrete(breaks=c("# overfished","# extinct"," Yield terminal","Yield total"))#
+p
+p <- p + scale_color_discrete(breaks=c("# overfished","# extinct"," Yield terminal","Yield total"), title="")
+p
+p <- ggplot(df)#
+p <- p + geom_line(aes(x=Uocean,y=value, col=ntype))#
+p <- p + geom_point(aes(x=Uocean,y=value, col=ntype))#
+p <- p + scale_y_continuous("Yield", sec.axis =  sec_axis( ~ . /max(Ytotal)*max(noverfished), name = "# of overfished and extinct stocks"),labels = scales::comma)#
+p <- p + theme_bw(16)#
+p <- p + xlab("mixed stock exploitation rate")#
+p <- p + scale_color_discrete(breaks=c("# overfished","# extinct"," Yield terminal","Yield total"), title="")#
+p <- p + theme(legend.title=element_blank())#
+p
+p <- ggplot(df)#
+p <- p + geom_line(aes(x=Uocean,y=value, col=ntype))#
+p <- p + geom_point(aes(x=Uocean,y=value, col=ntype))#
+p <- p + scale_y_continuous("Yield", sec.axis =  sec_axis( ~ . /max(Ytotal)*max(noverfished), name = "# of overfished and extinct stocks"),labels = scales::comma)#
+p <- p + theme_bw(16)#
+p <- p + xlab("mixed stock exploitation rate")#
+p <- p + scale_color_discrete(breaks=c("# overfished","# extinct"," Yield terminal","Yield total"))#
+p <- p + theme(legend.title=element_blank())#
+p
+DIRS<-c("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_nostRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_onestRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_twostRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_nostRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_onestRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_twostRec_100"#
+)
+Rfiles<-list()#
+SIMSdat<-list()#
+#
+for(d in 1:length(DIRS)){#
+#
+    Rfiles[[d]]<-list.files(DIRS[[d]],pattern="\\.Rdata",full.name=TRUE)#
+#
+    tmp_SIMS<-list()#
+    for(i in 1:length(Rfiles[[d]])){#
+        load(Rfiles[[d]][i])#
+        tmp_SIMS[[i]]<-sims#
+    }#
+    SIMSdat[[d]]<-tmp_SIMS#
+#
+}#
+plotlib<-"/Users/catarinawor/Documents/Lagrangian/R/plot_routines/HCR_noerror"#
+plotfiles <- list.files(plotlib,pattern="plot",full.name=TRUE)
+for(p in 1:length(plotfiles)){#
+    source(plotfiles[p])#
+}#
+#
+M<-SIMSdat[[1]]#
+#
+M1<-SIMSdat[[1]]#
+M2<-SIMSdat[[2]]#
+M3<-SIMSdat[[3]]#
+Msq<-SIMSdat[[4]]#
+Msq1<-SIMSdat[[4]]#
+Msq2<-SIMSdat[[5]]#
+Msq3<-SIMSdat[[6]]
+DIRS<-c("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_nostRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_onestRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_twostRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_nostRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_onestRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_twostRec_100"#
+)#
+#DIRS<-c("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_nostRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_onestRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_twostRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_nostRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_onestRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_twostRec_limit")#
+#DIRS<-c("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_nostRec"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_onestRec"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_twostRec"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_nostRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_onestRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_twostRec_limit")#
+#DIRS<-c("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_Best_nostRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_Best_onestRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_Best_twostRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_nostRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_onestRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_twostRec_m2")#
+Rfiles<-list()#
+SIMSdat<-list()#
+#
+for(d in 1:length(DIRS)){#
+#
+    Rfiles[[d]]<-list.files(DIRS[[d]],pattern="\\.Rdata",full.name=TRUE)#
+#
+    tmp_SIMS<-list()#
+    for(i in 1:length(Rfiles[[d]])){#
+        load(Rfiles[[d]][i])#
+        tmp_SIMS[[i]]<-sims#
+    }#
+    SIMSdat[[d]]<-tmp_SIMS#
+#
+}#
+plotlib<-"/Users/catarinawor/Documents/Lagrangian/R/plot_routines/HCR_noerror"#
+plotfiles <- list.files(plotlib,pattern="plot",full.name=TRUE)#
+#load graphing routinesfor#
+for(p in 1:length(plotfiles)){#
+    source(plotfiles[p])#
+}
+M<-SIMSdat[[1]]#
+#
+M1<-SIMSdat[[1]]#
+M2<-SIMSdat[[2]]#
+M3<-SIMSdat[[3]]#
+Msq<-SIMSdat[[4]]#
+Msq1<-SIMSdat[[4]]#
+Msq2<-SIMSdat[[5]]#
+Msq3<-SIMSdat[[6]]
+no<-plot_logUtility( SIMSdat[[1]],SIMSdat[[4]] , sv=TRUE, nome="nostrongrec",nations=TRUE)#
+one<-plot_logUtility( SIMSdat[[2]],SIMSdat[[5]]  , sv=TRUE, nome="onestrongrec",nations=TRUE)#
+two<-plot_logUtility( SIMSdat[[3]],SIMSdat[[6]]  , sv=TRUE, nome="twostrongrec",nations=TRUE)#
+lu<-plot_grid(no,one,two,nrow=3, labels="AUTO")#
+lu
+lu<-plot_grid(no,one,two,nrow=3, labels="AUTO")
+no<-plot_logUtility( SIMSdat[[1]],SIMSdat[[4]] , sv=TRUE, nome="nostrongrec",nations=TRUE)
+no<-plot_logUtility( SIMSdat[[1]],SIMSdat[[4]] , sv=TRUE, nome="nostrongrec",nations=TRUE)
+one<-plot_logUtility( SIMSdat[[2]],SIMSdat[[5]]  , sv=TRUE, nome="onestrongrec",nations=TRUE)
+two<-plot_logUtility( SIMSdat[[3]],SIMSdat[[6]]  , sv=TRUE, nome="twostrongrec",nations=TRUE)
+lu<-plot_grid(no,one,two,nrow=3, labels="AUTO")
+lu
+noAAV<-plot_AAV( SIMSdat[[1]],SIMSdat[[2]] , sv=TRUE, nome="AAVnostrongrec",nations=TRUE)
+oneAAV<-plot_AAV( SIMSdat[[2]],SIMSdat[[5]]  , sv=TRUE, nome="AAVonestrongrec",nations=TRUE)
+twoAAV<-plot_AAV( SIMSdat[[3]],SIMSdat[[6]]  , sv=TRUE, nome="AAVtwostrongrec",nations=TRUE)
+AAV<-plot_grid(noAAV,oneAAV,twoAAV,nrow=3, labels=c("no strong recruitment","one strong recruitments","two strong recruitments"),#
+      hjust = 0)#
+AAV
+setwd("/Users/catarinawor/Documents/Lagrangian/figures/HCR")
+ggsave("AAV_allScn.pdf", plot=AAV, width = 15, height = 15,dpi = 600)
+n <- c(length( M1 ),length( M2 ),length( M3 ))#
+#
+    mm<-list(M1 ,M2,M3)#
+    mmsq<-list(Msq1,Msq2,Msq3)#
+#
+    slope_hcr<-NULL#
+    intercept_hcr<-NULL#
+    utility_total<-NULL#
+    utility_total2<-NULL#
+    utility_nat1<-NULL#
+    utility_nat2<-NULL#
+    yield_total<-NULL#
+    yield_nat1<-NULL#
+    yield_nat2<-NULL#
+    B40_total<-NULL#
+    scenario<-NULL#
+#
+    i=1#
+    for(d in 1:3){#
+#
+        M<-mm[[d]]#
+#
+        for(ii in 1:n[d]){#
+#
+            iniyr<-M[[ii]][[1]]$"nyr"+1#
+            fimyr<-M[[ii]][[1]]$"proj_yr"#
+            B40_total[i]<-sum((M[[ii]][[1]]$ytB/M[[ii]][[1]]$Bo)[iniyr:fimyr]<0.4)/length(iniyr:fimyr)#
+#
+            slope_hcr[i]<-M[[ii]][[1]]$slope_hcr#
+            intercept_hcr[i]<-M[[ii]][[1]]$intercept_hcr#
+            utility_total[i]<-mean(log(apply(M[[ii]][[1]]$yYieldNat[101:160,],1,sum)+1))#
+            utility_total2[i]<-mean(log(M[[ii]][[1]]$yYieldNat[101:160,1]+1))*sum(log(M[[ii]][[1]]$yYieldNat[101:160,2]+1))#
+            utility_nat1[i]<-mean(log(M[[ii]][[1]]$yYieldNat[101:160,1]+1))#
+            utility_nat2[i]<-mean(log(M[[ii]][[1]]$yYieldNat[101:160,2]+1))#
+            yield_total[i]<-mean(apply(M[[ii]][[1]]$yYieldNat[101:160,],1,sum))#
+            yield_nat1[i]<-mean((M[[ii]][[1]]$yYieldNat[101:160,1]))#
+            yield_nat2[i]<-mean((M[[ii]][[1]]$yYieldNat[101:160,2]))#
+#
+            scenario[i]<-d#
+            i=i+1#
+        }#
+#
+    }#
+#
+    length(slope_hcr)#
+    slope_hcr_sq<-NULL#
+    intercept_hcr_sq<-NULL#
+    utility_total_sq<-NULL#
+    utility_total2_sq<-NULL#
+    utility_nat1_sq<-NULL#
+    utility_nat2_sq<-NULL#
+    yield_total_sq<-NULL#
+    yield_nat1_sq<-NULL#
+    yield_nat2_sq<-NULL#
+    B40_total_sq<-NULL#
+    scenario_sq<-NULL#
+#
+    nsq<- c(length( Msq1 ),length( Msq2 ),length( Msq3 ))#
+    y<-1#
+#
+    for(dd in 1:3){#
+#
+        Msq<-mmsq[[dd]]#
+#
+        for(yy in 1:nsq[[dd]]){#
+#
+            slope_hcr_sq[y]<-999#
+            intercept_hcr_sq[y]<-999#
+            utility_total_sq[y]<-sum(log(apply(Msq[[yy]][[1]]$yYieldNat[101:160,],1,sum)+1))#
+            utility_total2_sq[y]<-mean(log(Msq[[yy]][[1]]$yYieldNat[101:160,1]+1))*sum(log(Msq[[yy]][[1]]$yYieldNat[101:160,2]+1))#
+            utility_nat1_sq[y]<-mean(log(Msq[[yy]][[1]]$yYieldNat[101:160,1]+1))#
+            utility_nat2_sq[y]<-mean(log(Msq[[yy]][[1]]$yYieldNat[101:160,2]+1))#
+            yield_total_sq[y]<-mean(apply(Msq[[yy]][[1]]$yYieldNat[101:160,],1,sum))#
+            yield_nat1_sq[y]<-mean((Msq[[yy]][[1]]$yYieldNat[101:160,1]))#
+            yield_nat2_sq[y]<-mean((Msq[[yy]][[1]]$yYieldNat[101:160,2]))#
+            B40_total_sq[y]<-sum((Msq[[yy]][[1]]$ytB/Msq[[yy]][[1]]$Bo)[iniyr:fimyr]<0.4)/length(iniyr:fimyr)#
+            scenario_sq[y]<-dd#
+            y=y+1#
+        }#
+#
+    }#
+#
+    dflu<-data.frame(slope_hcr=slope_hcr,intercept_hcr=intercept_hcr,#
+        utility_total2=utility_total2,utility_total=utility_total,utility_nat1=utility_nat1,#
+        utility_nat2=utility_nat2,yield_total=yield_total,yield_nat1=yield_nat1,#
+        yield_nat2=yield_nat2,  b40=B40_total, scenario=scenario)#
+#
+    dflusq<-data.frame(slope_hcr=slope_hcr_sq,intercept_hcr=intercept_hcr_sq,#
+        utility_total2=utility_total2_sq,utility_total=utility_total_sq,utility_nat1=utility_nat1_sq,#
+        utility_nat2=utility_nat2_sq,yield_total=yield_total_sq,yield_nat1=yield_nat1_sq,#
+        yield_nat2=yield_nat2_sq,b40=B40_total_sq,scenario=scenario_sq)#
+#
+    dflu_plot<-aggregate(dflu,list(dflu$slope_hcr,dflu$intercept_hcr, dflu$scenario), mean)#
+#
+    dflu_plotsq<-aggregate(dflusq,list(dflusq$slope_hcr,dflusq$intercept_hcr, dflusq$scenario), mean)#
+    summary(dflu_plot)#
+    head(dflu_plotsq)#
+#
+    dflu_selec<-dflu_plot#
+#
+    dfa<-rbind(dflu_selec,dflu_plotsq)#
+#
+    dfa$slope<-as.character(dfa$slope_hcr)#
+    dfa$slope[dfa$slope=="999"]<-"40:10"#
+#
+    dfa$intercept<-as.character(dfa$intercept_hcr)#
+    dfa$intercept[dfa$intercept=="999"]<-"40:10"#
+#
+    dfa$ut2tf<- -999#
+    dfa$ut2tf[which(dfa$slope=="40:10")]<-dfa$utility_total2[which(dfa$slope=="40:10")]#
+#
+    dfa$nt1tf<- -999#
+    dfa$nt1tf[which(dfa$slope=="40:10")]<-dfa$utility_nat1[which(dfa$slope=="40:10")]#
+#
+    dfa$nt2tf<- -999#
+    dfa$nt2tf[which(dfa$slope=="40:10")]<-dfa$utility_nat2[which(dfa$slope=="40:10")]#
+#
+    dfa$scn<-"no strong recruitment"#
+    dfa$scn[dfa$scenario==2]<-"one strong recruitment"#
+    dfa$scn[dfa$scenario==3]<-"two strong recruitments"#
+#
+    dfa$b40tf<- -999#
+    dfa$b40tf[dfa$slope=="40:10"]<-dfa$b40[which(dfa$slope=="40:10")]#
+#
+summary(dfa)#
+#
+    dfc<-dfa[dfa$intercept_hcr<0.4|dfa$intercept_hcr>2,] #
+    dfcr<-dfc#
+    summary(dfcr)#
+#
+    dfcr$slope<-as.factor(dfcr$slope)#
+    dfcr$intercept<-as.factor(dfcr$intercept)#
+    levels(dfcr$intercept)#
+#
+    dfcr$utility_nat2_sc[dfcr$scenario==1]<-dfcr$utility_nat2[dfcr$scenario==1]/max(dfcr$utility_nat2[dfcr$scenario==1])#
+    dfcr$utility_nat2_sc[dfcr$scenario==2]<-dfcr$utility_nat2[dfcr$scenario==2]/max(dfcr$utility_nat2[dfcr$scenario==2])#
+    dfcr$utility_nat2_sc[dfcr$scenario==3]<-dfcr$utility_nat2[dfcr$scenario==3]/max(dfcr$utility_nat2[dfcr$scenario==3])#
+    dfcr$utility_nat1_sc[dfcr$scenario==1]<-dfcr$utility_nat1[dfcr$scenario==1]/max(dfcr$utility_nat1[dfcr$scenario==1])#
+    dfcr$utility_nat1_sc[dfcr$scenario==2]<-dfcr$utility_nat1[dfcr$scenario==2]/max(dfcr$utility_nat1[dfcr$scenario==2])#
+    dfcr$utility_nat1_sc[dfcr$scenario==3]<-dfcr$utility_nat1[dfcr$scenario==3]/max(dfcr$utility_nat1[dfcr$scenario==3])#
+    dfcr$yield_nat2_sc[dfcr$scenario==1]<-dfcr$yield_nat2[dfcr$scenario==1]/max(dfcr$yield_nat2[dfcr$scenario==1])#
+    dfcr$yield_nat2_sc[dfcr$scenario==2]<-dfcr$yield_nat2[dfcr$scenario==2]/max(dfcr$yield_nat2[dfcr$scenario==2])#
+    dfcr$yield_nat2_sc[dfcr$scenario==3]<-dfcr$yield_nat2[dfcr$scenario==3]/max(dfcr$yield_nat2[dfcr$scenario==3])#
+    dfcr$yield_nat1_sc[dfcr$scenario==1]<-dfcr$yield_nat1[dfcr$scenario==1]/max(dfcr$yield_nat1[dfcr$scenario==1])#
+    dfcr$yield_nat1_sc[dfcr$scenario==2]<-dfcr$yield_nat1[dfcr$scenario==2]/max(dfcr$yield_nat1[dfcr$scenario==2])#
+    dfcr$yield_nat1_sc[dfcr$scenario==3]<-dfcr$yield_nat1[dfcr$scenario==3]/max(dfcr$yield_nat1[dfcr$scenario==3])#
+    dfcr<-dfcr[order(dfcr$intercept),]#
+#
+    dft<-dfcr[dfcr$slope_hcr==999,]
+p<-ggplot(dfcr)#
+    p<-p+geom_path(aes(y=utility_nat2_sc,x=utility_nat1_sc,color=slope))#
+    p<-p+geom_point(aes(y=utility_nat2_sc,x=utility_nat1_sc,color=slope, shape=intercept),size=4,alpha=.6)#
+    p<-p+ geom_text(data=dft,aes(y=dft$utility_nat2_sc,x=dft$utility_nat1_sc,label="40:10"),fontface = "bold",colour="black")               #
+    p<-p + facet_wrap(~scn, scales="free")#
+    p<-p+ ylab("average log utility - Nation 2") + xlab("average log utility - Nation 1")#
+    p <- p  + theme_bw(16)+ theme(legend.position = "none")#
+    p <- p + guides(color=guide_legend("harvest rate"))#
+    p
+p1 <- ggplot(dfcr)#
+    p1 <- p1+geom_path(aes(y=yield_nat2_sc,x=yield_nat1_sc,color=slope))#
+    p1 <- p1+geom_point(aes(y=yield_nat2_sc,x=yield_nat1_sc,color=slope, shape=intercept),size=4,alpha=.6)#
+    #p1 <- p1+ geom_text(data=dft,aes(y=dft$yield_nat2_sc,x=dft$yield_nat1_sc,label="40:10"),fontface = "bold",colour="black")              #
+    p1 <- p1+facet_wrap(~scn, scales="free")#
+    p1 <- p1+ ylab(" average yield - Nation 2") + xlab(" average yield - Nation 1")#
+    p1 <- p1  + theme_bw(16)+ theme(legend.position = "bottom")#
+    p1 <- p1 + guides(color=guide_legend("harvest rate"), shape=guide_legend("biomass threshold"),size=guide_legend("none"))#
+    p1#
+    #p<-p+ geom_text(aes(y=nt2tf,x=nt1tf,label="10:40"),fontface = "bold",colour="black", position = position_nudge(y = -0.02))             #
+    #, size=guide_legend("biomass threshold")#
+#
+    pto<-plot_grid(p,p1,nrow=2,rel_heights  = c(1, 1.3))#
+    pto
+nome=""
+setwd("/Users/catarinawor/Documents/Lagrangian/figures/HCR")
+ggsave(paste(nome,"tradeoff_nations.pdf",sep=""), plot=pto, width = 11, height = 9)
+noAAV<-plot_AAV( SIMSdat[[1]],SIMSdat[[2]] , sv=TRUE, nome="AAVnostrongrec",nations=TRUE)#
+oneAAV<-plot_AAV( SIMSdat[[2]],SIMSdat[[5]]  , sv=TRUE, nome="AAVonestrongrec",nations=TRUE)#
+twoAAV<-plot_AAV( SIMSdat[[3]],SIMSdat[[6]]  , sv=TRUE, nome="AAVtwostrongrec",nations=TRUE)#
+AAV<-plot_grid(noAAV,oneAAV,twoAAV,nrow=3, labels=c("no strong recruitment","one strong recruitments","two strong recruitments"),#
+      hjust = 0)#
+AAV#
+setwd("/Users/catarinawor/Documents/Lagrangian/figures/HCR")#
+ggsave("AAV_allScn.pdf", plot=AAV, width = 15, height = 15,dpi = 600)
+nocl<-plot_closures( SIMSdat[[1]],SIMSdat[[2]] , sv=TRUE, nome="clnostrongrec",nations=TRUE)#
+onecl<-plot_closures( SIMSdat[[2]],SIMSdat[[5]]  , sv=TRUE, nome="clonestrongrec",nations=TRUE)#
+twocl<-plot_closures( SIMSdat[[3]],SIMSdat[[6]]  , sv=TRUE, nome="cltwostrongrec",nations=TRUE)#
+cl<-plot_grid(nocl,onecl,twocl,ncol=3, labels="AUTO",rel_widths = c(1,1, 1))#
+cl
+noAAV<-plot_AAV( SIMSdat[[1]],SIMSdat[[4]] , sv=TRUE, nome="AAVnostrongrec",nations=TRUE)
+oneAAV<-plot_AAV( SIMSdat[[2]],SIMSdat[[5]]  , sv=TRUE, nome="AAVonestrongrec",nations=TRUE)
+twoAAV<-plot_AAV( SIMSdat[[3]],SIMSdat[[6]]  , sv=TRUE, nome="AAVtwostrongrec",nations=TRUE)
+AAV<-plot_grid(noAAV,oneAAV,twoAAV,nrow=3, labels=c("no strong recruitment","one strong recruitments","two strong recruitments"),#
+      hjust = 0)#
+AAV
+setwd("/Users/catarinawor/Documents/Lagrangian/figures/HCR")
+ggsave("AAV_allScn.pdf", plot=AAV, width = 15, height = 15,dpi = 600)
+nocl<-plot_closures( SIMSdat[[1]],SIMSdat[[4]] , sv=TRUE, nome="clnostrongrec",nations=TRUE)
+onecl<-plot_closures( SIMSdat[[2]],SIMSdat[[5]]  , sv=TRUE, nome="clonestrongrec",nations=TRUE)
+twocl<-plot_closures( SIMSdat[[3]],SIMSdat[[6]]  , sv=TRUE, nome="cltwostrongrec",nations=TRUE)
+cl<-plot_grid(nocl,onecl,twocl,ncol=3, labels="AUTO",rel_widths = c(1,1, 1))
+cl
+nocl<-#
+plot_closures( SIMSdat[[1]],SIMSdat[[4]] , sv=TRUE, nome="clnostrongrec",nations=TRUE)
+M<-SIMSdat
+n <- length( M )#
+    slope_hcr<-NULL#
+    intercept_hcr<-NULL#
+    closure_total<-NULL#
+    closure_nat1<-NULL#
+    closure_nat2<-NULL#
+    for(i in 1:n){#
+#
+        slope_hcr[i]<-M[[i]][[1]]$slope_hcr#
+        intercept_hcr[i]<-M[[i]][[1]]$intercept_hcr#
+        closure_total[i]<-sum(apply(M[[i]][[1]]$yYieldNat[101:160,],1,sum)==0)/length(101:160)#
+        closure_nat1[i]<-sum(M[[i]][[1]]$yYieldNat[101:160,1]==0)/length(101:160)#
+        closure_nat2[i]<-sum(M[[i]][[1]]$yYieldNat[101:160,2]==0)/length(101:160)#
+    }#
+#
+    nsq <- length( Msq )#
+#
+    slope_hcr_sq<-NULL#
+    intercept_hcr_sq<-NULL#
+    closure_total_sq<-NULL#
+    closure_nat1_sq<-NULL#
+    closure_nat2_sq<-NULL#
+    for(y in 1:nsq){#
+#
+        slope_hcr_sq[y]<-Msq[[y]][[1]]$slope_hcr#
+        intercept_hcr_sq[y]<-Msq[[y]][[1]]$intercept_hcr#
+        closure_total_sq[y]<-sum(apply(Msq[[y]][[1]]$yYieldNat[101:160,],1,sum)==0)/length(101:160)#
+        closure_nat1_sq[y]<-sum(Msq[[y]][[1]]$yYieldNat[101:160,1]==0)/length(101:160)#
+        closure_nat2_sq[y]<-sum(Msq[[y]][[1]]$yYieldNat[101:160,2]==0)/length(101:160)#
+    }#
+    dfcl<-data.frame(slope_hcr=slope_hcr,intercept_hcr=intercept_hcr,#
+        closure_total=closure_total,closure_nat1=closure_nat1,closure_nat2=closure_nat2)#
+#
+    dfclsq<-data.frame(slope_hcr=slope_hcr_sq,intercept_hcr=intercept_hcr_sq,#
+        closure_total=closure_total_sq,closure_nat1=closure_nat1_sq,closure_nat2=closure_nat2_sq)#
+    dfcl_plot<-aggregate(dfcl,list(dfcl$slope_hcr,dfcl$intercept_hcr), mean)#
+    dfcl_plotsq<-aggregate(dfclsq,list(dfclsq$slope_hcr,dfclsq$intercept_hcr), mean)#
+    closure_total_comparison<-which.min(abs(dfcl_plot$closure_total-dfcl_plotsq$closure_total))#
+    closure_nat1_comparison<-which.min(abs(dfcl_plot$closure_nat1-dfcl_plotsq$closure_nat1))#
+    closure_nat2_comparison<-which.min(abs(dfcl_plot$closure_nat2-dfcl_plotsq$closure_nat2))#
+    summary(dfcl_plot)#
+#
+    dfcl_plotn<-data.frame(slope_hcr=rep(dfcl_plot$slope_hcr,3),intercept_hcr=rep(dfcl_plot$intercept_hcr,3),#
+        closure=c(dfcl_plot$closure_total,dfcl_plot$closure_nat1,dfcl_plot$closure_nat2),#
+        nation=rep(c("Total", "Nation 1", "Nation 2"),each=length(dfcl_plot$intercept_hcr)))#
+#
+    summary(dfcl_plotn)#
+    myPalette <- colorRampPalette(rev(brewer.pal(8, "Spectral")))#
+#
+    dfcl_plot2<-dfcl_plot
+pcl <- ggplot(dfcl_plot, aes(x=intercept_hcr,y=slope_hcr,z=closure_total))#
+        pcl <- pcl+geom_raster(aes(fill=closure_total))#
+        pcl <- pcl + scale_fill_gradientn(colours = myPalette(4))#
+        pcl <- pcl + theme_bw(16)#
+        print(pcl)
+Msq
+noAAV<-plot_AAV( SIMSdat[[1]],SIMSdat[[4]] , sv=TRUE, nome="AAVnostrongrec",nations=TRUE)
+Bno<-plot_B40( SIMSdat[[1]],SIMSdat[[4]], sv=FALSE, nome="nostrongrec",nations=TRUE)
+Bone<-plot_B40( SIMSdat[[2]],SIMSdat[[5]], sv=FALSE, nome="nostrongrec",nations=TRUE)
+Btwo<-plot_B40( SIMSdat[[3]],SIMSdat[[6]], sv=FALSE, nome="nostrongrec",nations=TRUE)
+b40<-plot_grid(Bno,Bone,Btwo,ncol=3, labels="AUTO")
+b40
+setwd("/Users/catarinawor/Documents/Lagrangian/figures/HCR")
+ggsave("B40_allScn.pdf", plot=b40, width = 15, height = 6,dpi = 600)
+plot_B40( SIMSdat[[1]],SIMSdat[[4]], sv=FALSE, nome="nostrongrec",nations=TRUE, limite=.2)
+plot_B40( SIMSdat[[1]],SIMSdat[[4]], sv=FALSE, nome="nostrongrec",nations=TRUE, limite=.1)

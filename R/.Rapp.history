@@ -1,0 +1,2706 @@
+Umixeffect[[u]]<-calc_mixFisheries_equil(Au)
+Umixeffect[[u]]$isoverfished
+Uoceanvec[8]
+Uoceanvec<-seq(0,.9,0.0500)#
+Umixeffect<-list()#
+noverfished<-NULL#
+nextinct<-NULL#
+Yterminal<-NULL#
+Ytotal<-NULL#
+#
+for(u in 1:length(Uoceanvec)){#
+#
+    Au<-list(a=a,b=b,#
+    age = age,    #
+    nat_surv = nat_surv,#
+    maturity = maturity,#
+    vulOcean = vulOcean,#
+    length = length,    #
+    weight = weight,    #
+    valterm = valterm, #
+    UmaxTerm = UmaxTerm,#
+    OceanU = Uoceanvec[8],  #
+    pnrml = pnrml, #
+    a_stock = aDeltaM,#
+    bNelson = bNelson,#
+    deltaM = deltaMFig8)#
+#
+    Umixeffect[[u]]<-calc_mixFisheries_equil(Au)#
+#
+    noverfished[u]<-sum(Umixeffect[[u]]$isoverfished)#
+    nextinct[u]<-sum(Umixeffect[[u]]$isextinct)#
+    Yterminal[u]<-sum(Umixeffect[[u]]$TerminalYield)#
+    Ytotal[u]<-sum(Umixeffect[[u]]$TotalYield)#
+}#
+#
+length(Umixeffect)#
+Uoceanvec[8]
+Umixeffect[[8]]$isoverfished
+Umixeffect[[9]]$isoverfished
+df<-data.frame(value=c(noverfished,nextinct),#
+    ntype=rep(c("# overfished","# extinct"),each=length(noverfished)),#
+    Uocean=Uoceanvec,Yield=c(Yterminal,Ytotal),#
+    Ytype=rep(c("terminal","total"),each=length(noverfished)))#
+#
+cbind(noverfished,Uoceanvec)#
+#
+p<-ggplot(df)#
+p<- p+geom_line(aes(x=Uocean,y=value, col=ntype))#
+p
+for(u in 1:length(Uoceanvec)){#
+#
+    Au<-list(a=a,b=b,#
+    age = age,    #
+    nat_surv = nat_surv,#
+    maturity = maturity,#
+    vulOcean = vulOcean,#
+    length = length,    #
+    weight = weight,    #
+    valterm = valterm, #
+    UmaxTerm = UmaxTerm,#
+    OceanU = Uoceanvec[u],  #
+    pnrml = pnrml, #
+    a_stock = aDeltaM,#
+    bNelson = bNelson,#
+    deltaM = deltaMFig8)#
+#
+    Umixeffect[[u]]<-calc_mixFisheries_equil(Au)#
+#
+    noverfished[u]<-sum(Umixeffect[[u]]$isoverfished)#
+    nextinct[u]<-sum(Umixeffect[[u]]$isextinct)#
+    Yterminal[u]<-sum(Umixeffect[[u]]$TerminalYield)#
+    Ytotal[u]<-sum(Umixeffect[[u]]$TotalYield)#
+}#
+#
+length(Umixeffect)#
+Uoceanvec[8]#
+Umixeffect[[8]]$isoverfished#
+Umixeffect[[9]]$isoverfished
+Uoceanvec<-seq(0.00,.9,0.0500)#
+Umixeffect<-list()#
+noverfished<-NULL#
+nextinct<-NULL#
+Yterminal<-NULL#
+Ytotal<-NULL#
+#
+for(u in 1:length(Uoceanvec)){#
+#
+    Au<-list(a=a,b=b,#
+    age = age,    #
+    nat_surv = nat_surv,#
+    maturity = maturity,#
+    vulOcean = vulOcean,#
+    length = length,    #
+    weight = weight,    #
+    valterm = valterm, #
+    UmaxTerm = UmaxTerm,#
+    OceanU = Uoceanvec[u],  #
+    pnrml = pnrml, #
+    a_stock = aDeltaM,#
+    bNelson = bNelson,#
+    deltaM = deltaMFig8)#
+#
+    Umixeffect[[u]]<-calc_mixFisheries_equil(Au)#
+#
+    noverfished[u]<-sum(Umixeffect[[u]]$isoverfished)#
+    nextinct[u]<-sum(Umixeffect[[u]]$isextinct)#
+    Yterminal[u]<-sum(Umixeffect[[u]]$TerminalYield)#
+    Ytotal[u]<-sum(Umixeffect[[u]]$TotalYield)#
+}#
+#
+length(Umixeffect)#
+Uoceanvec[8]#
+Umixeffect[[8]]$isoverfished#
+Umixeffect[[9]]$isoverfished
+Au<-list(a=a,b=b,#
+    age = age,    #
+    nat_surv = nat_surv,#
+    maturity = maturity,#
+    vulOcean = vulOcean,#
+    length = length,    #
+    weight = weight,    #
+    valterm = valterm, #
+    UmaxTerm = UmaxTerm,#
+    OceanU = 0.35,  #
+    pnrml = pnrml, #
+    a_stock = aDeltaM,#
+    bNelson = bNelson,#
+    deltaM = deltaMFig8)
+calc_mixFisheries_equil(Au)
+NperRec_o <-NULL#
+    NperRec_o[1]<-1#
+    for(y in 2:length(age)){#
+        NperRec_o[y]<-NperRec_o[y-1]*(1-maturity[y-1])*nat_surv[y-1]#
+    }#
+#
+    spro<-sum(maturity*NperRec_o)#
+    deltaM <- pnrml*a#
+    ae <- a-deltaM#
+#
+    No <- ae/b#
+    Umsy <- 0.5*ae-0.07*ae^2#
+    Smsy <- ae/b*(0.5-0.07*ae)#
+#
+    Smsy_No <- Smsy/No#
+#
+    Corr_Smsy <- (a_stock+log(spro))/bNelson*(0.5-0.07*a_stock)#
+    Corr_Umsy <- 0.5*(a_stock+log(spro))-0.07*(a_stock+log(spro))^2
+Corr_Umsy <- 0.5*(a_stock+log(spro))-0.07*(a_stock+log(spro))^2
+Corr_Umsy
+OceanU
+Uterm<-NULL#
+    for(n in 1:length(StockName)){#
+        Uterm[n]<-min(UmaxTerm,max(0,Corr_Umsy[n]-OceanU))#
+    }
+Uterm
+Utot<-OceanU+Uterm#
+#
+    NPR <- matrix(NA, ncol=length(age),nrow=length(StockName))#
+#
+    NPR[,1] <- 1#
+    for(a in 2:(length(age))){#
+        NPR[,a] <- NPR[,a-1]*(1-OceanU*vulOcean[a-1])*(1-maturity[a-1])*nat_surv[a-1]   #
+    }#
+#
+    SPR<- apply(t(t(NPR) * (1-OceanU*vulOcean) * maturity ),1,sum)*(1-Uterm)#
+#
+    Req <- (a_stock+log(SPR))/(SPR*bNelson)#
+    Req[which(Req<0)]<-0#
+    Umax<-1-exp(-(a_stock+log(spro)))#
+    mixedYield<- Req * apply(t(weight*vulOcean*t(NPR)),1,sum)*OceanU#
+#
+    TerminalYield<- Req * apply(t(t(NPR)*((1-OceanU)*vulOcean)*maturity*weight),1,sum)*Uterm*valterm#
+#
+    TotalYield<-mixedYield+TerminalYield
+TotalYield
+OceanU=.35
+NperRec_o <-NULL#
+    NperRec_o[1]<-1#
+    for(y in 2:length(age)){#
+        NperRec_o[y]<-NperRec_o[y-1]*(1-maturity[y-1])*nat_surv[y-1]#
+    }#
+#
+    spro<-sum(maturity*NperRec_o)#
+    deltaM <- pnrml*a#
+    ae <- a-deltaM#
+#
+    No <- ae/b#
+    Umsy <- 0.5*ae-0.07*ae^2#
+    Smsy <- ae/b*(0.5-0.07*ae)#
+#
+    Smsy_No <- Smsy/No#
+#
+    Corr_Smsy <- (a_stock+log(spro))/bNelson*(0.5-0.07*a_stock)#
+    Corr_Umsy <- 0.5*(a_stock+log(spro))-0.07*(a_stock+log(spro))^2#
+#
+    Uterm<-NULL#
+    for(n in 1:length(StockName)){#
+        Uterm[n]<-min(UmaxTerm,max(0,Corr_Umsy[n]-OceanU))#
+    }#
+    Utot<-OceanU+Uterm#
+#
+    NPR <- matrix(NA, ncol=length(age),nrow=length(StockName))#
+#
+    NPR[,1] <- 1#
+    for(a in 2:(length(age))){#
+        NPR[,a] <- NPR[,a-1]*(1-OceanU*vulOcean[a-1])*(1-maturity[a-1])*nat_surv[a-1]   #
+    }#
+#
+    SPR<- apply(t(t(NPR) * (1-OceanU*vulOcean) * maturity ),1,sum)*(1-Uterm)#
+#
+    Req <- (a_stock+log(SPR))/(SPR*bNelson)#
+    Req[which(Req<0)]<-0#
+    Umax<-1-exp(-(a_stock+log(spro)))#
+    mixedYield<- Req * apply(t(weight*vulOcean*t(NPR)),1,sum)*OceanU#
+#
+    TerminalYield<- Req * apply(t(t(NPR)*((1-OceanU)*vulOcean)*maturity*weight),1,sum)*Uterm*valterm#
+#
+    TotalYield<-mixedYield+TerminalYield#
+#
+    Smsy_num<-SPR*Req#
+#
+    isoverfished <- as.numeric(Utot>Corr_Umsy)#
+    isextinct<- as.numeric(Utot>Umax)
+isoverfished
+Utot
+Corr_Umsy
+cbind(Utot,Corr_Umsy)
+cbind(signif(Utot,7),Corr_Umsy)
+cbind(signif(Utot,8),Corr_Umsy)
+cbind(signif(Utot,9),Corr_Umsy)
+isoverfished <- as.numeric(Utot>Corr_Umsy)
+as.numeric(Utot>Corr_Umsy)
+calc_mixFisheries_equil<-function(A){#
+    with(A,{#
+#
+    NperRec_o <-NULL#
+    NperRec_o[1]<-1#
+    for(y in 2:length(age)){#
+        NperRec_o[y]<-NperRec_o[y-1]*(1-maturity[y-1])*nat_surv[y-1]#
+    }#
+#
+    spro<-sum(maturity*NperRec_o)#
+    deltaM <- pnrml*a#
+    ae <- a-deltaM#
+#
+    No <- ae/b#
+    Umsy <- 0.5*ae-0.07*ae^2#
+    Smsy <- ae/b*(0.5-0.07*ae)#
+#
+    Smsy_No <- Smsy/No#
+#
+    Corr_Smsy <- (a_stock+log(spro))/bNelson*(0.5-0.07*a_stock)#
+    Corr_Umsy <- 0.5*(a_stock+log(spro))-0.07*(a_stock+log(spro))^2#
+#
+    Uterm<-NULL#
+    for(n in 1:length(StockName)){#
+        Uterm[n]<-min(UmaxTerm,max(0,Corr_Umsy[n]-OceanU))#
+    }#
+    Utot<-OceanU+Uterm#
+#
+    NPR <- matrix(NA, ncol=length(age),nrow=length(StockName))#
+#
+    NPR[,1] <- 1#
+    for(a in 2:(length(age))){#
+        NPR[,a] <- NPR[,a-1]*(1-OceanU*vulOcean[a-1])*(1-maturity[a-1])*nat_surv[a-1]   #
+    }#
+#
+    SPR<- apply(t(t(NPR) * (1-OceanU*vulOcean) * maturity ),1,sum)*(1-Uterm)#
+#
+    Req <- (a_stock+log(SPR))/(SPR*bNelson)#
+    Req[which(Req<0)]<-0#
+    Umax<-1-exp(-(a_stock+log(spro)))#
+    mixedYield<- Req * apply(t(weight*vulOcean*t(NPR)),1,sum)*OceanU#
+#
+    TerminalYield<- Req * apply(t(t(NPR)*((1-OceanU)*vulOcean)*maturity*weight),1,sum)*Uterm*valterm#
+#
+    TotalYield<-mixedYield+TerminalYield#
+#
+    Smsy_num<-SPR*Req#
+#
+    isoverfished <- as.numeric(signif(Utot,9)>Corr_Umsy)#
+    #cbind(signif(Utot,9),Corr_Umsy)#
+    isextinct<- as.numeric(Utot>Umax)#
+#
+    B<-list(TotalYield=TotalYield,mixedYield=mixedYield,TerminalYield=TerminalYield,#
+        isoverfished=isoverfished,isextinct=isextinct)#
+#
+    return(B)#
+})#
+#
+}#
+##
+Uoceanvec<-seq(0.00,.9,0.0500)#
+Umixeffect<-list()#
+noverfished<-NULL#
+nextinct<-NULL#
+Yterminal<-NULL#
+Ytotal<-NULL
+for(u in 1:length(Uoceanvec)){#
+#
+    Au<-list(a=a,b=b,#
+    age = age,    #
+    nat_surv = nat_surv,#
+    maturity = maturity,#
+    vulOcean = vulOcean,#
+    length = length,    #
+    weight = weight,    #
+    valterm = valterm, #
+    UmaxTerm = UmaxTerm,#
+    OceanU = Uoceanvec[u],  #
+    pnrml = pnrml, #
+    a_stock = aDeltaM,#
+    bNelson = bNelson,#
+    deltaM = deltaMFig8)#
+#
+    Umixeffect[[u]]<-calc_mixFisheries_equil(Au)#
+#
+    noverfished[u]<-sum(Umixeffect[[u]]$isoverfished)#
+    nextinct[u]<-sum(Umixeffect[[u]]$isextinct)#
+    Yterminal[u]<-sum(Umixeffect[[u]]$TerminalYield)#
+    Ytotal[u]<-sum(Umixeffect[[u]]$TotalYield)#
+}#
+#
+length(Umixeffect)#
+Uoceanvec[8]#
+Umixeffect[[8]]$isoverfished#
+Umixeffect[[9]]$isoverfished
+df<-data.frame(value=c(noverfished,nextinct),#
+    ntype=rep(c("# overfished","# extinct"),each=length(noverfished)),#
+    Uocean=Uoceanvec,Yield=c(Yterminal,Ytotal),#
+    Ytype=rep(c("terminal","total"),each=length(noverfished)))#
+#
+cbind(noverfished,Uoceanvec)#
+#
+p<-ggplot(df)#
+p<- p+geom_line(aes(x=Uocean,y=value, col=ntype))#
+p
+calc_mixFisheries_equil<-function(A){#
+    with(A,{#
+#
+    NperRec_o <-NULL#
+    NperRec_o[1]<-1#
+    for(y in 2:length(age)){#
+        NperRec_o[y]<-NperRec_o[y-1]*(1-maturity[y-1])*nat_surv[y-1]#
+    }#
+#
+    spro<-sum(maturity*NperRec_o)#
+    deltaM <- pnrml*a#
+    ae <- a-deltaM#
+#
+    No <- ae/b#
+    Umsy <- 0.5*ae-0.07*ae^2#
+    Smsy <- ae/b*(0.5-0.07*ae)#
+#
+    Smsy_No <- Smsy/No#
+#
+    Corr_Smsy <- (a_stock+log(spro))/bNelson*(0.5-0.07*a_stock)#
+    Corr_Umsy <- 0.5*(a_stock+log(spro))-0.07*(a_stock+log(spro))^2#
+#
+    Uterm<-NULL#
+    for(n in 1:length(StockName)){#
+        Uterm[n]<-min(UmaxTerm,max(0,Corr_Umsy[n]-OceanU))#
+    }#
+    Utot<-OceanU+Uterm#
+#
+    NPR <- matrix(NA, ncol=length(age),nrow=length(StockName))#
+#
+    NPR[,1] <- 1#
+    for(a in 2:(length(age))){#
+        NPR[,a] <- NPR[,a-1]*(1-OceanU*vulOcean[a-1])*(1-maturity[a-1])*nat_surv[a-1]   #
+    }#
+#
+    SPR<- apply(t(t(NPR) * (1-OceanU*vulOcean) * maturity ),1,sum)*(1-Uterm)#
+#
+    Req <- (a_stock+log(SPR))/(SPR*bNelson)#
+    Req[which(Req<0)]<-0#
+    Umax<-1-exp(-(a_stock+log(spro)))#
+    mixedYield<- Req * apply(t(weight*vulOcean*t(NPR)),1,sum)*OceanU#
+#
+    TerminalYield<- Req * apply(t(t(NPR)*((1-OceanU)*vulOcean)*maturity*weight),1,sum)*Uterm*valterm#
+#
+    TotalYield<-mixedYield+TerminalYield#
+#
+    Smsy_num<-SPR*Req#
+#
+    isoverfished <- as.numeric(signif(Utot,9)>signif(Corr_Umsy,9))#
+    #cbind(signif(Utot,9),Corr_Umsy)#
+    isextinct<- as.numeric(Utot>Umax)#
+#
+    B<-list(TotalYield=TotalYield,mixedYield=mixedYield,TerminalYield=TerminalYield,#
+        isoverfished=isoverfished,isextinct=isextinct)#
+#
+    return(B)#
+})#
+#
+}#
+##
+Uoceanvec<-seq(0.00,.9,0.0500)#
+Umixeffect<-list()#
+noverfished<-NULL#
+nextinct<-NULL#
+Yterminal<-NULL#
+Ytotal<-NULL#
+#
+for(u in 1:length(Uoceanvec)){#
+#
+    Au<-list(a=a,b=b,#
+    age = age,    #
+    nat_surv = nat_surv,#
+    maturity = maturity,#
+    vulOcean = vulOcean,#
+    length = length,    #
+    weight = weight,    #
+    valterm = valterm, #
+    UmaxTerm = UmaxTerm,#
+    OceanU = Uoceanvec[u],  #
+    pnrml = pnrml, #
+    a_stock = aDeltaM,#
+    bNelson = bNelson,#
+    deltaM = deltaMFig8)#
+#
+    Umixeffect[[u]]<-calc_mixFisheries_equil(Au)#
+#
+    noverfished[u]<-sum(Umixeffect[[u]]$isoverfished)#
+    nextinct[u]<-sum(Umixeffect[[u]]$isextinct)#
+    Yterminal[u]<-sum(Umixeffect[[u]]$TerminalYield)#
+    Ytotal[u]<-sum(Umixeffect[[u]]$TotalYield)#
+}#
+#
+length(Umixeffect)#
+Uoceanvec[8]#
+Umixeffect[[8]]$isoverfished#
+Umixeffect[[9]]$isoverfished#
+#
+#-===========================================================#
+#plots#
+#
+df<-data.frame(value=c(noverfished,nextinct),#
+    ntype=rep(c("# overfished","# extinct"),each=length(noverfished)),#
+    Uocean=Uoceanvec,Yield=c(Yterminal,Ytotal),#
+    Ytype=rep(c("terminal","total"),each=length(noverfished)))
+df
+p<-ggplot(df)#
+p<- p+geom_line(aes(x=Uocean,y=value, col=ntype))#
+p
+df<-data.frame(value=c(noverfished,nextinct,Yterminal/max(Ytotal)*max(noverfished),Ytotal/max(Ytotal)*max(noverfished)),#
+    ntype=rep(c("# overfished","# extinct"," Yield terminal","Yield total"),each=length(noverfished)),#
+    Uocean=Uoceanvec)#
+#
+cbind(noverfished,Uoceanvec)#
+#
+p<-ggplot(df)#
+p<- p+geom_line(aes(x=Uocean,y=value, col=ntype))#
+p<- p+geom_point(aes(x=Uocean,y=value, col=ntype))#
+#
+p
+a   <-  2.78#
+b   <-  0.465#
+#
+age       <- 2:5#
+nat_surv  <- c(.6,.7,.8,.9)#
+maturity  <- c(0,.3,.6,1)#
+vulOcean  <- c(.1,1,1,1)#
+length    <- c(57,80,87,90)#
+weight    <- 0.01*length^3/1000#
+valterm   <- 1#
+UmaxTerm  <- 0#
+OceanU    <- 0.1#
+pnrml     <- seq(.1,1,.1)#
+aNelson <- c(3.48,2.07,4.14,3.87,3.02,#
+             2.78,1.69,4.27,1.74,2.49,#
+             2.62,2.22,2.43,3.08,3.1,#
+             0.91,2.67,2.91,3.28,2.82)#
+#
+bNelson <- c(0.1,0.21,0.75,0.33,0.47,#
+             0.01,0.02,0.04,0.74,0.09,#
+             0.16,1.2,0.13,0.98,1.15,#
+             1.24,1.14,0.12,0.12,0.3)#
+#a_stock<-aDeltaM#
+deltaMFig8 <- c(0.6,1,1,3,3,0.1,0.3,3.5,#
+                1,0.5,1.8,1.5,2,2.2,1,#
+                0.5,-1,1,1.3,1.5)#
+#
+aDeltaM <- aNelson-deltaMFig8/2#
+#
+StockName <- c("Cowichan","Puntledge","Nanaimo","Quinsam",#
+    "Qualicum","Harrison","Shuswap","Chilliwack","Skokomish",#
+    "Skagit","Snohomish","Stillaguamish","Green","Lake Washington",#
+    "Nisqually","Hoko","Elwha","Queets","Quillayute","Hoh")#
+A<-list(a=a,b=b,#
+age = age,    #
+nat_surv = nat_surv,#
+maturity = maturity,#
+vulOcean = vulOcean,#
+length = length,    #
+weight = weight,    #
+valterm = valterm, #
+UmaxTerm = UmaxTerm,#
+OceanU = OceanU,    #
+pnrml = pnrml, #
+a_stock = aDeltaM,#
+bNelson = bNelson,#
+deltaMFig8 = deltaMFig8,#
+StockName=StockName)     #
+calc_mixFisheries_equil<-function(A){#
+    with(A,{#
+#
+    NperRec_o <-NULL#
+    NperRec_o[1]<-1#
+    for(y in 2:length(age)){#
+        NperRec_o[y]<-NperRec_o[y-1]*(1-maturity[y-1])*nat_surv[y-1]#
+    }#
+#
+    spro<-sum(maturity*NperRec_o)#
+    deltaM <- pnrml*a#
+    ae <- a-deltaM#
+#
+    No <- ae/b#
+    Umsy <- 0.5*ae-0.07*ae^2#
+    Smsy <- ae/b*(0.5-0.07*ae)#
+#
+    Smsy_No <- Smsy/No#
+#
+    Corr_Smsy <- (a_stock+log(spro))/bNelson*(0.5-0.07*a_stock)#
+    Corr_Umsy <- 0.5*(a_stock+log(spro))-0.07*(a_stock+log(spro))^2#
+#
+    Uterm<-NULL#
+    for(n in 1:length(StockName)){#
+        Uterm[n]<-min(UmaxTerm,max(0,Corr_Umsy[n]-OceanU))#
+    }#
+    Utot<-OceanU+Uterm#
+#
+    NPR <- matrix(NA, ncol=length(age),nrow=length(StockName))#
+#
+    NPR[,1] <- 1#
+    for(a in 2:(length(age))){#
+        NPR[,a] <- NPR[,a-1]*(1-OceanU*vulOcean[a-1])*(1-maturity[a-1])*nat_surv[a-1]   #
+    }#
+#
+    SPR<- apply(t(t(NPR) * (1-OceanU*vulOcean) * maturity ),1,sum)*(1-Uterm)#
+#
+    Req <- (a_stock+log(SPR))/(SPR*bNelson)#
+    Req[which(Req<0)]<-0#
+    Umax<-1-exp(-(a_stock+log(spro)))#
+    mixedYield<- Req * apply(t(weight*vulOcean*t(NPR)),1,sum)*OceanU#
+#
+    TerminalYield<- Req * apply(t(t(NPR)*((1-OceanU)*vulOcean)*maturity*weight),1,sum)*Uterm*valterm#
+#
+    TotalYield<-mixedYield+TerminalYield#
+#
+    Smsy_num<-SPR*Req#
+#
+    isoverfished <- as.numeric(signif(Utot,9)>signif(Corr_Umsy,9))#
+    #cbind(signif(Utot,9),Corr_Umsy)#
+    isextinct<- as.numeric(Utot>Umax)#
+#
+    B<-list(TotalYield=TotalYield,mixedYield=mixedYield,TerminalYield=TerminalYield,#
+        isoverfished=isoverfished,isextinct=isextinct)#
+#
+    return(B)#
+})#
+#
+}#
+##
+Uoceanvec<-seq(0.00,.9,0.0500)#
+Umixeffect<-list()#
+noverfished<-NULL#
+nextinct<-NULL#
+Yterminal<-NULL#
+Ytotal<-NULL#
+#
+for(u in 1:length(Uoceanvec)){#
+#
+    Au<-list(a=a,b=b,#
+    age = age,    #
+    nat_surv = nat_surv,#
+    maturity = maturity,#
+    vulOcean = vulOcean,#
+    length = length,    #
+    weight = weight,    #
+    valterm = valterm, #
+    UmaxTerm = UmaxTerm,#
+    OceanU = Uoceanvec[u],  #
+    pnrml = pnrml, #
+    a_stock = aDeltaM,#
+    bNelson = bNelson,#
+    deltaM = deltaMFig8)#
+#
+    Umixeffect[[u]]<-calc_mixFisheries_equil(Au)#
+#
+    noverfished[u]<-sum(Umixeffect[[u]]$isoverfished)#
+    nextinct[u]<-sum(Umixeffect[[u]]$isextinct)#
+    Yterminal[u]<-sum(Umixeffect[[u]]$TerminalYield)#
+    Ytotal[u]<-sum(Umixeffect[[u]]$TotalYield)#
+}#
+#
+length(Umixeffect)#
+Uoceanvec[8]#
+Umixeffect[[8]]$isoverfished#
+Umixeffect[[9]]$isoverfished#
+#
+#-===========================================================#
+#plots#
+#
+df<-data.frame(value=c(noverfished,nextinct,Yterminal/max(Ytotal)*max(noverfished),Ytotal/max(Ytotal)*max(noverfished)),#
+    ntype=rep(c("# overfished","# extinct"," Yield terminal","Yield total"),each=length(noverfished)),#
+    Uocean=Uoceanvec)#
+#
+cbind(noverfished,Uoceanvec)#
+#
+p <- ggplot(df)#
+p <- p + geom_line(aes(x=Uocean,y=value, col=ntype))#
+p <- p + geom_point(aes(x=Uocean,y=value, col=ntype))#
+p <- p + scale_y_continuous("Sockeye Passage", sec.axis =  sec_axis( ~ . /max(df01_2008$High/100, na.rm=T), name = "% difference"),labels = scales::comma)#
+p
+p <- ggplot(df)#
+p <- p + geom_line(aes(x=Uocean,y=value, col=ntype))#
+p <- p + geom_point(aes(x=Uocean,y=value, col=ntype))#
+p
+p <- ggplot(df)#
+p <- p + geom_line(aes(x=Uocean,y=value, col=ntype))#
+p <- p + geom_point(aes(x=Uocean,y=value, col=ntype))#
+p <- p + scale_y_continuous("Yield", sec.axis =  sec_axis( ~ . /max(noverfished)*max(Ytotal), na.rm=T), name = "% difference"),labels = scales::comma)#
+p
+p <- ggplot(df)#
+p <- p + geom_line(aes(x=Uocean,y=value, col=ntype))#
+p <- p + geom_point(aes(x=Uocean,y=value, col=ntype))#
+p <- p + scale_y_continuous("Yield", sec.axis =  sec_axis( ~ . /max(noverfished)*max(Ytotal), name = "% difference"),labels = scales::comma)#
+p
+Ytotal
+df<-data.frame(value=c(noverfished/max(noverfished)*max(Ytotal),nextinct/max(noverfished)*max(Ytotal),Yterminal,Ytotal),#
+    ntype=rep(c("# overfished","# extinct"," Yield terminal","Yield total"),each=length(noverfished)),#
+    Uocean=Uoceanvec)#
+#
+cbind(noverfished,Uoceanvec)#
+#
+p <- ggplot(df)#
+p <- p + geom_line(aes(x=Uocean,y=value, col=ntype))#
+p <- p + geom_point(aes(x=Uocean,y=value, col=ntype))#
+p
+p <- ggplot(df)#
+p <- p + geom_line(aes(x=Uocean,y=value, col=ntype))#
+p <- p + geom_point(aes(x=Uocean,y=value, col=ntype))#
+p <- p + scale_y_continuous("Yield", sec.axis =  sec_axis( ~ . /max(Ytotal)*max(noverfished), name = "# of overfished and extinct stocks"),labels = scales::comma)#
+p
+p <- ggplot(df)#
+p <- p + geom_line(aes(x=Uocean,y=value, col=ntype))#
+p <- p + geom_point(aes(x=Uocean,y=value, col=ntype))#
+p <- p + scale_y_continuous("Yield", sec.axis =  sec_axis( ~ . /max(Ytotal)*max(noverfished), name = "# of overfished and extinct stocks"),labels = scales::comma)#
+p <- p + theme_bw(16)#
+p <- p + xlab("mixed stock exploitation rate")#
+p
+p <- ggplot(df)#
+p <- p + geom_line(aes(x=Uocean,y=value, col=ntype))#
+p <- p + geom_point(aes(x=Uocean,y=value, col=ntype))#
+p <- p + scale_y_continuous("Yield", sec.axis =  sec_axis( ~ . /max(Ytotal)*max(noverfished), name = "# of overfished and extinct stocks"),labels = scales::comma)#
+p <- p + theme_bw(16)#
+p <- p + xlab("mixed stock exploitation rate")#
+p <- p + scale_color_discrete(breaks=c("# overfished","# extinct"," Yield terminal","Yield total")))#
+p
+p <- ggplot(df)#
+p <- p + geom_line(aes(x=Uocean,y=value, col=ntype))#
+p <- p + geom_point(aes(x=Uocean,y=value, col=ntype))#
+p <- p + scale_y_continuous("Yield", sec.axis =  sec_axis( ~ . /max(Ytotal)*max(noverfished), name = "# of overfished and extinct stocks"),labels = scales::comma)#
+p <- p + theme_bw(16)#
+p <- p + xlab("mixed stock exploitation rate")#
+p <- p + scale_color_discrete(breaks=c("# overfished","# extinct"," Yield terminal","Yield total"))#
+p
+p <- p + scale_color_discrete(breaks=c("# overfished","# extinct"," Yield terminal","Yield total"), title="")
+p
+p <- ggplot(df)#
+p <- p + geom_line(aes(x=Uocean,y=value, col=ntype))#
+p <- p + geom_point(aes(x=Uocean,y=value, col=ntype))#
+p <- p + scale_y_continuous("Yield", sec.axis =  sec_axis( ~ . /max(Ytotal)*max(noverfished), name = "# of overfished and extinct stocks"),labels = scales::comma)#
+p <- p + theme_bw(16)#
+p <- p + xlab("mixed stock exploitation rate")#
+p <- p + scale_color_discrete(breaks=c("# overfished","# extinct"," Yield terminal","Yield total"), title="")#
+p <- p + theme(legend.title=element_blank())#
+p
+p <- ggplot(df)#
+p <- p + geom_line(aes(x=Uocean,y=value, col=ntype))#
+p <- p + geom_point(aes(x=Uocean,y=value, col=ntype))#
+p <- p + scale_y_continuous("Yield", sec.axis =  sec_axis( ~ . /max(Ytotal)*max(noverfished), name = "# of overfished and extinct stocks"),labels = scales::comma)#
+p <- p + theme_bw(16)#
+p <- p + xlab("mixed stock exploitation rate")#
+p <- p + scale_color_discrete(breaks=c("# overfished","# extinct"," Yield terminal","Yield total"))#
+p <- p + theme(legend.title=element_blank())#
+p
+76*.6
+library(dplyr)
+library(R2jags)
+source("/Users/catarinawor/Documents/lake_effort/R/directories.R")
+ls()
+DIRS<-c("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_nostRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_onestRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_twostRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_nostRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_onestRec_100",#
+"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_twostRec_100"#
+)#
+#DIRS<-c("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_nostRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_onestRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_twostRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_nostRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_onestRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_twostRec_limit")#
+#DIRS<-c("/Volumes/3T_dom_media/Catarina/HCR_sims_Best_nostRec"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_onestRec"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_Best_twostRec"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_nostRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_onestRec_limit"#
+#,"/Volumes/3T_dom_media/Catarina/HCR_sims_stquo_twostRec_limit")#
+#DIRS<-c("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_Best_nostRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_Best_onestRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_Best_twostRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_nostRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_onestRec_m2"#
+#,"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_sims_stquo_twostRec_m2")#
+Rfiles<-list()#
+SIMSdat<-list()#
+#
+for(d in 1:length(DIRS)){#
+#
+    Rfiles[[d]]<-list.files(DIRS[[d]],pattern="\\.Rdata",full.name=TRUE)#
+#
+    tmp_SIMS<-list()#
+    for(i in 1:length(Rfiles[[d]])){#
+        load(Rfiles[[d]][i])#
+        tmp_SIMS[[i]]<-sims#
+    }#
+    SIMSdat[[d]]<-tmp_SIMS#
+#
+}#
+plotlib<-"/Users/catarinawor/Documents/Lagrangian/R/plot_routines/HCR_noerror"#
+plotfiles <- list.files(plotlib,pattern="plot",full.name=TRUE)#
+#load graphing routinesfor#
+for(p in 1:length(plotfiles)){#
+    source(plotfiles[p])#
+}#
+#
+M<-SIMSdat[[1]]#
+#
+M1<-SIMSdat[[1]]#
+M2<-SIMSdat[[2]]#
+M3<-SIMSdat[[3]]#
+Msq<-SIMSdat[[4]]#
+Msq1<-SIMSdat[[4]]#
+Msq2<-SIMSdat[[5]]#
+Msq3<-SIMSdat[[6]]
+gg_color_hue <- function(n) {#
+        hues = seq(15, 375, length = n + 1)#
+        hcl(h = hues, l = 65, c = 88)[1:n]#
+    }#
+    n <- length( M )#
+    slope_hcr<-NULL#
+    intercept_hcr<-NULL#
+    Yield_total<-matrix(ncol=n, nrow=111)#
+    Yield_nat1<-matrix(ncol=n, nrow=111)#
+    Yield_nat2<-matrix(ncol=n, nrow=111)#
+    for(i in 1:n){#
+#
+        slope_hcr[i]<-M[[i]][[1]]$slope_hcr#
+        intercept_hcr[i]<-M[[i]][[1]]$intercept_hcr#
+        Yield_total[,i]<-(apply(M[[i]][[1]]$yYieldNat[50:160,],1,sum))#
+        Yield_nat1[,i]<-(M[[i]][[1]]$yYieldNat[50:160,1])#
+        Yield_nat2[,i]<-(M[[i]][[1]]$yYieldNat[50:160,2])#
+    }#
+    nsq<- length( Msq )#
+#
+    slope_hcr_sq<-NULL#
+    intercept_hcr_sq<-NULL#
+    Yield_total_sq<-matrix(ncol=nsq, nrow=111)#
+    Yield_nat1_sq<-matrix(ncol=nsq, nrow=111)#
+    Yield_nat2_sq<-matrix(ncol=nsq, nrow=111)#
+    for(y in 1:nsq){#
+#
+        slope_hcr_sq[y]<-999#
+        intercept_hcr_sq[y]<-999#
+        Yield_total_sq[,y]<-apply(Msq[[y]][[1]]$yYieldNat[50:160,],1,sum)#
+        Yield_nat1_sq[,y]<-Msq[[y]][[1]]$yYieldNat[50:160,1]#
+        Yield_nat2_sq[,y]<-Msq[[y]][[1]]$yYieldNat[50:160,2]#
+    }#
+    sp<- unique(slope_hcr)#
+    int<-unique(intercept_hcr)#
+    Yield_lo_nat2<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_hi_nat2<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_avg_nat2<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+#
+    Yield_lo_nat1<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_hi_nat1<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_avg_nat1<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+#
+    Yield_lo_tot<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_hi_tot<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_avg_tot<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_m_tot<-matrix(nrow=length(sp)*length(int)+1,ncol=111)
+intercept_dois<- NULL#
+    slope_dois<-NULL
+a <-1#
+    for(si in 1:length(sp)){#
+        for(ii in 1:length(int)){#
+#
+            intercept_dois[a]<-int[ii]#
+            slope_dois[a]<-sp[si]#
+            ncol(Yield_nat2)#
+#
+            tmp2<-Yield_nat2[,intersect(which(intercept_hcr==int[ii]),which(slope_hcr==sp[si]))]#
+            Yield_lo_nat2[a,]<-apply(tmp2,1,calc_quantile)[1,]#
+            Yield_hi_nat2[a,]<-apply(tmp2,1,calc_quantile)[5,]#
+            Yield_avg_nat2[a,]<-apply(tmp2,1,calc_quantile)[3,]#
+#
+            tmp1<-Yield_nat1[,intersect(which(intercept_hcr==int[ii]),which(slope_hcr==sp[si]))]#
+            Yield_lo_nat1[a,]<-apply(tmp1,1,calc_quantile)[1,]#
+            Yield_hi_nat1[a,]<-apply(tmp1,1,calc_quantile)[5,]#
+            Yield_avg_nat1[a,]<-apply(tmp1,1,calc_quantile)[3,]#
+            tmp0<-Yield_total[,intersect(which(intercept_hcr==int[ii]),which(slope_hcr==sp[si]))]#
+            Yield_lo_tot[a,]<-apply(tmp0,1,calc_quantile)[1,]#
+            Yield_hi_tot[a,]<-apply(tmp0,1,calc_quantile)[5,]#
+            Yield_avg_tot[a,]<-apply(tmp0,1,calc_quantile)[3,]#
+            Yield_m_tot[a,]<-apply(tmp0,1,mean)#
+#
+            a <- a+1#
+        }#
+    }#
+#
+    intercept_dois[a]<-4010#
+    slope_dois[a]<-4010
+tmp2<-Yield_nat2_sq#
+#
+    Yield_lo_nat2[a,]<-apply(tmp2,1,calc_quantile)[1,]#
+    Yield_hi_nat2[a,]<-apply(tmp2,1,calc_quantile)[5,]#
+    Yield_avg_nat2[a,]<-apply(tmp2,1,calc_quantile)[3,]#
+    tmp1<-Yield_nat1_sq#
+    Yield_lo_nat1[a,]<-apply(tmp1,1,calc_quantile)[1,]#
+    Yield_hi_nat1[a,]<-apply(tmp1,1,calc_quantile)[5,]#
+    Yield_avg_nat1[a,]<-apply(tmp1,1,calc_quantile)[3,]#
+    tmp0<-Yield_total_sq#
+    Yield_lo_tot[a,]<-apply(tmp0,1,calc_quantile)[1,]#
+    Yield_hi_tot[a,]<-apply(tmp0,1,calc_quantile)[5,]#
+    Yield_avg_tot[a,]<-apply(tmp0,1,calc_quantile)[3,]#
+    Yield_m_tot[a,]<-apply(tmp0,1,mean)#
+#
+    lonat2<-melt(Yield_lo_nat2)#
+    hinat2<-melt(Yield_hi_nat2)#
+    avgnat2<-melt(Yield_avg_nat2)#
+    nat2<- data.frame(year=(1966:2076)[avgnat2$Var2], hcr=avgnat2$Var1,#
+         intercept=intercept_dois[avgnat2$Var1],slope=slope_dois[avgnat2$Var1],#
+        mean=avgnat2$value,high=hinat2$value,low=lonat2$value)#
+#
+    nat2$high[nat2$year<2016]=NA#
+    nat2$low[nat2$year<2016]=NA#
+#
+    nat2_o<-nat2[(nat2$intercept==.1|nat2$intercept==4010)&(nat2$slope==.1|nat2$slope==.5|nat2$intercept==4010),]#
+    p<- ggplot(nat2_o)#
+    p<- p+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)#
+    p<- p+geom_line(aes(x=year,y=mean, color=as.factor(slope))) #
+    p<- p +scale_color_manual(values = c(gg_color_hue(2),"black") ,name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p<- p +scale_fill_manual(values = c(gg_color_hue(2),"black"),name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p <- p + labs(x= "", y= " Yield (1000t) ")#
+    p <- p + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())#
+    p
+nat2$intercept==0
+nat2_o<-nat2[(nat2$intercept==0|nat2$intercept==4010)&(nat2$slope==.1|nat2$slope==.5|nat2$slope==4010),]#
+    p<- ggplot(nat2_o)#
+    p<- p+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)#
+    p<- p+geom_line(aes(x=year,y=mean, color=as.factor(slope))) #
+    p<- p +scale_color_manual(values = c(gg_color_hue(2),"black") ,name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p<- p +scale_fill_manual(values = c(gg_color_hue(2),"black"),name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p <- p + labs(x= "", y= " Yield (1000t) ")#
+    p <- p + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())#
+    p
+nat2_o<-nat2[(nat2$intercept==0|nat2$intercept==4010)&(nat2$slope==.1|nat2$slope==.3|nat2$slope==4010),]#
+    p<- ggplot(nat2_o)#
+    p<- p+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)#
+    p<- p+geom_line(aes(x=year,y=mean, color=as.factor(slope))) #
+    p<- p +scale_color_manual(values = c(gg_color_hue(2),"black") ,name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p<- p +scale_fill_manual(values = c(gg_color_hue(2),"black"),name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p <- p + labs(x= "", y= " Yield (1000t) ")#
+    p <- p + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())#
+    p
+nat2_o<-nat2[(nat2$intercept==0|nat2$intercept==4010)&(nat2$slope==.1|nat2$slope==.2|nat2$slope==4010),]#
+    p<- ggplot(nat2_o)#
+    p<- p+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)#
+    p<- p+geom_line(aes(x=year,y=mean, color=as.factor(slope))) #
+    p<- p +scale_color_manual(values = c(gg_color_hue(2),"black") ,name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p<- p +scale_fill_manual(values = c(gg_color_hue(2),"black"),name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p <- p + labs(x= "", y= " Yield (1000t) ")#
+    p <- p + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())#
+    p
+nat2_o<-nat2[(nat2$intercept==0|nat2$intercept==4010)&(nat2$slope==.1|nat2$slope==.0.5|nat2$slope==4010),]#
+    p<- ggplot(nat2_o)#
+    p<- p+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)#
+    p<- p+geom_line(aes(x=year,y=mean, color=as.factor(slope))) #
+    p<- p +scale_color_manual(values = c(gg_color_hue(2),"black") ,name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p<- p +scale_fill_manual(values = c(gg_color_hue(2),"black"),name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p <- p + labs(x= "", y= " Yield (1000t) ")#
+    p <- p + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())#
+    p
+nat2_o<-nat2[(nat2$intercept==0|nat2$intercept==4010)&(nat2$slope==.1|nat2$slope==.05|nat2$slope==4010),]
+p<- ggplot(nat2_o)#
+    p<- p+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)#
+    p<- p+geom_line(aes(x=year,y=mean, color=as.factor(slope))) #
+    p<- p +scale_color_manual(values = c(gg_color_hue(2),"black") ,name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p<- p +scale_fill_manual(values = c(gg_color_hue(2),"black"),name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p <- p + labs(x= "", y= " Yield (1000t) ")#
+    p <- p + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())#
+    p
+summary(nat2)
+nat1$slope==4010
+lonat1<-melt(Yield_lo_nat1)#
+    hinat1<-melt(Yield_hi_nat1)#
+    avgnat1<-melt(Yield_avg_nat1)#
+    nat1<- data.frame(year=(1966:2076)[avgnat1$Var2], hcr=avgnat1$Var1,#
+         intercept=intercept_dois[avgnat1$Var1],slope=slope_dois[avgnat1$Var1],#
+        mean=avgnat1$value,high=hinat1$value,low=lonat1$value)#
+#
+    nat1$high[nat1$year<2016]=NA#
+    nat1$low[nat1$year<2016]=NA
+avgnat2$Var1
+avgnat2$Var2
+avgnat2$Var1
+p<- ggplot(nat2_o)#
+    p<- p+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)#
+    p<- p+geom_line(aes(x=year,y=mean, color=as.factor(slope))) #
+    p<- p +scale_color_manual(values = c(gg_color_hue(2),"black") ,name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p<- p +scale_fill_manual(values = c(gg_color_hue(2),"black"),name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p <- p + labs(x= "", y= " Yield (1000t) ")#
+    p <- p + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())#
+    p
+p<- ggplot(nat2_o)#
+    p<- p+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)#
+    p<- p+geom_line(aes(x=year,y=mean, color=as.factor(slope))) #
+    p<- p +scale_color_manual(values = c(gg_color_hue(2),"black"))# ,name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p<- p +scale_fill_manual(values = c(gg_color_hue(2),"black"))#,name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p <- p + labs(x= "", y= " Yield (1000t) ")#
+    p <- p + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())#
+    p
+nat2_o<-nat2[(nat2$intercept==0|nat2$intercept==4010)&(nat2$slope==.05|nat2$slope==.2|nat2$slope==4010),]#
+    p<- ggplot(nat2_o)#
+    p<- p+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)#
+    p<- p+geom_line(aes(x=year,y=mean, color=as.factor(slope))) #
+    p<- p +scale_color_manual(values = c(gg_color_hue(2),"black"))# ,name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p<- p +scale_fill_manual(values = c(gg_color_hue(2),"black"))#,name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p <- p + labs(x= "", y= " Yield (1000t) ")#
+    p <- p + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())#
+    p
+p<- ggplot(nat2_o)#
+    p<- p+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)#
+    p<- p+geom_line(aes(x=year,y=mean, color=as.factor(slope))) #
+    p<- p +scale_color_manual(values = c(gg_color_hue(2),"black"))# ,name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p<- p +scale_fill_manual(values = c(gg_color_hue(2),"black"))#,name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p <- p + labs(x= "", y= " Yield (1000t) ")#
+    p <- p + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())#
+    p#
+    lonat1<-melt(Yield_lo_nat1)#
+    hinat1<-melt(Yield_hi_nat1)#
+    avgnat1<-melt(Yield_avg_nat1)#
+    nat1<- data.frame(year=(1966:2076)[avgnat1$Var2], hcr=avgnat1$Var1,#
+         intercept=intercept_dois[avgnat1$Var1],slope=slope_dois[avgnat1$Var1],#
+        mean=avgnat1$value,high=hinat1$value,low=lonat1$value)#
+#
+    nat1$high[nat1$year<2016]=NA#
+    nat1$low[nat1$year<2016]=NA#
+#
+    nat1_o<-nat1[(nat1$intercept==.1|nat1$intercept==4010)&(nat1$slope==.1|nat1$slope==.3|nat1$slope==4010),]#
+    p1<- ggplot(nat1_o)#
+    p1<- p1+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)#
+    p1<- p1+geom_line(aes(x=year,y=mean, color=as.factor(slope)))   #
+    p1<- p1 +scale_color_manual(values = c(gg_color_hue(2),"black") ,name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p1<- p1 +scale_fill_manual(values = c(gg_color_hue(2),"black"),name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p1 <- p1 + labs(x= "Year", y= " Yield (1000t) ")#
+    p1 <- p1 + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())#
+#
+    p1#
+    plun<-plot_grid(p1,p,nrow=2,labels=c("Nation 1","Nation 2"),hjust = -1.5,vjust = 3)#
+        print(plun)
+nat2_o<-nat2[(nat2$intercept==0|nat2$intercept==4010)&(nat2$slope==.05|nat2$slope==.1|nat2$slope==4010),]#
+    p<- ggplot(nat2_o)#
+    p<- p+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)#
+    p<- p+geom_line(aes(x=year,y=mean, color=as.factor(slope))) #
+    p<- p +scale_color_manual(values = c(gg_color_hue(2),"black"))# ,name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p<- p +scale_fill_manual(values = c(gg_color_hue(2),"black"))#,name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p <- p + labs(x= "", y= " Yield (1000t) ")#
+    p <- p + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())#
+    p
+nat2_o<-nat2[(nat2$intercept==0|nat2$intercept==4010)&(nat2$slope==.1|nat2$slope==.5|nat2$slope==4010),]#
+    p<- ggplot(nat2_o)#
+    p<- p+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)#
+    p<- p+geom_line(aes(x=year,y=mean, color=as.factor(slope))) #
+    p<- p +scale_color_manual(values = c(gg_color_hue(2),"black"))# ,name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p<- p +scale_fill_manual(values = c(gg_color_hue(2),"black"))#,name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p <- p + labs(x= "", y= " Yield (1000t) ")#
+    p <- p + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())#
+    p
+nat2_o<-nat2[(nat2$intercept==.1|nat2$intercept==4010)&(nat2$slope==.1|nat2$slope==.5|nat2$slope==4010),]#
+    p<- ggplot(nat2_o)#
+    p<- p+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)#
+    p<- p+geom_line(aes(x=year,y=mean, color=as.factor(slope))) #
+    p<- p +scale_color_manual(values = c(gg_color_hue(2),"black"))# ,name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p<- p +scale_fill_manual(values = c(gg_color_hue(2),"black"))#,name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p <- p + labs(x= "", y= " Yield (1000t) ")#
+    p <- p + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())#
+    p
+nat2_o<-nat2[(nat2$intercept==.3|nat2$intercept==4010)&(nat2$slope==.1|nat2$slope==.5|nat2$slope==4010),]#
+    p<- ggplot(nat2_o)#
+    p<- p+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)#
+    p<- p+geom_line(aes(x=year,y=mean, color=as.factor(slope))) #
+    p<- p +scale_color_manual(values = c(gg_color_hue(2),"black")) ,name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p<- p +scale_fill_manual(values = c(gg_color_hue(2),"black")),name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p <- p + labs(x= "", y= " Yield (1000t) ")#
+    p <- p + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())#
+    p
+p<- ggplot(nat2_o)#
+    p<- p+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)#
+    p<- p+geom_line(aes(x=year,y=mean, color=as.factor(slope))) #
+    p<- p +scale_color_manual(values = c(gg_color_hue(2),"black") ,name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p<- p +scale_fill_manual(values = c(gg_color_hue(2),"black"),name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p <- p + labs(x= "", y= " Yield (1000t) ")#
+    p <- p + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())#
+    p
+nat2_o<-nat2[(nat2$intercept==.1|nat2$intercept==4010)&(nat2$slope==.1|nat2$slope==.5|nat2$slope==4010),]#
+    p<- ggplot(nat2_o)#
+    p<- p+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)#
+    p<- p+geom_line(aes(x=year,y=mean, color=as.factor(slope))) #
+    p<- p +scale_color_manual(values = c(gg_color_hue(2),"black") ,name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p<- p +scale_fill_manual(values = c(gg_color_hue(2),"black"),name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p <- p + labs(x= "", y= " Yield (1000t) ")#
+    p <- p + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())#
+    p#
+    lonat1<-melt(Yield_lo_nat1)#
+    hinat1<-melt(Yield_hi_nat1)#
+    avgnat1<-melt(Yield_avg_nat1)#
+    nat1<- data.frame(year=(1966:2076)[avgnat1$Var2], hcr=avgnat1$Var1,#
+         intercept=intercept_dois[avgnat1$Var1],slope=slope_dois[avgnat1$Var1],#
+        mean=avgnat1$value,high=hinat1$value,low=lonat1$value)#
+#
+    nat1$high[nat1$year<2016]=NA#
+    nat1$low[nat1$year<2016]=NA#
+#
+    nat1_o<-nat1[(nat1$intercept==.1|nat1$intercept==4010)&(nat1$slope==.1|nat1$slope==.3|nat1$slope==4010),]#
+    p1<- ggplot(nat1_o)#
+    p1<- p1+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)#
+    p1<- p1+geom_line(aes(x=year,y=mean, color=as.factor(slope)))   #
+    p1<- p1 +scale_color_manual(values = c(gg_color_hue(2),"black") ,name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p1<- p1 +scale_fill_manual(values = c(gg_color_hue(2),"black"),name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p1 <- p1 + labs(x= "Year", y= " Yield (1000t) ")#
+    p1 <- p1 + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())#
+#
+    p1#
+    plun<-plot_grid(p1,p,nrow=2,labels=c("Nation 1","Nation 2"),hjust = -1.5,vjust = 3)#
+        print(plun)
+names(M[[1]][[1]])
+M[[1]][[1]]$SB
+length(M[[1]][[1]]$SB)
+length(M[[1]][[1]]$ySB)
+slope_hcr<-NULL#
+    intercept_hcr<-NULL#
+    SSB_total<-matrix(ncol=n, nrow=111)#
+    for(i in 1:n){#
+#
+        slope_hcr[i]<-M[[i]][[1]]$slope_hcr#
+        intercept_hcr[i]<-M[[i]][[1]]$intercept_hcr#
+        SSB_total[,i]<-M[[i]][[1]]$ySB[50:160,]#
+    }
+n <- length( M )#
+    slope_hcr<-NULL#
+    intercept_hcr<-NULL#
+    SSB_total<-matrix(ncol=n, nrow=111)
+for(i in 1:n){#
+#
+        slope_hcr[i]<-M[[i]][[1]]$slope_hcr#
+        intercept_hcr[i]<-M[[i]][[1]]$intercept_hcr#
+        SSB_total[,i]<-M[[i]][[1]]$ySB[50:160]#
+    }
+nsq<- length( Msq )#
+#
+    slope_hcr_sq<-NULL#
+    intercept_hcr_sq<-NULL#
+    SSB_total_sq<-matrix(ncol=nsq, nrow=111)
+for(y in 1:nsq){#
+#
+        slope_hcr_sq[y]<-999#
+        intercept_hcr_sq[y]<-999#
+        SSB_total_sq[,y]<-apply(Msq[[y]][[1]]$yYieldNat[50:160,],1,sum)#
+#
+    }
+sp<- unique(slope_hcr)#
+    int<-unique(intercept_hcr)#
+    SSB_lo<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    SSB_hi<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    SSB_avg<-matrix(nrow=length(sp)*length(int)+1,ncol=111)
+intercept_dois<- NULL#
+    slope_dois<-NULL
+n <- length( M )#
+    slope_hcr<-NULL#
+    intercept_hcr<-NULL#
+    SSB_total<-matrix(ncol=n, nrow=111)#
+    for(i in 1:n){#
+#
+        slope_hcr[i]<-M[[i]][[1]]$slope_hcr#
+        intercept_hcr[i]<-M[[i]][[1]]$intercept_hcr#
+        SSB_total[,i]<-M[[i]][[1]]$ySB[50:160]#
+    }#
+    nsq<- length( Msq )#
+#
+    slope_hcr_sq<-NULL#
+    intercept_hcr_sq<-NULL#
+    SSB_total_sq<-matrix(ncol=nsq, nrow=111)#
+    for(y in 1:nsq){#
+#
+        slope_hcr_sq[y]<-999#
+        intercept_hcr_sq[y]<-999#
+        SSB_total_sq[,y]<-apply(Msq[[y]][[1]]$yYieldNat[50:160,],1,sum)#
+#
+    }#
+    sp<- unique(slope_hcr)#
+    int<-unique(intercept_hcr)#
+    SSB_lo<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    SSB_hi<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    SSB_avg<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    intercept_dois<- NULL#
+    slope_dois<-NULL#
+#
+    a <-1#
+    for(si in 1:length(sp)){#
+        for(ii in 1:length(int)){#
+#
+            intercept_dois[a]<-int[ii]#
+            slope_dois[a]<-sp[si]#
+            ncol(Yield_nat2)#
+#
+            tmp2<-SSB_total[,intersect(which(intercept_hcr==int[ii]),which(slope_hcr==sp[si]))]#
+            SSB_lo[a,]<-apply(tmp2,1,calc_quantile)[1,]#
+            SSB_hi[a,]<-apply(tmp2,1,calc_quantile)[5,]#
+            SSB_avg[a,]<-apply(tmp2,1,calc_quantile)[3,]#
+            a <- a+1#
+        }#
+    }#
+#
+    intercept_dois[a]<-4010#
+    slope_dois[a]<-4010#
+#
+    tmp2<-SSB_total_sq#
+#
+    SSB_lo[a,]<-apply(tmp2,1,calc_quantile)[1,]#
+    SSB_hi[a,]<-apply(tmp2,1,calc_quantile)[5,]#
+    SSB_avg[a,]<-apply(tmp2,1,calc_quantile)[3,]#
+    lossb<-melt(SSB_lo)#
+    hissb<-melt(SSB_hi)#
+    avgssb<-melt(SSB_avg)#
+    ssb<- data.frame(year=(1966:2076)[avgssb$Var2], hcr=avgssb$Var1,#
+         intercept=intercept_dois[avgssb$Var1],slope=slope_dois[avgssb$Var1],#
+        mean=avgssb$value,high=hissb$value,low=lossb$value)#
+#
+    ssb$high[ssb$year<2016]=NA#
+    ssb$low[ssb$year<2016]=NA
+p<- ggplot(ssb_o)#
+    p<- p+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)#
+    p<- p+geom_line(aes(x=year,y=mean, color=as.factor(slope))) #
+    p<- p +scale_color_manual(values = c(gg_color_hue(2),"black") ,name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p<- p +scale_fill_manual(values = c(gg_color_hue(2),"black"),name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p <- p + labs(x= "", y= " Yield (1000t) ")#
+    p <- p + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())#
+    p
+ssb_o<-ssb[(ssb$intercept==.1|ssb$intercept==4010)&(ssb$slope==.1|ssb$slope==.5|ssb$slope==4010),]
+p<- ggplot(ssb_o)#
+    p<- p+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)#
+    p<- p+geom_line(aes(x=year,y=mean, color=as.factor(slope))) #
+    p<- p +scale_color_manual(values = c(gg_color_hue(2),"black") ,name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p<- p +scale_fill_manual(values = c(gg_color_hue(2),"black"),name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p <- p + labs(x= "", y= " Yield (1000t) ")#
+    p <- p + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())#
+    p
+n <- length( M )#
+    slope_hcr<-NULL#
+    intercept_hcr<-NULL#
+    SSB_total<-matrix(ncol=n, nrow=111)#
+    for(i in 1:n){#
+#
+        slope_hcr[i]<-M[[i]][[1]]$slope_hcr#
+        intercept_hcr[i]<-M[[i]][[1]]$intercept_hcr#
+        SSB_total[,i]<-M[[i]][[1]]$ySB[50:160]#
+    }#
+    nsq<- length( Msq )#
+#
+    slope_hcr_sq<-NULL#
+    intercept_hcr_sq<-NULL#
+    SSB_total_sq<-matrix(ncol=nsq, nrow=111)#
+    for(y in 1:nsq){#
+#
+        slope_hcr_sq[y]<-999#
+        intercept_hcr_sq[y]<-999#
+        SSB_total_sq[,y]<-Msq[[y]][[1]]$ySB[50:160]#
+#
+    }#
+    sp<- unique(slope_hcr)#
+    int<-unique(intercept_hcr)#
+    SSB_lo<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    SSB_hi<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    SSB_avg<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    intercept_dois<- NULL#
+    slope_dois<-NULL#
+#
+    a <-1#
+    for(si in 1:length(sp)){#
+        for(ii in 1:length(int)){#
+#
+            intercept_dois[a]<-int[ii]#
+            slope_dois[a]<-sp[si]#
+            ncol(Yield_nat2)#
+#
+            tmp2<-SSB_total[,intersect(which(intercept_hcr==int[ii]),which(slope_hcr==sp[si]))]#
+            SSB_lo[a,]<-apply(tmp2,1,calc_quantile)[1,]#
+            SSB_hi[a,]<-apply(tmp2,1,calc_quantile)[5,]#
+            SSB_avg[a,]<-apply(tmp2,1,calc_quantile)[3,]#
+            a <- a+1#
+        }#
+    }#
+#
+    intercept_dois[a]<-4010#
+    slope_dois[a]<-4010#
+#
+    tmp2<-SSB_total_sq#
+#
+    SSB_lo[a,]<-apply(tmp2,1,calc_quantile)[1,]#
+    SSB_hi[a,]<-apply(tmp2,1,calc_quantile)[5,]#
+    SSB_avg[a,]<-apply(tmp2,1,calc_quantile)[3,]#
+    lossb<-melt(SSB_lo)#
+    hissb<-melt(SSB_hi)#
+    avgssb<-melt(SSB_avg)#
+    ssb<- data.frame(year=(1966:2076)[avgssb$Var2], hcr=avgssb$Var1,#
+         intercept=intercept_dois[avgssb$Var1],slope=slope_dois[avgssb$Var1],#
+        mean=avgssb$value,high=hissb$value,low=lossb$value)#
+#
+    ssb$high[ssb$year<2016]=NA#
+    ssb$low[ssb$year<2016]=NA#
+    ssb_o<-ssb[(ssb$intercept==.1|ssb$intercept==4010)&(ssb$slope==.1|ssb$slope==.5|ssb$slope==4010),]#
+    p<- ggplot(ssb_o)#
+    p<- p+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)#
+    p<- p+geom_line(aes(x=year,y=mean, color=as.factor(slope))) #
+    p<- p +scale_color_manual(values = c(gg_color_hue(2),"black") ,name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p<- p +scale_fill_manual(values = c(gg_color_hue(2),"black"),name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p <- p + labs(x= "", y= " Yield (1000t) ")#
+    p <- p + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())#
+    p
+n <- length( M )#
+    slope_hcr<-NULL#
+    intercept_hcr<-NULL#
+    SSB_total<-matrix(ncol=n, nrow=111)#
+    for(i in 1:n){#
+#
+        slope_hcr[i]<-M[[i]][[1]]$slope_hcr#
+        intercept_hcr[i]<-M[[i]][[1]]$intercept_hcr#
+        SSB_total[,i]<-M[[i]][[1]]$ySB[50:160]#
+    }#
+    nsq<- length( Msq )#
+#
+    slope_hcr_sq<-NULL#
+    intercept_hcr_sq<-NULL#
+    SSB_total_sq<-matrix(ncol=nsq, nrow=111)#
+    for(y in 1:nsq){#
+#
+        slope_hcr_sq[y]<-999#
+        intercept_hcr_sq[y]<-999#
+        SSB_total_sq[,y]<-Msq[[y]][[1]]$ySB[50:160]#
+#
+    }#
+    sp<- unique(slope_hcr)#
+    int<-unique(intercept_hcr)#
+    SSB_lo<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    SSB_hi<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    SSB_avg<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    intercept_dois<- NULL#
+    slope_dois<-NULL#
+#
+    a <-1#
+    for(si in 1:length(sp)){#
+        for(ii in 1:length(int)){#
+#
+            intercept_dois[a]<-int[ii]#
+            slope_dois[a]<-sp[si]#
+            ncol(Yield_nat2)#
+#
+            tmp2<-SSB_total[,intersect(which(intercept_hcr==int[ii]),which(slope_hcr==sp[si]))]#
+            SSB_lo[a,]<-apply(tmp2,1,calc_quantile)[1,]#
+            SSB_hi[a,]<-apply(tmp2,1,calc_quantile)[5,]#
+            SSB_avg[a,]<-apply(tmp2,1,calc_quantile)[3,]#
+            a <- a+1#
+        }#
+    }#
+#
+    intercept_dois[a]<-4010#
+    slope_dois[a]<-4010#
+#
+    tmp2<-SSB_total_sq#
+#
+    SSB_lo[a,]<-apply(tmp2,1,calc_quantile)[1,]#
+    SSB_hi[a,]<-apply(tmp2,1,calc_quantile)[5,]#
+    SSB_avg[a,]<-apply(tmp2,1,calc_quantile)[3,]#
+    lossb<-melt(SSB_lo)#
+    hissb<-melt(SSB_hi)#
+    avgssb<-melt(SSB_avg)#
+    ssb<- data.frame(year=(1966:2076)[avgssb$Var2], hcr=avgssb$Var1,#
+         intercept=intercept_dois[avgssb$Var1],slope=slope_dois[avgssb$Var1],#
+        mean=avgssb$value,high=hissb$value,low=lossb$value)#
+#
+    ssb$high[ssb$year<2016]=NA#
+    ssb$low[ssb$year<2016]=NA
+ssb_o<-ssb[(ssb$intercept==.1|ssb$intercept==4010)&(ssb$slope==.1|ssb$slope==.3|ssb$slope==4010),]#
+    p<- ggplot(ssb_o)#
+    p<- p+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)#
+    p<- p+geom_line(aes(x=year,y=mean, color=as.factor(slope))) #
+    p<- p +scale_color_manual(values = c(gg_color_hue(2),"black") ,name="exploitation rate",labels=c("0.1", "0.3", "40:10 rule"))#
+    p<- p +scale_fill_manual(values = c(gg_color_hue(2),"black"),name="exploitation rate",labels=c("0.1", "0.3", "40:10 rule"))#
+    p <- p + labs(x= "", y= " Yield (1000t) ")#
+    p <- p + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())#
+    p
+ssb_o<-ssb[(ssb$intercept==.1|ssb$intercept==4010)&(ssb$slope==.1|ssb$slope==.2|ssb$slope==4010),]#
+    p<- ggplot(ssb_o)#
+    p<- p+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)#
+    p<- p+geom_line(aes(x=year,y=mean, color=as.factor(slope))) #
+    p<- p +scale_color_manual(values = c(gg_color_hue(2),"black") ,name="exploitation rate",labels=c("0.1", "0.3", "40:10 rule"))#
+    p<- p +scale_fill_manual(values = c(gg_color_hue(2),"black"),name="exploitation rate",labels=c("0.1", "0.3", "40:10 rule"))#
+    p <- p + labs(x= "", y= " Yield (1000t) ")#
+    p <- p + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())#
+    p
+n <- length( M )#
+    slope_hcr<-NULL#
+    intercept_hcr<-NULL#
+    Yield_total<-matrix(ncol=n, nrow=111)#
+    Yield_nat1<-matrix(ncol=n, nrow=111)#
+    Yield_nat2<-matrix(ncol=n, nrow=111)#
+    for(i in 1:n){#
+#
+        slope_hcr[i]<-M[[i]][[1]]$slope_hcr#
+        intercept_hcr[i]<-M[[i]][[1]]$intercept_hcr#
+        Yield_total[,i]<-(apply(M[[i]][[1]]$yYieldNat[50:160,],1,sum))#
+        Yield_nat1[,i]<-(M[[i]][[1]]$yYieldNat[50:160,1])#
+        Yield_nat2[,i]<-(M[[i]][[1]]$yYieldNat[50:160,2])#
+    }#
+    nsq<- length( Msq )#
+#
+    slope_hcr_sq<-NULL#
+    intercept_hcr_sq<-NULL#
+    Yield_total_sq<-matrix(ncol=nsq, nrow=111)#
+    Yield_nat1_sq<-matrix(ncol=nsq, nrow=111)#
+    Yield_nat2_sq<-matrix(ncol=nsq, nrow=111)#
+    for(y in 1:nsq){#
+#
+        slope_hcr_sq[y]<-999#
+        intercept_hcr_sq[y]<-999#
+        Yield_total_sq[,y]<-apply(Msq[[y]][[1]]$yYieldNat[50:160,],1,sum)#
+        Yield_nat1_sq[,y]<-Msq[[y]][[1]]$yYieldNat[50:160,1]#
+        Yield_nat2_sq[,y]<-Msq[[y]][[1]]$yYieldNat[50:160,2]#
+    }#
+    sp<- unique(slope_hcr)#
+    int<-unique(intercept_hcr)#
+    Yield_lo_nat2<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_hi_nat2<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_avg_nat2<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+#
+    Yield_lo_nat1<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_hi_nat1<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_avg_nat1<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+#
+    Yield_lo_tot<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_hi_tot<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_avg_tot<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+    Yield_m_tot<-matrix(nrow=length(sp)*length(int)+1,ncol=111)#
+#
+    intercept_dois<- NULL#
+    slope_dois<-NULL#
+#
+    a <-1#
+    for(si in 1:length(sp)){#
+        for(ii in 1:length(int)){#
+#
+            intercept_dois[a]<-int[ii]#
+            slope_dois[a]<-sp[si]#
+            ncol(Yield_nat2)#
+#
+            tmp2<-Yield_nat2[,intersect(which(intercept_hcr==int[ii]),which(slope_hcr==sp[si]))]#
+            Yield_lo_nat2[a,]<-apply(tmp2,1,calc_quantile)[1,]#
+            Yield_hi_nat2[a,]<-apply(tmp2,1,calc_quantile)[5,]#
+            Yield_avg_nat2[a,]<-apply(tmp2,1,calc_quantile)[3,]#
+#
+            tmp1<-Yield_nat1[,intersect(which(intercept_hcr==int[ii]),which(slope_hcr==sp[si]))]#
+            Yield_lo_nat1[a,]<-apply(tmp1,1,calc_quantile)[1,]#
+            Yield_hi_nat1[a,]<-apply(tmp1,1,calc_quantile)[5,]#
+            Yield_avg_nat1[a,]<-apply(tmp1,1,calc_quantile)[3,]#
+            tmp0<-Yield_total[,intersect(which(intercept_hcr==int[ii]),which(slope_hcr==sp[si]))]#
+            Yield_lo_tot[a,]<-apply(tmp0,1,calc_quantile)[1,]#
+            Yield_hi_tot[a,]<-apply(tmp0,1,calc_quantile)[5,]#
+            Yield_avg_tot[a,]<-apply(tmp0,1,calc_quantile)[3,]#
+            Yield_m_tot[a,]<-apply(tmp0,1,mean)#
+#
+            a <- a+1#
+        }#
+    }#
+#
+    intercept_dois[a]<-4010#
+    slope_dois[a]<-4010#
+#
+    tmp2<-Yield_nat2_sq#
+#
+    Yield_lo_nat2[a,]<-apply(tmp2,1,calc_quantile)[1,]#
+    Yield_hi_nat2[a,]<-apply(tmp2,1,calc_quantile)[5,]#
+    Yield_avg_nat2[a,]<-apply(tmp2,1,calc_quantile)[3,]#
+    tmp1<-Yield_nat1_sq#
+    Yield_lo_nat1[a,]<-apply(tmp1,1,calc_quantile)[1,]#
+    Yield_hi_nat1[a,]<-apply(tmp1,1,calc_quantile)[5,]#
+    Yield_avg_nat1[a,]<-apply(tmp1,1,calc_quantile)[3,]#
+    tmp0<-Yield_total_sq#
+    Yield_lo_tot[a,]<-apply(tmp0,1,calc_quantile)[1,]#
+    Yield_hi_tot[a,]<-apply(tmp0,1,calc_quantile)[5,]#
+    Yield_avg_tot[a,]<-apply(tmp0,1,calc_quantile)[3,]#
+    Yield_m_tot[a,]<-apply(tmp0,1,mean)#
+#
+    lonat2<-melt(Yield_lo_nat2)#
+    hinat2<-melt(Yield_hi_nat2)#
+    avgnat2<-melt(Yield_avg_nat2)#
+    nat2<- data.frame(year=(1966:2076)[avgnat2$Var2], hcr=avgnat2$Var1,#
+         intercept=intercept_dois[avgnat2$Var1],slope=slope_dois[avgnat2$Var1],#
+        mean=avgnat2$value,high=hinat2$value,low=lonat2$value)#
+#
+    nat2$high[nat2$year<2016]=NA#
+    nat2$low[nat2$year<2016]=NA#
+#
+    nat2_o<-nat2[(nat2$intercept==0|nat2$intercept==4010)&(nat2$slope==.1|nat2$slope==.05|nat2$slope==4010),]#
+    p<- ggplot(nat2_o)#
+    p<- p+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)#
+    p<- p+geom_line(aes(x=year,y=mean, color=as.factor(slope))) #
+    p<- p +scale_color_manual(values = c(gg_color_hue(2),"black") ,name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p<- p +scale_fill_manual(values = c(gg_color_hue(2),"black"),name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p <- p + labs(x= "", y= " Yield (1000t) ")#
+    p <- p + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())#
+    p
+nat2_o<-nat2[(nat2$intercept==0|nat2$intercept==4010)&(nat2$slope==.1|nat2$slope==.3|nat2$slope==4010),]#
+    p<- ggplot(nat2_o)#
+    p<- p+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)#
+    p<- p+geom_line(aes(x=year,y=mean, color=as.factor(slope))) #
+    p<- p +scale_color_manual(values = c(gg_color_hue(2),"black") ,name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p<- p +scale_fill_manual(values = c(gg_color_hue(2),"black"),name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))#
+    p <- p + labs(x= "", y= " Yield (1000t) ")#
+    p <- p + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())#
+    p
+p<- ggplot(nat2_o)#
+    p<- p+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)#
+    p<- p+geom_line(aes(x=year,y=mean, color=as.factor(slope))) #
+    p<- p +scale_color_manual(values = c(gg_color_hue(2),"black") ,name="exploitation rate",labels=c("0.1", "0.3", "40:10 rule"))#
+    p<- p +scale_fill_manual(values = c(gg_color_hue(2),"black"),name="exploitation rate",labels=c("0.1", "0.3", "40:10 rule"))#
+    p <- p + labs(x= "", y= " Yield (1000t) ")#
+    p <- p + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())#
+    p
+lonat1<-melt(Yield_lo_nat1)#
+    hinat1<-melt(Yield_hi_nat1)#
+    avgnat1<-melt(Yield_avg_nat1)#
+    nat1<- data.frame(year=(1966:2076)[avgnat1$Var2], hcr=avgnat1$Var1,#
+         intercept=intercept_dois[avgnat1$Var1],slope=slope_dois[avgnat1$Var1],#
+        mean=avgnat1$value,high=hinat1$value,low=lonat1$value)#
+#
+    nat1$high[nat1$year<2016]=NA#
+    nat1$low[nat1$year<2016]=NA
+p1<- ggplot(nat1_o)#
+    p1<- p1+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)#
+    p1<- p1+geom_line(aes(x=year,y=mean, color=as.factor(slope)))   #
+    p1<- p1 +scale_color_manual(values = c(gg_color_hue(2),"black") ,name="exploitation rate",labels=c("0.1", "0.3", "40:10 rule"))#
+    p1<- p1 +scale_fill_manual(values = c(gg_color_hue(2),"black"),name="exploitation rate",labels=c("0.1", "0.3", "40:10 rule"))#
+    p1 <- p1 + labs(x= "Year", y= " Yield (1000t) ")#
+    p1 <- p1 + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())#
+#
+    p1
+plun<-plot_grid(p1,p,nrow=2,labels=c("Nation 1","Nation 2"),hjust = -1.5,vjust = 3)#
+        print(plun)
+pb<- ggplot(ssb_o)#
+    pb<- pb+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)#
+    pb<- pb+geom_line(aes(x=year,y=mean, color=as.factor(slope)))   #
+    pb<- pb +scale_color_manual(values = c(gg_color_hue(2),"black") ,name="exploitation rate",labels=c("0.1", "0.3", "40:10 rule"))#
+    pb<- pb +scale_fill_manual(values = c(gg_color_hue(2),"black"),name="exploitation rate",labels=c("0.1", "0.3", "40:10 rule"))#
+    pb <- pb + labs(x= "", y= " Yield (1000t) ")#
+    pb <- pb + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())#
+    pb
+ssb_o<-ssb[(ssb$intercept==.1|ssb$intercept==4010)&(ssb$slope==.1|ssb$slope==.3|ssb$slope==4010),]#
+    pb<- ggplot(ssb_o)#
+    pb<- pb+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)#
+    pb<- pb+geom_line(aes(x=year,y=mean, color=as.factor(slope)))   #
+    pb<- pb +scale_color_manual(values = c(gg_color_hue(2),"black") ,name="exploitation rate",labels=c("0.1", "0.3", "40:10 rule"))#
+    pb<- pb +scale_fill_manual(values = c(gg_color_hue(2),"black"),name="exploitation rate",labels=c("0.1", "0.3", "40:10 rule"))#
+    pb <- pb + labs(x= "", y= " Yield (1000t) ")#
+    pb <- pb + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())#
+    pb
+pb<- ggplot(ssb_o)#
+    pb<- pb+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)#
+    pb<- pb+geom_line(aes(x=year,y=mean, color=as.factor(slope)))   #
+    pb<- pb +scale_color_manual(values = c(gg_color_hue(2),"black") ,name="exploitation rate",labels=c("0.1", "0.3", "40:10 rule"))#
+    pb<- pb +scale_fill_manual(values = c(gg_color_hue(2),"black"),name="exploitation rate",labels=c("0.1", "0.3", "40:10 rule"))#
+    pb <- pb + labs(x= "", y= " Yield (1000t) ")#
+    pb <- pb + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())#
+    pb
+pb<- ggplot(ssb_o)#
+    pb<- pb+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)#
+    pb<- pb+geom_line(aes(x=year,y=mean, color=as.factor(slope)))   #
+    pb<- pb +scale_color_manual(values = c(gg_color_hue(2),"black") ,name="exploitation rate",labels=c("0.1", "0.3", "40:10 rule"))#
+    pb<- pb +scale_fill_manual(values = c(gg_color_hue(2),"black"),name="exploitation rate",labels=c("0.1", "0.3", "40:10 rule"))#
+    pb <- pb + labs(x= "", y= "SSB (1000t) ")#
+    pb <- pb + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())#
+    pb
+library(TMB)
+library("TMB")
+https://www.mcsweeneys.net/articles/faq-the-snake-fight-portion-of-your-thesis-defense
+install.packages("TMB")
+library(TMB)
+runExample(all=TRUE)
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+sim <- read.rep("../admb/OM/simple/lagrangian_OM.rep")#
+sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")#
+#
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")#
+names(sim)#
+dim(sim$propVBarea)#
+head(sim$propVBarea)#
+simvb<-(cbind(data.frame(time=sim$propVBarea[,1],#
+  area=sim$propVBarea[,2],#
+  type="single"),#
+  sim$propVBarea[,3:ncol(sim$propVBarea)]))
+names(simvb)[4:ncol(simvb)]<-paste("A",sim$sage:sim$nage, sep="")
+head(simvb)#
+molsimvb<-melt(simvb, id.vars=list("area", "time", "type"))#
+head(molsimvb)
+library(ggplot2)#
+library(reshape2)#
+library(animation)#
+library(ggmap)#
+library(plyr)
+names(simvb)[4:ncol(simvb)]<-paste("A",sim$sage:sim$nage, sep="")
+head(simvb)#
+molsimvb<-melt(simvb, id.vars=list("area", "time", "type"))#
+head(molsimvb)#
+names(sim_gtg)#
+#
+gtgvb<-cbind(data.frame(time=sim_gtg$propVBarea[,1],#
+  group=sim_gtg$propVBarea[,2],#
+  area=sim_gtg$propVBarea[,3],  #
+  type="multiple"),#
+  sim_gtg$propVBarea[,4:ncol(sim_gtg$propVBarea)])
+names(gtgvb)[5:ncol(gtgvb)]<-paste("A",sim_gtg$sage:sim_gtg$nage, sep="")#
+head(gtgvb)#
+#
+ngtgvb<-aggregate(gtgvb[,5:ncol(gtgvb)], by=list(gtgvb$time,gtgvb$area,gtgvb$type), sum)#
+#
+head(ngtgvb)#
+#
+names(ngtgvb)[1]<-"time"#
+names(ngtgvb)[2]<-"area"#
+names(ngtgvb)[3]<-"type"#
+#
+molgtgvb<-melt(ngtgvb, id.vars=list("area", "time", "type"))#
+head(molgtgvb)#
+#
+df1<-rbind(molgtgvb,molsimvb)#
+#
+df2<-df1[df1$variable=="A1"|df1$variable=="A5",]
+df2$time2<-meses[indmonth[df2$time]]#
+#
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+df2<-arrange(transform(df2,Month=factor(time,levels=meses)),Month)#
+#
+df2$age<-as.factor(as.numeric(df2$variable))#
+#df2$values<-df2$value#/max(df2$value)#
+df2$values<-df2$value/max(df2$value)#
+#
+#df2$values[df2$variable=="A1"]<-df2$value[df2$variable=="A1"]/max(df2$value[df2$variable=="A1"])#
+#df2$values[df2$variable=="A5"]<-df2$value[df2$variable=="A5"]/max(df2$value[df2$variable=="A5"])#
+#df2$values[df2$variable=="A2"&df2$type=="gtg"]<-df2$value[df2$variable=="A2"&df2$type=="gtg"]/max(df2$value[df2$variable=="A2"&df2$type=="gtg"])#
+#df2$values[df2$variable=="A2"&df2$type=="simple"]<-df2$value[df2$variable=="A2"&df2$type=="simple"]/max(df2$value[df2$variable=="A2"&df2$type=="simple"])#
+#
+#df2$values[df2$variable=="A5"&df2$type=="gtg"]<-df2$value[df2$variable=="A5"&df2$type=="gtg"]/max(df2$value[df2$variable=="A5"&df2$type=="gtg"])#
+#df2$values[df2$variable=="A5"&df2$type=="simple"]<-df2$value[df2$variable=="A5"&df2$type=="simple"]/max(df2$value[df2$variable=="A5"&df2$type=="simple"])#
+names(sim)#
+sim$Effarea#
+dim(sim$Effarea)#
+head(sim$Effarea)
+df2
+effsim<-melt(sim$Effarea)
+summary(effsim)#
+#
+names(effsim)[1]<-"time"#
+names(effsim)[2]<-"area"#
+names(effsim)[3]<-"values"#
+#
+summary(effsim)#
+#
+effsim$area<-as.numeric(effsim$area)+29#
+summary(effsim$area)#
+effsim$dat<-"effort"#
+effsim$type<-"single"
+effgtg<-melt(sim_gtg$Effarea)
+names(effgtg)[1]<-"time"#
+names(effgtg)[2]<-"area"#
+names(effgtg)[3]<-"values"
+effgtg$area<-as.numeric(effgtg$area)+29#
+effgtg$dat<-"effort"#
+effgtg$type<-"multiple"#
+#
+summary(effgtg)#
+Eff<-rbind(effsim,effgtg)#
+Eff<-Eff[Eff$time>1188,]#
+#
+Eff$time2<-meses[indmonth[Eff$time]]#
+Eff$values<-Eff$values/max(Eff$values)#
+#
+Eff<-arrange(transform(Eff,Month=factor(time2,levels=meses)),Month)#
+summary(Eff)
+sim$indmonth
+simvb<-(cbind(data.frame(time=sim$propVBarea[,1],#
+  area=sim$propVBarea[,2],#
+  type="single"),#
+  sim$propVBarea[,3:ncol(sim$propVBarea)]))#
+names(simvb)[4:ncol(simvb)]<-paste("A",sim$sage:sim$nage, sep="")#
+#
+head(simvb)#
+molsimvb<-melt(simvb, id.vars=list("area", "time", "type"))#
+head(molsimvb)#
+names(sim_gtg)#
+#
+gtgvb<-cbind(data.frame(time=sim_gtg$propVBarea[,1],#
+  group=sim_gtg$propVBarea[,2],#
+  area=sim_gtg$propVBarea[,3],  #
+  type="multiple"),#
+  sim_gtg$propVBarea[,4:ncol(sim_gtg$propVBarea)])#
+#
+names(gtgvb)[5:ncol(gtgvb)]<-paste("A",sim_gtg$sage:sim_gtg$nage, sep="")#
+head(gtgvb)#
+#
+ngtgvb<-aggregate(gtgvb[,5:ncol(gtgvb)], by=list(gtgvb$time,gtgvb$area,gtgvb$type), sum)#
+#
+head(ngtgvb)#
+#
+names(ngtgvb)[1]<-"time"#
+names(ngtgvb)[2]<-"area"#
+names(ngtgvb)[3]<-"type"#
+#
+molgtgvb<-melt(ngtgvb, id.vars=list("area", "time", "type"))#
+head(molgtgvb)#
+#
+df1<-rbind(molgtgvb,molsimvb)#
+#
+df2<-df1[df1$variable=="A1"|df1$variable=="A5",]
+df2$time2<-meses[indmonth[df2$time]]#
+#
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+df2<-arrange(transform(df2,Month=factor(time,levels=meses)),Month)#
+#
+df2$age<-as.factor(as.numeric(df2$variable))#
+#df2$values<-df2$value#/max(df2$value)#
+df2$values<-df2$value/max(df2$value)#
+#
+#df2$values[df2$variable=="A1"]<-df2$value[df2$variable=="A1"]/max(df2$value[df2$variable=="A1"])#
+#df2$values[df2$variable=="A5"]<-df2$value[df2$variable=="A5"]/max(df2$value[df2$variable=="A5"])#
+#df2$values[df2$variable=="A2"&df2$type=="gtg"]<-df2$value[df2$variable=="A2"&df2$type=="gtg"]/max(df2$value[df2$variable=="A2"&df2$type=="gtg"])#
+#df2$values[df2$variable=="A2"&df2$type=="simple"]<-df2$value[df2$variable=="A2"&df2$type=="simple"]/max(df2$value[df2$variable=="A2"&df2$type=="simple"])#
+#
+#df2$values[df2$variable=="A5"&df2$type=="gtg"]<-df2$value[df2$variable=="A5"&df2$type=="gtg"]/max(df2$value[df2$variable=="A5"&df2$type=="gtg"])#
+#df2$values[df2$variable=="A5"&df2$type=="simple"]<-df2$value[df2$variable=="A5"&df2$type=="simple"]/max(df2$value[df2$variable=="A5"&df2$type=="simple"])#
+names(sim)#
+#
+dim(sim$Effarea)#
+head(sim$Effarea)#
+#
+effsim<-melt(sim$Effarea)#
+#
+summary(effsim)#
+#
+names(effsim)[1]<-"time"#
+names(effsim)[2]<-"area"#
+names(effsim)[3]<-"values"#
+#
+summary(effsim)#
+#
+effsim$area<-as.numeric(effsim$area)+29#
+summary(effsim$area)#
+effsim$dat<-"effort"#
+effsim$type<-"single"
+indmonth
+indmonth<-sim$indmonth
+indmonth
+simvb<-(cbind(data.frame(time=sim$propVBarea[,1],#
+  area=sim$propVBarea[,2],#
+  type="single"),#
+  sim$propVBarea[,3:ncol(sim$propVBarea)]))#
+names(simvb)[4:ncol(simvb)]<-paste("A",sim$sage:sim$nage, sep="")#
+#
+head(simvb)#
+molsimvb<-melt(simvb, id.vars=list("area", "time", "type"))#
+head(molsimvb)#
+names(sim_gtg)#
+#
+gtgvb<-cbind(data.frame(time=sim_gtg$propVBarea[,1],#
+  group=sim_gtg$propVBarea[,2],#
+  area=sim_gtg$propVBarea[,3],  #
+  type="multiple"),#
+  sim_gtg$propVBarea[,4:ncol(sim_gtg$propVBarea)])#
+#
+names(gtgvb)[5:ncol(gtgvb)]<-paste("A",sim_gtg$sage:sim_gtg$nage, sep="")#
+head(gtgvb)#
+#
+ngtgvb<-aggregate(gtgvb[,5:ncol(gtgvb)], by=list(gtgvb$time,gtgvb$area,gtgvb$type), sum)#
+#
+head(ngtgvb)
+names(ngtgvb)[1]<-"time"#
+names(ngtgvb)[2]<-"area"#
+names(ngtgvb)[3]<-"type"#
+#
+molgtgvb<-melt(ngtgvb, id.vars=list("area", "time", "type"))#
+head(molgtgvb)#
+#
+df1<-rbind(molgtgvb,molsimvb)#
+#
+df2<-df1[df1$variable=="A1"|df1$variable=="A5",]
+df2$time2<-meses[indmonth[df2$time]]#
+#
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+df2<-arrange(transform(df2,Month=factor(time,levels=meses)),Month)#
+#
+df2$age<-as.factor(as.numeric(df2$variable))#
+#df2$values<-df2$value#/max(df2$value)#
+df2$values<-df2$value/max(df2$value)
+names(sim)#
+#
+dim(sim$Effarea)#
+head(sim$Effarea)#
+#
+effsim<-melt(sim$Effarea)#
+#
+summary(effsim)#
+#
+names(effsim)[1]<-"time"#
+names(effsim)[2]<-"area"#
+names(effsim)[3]<-"values"#
+#
+summary(effsim)#
+#
+effsim$area<-as.numeric(effsim$area)+29#
+summary(effsim$area)#
+effsim$dat<-"effort"#
+effsim$type<-"single"
+effgtg<-melt(sim_gtg$Effarea)#
+names(effgtg)[1]<-"time"#
+names(effgtg)[2]<-"area"#
+names(effgtg)[3]<-"values"
+effgtg$area<-as.numeric(effgtg$area)+29#
+effgtg$dat<-"effort"#
+effgtg$type<-"multiple"#
+#
+summary(effgtg)#
+Eff<-rbind(effsim,effgtg)#
+Eff<-Eff[Eff$time>1188,]#
+#
+Eff$time2<-meses[indmonth[Eff$time]]#
+Eff$values<-Eff$values/max(Eff$values)
+Eff<-arrange(transform(Eff,Month=factor(time2,levels=meses)),Month)#
+summary(Eff)#
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=type, lty=age),alpha=0.8, size=1.)#
+p<-p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),alpha=0.8,stat = "identity", position=position_dodge())#
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p <- p + scale_color_grey("model") + scale_fill_grey("model")#
+p <- p + scale_linetype_manual(breaks=c("1","5"), values=c(3,1))#
+p <- p + ylab("Relative Biomass/Effort")#
+p <- p + xlab("Latitude (areas)")#
+p
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")#
+names(sim)#
+dim(sim$propVBarea)#
+head(sim$propVBarea)
+indmonth<-sim$indmonth#
+#
+simvb<-(cbind(data.frame(time=sim$propVBarea[,1],#
+  area=sim$propVBarea[,2],#
+  type="single"),#
+  sim$propVBarea[,3:ncol(sim$propVBarea)]))#
+names(simvb)[4:ncol(simvb)]<-paste("A",sim$sage:sim$nage, sep="")#
+#
+head(simvb)#
+molsimvb<-melt(simvb, id.vars=list("area", "time", "type"))#
+head(molsimvb)#
+names(sim_gtg)#
+#
+gtgvb<-cbind(data.frame(time=sim_gtg$propVBarea[,1],#
+  group=sim_gtg$propVBarea[,2],#
+  area=sim_gtg$propVBarea[,3],  #
+  type="multiple"),#
+  sim_gtg$propVBarea[,4:ncol(sim_gtg$propVBarea)])#
+#
+names(gtgvb)[5:ncol(gtgvb)]<-paste("A",sim_gtg$sage:sim_gtg$nage, sep="")#
+head(gtgvb)
+ngtgvb<-aggregate(gtgvb[,5:ncol(gtgvb)], by=list(gtgvb$time,gtgvb$area,gtgvb$type), sum)#
+#
+head(ngtgvb)
+names(ngtgvb)[1]<-"time"#
+names(ngtgvb)[2]<-"area"#
+names(ngtgvb)[3]<-"type"
+molgtgvb<-melt(ngtgvb, id.vars=list("area", "time", "type"))#
+head(molgtgvb)#
+#
+df1<-rbind(molgtgvb,molsimvb)#
+#
+df2<-df1[df1$variable=="A1"|df1$variable=="A5",]#
+#
+df2$time2<-meses[indmonth[df2$time]]
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+df2<-arrange(transform(df2,Month=factor(time,levels=meses)),Month)#
+#
+df2$age<-as.factor(as.numeric(df2$variable))#
+#df2$values<-df2$value#/max(df2$value)#
+df2$values<-df2$value/max(df2$value)
+names(sim)
+dim(sim$Effarea)#
+head(sim$Effarea)
+effsim<-melt(sim$Effarea)
+summary(effsim)#
+#
+names(effsim)[1]<-"time"#
+names(effsim)[2]<-"area"#
+names(effsim)[3]<-"values"#
+#
+summary(effsim)#
+#
+effsim$area<-as.numeric(effsim$area)+29#
+summary(effsim$area)#
+effsim$dat<-"effort"#
+effsim$type<-"single"
+effgtg<-melt(sim_gtg$Effarea)#
+names(effgtg)[1]<-"time"#
+names(effgtg)[2]<-"area"#
+names(effgtg)[3]<-"values"#
+effgtg$area<-as.numeric(effgtg$area)+29#
+effgtg$dat<-"effort"#
+effgtg$type<-"multiple"#
+#
+summary(effgtg)#
+Eff<-rbind(effsim,effgtg)#
+Eff<-Eff[Eff$time>1188,]#
+#
+Eff$time2<-meses[indmonth[Eff$time]]#
+Eff$values<-Eff$values/max(Eff$values)#
+#
+Eff<-arrange(transform(Eff,Month=factor(time2,levels=meses)),Month)#
+summary(Eff)
+sumamry(df2)
+summary(df2)
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=type, lty=age),alpha=0.8, size=1.)#
+p<-p+facet_wrap(~Month, ncol =3)#
+p
+df1<-rbind(molgtgvb,molsimvb)#
+#
+df2<-df1[df1$variable=="A1"|df1$variable=="A5",]#
+#
+df2$time2<-meses[indmonth[df2$time]]#
+#
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+df2<-arrange(transform(df2,Month=factor(time2,levels=meses)),Month)#
+#
+df2$age<-as.factor(as.numeric(df2$variable))#
+#df2$values<-df2$value#/max(df2$value)#
+df2$values<-df2$value/max(df2$value)
+summary(df2)
+head(df2)
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=type, lty=age),alpha=0.8, size=1.)#
+p<-p+facet_wrap(~Month, ncol =3)#
+p
+library(ggplot2)#
+library(reshape2)#
+library(animation)#
+library(ggmap)#
+library(plyr)#
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+sim <- read.rep("../admb/OM/simple/lagrangian_OM.rep")#
+sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")#
+#
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")#
+names(sim)#
+dim(sim$propVBarea)#
+head(sim$propVBarea)#
+indmonth<-sim$indmonth#
+#
+simvb<-(cbind(data.frame(time=sim$propVBarea[,1],#
+  area=sim$propVBarea[,2],#
+  type="single"),#
+  sim$propVBarea[,3:ncol(sim$propVBarea)]))#
+names(simvb)[4:ncol(simvb)]<-paste("A",sim$sage:sim$nage, sep="")#
+#
+head(simvb)#
+molsimvb<-melt(simvb, id.vars=list("area", "time", "type"))#
+head(molsimvb)#
+names(sim_gtg)#
+#
+gtgvb<-cbind(data.frame(time=sim_gtg$propVBarea[,1],#
+  group=sim_gtg$propVBarea[,2],#
+  area=sim_gtg$propVBarea[,3],  #
+  type="multiple"),#
+  sim_gtg$propVBarea[,4:ncol(sim_gtg$propVBarea)])#
+#
+names(gtgvb)[5:ncol(gtgvb)]<-paste("A",sim_gtg$sage:sim_gtg$nage, sep="")#
+head(gtgvb)#
+#
+ngtgvb<-aggregate(gtgvb[,5:ncol(gtgvb)], by=list(gtgvb$time,gtgvb$area,gtgvb$type), sum)#
+#
+head(ngtgvb)#
+#
+names(ngtgvb)[1]<-"time"#
+names(ngtgvb)[2]<-"area"#
+names(ngtgvb)[3]<-"type"#
+#
+molgtgvb<-melt(ngtgvb, id.vars=list("area", "time", "type"))#
+head(molgtgvb)#
+#
+df1<-rbind(molgtgvb,molsimvb)#
+#
+df2<-df1[df1$variable=="A1"|df1$variable=="A5",]#
+#
+df2$time2<-meses[indmonth[df2$time]]#
+#
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+df2<-arrange(transform(df2,Month=factor(time2,levels=meses)),Month)#
+#
+df2$age<-as.factor(as.numeric(df2$variable))#
+#df2$values<-df2$value#/max(df2$value)#
+df2$values<-df2$value/max(df2$value)
+names(sim)#
+#
+dim(sim$Effarea)#
+head(sim$Effarea)#
+#
+effsim<-melt(sim$Effarea)#
+#
+summary(effsim)#
+#
+names(effsim)[1]<-"time"#
+names(effsim)[2]<-"area"#
+names(effsim)[3]<-"values"#
+#
+summary(effsim)#
+#
+effsim$area<-as.numeric(effsim$area)+29#
+summary(effsim$area)#
+effsim$dat<-"effort"#
+effsim$type<-"single"#
+summary(df2)#
+head(df2)#
+p<-ggplot(df2, aes(x=area,y=values))#
+p<-p+geom_line(aes(color=type, lty=age),alpha=0.8, size=1.)#
+p<-p+facet_wrap(~Month, ncol =3)#
+p
+df1<-rbind(molgtgvb,molsimvb)
+df2$time2<-meses[indmonth[df2$time]]
+df2<-df2[df2$time>1188,]
+summary(df2)
+df2<-arrange(transform(df2,Month=factor(time2,levels=meses)),Month)
+df2$age<-as.factor(as.numeric(df2$variable))
+df2$values<-df2$value/max(df2$value)
+p <- ggplot(df2, aes(x=area,y=values))#
+p <- p+geom_line(aes(color=type, lty=age),alpha=0.8, size=1.)#
+p <- p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p <- p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p
+df1<-rbind(molgtgvb,molsimvb)
+df2<-molsimvb#
+#
+df2$time2<-meses[indmonth[df2$time]]#
+#
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+df2<-arrange(transform(df2,Month=factor(time2,levels=meses)),Month)#
+#
+df2$age<-as.factor(as.numeric(df2$variable))#
+#df2$values<-df2$value#/max(df2$value)#
+df2$values<-df2$value/max(df2$value)#
+p <- ggplot(df2, aes(x=area,y=values))#
+p <- p+geom_line(aes(color=type, lty=age),alpha=0.8, size=1.)#
+p <- p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p <- p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p
+p <- ggplot(df2, aes(x=area,y=values))#
+p <- p+geom_line(aes(color=age, lty=type),alpha=0.8, size=1.)#
+p <- p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p <- p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p
+summary(df2)
+?aggregate
+df3<- aggregate(df2, by=list(df2$age),sum)
+aggregate(df2values, by=list(df2$age),sum)
+aggregate(df2$values, by=list(df2$age),sum)
+df3<- aggregate(df2$values, by=list(df2$age, df2$Month,df2$area),sum)
+df3
+p <- ggplot(df3, aes(x=area,y=values))#
+p <- p+geom_line(aes(color=age, lty=type),alpha=0.8, size=1.)#
+p <- p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p <- p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p
+p <- ggplot(df3, aes(x=area,y=values))
+p <- p+geom_line(aes(color=age, lty=type),alpha=0.8, size=1.)
+p
+p <- ggplot(df3, aes(x=area,y=values))#
+p <- p+geom_line(aes(),alpha=0.8, size=1.)#
+p
+head(df3)
+df3<- aggregate(df2$values, by=list(age=df2$age, Month=df2$Month,area=df2$area),sum)
+head(df3)
+p <- ggplot(df3, aes(x=area,y=values))#
+p <- p+geom_line(aes(),alpha=0.8, size=1.)#
+p <- p+facet_wrap(~Month, ncol =3)#
+p
+p <- ggplot(df3, aes(x=area,y=x))#
+p <- p+geom_line(aes(),alpha=0.8, size=1.)#
+p <- p+facet_wrap(~Month, ncol =3)#
+p
+summary(df3)
+df2$time2<-meses[indmonth[df2$time]]#
+#
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+df2<-arrange(transform(df2,Month=factor(time2,levels=meses)),Month)#
+#
+df2$age<-as.factor(as.numeric(df2$variable))#
+#df2$values<-df2$value#/max(df2$value)#
+df2$values<-df2$value/max(df2$value)#
+#
+summary(df2)#
+#
+df3<- aggregate(df2$values, by=list(age=df2$age, Month=df2$Month,area=df2$area),sum)#
+#
+summary(df3)
+df3<- aggregate(df2$values, by=list( Month=df2$Month,area=df2$area),sum)#
+#
+summary(df3)
+p <- ggplot(df3, aes(x=area,y=x))#
+p <- p+geom_line(aes(),alpha=0.8, size=1.)#
+p <- p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p <- p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p
+df2<-df1[df1$variable=="A1"|df1$variable=="A5",]
+df2<-df1[df1$variable=="A1"|df1$variable=="A5",]
+df2$time2<-meses[indmonth[df2$time]]#
+#
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+df2<-arrange(transform(df2,Month=factor(time2,levels=meses)),Month)#
+#
+df2$age<-as.factor(as.numeric(df2$variable))#
+#df2$values<-df2$value#/max(df2$value)#
+df2$values<-df2$value/max(df2$value)#
+#
+summary(df2)#
+#
+df3<- aggregate(df2$values, by=list( Month=df2$Month,area=df2$area, df2$type),sum)#
+#
+summary(df3)
+p <- ggplot(df3, aes(x=area,y=x))#
+p <- p+geom_line(aes(color=type),alpha=0.8, size=1.)#
+p <- p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p <- p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p
+df3<- aggregate(df2$values, by=list( Month=df2$Month,area=df2$area, type=df2$type),sum)#
+#
+summary(df3)#
+#
+?aggregate#
+p <- ggplot(df3, aes(x=area,y=x))#
+p <- p+geom_line(aes(color=type),alpha=0.8, size=1.)#
+p <- p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p <- p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p
+library(ggplot2)#
+library(reshape2)#
+library(animation)#
+library(ggmap)#
+library(plyr)#
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+sim <- read.rep("../admb/OM/simple/lagrangian_OM.rep")#
+sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")#
+#
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")#
+names(sim)#
+dim(sim$propVBarea)#
+head(sim$propVBarea)#
+indmonth<-sim$indmonth#
+#
+simvb<-(cbind(data.frame(time=sim$propVBarea[,1],#
+  area=sim$propVBarea[,2],#
+  type="single"),#
+  sim$propVBarea[,3:ncol(sim$propVBarea)]))#
+names(simvb)[4:ncol(simvb)]<-paste("A",sim$sage:sim$nage, sep="")#
+#
+head(simvb)#
+molsimvb<-melt(simvb, id.vars=list("area", "time", "type"))#
+head(molsimvb)#
+names(sim_gtg)#
+#
+gtgvb<-cbind(data.frame(time=sim_gtg$propVBarea[,1],#
+  group=sim_gtg$propVBarea[,2],#
+  area=sim_gtg$propVBarea[,3],  #
+  type="multiple"),#
+  sim_gtg$propVBarea[,4:ncol(sim_gtg$propVBarea)])#
+#
+names(gtgvb)[5:ncol(gtgvb)]<-paste("A",sim_gtg$sage:sim_gtg$nage, sep="")#
+head(gtgvb)#
+#
+ngtgvb<-aggregate(gtgvb[,5:ncol(gtgvb)], by=list(gtgvb$time,gtgvb$area,gtgvb$type), sum)#
+#
+head(ngtgvb)#
+#
+names(ngtgvb)[1]<-"time"#
+names(ngtgvb)[2]<-"area"#
+names(ngtgvb)[3]<-"type"#
+#
+molgtgvb<-melt(ngtgvb, id.vars=list("area", "time", "type"))#
+head(molgtgvb)#
+#
+df1<-rbind(molgtgvb,molsimvb)#
+#
+df2<-df1[df1$variable=="A1"|df1$variable=="A5",]#
+#df2<-molsimvb
+df2$time2<-meses[indmonth[df2$time]]#
+#
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+df2<-arrange(transform(df2,Month=factor(time2,levels=meses)),Month)#
+#
+df2$age<-as.factor(as.numeric(df2$variable))#
+#df2$values<-df2$value#/max(df2$value)#
+df2$values<-df2$value/max(df2$value)#
+#
+summary(df2)#
+#
+df3<- aggregate(df2$values, by=list( Month=df2$Month,area=df2$area, type=df2$type),sum)#
+#
+summary(df3)
+p <- ggplot(df3, aes(x=area,y=x))#
+p <- p+geom_line(aes(color=type),alpha=0.8, size=1.)#
+p <- p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p <- p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p
+library(ggplot2)#
+library(reshape2)#
+library(animation)#
+library(ggmap)#
+library(plyr)#
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+sim <- read.rep("../admb/OM/simple/lagrangian_OM.rep")#
+sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")#
+#
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")#
+names(sim)#
+dim(sim$propVBarea)#
+head(sim$propVBarea)#
+indmonth<-sim$indmonth#
+#
+simvb<-(cbind(data.frame(time=sim$propVBarea[,1],#
+  area=sim$propVBarea[,2],#
+  type="single"),#
+  sim$propVBarea[,3:ncol(sim$propVBarea)]))#
+names(simvb)[4:ncol(simvb)]<-paste("A",sim$sage:sim$nage, sep="")#
+#
+head(simvb)#
+molsimvb<-melt(simvb, id.vars=list("area", "time", "type"))#
+head(molsimvb)#
+names(sim_gtg)#
+#
+gtgvb<-cbind(data.frame(time=sim_gtg$propVBarea[,1],#
+  group=sim_gtg$propVBarea[,2],#
+  area=sim_gtg$propVBarea[,3],  #
+  type="multiple"),#
+  sim_gtg$propVBarea[,4:ncol(sim_gtg$propVBarea)])#
+#
+names(gtgvb)[5:ncol(gtgvb)]<-paste("A",sim_gtg$sage:sim_gtg$nage, sep="")#
+head(gtgvb)#
+#
+ngtgvb<-aggregate(gtgvb[,5:ncol(gtgvb)], by=list(gtgvb$time,gtgvb$area,gtgvb$type), sum)#
+#
+head(ngtgvb)#
+#
+names(ngtgvb)[1]<-"time"#
+names(ngtgvb)[2]<-"area"#
+names(ngtgvb)[3]<-"type"#
+#
+molgtgvb<-melt(ngtgvb, id.vars=list("area", "time", "type"))#
+head(molgtgvb)#
+#
+df1<-rbind(molgtgvb,molsimvb)#
+#
+df2<-df1[df1$variable=="A1"|df1$variable=="A5",]#
+#df2<-molsimvb
+df2$time2<-meses[indmonth[df2$time]]#
+#
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+df2<-arrange(transform(df2,Month=factor(time2,levels=meses)),Month)#
+#
+df2$age<-as.factor(as.numeric(df2$variable))#
+#df2$values<-df2$value#/max(df2$value)#
+df2$values<-df2$value/max(df2$value)#
+#
+summary(df2)
+df3<- aggregate(df2$values, by=list( Month=df2$Month,area=df2$area, type=df2$type),sum)#
+#
+summary(df3)#
+#
+?aggregate#
+p <- ggplot(df3, aes(x=area,y=x))#
+p <- p+geom_line(aes(color=type),alpha=0.8, size=1.)#
+p <- p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p <- p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p
+p <- ggplot(df2, aes(x=area,y=values))#
+p <- p+geom_line(aes(color=type, lty=age),alpha=0.8, size=1.)#
+p <- p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p <- p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p
+df1<-rbind(molgtgvb,molsimvb)#
+#
+#df2<-df1[df1$variable=="A1"|df1$variable=="A5",]#
+df2<-df1#
+df2$time2<-meses[indmonth[df2$time]]#
+#
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+df2<-arrange(transform(df2,Month=factor(time2,levels=meses)),Month)#
+#
+df2$age<-as.factor(as.numeric(df2$variable))#
+#df2$values<-df2$value#/max(df2$value)#
+df2$values<-df2$value/max(df2$value)#
+#
+summary(df2)#
+#
+df3<- aggregate(df2$values, by=list( Month=df2$Month,area=df2$area, type=df2$type),sum)#
+#
+summary(df3)#
+#
+?aggregate#
+p <- ggplot(df3, aes(x=area,y=x))#
+p <- p+geom_line(aes(color=type),alpha=0.8, size=1.)#
+p <- p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p <- p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p
+df2<-molgtgvb#
+df2$time2<-meses[indmonth[df2$time]]#
+#
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+df2<-arrange(transform(df2,Month=factor(time2,levels=meses)),Month)#
+#
+df2$age<-as.factor(as.numeric(df2$variable))#
+#df2$values<-df2$value#/max(df2$value)#
+df2$values<-df2$value/max(df2$value)#
+#
+summary(df2)#
+p <- ggplot(df2, aes(x=area,y=x))#
+p <- p+geom_line(aes(color=age),alpha=0.8, size=1.)#
+p <- p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p <- p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p
+p <- ggplot(df2, aes(x=area,y=values))#
+p <- p+geom_line(aes(color=age),alpha=0.8, size=1.)#
+p <- p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p <- p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p
+df2<-molgtgvb#
+df2<-df2[df2$variable!="A20",]#
+#
+df2$time2<-meses[indmonth[df2$time]]#
+#
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+df2<-arrange(transform(df2,Month=factor(time2,levels=meses)),Month)#
+#
+df2$age<-as.factor(as.numeric(df2$variable))#
+#df2$values<-df2$value#/max(df2$value)#
+df2$values<-df2$value/max(df2$value)#
+#
+summary(df2)
+p <- ggplot(df2, aes(x=area,y=values))#
+p <- p+geom_line(aes(color=age),alpha=0.8, size=1.)#
+p <- p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p <- p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p
+df2<-molsimvb#
+df2<-df2[df2$variable!="A20",]#
+#
+df2$time2<-meses[indmonth[df2$time]]#
+#
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+df2<-arrange(transform(df2,Month=factor(time2,levels=meses)),Month)#
+#
+df2$age<-as.factor(as.numeric(df2$variable))#
+#df2$values<-df2$value#/max(df2$value)#
+df2$values<-df2$value/max(df2$value)#
+#
+summary(df2)#
+p <- ggplot(df2, aes(x=area,y=values))#
+p <- p+geom_line(aes(color=age),alpha=0.8, size=1.)#
+p <- p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p <- p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p
+df2<-molsimvb
+df2$time2<-meses[indmonth[df2$time]]#
+#
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+df2<-arrange(transform(df2,Month=factor(time2,levels=meses)),Month)#
+#
+df2$age<-as.factor(as.numeric(df2$variable))#
+#df2$values<-df2$value#/max(df2$value)#
+df2$values<-df2$value/max(df2$value)#
+#
+summary(df2)#
+p <- ggplot(df2, aes(x=area,y=values))#
+p <- p+geom_line(aes(color=age),alpha=0.8, size=1.)#
+p <- p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p <- p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p
+p <- ggplot(df2, aes(x=area,y=values))#
+p <- p+geom_line(aes(color=type, lty=age),alpha=0.8, size=1.)#
+p <- p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p <- p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p
+df2<-df1[df1$variable=="A1"|df1$variable=="A5",]
+df2$time2<-meses[indmonth[df2$time]]#
+#
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+df2<-arrange(transform(df2,Month=factor(time2,levels=meses)),Month)#
+#
+df2$age<-as.factor(as.numeric(df2$variable))#
+#df2$values<-df2$value#/max(df2$value)#
+df2$values<-df2$value/max(df2$value)
+p <- ggplot(df2, aes(x=area,y=values))#
+p <- p+geom_line(aes(color=type, lty=age),alpha=0.8, size=1.)#
+p <- p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p <- p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p
+df2<-df1[df1$variable=="A1"|df1$variable=="A7",]#
+#df2<-df1#
+df2$time2<-meses[indmonth[df2$time]]#
+#
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+df2<-arrange(transform(df2,Month=factor(time2,levels=meses)),Month)#
+#
+df2$age<-as.factor(as.numeric(df2$variable))#
+#df2$values<-df2$value#/max(df2$value)#
+df2$values<-df2$value/max(df2$value)#
+#
+summary(df2)
+p <- ggplot(df2, aes(x=area,y=values))#
+p <- p+geom_line(aes(color=type, lty=age),alpha=0.8, size=1.)#
+p <- p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p <- p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p
+p <- ggplot(df2, aes(x=area,y=values))#
+p <- p+geom_line(aes(color=type, lty=age),alpha=0.8, size=1.)#
+p <- p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p <- p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p <- p + scale_linetype_manual(breaks=c("1","5"), values=c(3,1))#
+p <- p + ylab("Relative Biomass")#
+p <- p + xlab("Latitude (areas)")#
+p
+df1<-rbind(molgtgvb,molsimvb)#
+#
+df2<-df1[df1$variable=="A1"|df1$variable=="A6",]#
+#df2<-df1#
+df2$time2<-meses[indmonth[df2$time]]#
+#
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+df2<-arrange(transform(df2,Month=factor(time2,levels=meses)),Month)#
+#
+df2$age<-as.factor(as.numeric(df2$variable))#
+#df2$values<-df2$value#/max(df2$value)#
+df2$values<-df2$value/max(df2$value)#
+#
+summary(df2)#
+p <- ggplot(df2, aes(x=area,y=values))#
+p <- p+geom_line(aes(color=type, lty=age),alpha=0.8, size=1.)#
+p <- p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p <- p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p <- p + scale_linetype_manual(breaks=c("1","5"), values=c(3,1))#
+p <- p + ylab("Relative Biomass")#
+p <- p + xlab("Latitude (areas)")#
+p
+p <- ggplot(df2, aes(x=area,y=values))#
+p <- p+geom_line(aes(color=type, lty=age),alpha=0.8, size=1.)#
+p <- p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p <- p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+#p <- p + scale_linetype_manual(breaks=c("1","5"), values=c(3,1))#
+p <- p + ylab("Relative Biomass")#
+p <- p + xlab("Latitude (areas)")#
+p
+p <- p + scale_linetype_manual(breaks=c("1","6"), values=c(3,1))
+p
+p <- ggplot(df2, aes(x=area,y=values))#
+p <- p+geom_line(aes(color=type, lty=age),alpha=0.8, size=1.)#
+p <- p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p <- p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+#p <- p + scale_linetype_manual(breaks=c("1","6"), values=c(3,1))#
+p <- p + ylab("Relative Biomass")#
+p <- p + xlab("Latitude (areas)")#
+p
+p <- ggplot(df2, aes(x=area,y=values))#
+p <- p+geom_line(aes(color=type, lty=age),alpha=0.8, size=1.)#
+p <- p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p <- p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p <- p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),alpha=0.8,stat = "identity", position=position_dodge())#
+#p <- p + scale_linetype_manual(breaks=c("1","6"), values=c(3,1))#
+p <- p + ylab("Relative Biomass")#
+p <- p + xlab("Latitude (areas)")#
+p
+df3<- aggregate(df2$values, by=list( Month=df2$Month,area=df2$area, type=df2$type),sum)#
+#
+summary(df3)#
+p <- ggplot(df3, aes(x=area,y=x))#
+p <- p+geom_line(aes(color=type),alpha=0.8, size=1.)#
+p <- p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p <- p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p
+p <- ggplot(df3, aes(x=area,y=x))#
+p <- p+geom_line(aes(color=type),alpha=0.8, size=1.)#
+p <- p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p <- p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p <- p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),alpha=0.8,stat = "identity", position=position_dodge())#
+p
+library(ggplot2)#
+library(reshape2)#
+library(animation)#
+library(ggmap)#
+library(plyr)#
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+sim <- read.rep("../admb/OM/simple/lagrangian_OM.rep")#
+sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")#
+#
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")#
+names(sim)#
+dim(sim$propVBarea)#
+head(sim$propVBarea)#
+indmonth<-sim$indmonth#
+#
+simvb<-(cbind(data.frame(time=sim$propVBarea[,1],#
+  area=sim$propVBarea[,2],#
+  type="single"),#
+  sim$propVBarea[,3:ncol(sim$propVBarea)]))#
+names(simvb)[4:ncol(simvb)]<-paste("A",sim$sage:sim$nage, sep="")#
+#
+head(simvb)#
+molsimvb<-melt(simvb, id.vars=list("area", "time", "type"))#
+head(molsimvb)#
+names(sim_gtg)#
+#
+gtgvb<-cbind(data.frame(time=sim_gtg$propVBarea[,1],#
+  group=sim_gtg$propVBarea[,2],#
+  area=sim_gtg$propVBarea[,3],  #
+  type="multiple"),#
+  sim_gtg$propVBarea[,4:ncol(sim_gtg$propVBarea)])#
+#
+names(gtgvb)[5:ncol(gtgvb)]<-paste("A",sim_gtg$sage:sim_gtg$nage, sep="")#
+head(gtgvb)#
+#
+ngtgvb<-aggregate(gtgvb[,5:ncol(gtgvb)], by=list(gtgvb$time,gtgvb$area,gtgvb$type), sum)#
+#
+head(ngtgvb)#
+#
+names(ngtgvb)[1]<-"time"#
+names(ngtgvb)[2]<-"area"#
+names(ngtgvb)[3]<-"type"#
+#
+molgtgvb<-melt(ngtgvb, id.vars=list("area", "time", "type"))#
+head(molgtgvb)#
+#
+df1<-rbind(molgtgvb,molsimvb)#
+#
+df2<-df1[df1$variable=="A1"|df1$variable=="A6",]#
+#df2<-df1#
+df2$time2<-meses[indmonth[df2$time]]#
+#
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+df2<-arrange(transform(df2,Month=factor(time2,levels=meses)),Month)#
+#
+df2$age<-as.factor(as.numeric(df2$variable))#
+#df2$values<-df2$value#/max(df2$value)#
+df2$values<-df2$value/max(df2$value)#
+#
+summary(df2)#
+p <- ggplot(df2, aes(x=area,y=values))#
+p <- p+geom_line(aes(color=type, lty=age),alpha=0.8, size=1.)#
+p <- p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p <- p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+#p <- p + scale_linetype_manual(breaks=c("1","6"), values=c(3,1))#
+p <- p + ylab("Relative Biomass")#
+p <- p + xlab("Latitude (areas)")#
+p
+p <- ggplot(df2, aes(x=area,y=values))#
+p <- p+geom_line(aes(color=type, lty=age),alpha=0.8, size=1.)#
+p <- p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p <- p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+#p <- p + scale_linetype_manual(breaks=c("1","6"), values=c(3,1))#
+p <- p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),alpha=0.8,stat = "identity", position=position_dodge())#
+#
+p <- p + ylab("Relative Biomass")#
+p <- p + xlab("Latitude (areas)")#
+p
+df3<- aggregate(df2$values, by=list( Month=df2$Month,area=df2$area, type=df2$type),sum)#
+#
+summary(df3)#
+p <- ggplot(df3, aes(x=area,y=x))#
+p <- p+geom_line(aes(color=type),alpha=0.8, size=1.)#
+p <- p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p <- p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p <- p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),alpha=0.8,stat = "identity", position=position_dodge())#
+p
+a<-c(.1,.1,.3,.4,.6,.2,.1)
+sum(a)
+sum(a^2)
+a^2/sum(a^2)
+a^1/sum(a^1)
+a
+sum(a^1/sum(a^1))
+sum(a^2/sum(a^2))
+library(ggplot2)#
+library(reshape2)#
+library(animation)#
+library(ggmap)#
+library(plyr)#
+setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+source("read.admb.R")#
+#
+sim <- read.rep("../admb/OM/simple/lagrangian_OM.rep")#
+sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")#
+#
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")#
+names(sim)#
+dim(sim$propVBarea)#
+head(sim$propVBarea)#
+indmonth<-sim$indmonth#
+#
+simvb<-(cbind(data.frame(time=sim$propVBarea[,1],#
+  area=sim$propVBarea[,2],#
+  type="single"),#
+  sim$propVBarea[,3:ncol(sim$propVBarea)]))#
+names(simvb)[4:ncol(simvb)]<-paste("A",sim$sage:sim$nage, sep="")#
+#
+head(simvb)#
+molsimvb<-melt(simvb, id.vars=list("area", "time", "type"))#
+head(molsimvb)#
+names(sim_gtg)#
+#
+gtgvb<-cbind(data.frame(time=sim_gtg$propVBarea[,1],#
+  group=sim_gtg$propVBarea[,2],#
+  area=sim_gtg$propVBarea[,3],  #
+  type="multiple"),#
+  sim_gtg$propVBarea[,4:ncol(sim_gtg$propVBarea)])#
+#
+names(gtgvb)[5:ncol(gtgvb)]<-paste("A",sim_gtg$sage:sim_gtg$nage, sep="")#
+head(gtgvb)#
+#
+ngtgvb<-aggregate(gtgvb[,5:ncol(gtgvb)], by=list(gtgvb$time,gtgvb$area,gtgvb$type), sum)#
+#
+head(ngtgvb)#
+#
+names(ngtgvb)[1]<-"time"#
+names(ngtgvb)[2]<-"area"#
+names(ngtgvb)[3]<-"type"#
+#
+molgtgvb<-melt(ngtgvb, id.vars=list("area", "time", "type"))#
+head(molgtgvb)#
+#
+df1<-rbind(molgtgvb,molsimvb)#
+#
+df2<-df1[df1$variable=="A1"|df1$variable=="A6",]#
+#df2<-df1#
+df2$time2<-meses[indmonth[df2$time]]#
+#
+df2<-df2[df2$time>1188,]#
+summary(df2)#
+df2<-arrange(transform(df2,Month=factor(time2,levels=meses)),Month)#
+#
+df2$age<-as.factor(as.numeric(df2$variable))#
+#df2$values<-df2$value#/max(df2$value)#
+df2$values<-df2$value/max(df2$value)#
+#
+summary(df2)#
+p <- ggplot(df2, aes(x=area,y=values))#
+p <- p+geom_line(aes(color=type, lty=age),alpha=0.8, size=1.)#
+p <- p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p <- p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+#p <- p + scale_linetype_manual(breaks=c("1","6"), values=c(3,1))#
+p <- p + ylab("Relative Biomass")#
+p <- p + xlab("Latitude (areas)")#
+p
+p <- ggplot(df2, aes(x=area,y=values))#
+p <- p+geom_line(aes(color=type, lty=age),alpha=0.8, size=1.)#
+p <- p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p <- p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+#p <- p + scale_linetype_manual(breaks=c("1","6"), values=c(3,1))#
+p <- p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),alpha=0.8,stat = "identity", position=position_dodge())#
+#
+p <- p + ylab("Relative Biomass")#
+p <- p + xlab("Latitude (areas)")#
+p
+df3<- aggregate(df2$values, by=list( Month=df2$Month,area=df2$area, type=df2$type),sum)#
+#
+summary(df3)#
+p <- ggplot(df3, aes(x=area,y=x))#
+p <- p+geom_line(aes(color=type),alpha=0.8, size=1.)#
+p <- p+facet_wrap(~Month, ncol =3)#
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)#
+p <- p+ theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks = element_blank())#
+p <- p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),alpha=0.8,stat = "identity", position=position_dodge())#
+p
+names(sim)
+dim(sim$Effarea)
+head(sim$Effarea)
