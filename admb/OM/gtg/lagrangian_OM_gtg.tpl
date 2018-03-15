@@ -717,13 +717,13 @@ FUNCTION void calc_effarea(const int& ii,const int& ia)
 
 	for(int r= sarea; r<=narea; r++)
 	{
-		//if(sum(yCatchNatAge(indyr(ii))(indnatarea(r))(sage,nage))<ctlim(indnatarea(r))){
+		if(tVBarea(ii)(r)>0){
 			tmp1(r)= (pow(tVBarea(ii)(r),fbeta)/(totVBnation(ii)(indnatarea(r)))) * effPwr(r);
 			tmp2(r) = tmp1(r)*TotEffyear(indfisharea(r))(indyr(ia));
 			Effarea(ii)(r) = tmp2(r)*TotEffmonth(indfisharea(r))(indmonth(ii));
-		//}else{
-		//	Effarea(ii)(r) = 0.0;
-		//}
+		}else{
+			Effarea(ii)(r) = 0.0;
+		}
 	}
 	//cout<<"Ok after calc_effarea"<<endl;
 

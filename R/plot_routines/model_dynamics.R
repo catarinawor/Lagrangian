@@ -51,9 +51,9 @@ head(Xplot)
 head(sim_gtg$propVBarea)
 
 (sim_gtg$SB)
-sim_gtg$propVBarea[1:2400,1:3]
+tail(sim_gtg$propVBarea)
 
-tmpXplotgtg<-data.frame(sim_gtg$propVBarea[sim_gtg$propVBarea[,1]>( calc_numbers_at_age),])
+tmpXplotgtg<-data.frame(sim_gtg$propVBarea[sim_gtg$propVBarea[,1]>1188,])
 
 tmpXplotgtg[,1]<-meses[tmpXplotgtg[,1]-(max(sim_gtg$propVBarea[,1])-12)]
 tmpXplotgtg<-rename(tmpXplotgtg, c("V1"="month", "V2"="group", "V3"= "Latitude","V4"="1", "V5"="2", "V6"= "3",
@@ -126,8 +126,27 @@ p <- p + ylab("Biomass")
 p <- p + scale_linetype_manual(breaks=c(as.factor(1:20),"0","-1"), values=c(5,1,rep(1,20)))
 p <- p + scale_colour_grey(start = 0.6, end = 0.1) +guides(lty=FALSE)
 p
-setwd("/Users/catarinawor/Documents/hake/Lag_Model_paper")
-ggsave(file="Figure1.pdf")
+#setwd("/Users/catarinawor/Documents/hake/Lag_Model_paper")
+#ggsave(file="Figure1.pdf")
+
+#presentation version
+
+p <- ggplot(dfalljul) 
+p <- p + geom_line(aes(x=Latitude, y=value, lty=group, colour=model),size=1.2)
+p <- p + geom_vline(xintercept=48.5, linetype=3)
+#p <- p + facet_wrap(~month,ncol=4)
+p <- p + theme_bw(18)+theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),axis.ticks.y = element_blank(),
+        axis.text=element_text(size=18,face="bold"),axis.title=element_text(size=18,face="bold"),
+         legend.text=element_text(size=18,face="bold"), legend.title=element_text(size=18,face="bold")) 
+p <- p + ylab("Biomass")
+p <- p + scale_linetype_manual(breaks=c(as.factor(1:20),"0","-1"), values=c(5,1,rep(1,20)))
+p <- p + scale_colour_brewer(palette="Dark2") +guides(lty=FALSE)
+p <- p + annotate("text", x = 54, y = 0.045, label = "Canada", fontface =2, size= theme_get()$text[["size"]]/2)
+p <- p + annotate("text", x = 44, y = 0.045, label = "U.S.A.", fontface =2, size= theme_get()$text[["size"]]/2)
+p
+
+
 
 ############need to run with  effort ############
 
@@ -139,6 +158,9 @@ sim <- read.rep("../admb/OM/simple/lagrangian_OM.rep")
 sim_gtg <- read.rep("../admb/OM/gtg/lagrangian_OM_gtg.rep")
 
 meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+
+indmonth<-sim$indmonth
+
 names(sim)
 dim(sim$propVBarea)
 head(sim$propVBarea)
@@ -266,8 +288,54 @@ p <- p + scale_linetype_manual(breaks=c("1","5"), values=c(3,1))
 p <- p + ylab("Relative Biomass/Effort")
 p <- p + xlab("Latitude (areas)")
 p
-setwd("/Users/catarinawor/Documents/hake/Lag_Model_paper")
-ggsave(file="Figure2.pdf")
+#setwd("/Users/catarinawor/Documents/hake/Lag_Model_paper")
+#ggsave(file="Figure2.pdf")
 
 ?geom_bar
 
+#presentation version
+
+
+#no effort
+
+df3<-df2[df2$Month=="Jan"|df2$Month=="Apr"|df2$Month=="Jul"|df2$Month=="Oct",]
+
+
+p<-ggplot(df3, aes(x=area,y=values))
+p<-p+geom_line(aes(color=type, lty=age),alpha=0.8, size=1.)
+p <- p + annotate("text", x = 54, y = 0.85, label = "Canada", fontface =2, size= theme_get()$text[["size"]]/2)
+p <- p + annotate("text", x = 44, y = 0.85, label = "U.S.A.", fontface =2, size= theme_get()$text[["size"]]/2)
+p<-p+facet_wrap(~Month, ncol =2)
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)
+#p<-p+ geom_bar(data=Eff,aes(x=area,y=values,fill=type),alpha=0.8,stat = "identity", position=position_dodge())
+p<-p+ theme_bw(18)+theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),axis.ticks = element_blank(),
+        axis.text=element_text(size=18,face="bold"),axis.title=element_text(size=18,face="bold"),
+         legend.text=element_text(size=18,face="bold"), legend.title=element_text(size=18,face="bold"))
+p <- p + scale_color_brewer(palette="Dark2") + scale_fill_brewer(palette="Dark2")
+p <- p + scale_linetype_manual(breaks=c("1","5"), values=c(3,1))
+p <- p + ylab("Relative Biomass/Effort")
+p <- p + xlab("Latitude (areas)")
+p
+
+
+head(Eff)
+Eff3<-Eff[Eff$time2=="Jan"|Eff$time2=="Apr"|Eff$time2=="Jul"|Eff$time2=="Oct",]
+
+
+p<-ggplot(df3, aes(x=area,y=values))
+p<-p+geom_line(aes(color=type, lty=age),alpha=0.8, size=1.)
+p <- p + annotate("text", x = 54, y = 0.85, label = "Canada", fontface =2, size= theme_get()$text[["size"]]/2)
+p <- p + annotate("text", x = 44, y = 0.85, label = "U.S.A.", fontface =2, size= theme_get()$text[["size"]]/2)
+p<-p+facet_wrap(~Month, ncol =2)
+p <- p + geom_vline(aes(xintercept=49), linetype=3,alpha=0.8)
+p<-p+ geom_bar(data=Eff3,aes(x=area,y=values,fill=type),alpha=0.8,stat = "identity", position=position_dodge())
+p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),axis.ticks = element_blank(),
+        axis.text=element_text(size=18,face="bold"),axis.title=element_text(size=18,face="bold"),
+         legend.text=element_text(size=18,face="bold"), legend.title=element_text(size=18,face="bold"))
+p <- p + scale_color_brewer(palette="Dark2") + scale_fill_brewer(palette="Dark2")
+p <- p + scale_linetype_manual(breaks=c("1","5"), values=c(3,1))
+p <- p + ylab("Relative Biomass/Effort")
+p <- p + xlab("Latitude (areas)")
+p
