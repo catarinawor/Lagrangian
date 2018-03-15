@@ -41,4 +41,26 @@ arrows(19,60.5,19,45,length=0.0,lwd=3,col="gray50")
 text(x=19.1, y = 61.5, labels = expression(paste("X"[max])), font=2,cex=1.5)
 dev.off()
 
-?text
+
+meses<-c("Jan", "Feb", "Mar", "Apr","May", "Jun","Jul","Aug","Sep", "Oct","Nov", "Dec")
+
+
+
+par(bty="l",yaxs="i",las=1, mar=c(7.1, 5.1, 3.1, 3.1))
+plot(x,y,type="l", ylab=" ", xlab="",lwd=3,
+	ylim=c(28,64),axes=FALSE)
+mtext("X spatial gradient", side=2,las=0, font=2,cex=2, line=3)
+axis(1,pos=30,xaxp=c(1,24,23),hadj=.1, labels=rep(meses,2), at=1:24, cex.axis=2, font=2)
+mtext("Time", side = 1, line = 3, outer = FALSE, at = NA,
+      adj = NA, padj = NA, cex = 2, font = 2)
+#text(x=23.5, y = 46, labels = "Time", font=2,cex=1.5)
+axis(2,pos=1,font=2,cex.axis=2,at=seq(30,60,5))
+arrows(x[length(x)-1],y[length(x)-1],x[length(x)]
+     ,y[length(x)],length=0.1,lwd=3,xaxp=c(1,24,23))
+arrows(7,60.5,7,58.,length=0.0,lwd=3,col="gray50")
+text(x=7.1, y = 61.9, labels = expression(paste("X"[max])), font=2,cex=2.5)
+arrows(13,30,13,31,length=0.0,lwd=3,col="gray50")
+text(x=13.1, y = 33, labels = expression(paste("X"[min])), font=2,cex=2.5)
+arrows(19,60.5,19,58.,length=0.0,lwd=3,col="gray50")
+text(x=19.1, y = 61.9, labels = expression(paste("X"[max])), font=2,cex=2.5)
+
