@@ -315,7 +315,7 @@ p<-p+ theme_bw(18)+theme(panel.grid.major = element_blank(),
 p <- p + scale_color_brewer(palette="Dark2") + scale_fill_brewer(palette="Dark2")
 p <- p + scale_linetype_manual(breaks=c("1","5"), values=c(3,1))
 p <- p + ylab("Relative Biomass/Effort")
-p <- p + xlab("Latitude (areas)")
+p <- p + xlab("Latitude")
 p
 
 
@@ -337,5 +337,5 @@ p<-p+ theme_bw(16)+theme(panel.grid.major = element_blank(),
 p <- p + scale_color_brewer(palette="Dark2") + scale_fill_brewer(palette="Dark2")
 p <- p + scale_linetype_manual(breaks=c("1","5"), values=c(3,1))
 p <- p + ylab("Relative Biomass/Effort")
-p <- p + xlab("Latitude (areas)")
+p <- p + xlab("Latitude")
 p
