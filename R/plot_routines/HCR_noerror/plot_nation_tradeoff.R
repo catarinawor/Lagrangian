@@ -145,9 +145,14 @@ plot_tradeoff <- function( M1 ,M2,M3, Msq1,Msq2,Msq3, sv=F, nome="",nations=F)
 	dfa$nt2tf<- -999
 	dfa$nt2tf[which(dfa$slope=="40:10")]<-dfa$utility_nat2[which(dfa$slope=="40:10")]
 
-	dfa$scn<-"Base case movement"
-	dfa$scn[dfa$scenario==2]<-"early movement"
-	dfa$scn[dfa$scenario==3]<-"late movement"
+	#dfa$scn<-"Base case movement"
+	#dfa$scn[dfa$scenario==2]<-"early movement"
+	#dfa$scn[dfa$scenario==3]<-"late movement"
+
+	dfa$scn<-"no strong recruitment"
+	dfa$scn[dfa$scenario==2]<-"one strong recruitment"
+	dfa$scn[dfa$scenario==3]<-"two strong recruitments"
+
 
 	dfa$b40tf<- -999
 	dfa$b40tf[dfa$slope=="40:10"]<-dfa$b40[which(dfa$slope=="40:10")]
@@ -155,7 +160,7 @@ plot_tradeoff <- function( M1 ,M2,M3, Msq1,Msq2,Msq3, sv=F, nome="",nations=F)
 summary(dfa)
 
 	dfc<-dfa[dfa$intercept_hcr<0.4|dfa$intercept_hcr>2,] 
-	dfcr<-dfc
+	dfcr<-dfc[dfc$slope_hcr<0.5|dfc$slope_hcr>2,] 
 	summary(dfcr)
 
 	dfcr$slope<-as.factor(dfcr$slope)
@@ -183,6 +188,45 @@ summary(dfa)
 	dfcr<-dfcr[order(dfcr$intercept),]
 
 	dft<-dfcr[dfcr$slope_hcr==999,]
+
+	summary(dfcr)
+
+	#presentation version
+	p<-ggplot(dfcr)
+	p<-p+geom_path(aes(y=utility_nat2_sc,x=utility_nat1_sc,color=slope),size=1.5)
+	p<-p+geom_point(aes(y=utility_nat2_sc,x=utility_nat1_sc,color=slope, shape=intercept),size=8,alpha=.6)
+	p<-p+ geom_text(data=dft,aes(y=dft$utility_nat2_sc,x=dft$utility_nat1_sc,label="40:10"),fontface = "bold",colour="black")				
+	p<-p + facet_wrap(~scn, scales="free")
+	p<-p+ ylab("average log utility -Canada") + xlab("average log yield - U.S.A.")
+	p <- p  + theme_bw(18)+ theme(legend.position = "none")
+	p <- p + guides(color=guide_legend("harvest rate"))
+	p <- p + theme(axis.text = element_text(face="bold", size=18),
+  			axis.title = element_text(face="bold", size=18),
+  			strip.text = element_text(face="bold", size=18))
+	print(p)
+
+	
+
+	p1 <- ggplot(dfcr)
+	p1 <- p1+geom_path(aes(y=yield_nat2_sc,x=yield_nat1_sc,color=slope),size=1.5)
+	p1 <- p1+geom_point(aes(y=yield_nat2_sc,x=yield_nat1_sc,color=slope, shape=intercept),size=8,alpha=.6)
+	p1 <- p1+ geom_text(data=dft,aes(y=dft$yield_nat2_sc,x=dft$yield_nat1_sc,label="40:10"),fontface = "bold",colour="black")				
+	
+	p1 <- p1+facet_wrap(~scn, scales="free")
+	p1 <- p1+ ylab(" average yield - Canada ") + xlab(" average yield - U.S.A.")
+	p1 <- p1  + theme_bw(18)+ theme(legend.position = "bottom")
+	p1 <- p1 + guides(color=guide_legend("harvest rate"), shape=guide_legend("biomass threshold"),size=guide_legend("none"))
+	p1 <- p1 +  theme(axis.text = element_text(face="bold", size=18),
+  			axis.title = element_text(face="bold", size=18),
+  			strip.text = element_text(face="bold", size=18))
+	#p1 <-p1+ geom_text(aes(y=nt2tf,x=nt1tf,label="10:40"),fontface = "bold",colour="black", position = position_nudge(y = -0.02))				
+	#, size=guide_legend("biomass threshold")
+	p1
+
+	pto<-plot_grid(p,p1,nrow=2,rel_heights  = c(1, 1.3))
+	pto
+
+
 
 	p<-ggplot(dfcr)
 	p<-p+geom_path(aes(y=utility_nat2_sc,x=utility_nat1_sc,color=slope))

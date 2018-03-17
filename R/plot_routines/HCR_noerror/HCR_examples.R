@@ -37,23 +37,24 @@ for(i in 1:length(yB)){
 		TAC[i]= 0
 	}
 
-	if(ySB[i]/SBo>intercept2){
+	if((ySB[i]/SBo)>intercept2){
 		TAC2[i]= max(min(slope2*yB[i]*(ySB[i]-SBo*intercept2)/SBo,600),0)
 	}else{
 		TAC2[i]= 0
 	}
 
-	if(ySB[i]/SBo>intercept2){
+	if((ySB[i]/SBo)>intercept2){
 		TAC3[i]= max(min(slope3*yB[i]*(ySB[i]-SBo*intercept3)/SBo,600),0)
 	}else{
 		TAC3[i]= 0
 	}
 
-	if(ySB[i]/SBo>.4){
+	if((ySB[i]/SBo)>.4){
+		print((ySB[i]/SBo))
 		TAC1040[i]= min(utarget*yB[i],600)
 	}else{
-	 	if(ySB[i]/SBo>.1){
-	 		TAC1040[i]=min(((ySB[i]-0.1*SBo)*((0.4/ySB[i])/(0.4-0.1)))* utarget*yB[i],600)
+	 	if((ySB[i]/SBo)>.1){
+	 		TAC1040[i]= min(((ySB[i]-0.1*SBo)*((0.4/ySB[i])/(0.4-0.1)))* utarget*yB[i],600)
 		}else{
 			TAC1040[i]=0
 		}
@@ -71,7 +72,7 @@ lines(ySB/SBo,TAC3, lwd=2, lty=2,col="gray40")
 text(x=0.55,175, labels ="slope = 0.5", adj=0.0,col="gray40",font=2)
 text(x=0.55,200, labels ="intercept = 0.4", adj=0.0,col="gray40",font=2)
 
-lines(yB/SBo,TAC1040, lwd=2, lty=3,col="gray20")
+lines(ySB/SBo,TAC1040, lwd=2, lty=3,col="gray20")
 text(x=0.15,175, labels ="40:10 rule", adj=0.0,col="gray20",font=2)
 
 #dev.off()
@@ -79,21 +80,23 @@ text(x=0.15,175, labels ="40:10 rule", adj=0.0,col="gray20",font=2)
 
 
 
-par(las=1, mar=c(5,5,1,1))
+par(las=1, mar=c(5,5,3,1))
 plot(ySB/SBo,TAC,type="l",lwd=5, xlab= expression(SB[t]/SB[0],font=2),
- col="darkorange2", cex.lab=1.4,cex.axis=1.3,font.lab=2,font.axis=2)
+ col="darkorange2", cex.lab=1.4,cex.axis=1.3,font.lab=2,font.axis=2,
+ main="Harvest control rule examples", cex.main=1.6)
 lines(ySB/SBo,TAC3, lwd=5, lty=2,col="seagreen")
-lines(yB/SBo,TAC1040, lwd=5, lty=1,col="dodgerblue4", cex=1.4)
+lines(ySB/SBo,TAC1040, lwd=5, lty=1,col="dodgerblue4", cex=1.6)
 
-text(x=0.32,75, labels ="ER = 0.2", adj=0.0,font=2, col="darkorange2", cex=1.4)
-text(x=0.32,100, labels ="threshold = 0.0", adj=0.0,font=2, col="darkorange2", cex=1.4)
+text(x=0.33,70, labels ="U = 0.2", adj=0.0,font=2, col="darkorange2", cex=1.5)
+text(x=0.33,100, labels ="threshold = 0.0", adj=0.0,font=2, col="darkorange2", cex=1.6)
 
-text(x=0.55,175, labels ="ER = 0.5", adj=0.0,col="seagreen",font=2, cex=1.4)
-text(x=0.55,200, labels ="threshold = 0.4", adj=0.0,col="seagreen",font=2, cex=1.4)
+text(x=0.55,170, labels ="U = 0.5", adj=0.0,col="seagreen",font=2, cex=1.6)
+text(x=0.55,200, labels ="threshold = 0.4", adj=0.0,col="seagreen",font=2, cex=1.6)
 
-text(x=0.18,175, labels ="40:10 rule", adj=0.0,col="dodgerblue4",font=2, cex=1.4)
+text(x=0.07,175, labels ="40:10 rule", adj=0.0,col="dodgerblue4",font=2, cex=1.6)
 
-
+abline(v=.1)
+abline(v=.4)
 
 
 #lines(ySB/SBo,TAC2, lwd=2,col="gray30")
