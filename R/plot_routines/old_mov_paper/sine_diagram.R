@@ -63,4 +63,4 @@ arrows(13,30,13,31,length=0.0,lwd=3,col="gray50")
 text(x=13.1, y = 33, labels = expression(paste("X"[min])), font=2,cex=2.5)
 arrows(19,60.5,19,58.,length=0.0,lwd=3,col="gray50")
 text(x=19.1, y = 61.9, labels = expression(paste("X"[max])), font=2,cex=2.5)
-
+abline(h=49)

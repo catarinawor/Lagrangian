@@ -197,7 +197,7 @@ summary(dfa)
 	p<-p+geom_point(aes(y=utility_nat2_sc,x=utility_nat1_sc,color=slope, shape=intercept),size=8,alpha=.6)
 	p<-p+ geom_text(data=dft,aes(y=dft$utility_nat2_sc,x=dft$utility_nat1_sc,label="40:10"),fontface = "bold",colour="black")				
 	p<-p + facet_wrap(~scn, scales="free")
-	p<-p+ ylab("average log utility -Canada") + xlab("average log yield - U.S.A.")
+	p<-p+ ylab("average log yield - Canada") + xlab("average log yield - U.S.A.")
 	p <- p  + theme_bw(18)+ theme(legend.position = "none")
 	p <- p + guides(color=guide_legend("harvest rate"))
 	p <- p + theme(axis.text = element_text(face="bold", size=18),
@@ -257,8 +257,11 @@ summary(dfa)
 	
 
 	if(sv==TRUE){
-			setwd("/Users/catarinawor/Documents/Lagrangian/report/manuscript/ICES")
-			ggsave(paste(nome,"tradeoff_nations_mov_scn.pdf",sep=""), plot=pto, width = 11, height = 9)
+			#setwd("/Users/catarinawor/Documents/Lagrangian/report/manuscript/ICES")
+			#ggsave(paste(nome,"tradeoff_nations_mov_scn.pdf",sep=""), plot=pto, width = 11, height = 9)
+			setwd("/Users/catarinawor/Documents/")
+			ggsave(paste("tradeoff.pdf",sep=""), plot=pto, width = 13, height = 10)
+		
 		}
 
 		return(pto)

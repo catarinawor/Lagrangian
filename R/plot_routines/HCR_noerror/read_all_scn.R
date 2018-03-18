@@ -26,6 +26,13 @@ DIRS<-c("/Volumes/Seagate/HCRresult/HCR_linear_nostRec_100",
 		"/Volumes/Seagate/HCRresult/HCR_stquo_twostRec_100"
 )
 
+DIRS<-c("/Volumes/3T_dom_media/Catarina/HCRresult/HCR_linear_nostRec_100",
+		"/Volumes/3T_dom_media/Catarina/HCRresult/HCR_linear_onestRec_100",
+		"/Volumes/3T_dom_media/Catarina/HCRresult/HCR_linear_twostRec_100",
+		"/Volumes/3T_dom_media/Catarina/HCRresult/HCR_stquo_nostRec_100",
+		"/Volumes/3T_dom_media/Catarina/HCRresult/HCR_stquo_onestRec_100",
+		"/Volumes/3T_dom_media/Catarina/HCRresult/HCR_stquo_twostRec_100"
+)
 
 
 
