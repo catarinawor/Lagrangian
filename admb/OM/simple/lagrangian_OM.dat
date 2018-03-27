@@ -50,7 +50,7 @@
 1.0
 #0.4
 #err
-0.0
+1.0
 #linf
 53.2
 #vbk
@@ -60,7 +60,7 @@
 #mo
 1
 #maxPos50
-4.5
+3.0
 #maxPossd
 1.5
 #cv in position by age

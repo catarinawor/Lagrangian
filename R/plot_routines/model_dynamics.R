@@ -302,7 +302,7 @@ df3<-df2[df2$Month=="Jan"|df2$Month=="Apr"|df2$Month=="Jul"|df2$Month=="Oct",]
 
 
 p<-ggplot(df3, aes(x=area,y=values))
-p<-p+geom_line(aes(color=type, lty=age),alpha=0.8, size=1.)
+p<-p+geom_line(aes(color=type, lty=age),alpha=0.8, size=2.)
 p <- p + annotate("text", x = 54, y = 0.85, label = "Canada", fontface =2, size= theme_get()$text[["size"]]/2)
 p <- p + annotate("text", x = 44, y = 0.85, label = "U.S.A.", fontface =2, size= theme_get()$text[["size"]]/2)
 p<-p+facet_wrap(~Month, ncol =2)
@@ -324,7 +324,7 @@ Eff3<-Eff[Eff$time2=="Jan"|Eff$time2=="Apr"|Eff$time2=="Jul"|Eff$time2=="Oct",]
 
 
 p<-ggplot(df3, aes(x=area,y=values))
-p<-p+geom_line(aes(color=type, lty=age),alpha=0.8, size=1.)
+p<-p+geom_line(aes(color=type, lty=age),alpha=0.8, size=2.)
 p <- p + annotate("text", x = 54, y = 0.85, label = "Canada", fontface =2, size= theme_get()$text[["size"]]/2)
 p <- p + annotate("text", x = 44, y = 0.85, label = "U.S.A.", fontface =2, size= theme_get()$text[["size"]]/2)
 p<-p+facet_wrap(~Month, ncol =2)
