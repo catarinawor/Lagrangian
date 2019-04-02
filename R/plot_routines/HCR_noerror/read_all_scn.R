@@ -2,12 +2,14 @@
 # Read in the results from the HCR search - no assessment error
 #Author: Catarina Wor
 #Date: Sep 14 2017
-
+#linear are the linear harvest control rules
+#st quo refers to the 40:10 harvest control rule, currently used in hake management
 #==============================================================
 
 
 library(cowplot)
 
+#DIRS<-"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_nostRec_100"
 
 
 #DIRS<-c("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_nostRec_100",
@@ -18,21 +20,23 @@ library(cowplot)
 #"/Users/catarinawor/Documents/LagrangianHCRresult//HCR_stquo_twostRec_100"
 #)
 
-DIRS<-c("/Volumes/Seagate/HCRresult/HCR_linear_nostRec_100",
-		"/Volumes/Seagate/HCRresult/HCR_linear_onestRec_100",
-		"/Volumes/Seagate/HCRresult/HCR_linear_twostRec_100",
-		"/Volumes/Seagate/HCRresult/HCR_stquo_nostRec_100",
-		"/Volumes/Seagate/HCRresult/HCR_stquo_onestRec_100",
-		"/Volumes/Seagate/HCRresult/HCR_stquo_twostRec_100"
-)
+#DIRS<-c("/Volumes/Seagate/HCRresult/HCR_linear_nostRec_100",
+#		"/Volumes/Seagate/HCRresult/HCR_linear_onestRec_100",
+#		"/Volumes/Seagate/HCRresult/HCR_linear_twostRec_100",
+#		"/Volumes/Seagate/HCRresult/HCR_stquo_nostRec_100",
+#		"/Volumes/Seagate/HCRresult/HCR_stquo_onestRec_100",
+#		"/Volumes/Seagate/HCRresult/HCR_stquo_twostRec_100"
+#)
 
-DIRS<-c("/Volumes/3T_dom_media/Catarina/HCRresult/HCR_linear_nostRec_100",
-		"/Volumes/3T_dom_media/Catarina/HCRresult/HCR_linear_onestRec_100",
-		"/Volumes/3T_dom_media/Catarina/HCRresult/HCR_linear_twostRec_100",
-		"/Volumes/3T_dom_media/Catarina/HCRresult/HCR_stquo_nostRec_100",
-		"/Volumes/3T_dom_media/Catarina/HCRresult/HCR_stquo_onestRec_100",
-		"/Volumes/3T_dom_media/Catarina/HCRresult/HCR_stquo_twostRec_100"
-)
+
+# thesis directories
+#DIRS<-c("/Volumes/3T_dom_media/Catarina/HCRresult/HCR_linear_nostRec_100",
+#		"/Volumes/3T_dom_media/Catarina/HCRresult/HCR_linear_onestRec_100",
+#		"/Volumes/3T_dom_media/Catarina/HCRresult/HCR_linear_twostRec_100",
+#		"/Volumes/3T_dom_media/Catarina/HCRresult/HCR_stquo_nostRec_100",
+#		"/Volumes/3T_dom_media/Catarina/HCRresult/HCR_stquo_onestRec_100",
+#		"/Volumes/3T_dom_media/Catarina/HCRresult/HCR_stquo_twostRec_100"
+#)
 
 
 

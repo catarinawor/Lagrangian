@@ -2,10 +2,8 @@
 # Routine for generating figures for Defense presentation
 # Author: Catarina Wor
 # Feb 2018
+# In Nov 2018 added more figures for the PBS seminar
 #=========================================================================
-
-rm(list=ls()); 
-
 
 source("/Users/catarinawor/Documents/Lagrangian/R/read.admb.R")
 setwd("/Users/catarinawor/Documents/Lagrangian/admb/OM/simple/")
@@ -63,7 +61,7 @@ VBEffareaplot<-cbind(VBEffareaplot,sdvalue)
 
 
 yr<- VBEffareaplot$yr
-basemap<-get_map(location = c(lon = -125, lat = 45),
+basemap<-get_stamenmap(location = c(lon = -125, lat = 45),
     zoom = 5, maptype = "terrain")
 #setwd("/Users/catarinawor/Documents/hake/PICES_conference/presentation/Fbase_anime")
 summary(VBEffareaplot)
@@ -418,4 +416,88 @@ p
 
 setwd("/Users/catarinawor/Documents/Thesis_presentation/Figures")
 ggsave(file="gtg_simple_comp.pdf", plot=p)
+
+
+#====================================================================
+#month by month - (almost all cohorts)
+
+source("/Users/catarinawor/Documents/Lagrangian/R/read.admb.R")
+setwd("/Users/catarinawor/Documents/Lagrangian/admb/OM/simple/")
+sim<-read.rep("lagrangian_OM.rep")
+
+
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+
+
+tmpXplot<-data.frame(sim$propVBarea[sim$propVBarea[,1]>(max(sim$propVBarea[,1])-12),])
+tmpXplot[,1]<-meses[tmpXplot[,1]-(max(sim$propVBarea[,1])-12)]
+tmpXplot<-rename(tmpXplot, c("V1"="month", "V2"= "Latitude","V3"="1", "V4"="2", "V5"= "3",
+  "V6"="4", "V7"="5", "V8"= "6","V9"="7", "V10"="8", "V11"= "9","V12"="10", "V13"="11", "V14"= "12",
+  "V15"="13", "V16"="14", "V17"= "15","V18"="16", "V19"="17", "V20"= "18","V21"="19", "V22"="20"))
+dim(tmpXplot)
+head(tmpXplot)
+
+
+Xplot<-melt(tmpXplot, id=c("month", "Latitude"),variable.name="age")
+Xplot$group<-as.factor(rep(0,length(Xplot$month)))
+Xplot<-arrange(transform(Xplot,month=factor(month,levels=meses)),month)
+aggregate(Xplot$value,list(Xplot$age),sum) 
+
+
+head(Xplot)
+dim(Xplot)
+
+
+
+Xplot10<-Xplot[as.numeric(Xplot$age)%%2==0&as.numeric(Xplot$age)<20,] 
+
+aggregate(Xplot10$value,list(Xplot10$age),sum) 
+
+
+p2 <- ggplot(Xplot10) 
+p2 <- p2 + geom_line(aes(x=Latitude, y=value, colour=age),size=1.8)
+p2 <- p2 + geom_vline(xintercept=48.5, linetype=3,size=1.8)
+p2 <- p2 + facet_wrap(~month,ncol=4)
+p2 <- p2 + theme_bw(18)+theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),axis.ticks.y = element_blank(),
+        axis.text.y=element_blank(),axis.text.x=element_text(face="bold"),
+        axis.title=element_text(face="bold"), strip.text=element_text(face="bold")) 
+p2 <- p2 + ylab("Biomass")
+p2
+ggsave(filename ="age_move.pdf")
+
+#===============================
+#animation version
+
+
+setwd("/Users/catarinawor/Documents/Lagrangian/anime")
+library("animation")
+
+ani.options(ani.dev = "pdf", ani.type = "pdf",ani.width=8, ani.height=6)
+saveLatex(
+#if you don't have latex installed you need to install it or use other function such as saveGIF
+
+for(i in 1:length(meses)){
+
+    Xplotmes<-Xplot10[Xplot10$month==meses[i],]
+
+
+    p2 <- ggplot(Xplotmes) 
+    p2 <- p2 + geom_line(aes(x=Latitude, y=value, colour=age),size=1.8)
+    p2 <- p2 + geom_vline(xintercept=48.5, linetype=3,size=1.8)
+    p2 <- p2 + theme_bw(18)+theme(panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(),axis.ticks.y = element_blank(),
+            axis.text.y=element_blank(),
+            axis.text.x=element_text(face="bold"),axis.title=element_text(face="bold"),
+            plot.title=element_text(face="bold",hjust=.5) )
+    p2 <- p2 + ylab("Biomass") + labs(title=meses[i])
+    print(p2)
+    #ggsave(filename =paste0("Rplot",i,".pdf")) 
+
+
+}
+,
+pdflatex = "/usr/texbin/pdflatex",latex.filename = "movecurve.tex")
+
+
 

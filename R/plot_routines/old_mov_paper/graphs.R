@@ -4,8 +4,6 @@
 # Jun 1st 2015 - updated in November 26th 2015
 #=========================================================================
 
-rm(list=ls()); 
-
 library(plyr)
 library(data.table)
 library(ggplot2)

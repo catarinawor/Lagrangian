@@ -1,1354 +1,3 @@
-length(zero_cam_lakecams)
-length(pos_cam_lakecams)
-imputation_zero_lakecams
-length(imputation_zero_lakecams)
-length(imputation_pos_lakecams)
-false_zero_timeofday
-length(false_zero_timeofday)
-length(zero_cam_timeofday)
-length(pos_cam_timeofday)
-length(imputation_zero_timeofday)
-length(imputation_pos_timeofday)
-length(false_zero$weekend)
-length(zero_cam$weekend)
-length(pos_cam$weekend)
-length(imputation_zero$weekend )
-length(imputation_pos$weekend)
-imputation_zero$lakeyear
-length(imputation_zero$lakeyear)
-length(imputation_pos$cam_count)
-length(n_days_per_lakeyear)
-zero_nobs
-jags_data <- list( n_lyrs   = n_lakeyears,#
-                     nlc      = n_lakecams,#
-                     nzz      = nrow(zero_cam),#
-                     nzc      = zero_cam$n_zero_cam,#
-                     nze      = zero_cam$n_zero_eff,#
-                     nzp      = nrow(false_zero),#
-                     niz      = nrow(imputation_zero),#
-                     nip      = nrow(imputation_pos),#
-                     zp       = false_zero$ground_count,#
-                     npp      = nrow(pos_cam),#
-                     ppc      = pos_cam$cam_count,#
-                     ppe      = pos_cam$ground_count,#
-                     lc_zz    = zero_cam_lakecams,#
-                     lc_zp    = false_zero_lakecams,#
-                     lc_pp    = pos_cam_lakecams,#
-                     lc_iz    = imputation_zero_lakecams,#
-                     lc_ip    = imputation_pos_lakecams,#
-                     tod_zp   = false_zero_timeofday,#
-                     tod_zz   = zero_cam_timeofday,#
-                     tod_pp   = pos_cam_timeofday,#
-                     tod_iz   = imputation_zero_timeofday,#
-                     tod_ip   = imputation_pos_timeofday,#
-                     wknd_zp  = false_zero$weekend,#
-                     wknd_zz  = zero_cam$weekend,#
-                     wknd_pp  = pos_cam$weekend,#
-                     wknd_iz  = imputation_zero$weekend,#
-                     wknd_ip  = imputation_pos$weekend,#
-                     ly_iz    = imputation_zero$lakeyear,#
-                     date_iz  = imputation_zero$julian_day,#
-                     i_iz     = imputation_zero$day_index,#
-                     ncam_iz  = imputation_zero$n_cam_per_dhly,#
-                     ize      = ize,#
-                     ippc     = imputation_pos$cam_count,#
-                     ly_ip    = imputation_pos$lakeyear,#
-                     date_ip  = imputation_pos$julian_day,#
-                     i_ip     = imputation_pos$day_index,#
-                     ncam_ip  = imputation_pos$n_cam_per_dhly,#
-                     ipe      = ipe,#
-                     n_days   = n_days_per_lakeyear,#
-                     all_days = all_days,#
-                     lyrs_z   = zero_lakeyears,#
-                     days_z   = zero_days,#
-                     nobs_z   = zero_nobs,#
-                     lyrs_p   = pos_lakeyears,#
-                     days_p   = pos_days,#
-                     nobs_p   = pos_nobs,#
-                     pseen_zp = false_zero$p_seen,#
-                     pseen_zz = zero_cam$p_seen,#
-                     pseen_pp = pos_cam$p_seen,#
-                     pseen_iz = imputation_zero$p_seen,#
-                     pseen_ip = imputation_pos$p_seen,#
-                     pseen    = pseen )
-model_file <- list( model_1 = "ImputeEff_h_1.txt")
-n_models <- length( model_file )
-pars <- list( model_1 = c("md","pd","ml","pl","ma","pa","d_track","L","a",#
-                               "MSE_Total","Bias"))
-inits <- list( model_1 = function() {#
-                               list( md=0, pd=0.5, ml=0, pl=1.5, ma=0, pa=0.5 )#
-                             })
-DIC <- numeric( length=n_models )
-for( i in 1:n_models ) {#
-      cat( "Fitting model", i, "of", n_models, "\n" )#
-      # Run jags#
-      setwd(input_JAGS_dir)#
-      jags_output <- jags( data               = jags_data,#
-                           inits              = inits[[ i ]],#
-                           parameters.to.save = pars[[ i ]],#
-                           model.file         = model_file[[ i ]],#
-                           n.chains           = nchain,#
-                           n.iter             = nburn+nits,#
-                           n.burnin           = nburn,#
-                           n.thin             = nthin,#
-                           DIC                = TRUE )#
-      # File to save jags output to#
-      output_file <- paste( "MCMC", i, "txt", sep="." )#
-      setwd(output_JAGS_dir)#
-      # Save jags output#
-      save( jags_output, file=output_file )#
-#
-      # Record DIC#
-      DIC[i] <- jags_output$BUGSoutput$DIC#
-    }
-model_1 = c("md","pd","ml","pl","ma","pa","d_track","L","a"))
-pars <- list( model_1 = c("md","pd","ml","pl","ma","pa","d_track","L","a"))
-inits <- list( model_1 = function() {#
-                               list( md=0, pd=0.5, ml=0, pl=1.5, ma=0, pa=0.5 )#
-                             })
-for( i in 1:n_models ) {#
-      cat( "Fitting model", i, "of", n_models, "\n" )#
-      # Run jags#
-      setwd(input_JAGS_dir)#
-      jags_output <- jags( data               = jags_data,#
-                           inits              = inits[[ i ]],#
-                           parameters.to.save = pars[[ i ]],#
-                           model.file         = model_file[[ i ]],#
-                           n.chains           = nchain,#
-                           n.iter             = nburn+nits,#
-                           n.burnin           = nburn,#
-                           n.thin             = nthin,#
-                           DIC                = TRUE )#
-      # File to save jags output to#
-      output_file <- paste( "MCMC", i, "txt", sep="." )#
-      setwd(output_JAGS_dir)#
-      # Save jags output#
-      save( jags_output, file=output_file )#
-#
-      # Record DIC#
-      DIC[i] <- jags_output$BUGSoutput$DIC#
-    }
-ipe=c(0,0)#
-    ize=c(0,0)#
-  #}#
-    as.data.frame(zero_cam)#
-#
-  jags_data <- list( n_lyrs   = n_lakeyears,#
-                     nlc      = n_lakecams,#
-                     nzz      = nrow(zero_cam),#
-                     nzc      = zero_cam$n_zero_cam,#
-                     nze      = zero_cam$n_zero_eff,#
-                     nzp      = nrow(false_zero),#
-                     niz      = nrow(imputation_zero),#
-                     nip      = nrow(imputation_pos),#
-                     zp       = false_zero$ground_count,#
-                     npp      = nrow(pos_cam),#
-                     ppc      = pos_cam$cam_count,#
-                     ppe      = pos_cam$ground_count,#
-                     lc_zz    = zero_cam_lakecams,#
-                     lc_zp    = false_zero_lakecams,#
-                     lc_pp    = pos_cam_lakecams,#
-                     lc_iz    = imputation_zero_lakecams,#
-                     lc_ip    = imputation_pos_lakecams,#
-                     tod_zp   = false_zero_timeofday,#
-                     tod_zz   = zero_cam_timeofday,#
-                     tod_pp   = pos_cam_timeofday,#
-                     tod_iz   = imputation_zero_timeofday,#
-                     tod_ip   = imputation_pos_timeofday,#
-                     wknd_zp  = false_zero$weekend,#
-                     wknd_zz  = zero_cam$weekend,#
-                     wknd_pp  = pos_cam$weekend,#
-                     wknd_iz  = imputation_zero$weekend,#
-                     wknd_ip  = imputation_pos$weekend,#
-                     ly_iz    = imputation_zero$lakeyear,#
-                     date_iz  = imputation_zero$julian_day,#
-                     i_iz     = imputation_zero$day_index,#
-                     ncam_iz  = imputation_zero$n_cam_per_dhly,#
-                     ize      = ize,#
-                     ippc     = imputation_pos$cam_count,#
-                     ly_ip    = imputation_pos$lakeyear,#
-                     date_ip  = imputation_pos$julian_day,#
-                     i_ip     = imputation_pos$day_index,#
-                     ncam_ip  = imputation_pos$n_cam_per_dhly,#
-                     ipe      = ipe,#
-                     n_days   = n_days_per_lakeyear,#
-                     all_days = all_days,#
-                     lyrs_z   = zero_lakeyears,#
-                     days_z   = zero_days,#
-                     nobs_z   = zero_nobs,#
-                     lyrs_p   = pos_lakeyears,#
-                     days_p   = pos_days,#
-                     nobs_p   = pos_nobs,#
-                     pseen_zp = false_zero$p_seen,#
-                     pseen_zz = zero_cam$p_seen,#
-                     pseen_pp = pos_cam$p_seen,#
-                     pseen_iz = imputation_zero$p_seen,#
-                     pseen_ip = imputation_pos$p_seen,#
-                     pseen    = pseen )#
-  # Run all possible models and find model with lowest DIC#
-  #Problem: there is an error here.#
-  if( run_all ) {#
-#
-    # Specify locations of model files#
-    model_file <- list( model_1 = "ImputeEff_h_1.txt",  # no covariates  )      #
-                        model_2 = "ImputeEff_h_2.txt",  # cov on alpha            #
-                        model_3 = "ImputeEff_h_3.txt",  # cov on lambda         #
-                        model_4 = "ImputeEff_h_4.txt",  # cov on delta            #
-                        model_5 = "ImputeEff_h_5.txt",  # cov on lambda and alpha#
-                        model_6 = "ImputeEff_h_6.txt",  # cov on delta and alpha  #
-                        model_7 = "ImputeEff_h_7.txt",  # cov on delta and lambda#
-                        model_8 = "ImputeEff_h_8.txt" ) # cov on all             #
-    # Number of models#
-    n_models <- length( model_file )#
-    # Parameters for each model#
-    pars <- list( model_1 = c("md","pd","ml","pl","ma","pa","d_track","L","a"),#
-                               #"MSE_Total","Bias"),#
-                  model_2 = c("md","pd","ml","pl","ma","pa","mawk","pawk",#
-                              "d_track","L","a","awk","zdnew","zLnew","zanew",#
-                              "zawknew"),#"MSE_Total","Bias"),#
-                  model_3 = c("md","pd","ml","pl","ma","pa","mLwk","pLwk",#
-                              "d_track","L","a","Lwk","zdnew","zLnew","zLwknew",#
-                              "zanew"),#"MSE_Total","Bias"),#
-                  model_4 = c("md","pd","ml","pl","ma","pa","mdtod","pdtod",#
-                              "d_track","L","a","dtod"),#"MSE_Total","Bias"),#
-                  model_5 = c("md","pd","ml","pl","ma","pa","mawk","pawk","mLwk",#
-                              "pLwk","d_track","L","a","awk","Lwk","zdnew",#
-                              "zLnew","zLwknew","zanew","zawknew"),#
-                              #"MSE_Total","Bias"),#
-                  model_6 = c("md","pd","ml","pl","ma","pa","mdtod","pdtod",#
-                              "mawk","pawk","d_track","dwd_track","L","a","dtod",#
-                              "awk"),#"MSE_Total","Bias"),#
-                  model_7 = c("md","pd","ml","pl","ma","pa","mdtod","pdtod",#
-                              "mLwk","pLwk","d_track","L","a","dtod","Lwk"),#
-                              #"MSE_Total","Bias"),#
-                  model_8 = c("md","pd","ml","pl","ma","pa","mawk","pawk",#
-                              "mdtod","pdtod","mLwk","pLwk","d_track","L","a",#
-                              "awk","dtod","Lwk"),#"MSE_Total","Bias") #
-                  )#
-    # Initial parameter values for each model#
-    inits <- list( model_1 = function() {#
-                               list( md=0, pd=0.5, ml=0, pl=1.5, ma=0, pa=0.5 )#
-                             },#
-                   model_2 = function() {#
-                               list( md=0, pd=0.5, ml=0, pl=1.5, ma=0, pa=0.5,#
-                                     mawk=0, pawk=0.5 )#
-                             },#
-                   model_3 = function() {#
-                               list( md=0, pd=0.5, ml=0, pl=1.5, ma=0, pa=0.5,#
-                                     mLwk=0, pLwk=0.5 )#
-                             },#
-                   model_4 = function() {#
-                               list( md=0, pd=0.5, ml=0, pl=1.5, ma=0, pa=0.5,#
-                                     mdtod=0, pdtod=0.5 )#
-                             },#
-                   model_5 = function() {#
-                               list( md=0, pd=0.5, ml=0, pl=1.5, ma=0, pa=0.5,#
-                                     mawk=0, pawk=0.5, mLwk=0, pLwk=1.5 )#
-                             },#
-                   model_6 = function() {#
-                               list( md=0, pd=0.5, ml=0, pl=1.5, ma=0, pa=0.5,#
-                                     mdtod=0, pdtod=0.5, mawk=0, pawk=0.5 )#
-                             },#
-                   model_7 = function() {#
-                               list( md=0, pd=0.5, ml=0, pl=1.5, ma=0, pa=0.5,#
-                                     mdtod=0, pdtod=0.5, mLwk=0, pLwk=1.5 )#
-                             },#
-                   model_8 = function() {#
-                               list( md=0, pd=0.5, ml=0, pl=1.5, ma=0, pa=0.5,#
-                                     mawk=0, pawk=0.5, mdtod=0, pdtod=0.5,#
-                                     mLwk=0, pLwk=1.5)#
-                             } )#
-    # Deviance information criterion for each model#
-    DIC <- numeric( length=n_models )
-# Run each model#
-    for( i in 1:n_models ) {#
-      cat( "Fitting model", i, "of", n_models, "\n" )#
-      # Run jags#
-      setwd(input_JAGS_dir)#
-      jags_output <- jags( data               = jags_data,#
-                           inits              = inits[[ i ]],#
-                           parameters.to.save = pars[[ i ]],#
-                           model.file         = model_file[[ i ]],#
-                           n.chains           = nchain,#
-                           n.iter             = nburn+nits,#
-                           n.burnin           = nburn,#
-                           n.thin             = nthin,#
-                           DIC                = TRUE )#
-      # File to save jags output to#
-      output_file <- paste( "MCMC", i, "txt", sep="." )#
-      setwd(output_JAGS_dir)#
-      # Save jags output#
-      save( jags_output, file=output_file )#
-#
-      # Record DIC#
-      DIC[i] <- jags_output$BUGSoutput$DIC#
-    }#
-#
-    # Choose model with lowest DIC to parameterize imputation#
-    imp_model <- which(DIC==min(DIC))#
-    rm( jags_data, inits, pars, model_file )#
-#
-  }
-jags_data <- list( n_lyrs   = n_lakeyears,#
-                     nlc      = n_lakecams,#
-                     nzz      = nrow(zero_cam),#
-                     nzc      = zero_cam$n_zero_cam,#
-                     nze      = zero_cam$n_zero_eff,#
-                     nzp      = nrow(false_zero),#
-                     niz      = nrow(imputation_zero),#
-                     nip      = nrow(imputation_pos),#
-                     zp       = false_zero$ground_count,#
-                     npp      = nrow(pos_cam),#
-                     ppc      = pos_cam$cam_count,#
-                     ppe      = pos_cam$ground_count,#
-                     lc_zz    = zero_cam_lakecams,#
-                     lc_zp    = false_zero_lakecams,#
-                     lc_pp    = pos_cam_lakecams,#
-                     lc_iz    = imputation_zero_lakecams,#
-                     lc_ip    = imputation_pos_lakecams,#
-                     tod_zp   = false_zero_timeofday,#
-                     tod_zz   = zero_cam_timeofday,#
-                     tod_pp   = pos_cam_timeofday,#
-                     tod_iz   = imputation_zero_timeofday,#
-                     tod_ip   = imputation_pos_timeofday,#
-                     wknd_zp  = false_zero$weekend,#
-                     wknd_zz  = zero_cam$weekend,#
-                     wknd_pp  = pos_cam$weekend,#
-                     wknd_iz  = imputation_zero$weekend,#
-                     wknd_ip  = imputation_pos$weekend,#
-                     ly_iz    = imputation_zero$lakeyear,#
-                     date_iz  = imputation_zero$julian_day,#
-                     i_iz     = imputation_zero$day_index,#
-                     ncam_iz  = imputation_zero$n_cam_per_dhly,#
-                     ize      = ize,#
-                     ippc     = imputation_pos$cam_count,#
-                     ly_ip    = imputation_pos$lakeyear,#
-                     date_ip  = imputation_pos$julian_day,#
-                     i_ip     = imputation_pos$day_index,#
-                     ncam_ip  = imputation_pos$n_cam_per_dhly,#
-                     ipe      = ipe,#
-                     n_days   = n_days_per_lakeyear,#
-                     all_days = all_days,#
-                     lyrs_z   = zero_lakeyears,#
-                     days_z   = zero_days,#
-                     nobs_z   = zero_nobs,#
-                     lyrs_p   = pos_lakeyears,#
-                     days_p   = pos_days,#
-                     nobs_p   = pos_nobs,#
-                     pseen_zp = false_zero$p_seen,#
-                     pseen_zz = zero_cam$p_seen,#
-                     pseen_pp = pos_cam$p_seen,#
-                     pseen_iz = imputation_zero$p_seen,#
-                     pseen_ip = imputation_pos$p_seen,#
-                     pseen    = pseen )
-model_file <- list( model_1 = "ImputeEff_h_1.txt",  # no covariates  )      #
-                        model_2 = "ImputeEff_h_2.txt",  # cov on alpha            #
-                        model_3 = "ImputeEff_h_3.txt",  # cov on lambda         #
-                        model_4 = "ImputeEff_h_4.txt",  # cov on delta            #
-                        model_5 = "ImputeEff_h_5.txt",  # cov on lambda and alpha#
-                        model_6 = "ImputeEff_h_6.txt",  # cov on delta and alpha  #
-                        model_7 = "ImputeEff_h_7.txt",  # cov on delta and lambda#
-                        model_8 = "ImputeEff_h_8.txt" ) # cov on all
-n_models <- length( model_file )#
-    # Parameters for each model#
-    pars <- list( model_1 = c("md","pd","ml","pl","ma","pa","d_track","L","a"),#
-                               #"MSE_Total","Bias"),#
-                  model_2 = c("md","pd","ml","pl","ma","pa","mawk","pawk",#
-                              "d_track","L","a","awk","zdnew","zLnew","zanew",#
-                              "zawknew"),#"MSE_Total","Bias"),#
-                  model_3 = c("md","pd","ml","pl","ma","pa","mLwk","pLwk",#
-                              "d_track","L","a","Lwk","zdnew","zLnew","zLwknew",#
-                              "zanew"),#"MSE_Total","Bias"),#
-                  model_4 = c("md","pd","ml","pl","ma","pa","mdtod","pdtod",#
-                              "d_track","L","a","dtod"),#"MSE_Total","Bias"),#
-                  model_5 = c("md","pd","ml","pl","ma","pa","mawk","pawk","mLwk",#
-                              "pLwk","d_track","L","a","awk","Lwk","zdnew",#
-                              "zLnew","zLwknew","zanew","zawknew"),#
-                              #"MSE_Total","Bias"),#
-                  model_6 = c("md","pd","ml","pl","ma","pa","mdtod","pdtod",#
-                              "mawk","pawk","d_track","dwd_track","L","a","dtod",#
-                              "awk"),#"MSE_Total","Bias"),#
-                  model_7 = c("md","pd","ml","pl","ma","pa","mdtod","pdtod",#
-                              "mLwk","pLwk","d_track","L","a","dtod","Lwk"),#
-                              #"MSE_Total","Bias"),#
-                  model_8 = c("md","pd","ml","pl","ma","pa","mawk","pawk",#
-                              "mdtod","pdtod","mLwk","pLwk","d_track","L","a",#
-                              "awk","dtod","Lwk"),#"MSE_Total","Bias") #
-                  )
-pars <- list( model_1 = c("md","pd","ml","pl","ma","pa","d_track","L","a"),#
-                               #"MSE_Total","Bias"),#
-                  model_2 = c("md","pd","ml","pl","ma","pa","mawk","pawk",#
-                              "d_track","L","a","awk","zdnew","zLnew","zanew",#
-                              "zawknew"),#"MSE_Total","Bias"),#
-                  model_3 = c("md","pd","ml","pl","ma","pa","mLwk","pLwk",#
-                              "d_track","L","a","Lwk","zdnew","zLnew","zLwknew",#
-                              "zanew"),#"MSE_Total","Bias"),#
-                  model_4 = c("md","pd","ml","pl","ma","pa","mdtod","pdtod",#
-                              "d_track","L","a","dtod"),#"MSE_Total","Bias"),#
-                  model_5 = c("md","pd","ml","pl","ma","pa","mawk","pawk","mLwk",#
-                              "pLwk","d_track","L","a","awk","Lwk","zdnew",#
-                              "zLnew","zLwknew","zanew","zawknew"),#
-                              #"MSE_Total","Bias"),#
-                  model_6 = c("md","pd","ml","pl","ma","pa","mdtod","pdtod",#
-                              "mawk","pawk","d_track","dwd_track","L","a","dtod",#
-                              "awk"),#"MSE_Total","Bias"),#
-                  model_7 = c("md","pd","ml","pl","ma","pa","mdtod","pdtod",#
-                              "mLwk","pLwk","d_track","L","a","dtod","Lwk"),#
-                              #"MSE_Total","Bias"),#
-                  model_8 = c("md","pd","ml","pl","ma","pa","mawk","pawk",#
-                              "mdtod","pdtod","mLwk","pLwk","d_track","L","a",#
-                              "awk","dtod","Lwk")#,"MSE_Total","Bias") #
-                  )
-inits <- list( model_1 = function() {#
-                               list( md=0, pd=0.5, ml=0, pl=1.5, ma=0, pa=0.5 )#
-                             },#
-                   model_2 = function() {#
-                               list( md=0, pd=0.5, ml=0, pl=1.5, ma=0, pa=0.5,#
-                                     mawk=0, pawk=0.5 )#
-                             },#
-                   model_3 = function() {#
-                               list( md=0, pd=0.5, ml=0, pl=1.5, ma=0, pa=0.5,#
-                                     mLwk=0, pLwk=0.5 )#
-                             },#
-                   model_4 = function() {#
-                               list( md=0, pd=0.5, ml=0, pl=1.5, ma=0, pa=0.5,#
-                                     mdtod=0, pdtod=0.5 )#
-                             },#
-                   model_5 = function() {#
-                               list( md=0, pd=0.5, ml=0, pl=1.5, ma=0, pa=0.5,#
-                                     mawk=0, pawk=0.5, mLwk=0, pLwk=1.5 )#
-                             },#
-                   model_6 = function() {#
-                               list( md=0, pd=0.5, ml=0, pl=1.5, ma=0, pa=0.5,#
-                                     mdtod=0, pdtod=0.5, mawk=0, pawk=0.5 )#
-                             },#
-                   model_7 = function() {#
-                               list( md=0, pd=0.5, ml=0, pl=1.5, ma=0, pa=0.5,#
-                                     mdtod=0, pdtod=0.5, mLwk=0, pLwk=1.5 )#
-                             },#
-                   model_8 = function() {#
-                               list( md=0, pd=0.5, ml=0, pl=1.5, ma=0, pa=0.5,#
-                                     mawk=0, pawk=0.5, mdtod=0, pdtod=0.5,#
-                                     mLwk=0, pLwk=1.5)#
-                             } )
-DIC <- numeric( length=n_models )#
-#
-    # Run each model#
-    for( i in 1:n_models ) {#
-      cat( "Fitting model", i, "of", n_models, "\n" )#
-      # Run jags#
-      setwd(input_JAGS_dir)#
-      jags_output <- jags( data               = jags_data,#
-                           inits              = inits[[ i ]],#
-                           parameters.to.save = pars[[ i ]],#
-                           model.file         = model_file[[ i ]],#
-                           n.chains           = nchain,#
-                           n.iter             = nburn+nits,#
-                           n.burnin           = nburn,#
-                           n.thin             = nthin,#
-                           DIC                = TRUE )#
-      # File to save jags output to#
-      output_file <- paste( "MCMC", i, "txt", sep="." )#
-      setwd(output_JAGS_dir)#
-      # Save jags output#
-      save( jags_output, file=output_file )#
-#
-      # Record DIC#
-      DIC[i] <- jags_output$BUGSoutput$DIC#
-    }
-dim(pos_cam)
-dim(zero_cam)
-dim(false_zero)
-length(imputatio_pos)
-length(imputation_pos)
-length(imputation_pos)
-length(imputation_dat)
-dim(imputation_dat)
-dim(imputation_pos)
-dim(imputation_zero)
-4000*60
-4000*60/3
-log(.4)
-ricker_at<-c(rep(2,75), seq(2,1.4, length=25))#
-ricker_b<-3.38e-5 #
-n_years <- 100          #years of simulations#
-k <- 4              #age at maturity#
-#Generate Recruitment deviations #
-wt<-rnorm(n_years,0,0.5)  #normally distributed process error#
-#Initialize populations#
-#
-St <- rep(NA,length=n_years+k)#
-St[1:k] <- ricker_at[1]/ricker_b#
-St[(k+1):(n_years+k)] <- ricker_at/ricker_b#
-Rtm <- rep(NA,length=n_years+k)#
-yt <- rep(NA,length=n_years+k)#
-hr <- rep(0.6,length=n_years+k)#
-#
-for(y in (1+k):(n_years)){ #project the population given parameters and Hr#
-    Rtm[y] <- St[y-k]*exp(ricker_at[y]-ricker_b *St[y-k] +wt[y]) #recruits#
-    St[y] <- Rtm[y]*(1-hr[y])                                     #recruits that survive the fisheries#
-    yt[y] <- Rtm[y]*hr[y]                                         #recruits that are caught#
-}#
-df<-data.frame(Rtm=Rtm[(1+k):(n_years)],St=St[1:(n_years-k)],year=1:(n_years-k),hr=hr[(1+k):(n_years)])#
-#
-df2<-df[df$year>65,]#
-p<-ggplot(df2)#
-p<-p+geom_point(aes(x=St,y=Rtm,col=year))#
-p
-library(ggplot2)
-ricker_at<-c(rep(2,75), seq(2,1.4, length=25))#
-ricker_b<-3.38e-5 #
-n_years <- 100          #years of simulations#
-k <- 4              #age at maturity#
-#Generate Recruitment deviations #
-wt<-rnorm(n_years,0,0.5)  #normally distributed process error#
-#Initialize populations#
-#
-St <- rep(NA,length=n_years+k)#
-St[1:k] <- ricker_at[1]/ricker_b#
-St[(k+1):(n_years+k)] <- ricker_at/ricker_b#
-Rtm <- rep(NA,length=n_years+k)#
-yt <- rep(NA,length=n_years+k)#
-hr <- rep(0.6,length=n_years+k)#
-#
-for(y in (1+k):(n_years)){ #project the population given parameters and Hr#
-    Rtm[y] <- St[y-k]*exp(ricker_at[y]-ricker_b *St[y-k] +wt[y]) #recruits#
-    St[y] <- Rtm[y]*(1-hr[y])                                     #recruits that survive the fisheries#
-    yt[y] <- Rtm[y]*hr[y]                                         #recruits that are caught#
-}
-df<-data.frame(Rtm=Rtm[(1+k):(n_years)],St=St[1:(n_years-k)],year=1:(n_years-k),hr=hr[(1+k):(n_years)])
-80/12
-ricker_at<-c(rep(2,75), seq(2,1.4, length=25))#
-ricker_b<-3.38e-5 #
-n_years <- 100          #years of simulations#
-k <- 4              #age at maturity#
-#Generate Recruitment deviations #
-wt<-rnorm(n_years,0,0.5)  #normally distributed process error#
-#Initialize populations#
-#
-St <- rep(NA,length=n_years+k)#
-St[1:k] <- ricker_at[1]/ricker_b#
-St[(k+1):(n_years+k)] <- ricker_at/ricker_b#
-Rtm <- rep(NA,length=n_years+k)#
-yt <- rep(NA,length=n_years+k)#
-hr <- rep(0.6,length=n_years+k)#
-#
-for(y in (1+k):(n_years)){ #project the population given parameters and Hr#
-    Rtm[y] <- St[y-k]*exp(ricker_at[y]-ricker_b *St[y-k] +wt[y]) #recruits#
-    St[y] <- Rtm[y]*(1-hr[y])                                     #recruits that survive the fisheries#
-    yt[y] <- Rtm[y]*hr[y]                                         #recruits that are caught#
-}#
-df<-data.frame(Rtm=Rtm[(1+k):(n_years)],St=St[1:(n_years-k)],year=1:(n_years-k),hr=hr[(1+k):(n_years)])#
-#
-df2<-df[df$year>65,]
-mydata<-list(obs_logR=log(df2$Rtm),obs_S=df2$St)
-mydata
-Smax<- 1/ricker_b
-1/ricker_b
-mydata<-list(obs_logR=log(df2$Rtm),obs_S=df2$St)
-setwd("/Users/catarinawor/Documents/work/Chinook/KalmanFilterStudy/TMB")
-save(mydata,file=Rickerkf.dat)
-save(mydata,file="Rickerkf.dat")
-library(TMB)#
-compile("Rickerkf.cpp")#
-dyn.load("Rickerkf.so")#
-data <- list(y=scan("Rickerkf.dat"))
-compile("Rickerkf.cpp")
-compile("Rickerkf.cpp")
-compile("Rickerkf.cpp")
-compile("Rickerkf.cpp")
-compile("Rickerkf.cpp")
-compile("Rickerkf.cpp")
-compile("Rickerkf.cpp")
-compile("Rickerkf.cpp")
-dyn.load("Rickerkf.so")
-data <- list(y=scan("Rickerkf.dat"))
-mydata<-load("Rickerkf.dat")
-mydata
-setwd("/Users/catarinawor/Documents/work/Chinook/KalmanFilterStudy/TMB")
-mydata<-load("Rickerkf.dat")
-mydata
-mydata<-list(obs_logR=log(df2$Rtm),obs_S=df2$St)
-mydata
-setwd("/Users/catarinawor/Documents/work/Chinook/KalmanFilterStudy/TMB")
-save(mydata,file="Rickerkf.dat)
-mdata<-load("Rickerkf.dat")
-save(mydata,file="Rickerkf.dat")
-mdata<-load("Rickerkf.dat")
-mdata
-mdata[[1]]<-load("Rickerkf.dat")
-mdata[[1]]
-mdata<-load("Rickerkf.dat")
-mdata[[1]]
-mdata$mydata
-mdat[[mydata]]
-mdata[[mydata]]
-mdata[[1]]
-write.csv(df2,file="Rickerkf.csv")
-mdata<-read.csv("Rickerkf.csv")
-mdata
-df2<-read.csv("Rickerkf.csv")
-mydata<-list(obs_logR=log(df2$Rtm),obs_S=df2$St)
-mydata
-data <- mydata
-parameters <- list(#
-  alphao=2.0#
-  Smax = 29000,#
-  logSigalpha=0,#
-  logSigObs= -0.9,#
-  alpha=rep(2,length(data$obs_logR))#
-  )
-data <- mydata#
-parameters <- list(#
-  alphao=2.0,#
-  Smax = 29000,#
-  logSigalpha=0,#
-  logSigObs= -0.9,#
-  alpha=rep(2,length(data$obs_logR))#
-  )
-newtonOption(smartsearch=FALSE)
-obj<-MakeADFun(data,parameters,random="alpha",DLL="Rickerkf")
-obj$fn()
-obj$gr()
-opt<-nlminb(obj$par,obj$fn,obj$gr)
-library(TMB)#
-compile("Rickerkf.cpp")#
-dyn.load("Rickerkf.so")#
-#
-setwd("/Users/catarinawor/Documents/work/Chinook/KalmanFilterStudy/TMB")#
-#
-df2<-read.csv("Rickerkf.csv")#
-mydata<-list(obs_logR=log(df2$Rtm),obs_S=df2$St)#
-data <- mydata
-parameters <- list(#
-  alphao=2.0,#
-  Smax = 29000,#
-  logSigalpha=0,#
-  logSigObs= -0.9,#
-  alpha=rep(2,length(data$obs_logR))#
-  )#
-#
-newtonOption(smartsearch=FALSE)
-obj<-MakeADFun(data,parameters,random="alpha",DLL="Rickerkf")
-obj$fn()
-obj$gr()
-opt<-nlminb(obj$par,obj$fn,obj$gr)
-rep<-obj$report()
-rep
-DIR<-"/Users/catarinawor/Documents/Length_SRA/R/simResult/noRinit"#
-plotlib<-"/Users/catarinawor/Documents/Length_SRA/R/plots"#
-#.RFILES     <- list.files(.LIB,pattern="\\.[Rr]$")#
-#
-SIMSdat<-list()#
-#
-Rfiles <- list.files(DIR,pattern="\\.Rdata",full.name=TRUE)#
-#
-plotfiles <- list.files(plotlib,pattern="plot",full.name=TRUE)#
-for(i in 1:length(Rfiles)){#
-    load(Rfiles[i])#
-    SIMSdat[[i]]<-sims#
-}#
-#load graphing routinesfor#
-for(p in 1:length(plotfiles)){#
-    source(plotfiles[p])#
-}#
-#
-length(SIMSdat)
-M<-SIMSdat
-scn<-read_scnnames()#
-#
-    n <- length( M )#
-    mdf <- NULL#
-    adf <- NULL
-conv_n<-numeric(length=length(scn))
-conv_n
-require(reshape2)#
-require(tidyr)#
-require(ggplot2)
-cat("plot_params")#
-#
-    scn<-read_scnnames()#
-#
-    n <- length( M )#
-    mdf <- NULL#
-    adf <- NULL
-conv_n<-numeric(length=length(scn))#
-        for(i in 1:n){#
-        if(M[[i]]$SApar$maxgrad<1.0e-03){#
-            conv_n[M[[i]]$OM$scnNumber] <-  conv_n[M[[i]]$OM$scnNumber] + 1#
-#
-            #if(Rinit==TRUE){#
-            #   est<-c(M[[i]]$SArep$Ro,#
-            #       M[[i]]$SArep$Rinit,#
-            #       M[[i]]$SArep$reck)#
-            #   true<-c(M[[i]]$OM$Ro,#
-            #       M[[i]]$OM$Rinit,#
-            #       M[[i]]$OM$reck)#
-            #   bias<- (est- true) / true#
-                #tv <- data.frame(Ro=est[1], Rinit=est[2], kappa=est[3], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-#
-            #l  df <- data.frame(Ro=bias[1],  Rinit=bias[2], kappa=bias[3], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                #df <- data.frame(Ro=bias[1],  kappa=bias[2], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-#
-            #   mdf <- rbind(mdf,df)#
-#
-            #   af <- data.frame(true = true, est = est, param=c("Ro", "Rinit" , "kappa"), scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                #af <- data.frame(true = true, est = est, param=c("Ro",  "kappa"), scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-            #   adf <- rbind(adf,af)#
-            #}else{#
-                est<-c(M[[i]]$SArep$Ro,#
-                    M[[i]]$SArep$reck,#
-                    M[[i]]$SArep$depletion[length(M[[i]]$SArep$depletion)],#
-                    M[[i]]$SArep$ytarget[length(M[[i]]$SArep$ytarget)],#
-                    M[[i]]$SArep$utarget[length(M[[i]]$SArep$utarget)])#
-                true<-c(M[[i]]$OM$Ro,#
-                    M[[i]]$OM$reck,#
-                    M[[i]]$OM$depl[length(M[[i]]$OM$depl)],#
-                    M[[i]]$OM$ytarget[length(M[[i]]$OM$ytarget)],#
-                    M[[i]]$OM$utarget[length(M[[i]]$OM$utarget)])#
-                    bias<- (est- true) / true#
-                #tv <- data.frame(Ro=est[1], Rinit=est[2], kappa=est[3], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-#
-                #df <- data.frame(Ro=bias[1],  Rinit=bias[2], kappa=bias[3], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                df <- data.frame(Ro=bias[1],  kappa=bias[2],depletion=bias[3], ytarget=bias[4], utarget=bias[5], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-#
-                mdf <- rbind(mdf,df)#
-#
-                #af <- data.frame(true = true, est = est, param=c("Ro", "Rinit" , "kappa"), scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                af <- data.frame(true = true, est = est, param=c("Ro",  "kappa", "Depletion", expression("Yield"["target"]), expression("U"["target"])), scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                adf <- rbind(adf,af)#
-            #}#
-        }#
-    }
-for(i in 1:n){#
-        if(M[[i]]$SApar$maxgrad<1.0e-03){#
-            conv_n[M[[i]]$OM$scnNumber] <-  conv_n[M[[i]]$OM$scnNumber] + 1#
-#
-            #if(Rinit==TRUE){#
-            #   est<-c(M[[i]]$SArep$Ro,#
-            #       M[[i]]$SArep$Rinit,#
-            #       M[[i]]$SArep$reck)#
-            #   true<-c(M[[i]]$OM$Ro,#
-            #       M[[i]]$OM$Rinit,#
-            #       M[[i]]$OM$reck)#
-            #   bias<- (est- true) / true#
-                #tv <- data.frame(Ro=est[1], Rinit=est[2], kappa=est[3], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-#
-            #l  df <- data.frame(Ro=bias[1],  Rinit=bias[2], kappa=bias[3], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                #df <- data.frame(Ro=bias[1],  kappa=bias[2], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-#
-            #   mdf <- rbind(mdf,df)#
-#
-            #   af <- data.frame(true = true, est = est, param=c("Ro", "Rinit" , "kappa"), scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                #af <- data.frame(true = true, est = est, param=c("Ro",  "kappa"), scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-            #   adf <- rbind(adf,af)#
-            #}else{#
-                est<-c(M[[i]]$SArep$Ro,#
-                    M[[i]]$SArep$reck,#
-                    M[[i]]$SArep$depletion[length(M[[i]]$SArep$depletion)],#
-                    M[[i]]$SArep$ytarget[length(M[[i]]$SArep$ytarget)],#
-                    M[[i]]$SArep$utarget[length(M[[i]]$SArep$utarget)])#
-                true<-c(M[[i]]$OM$Ro,#
-                    M[[i]]$OM$reck,#
-                    M[[i]]$OM$depl[length(M[[i]]$OM$depl)],#
-                    M[[i]]$OM$ytarget[length(M[[i]]$OM$ytarget)],#
-                    M[[i]]$OM$utarget[length(M[[i]]$OM$utarget)])#
-                    bias<- (est- true) / true#
-                #tv <- data.frame(Ro=est[1], Rinit=est[2], kappa=est[3], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-#
-                #df <- data.frame(Ro=bias[1],  Rinit=bias[2], kappa=bias[3], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                df <- data.frame(Ro=bias[1],  kappa=bias[2],depletion=bias[3], ytarget=bias[4], utarget=bias[5], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-#
-                mdf <- rbind(mdf,df)#
-#
-                #af <- data.frame(true = true, est = est, param=c("Ro", "Rinit" , "kappa"), scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                af <- data.frame(true = true, est = est, param=c("Ro",  "kappa", "Depletion", "Yield_target", "U_target"), scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                adf <- rbind(adf,af)#
-            #}#
-        }#
-    }
-df2<-melt(mdf,variable.name = "parameter",id=c("scenario","scnnumber"))#
-#
-    levels(df2$parameter)<-c("Ro","kappa","Depletion",expression("Yield"["target"]), expression("U"["target"]),"q")#
-    df2$converge<-conv_n[df2$scnnumber]
-p <- ggplot(df2) #
-    p <- p + geom_boxplot(aes(x=scenario,y=value, fill=parameter))#
-    p <- p + geom_hline(yintercept=0, color="darkred", size=1.2, alpha=0.3)#
-    p <- p + labs(x="Parameter",y="Bias")#
-    p <- p + theme_bw(11) #
-    p <- p + theme(axis.text = element_text(face="bold", size=12),#
-  axis.text.x= element_text(angle=45,hjust = 1),#
-  axis.title = element_text(face="bold", size=12))#
-    p <- p + coord_cartesian(ylim=c(-0.75, 0.75))#
-    p <- p + facet_wrap(~parameter)#
-    p <- p + geom_text(data=df2, aes(x=scnnumber, y=0.44, label=converge), parse=TRUE)#
-    print(p)
-df2<-melt(mdf,variable.name = "parameter",id=c("scenario","scnnumber"))#
-#
-    #levels(df2$parameter)<-expression(c(R_[0],R_[init],kappa ))#
-    df2$converge<-conv_n[df2$scnnumber]#
-    df2$valuep<-df2$value*100#
-    summary(df2) #
-#
-    df2$scenario<-factor(df2$scenario,levels = rev(levels(df2$scenario)),ordered = TRUE)#
-    p <- ggplot(df2) #
-    p <- p + geom_boxplot(aes(x=scenario,y=value))+ coord_flip(ylim=c(-1., 1.0))#
-    p <- p + geom_hline(yintercept=0, color="black", size=1.2, alpha=0.3)#
-    p <- p + labs(x="Scenario",y="Relative Proportional Error")#
-    p <- p + theme_bw(12) #
-    p <- p + facet_wrap(~parameter,ncol = 1,labeller = label_parsed)#
-    p <- p + theme(axis.text = element_text(face="bold", size=12),#
-  axis.title = element_text(face="bold", size=12),#
-  strip.text = element_text(face="bold", size=16))#
-    print(p)
-p <- ggplot(df2) #
-    p <- p + geom_boxplot(aes(x=scenario,y=value))+ coord_flip(ylim=c(-1., 1.0))#
-    p <- p + geom_hline(yintercept=0, color="black", size=1.2, alpha=0.3)#
-    p <- p + labs(x="Scenario",y="Relative Proportional Error")#
-    p <- p + theme_bw(12) #
-    p <- p + facet_wrap(~parameter,ncol = 2,labeller = label_parsed)#
-    p <- p + theme(axis.text = element_text(face="bold", size=12),#
-  axis.title = element_text(face="bold", size=12),#
-  strip.text = element_text(face="bold", size=16))#
-    print(p)
-df2<-melt(mdf,variable.name = "parameter",id=c("scenario","scnnumber"))#
-#
-    levels(df2$parameter)<-c("Ro","kappa","Depletion",expression("Yield"["target"]), expression("U"["target"]),"q")#
-    df2$converge<-conv_n[df2$scnnumber]#
-    p <- ggplot(df2) #
-    p <- p + geom_boxplot(aes(x=scenario,y=value))+ coord_flip(ylim=c(-1., 1.0))#
-    p <- p + geom_hline(yintercept=0, color="black", size=1.2, alpha=0.3)#
-    p <- p + labs(x="Scenario",y="Relative Proportional Error")#
-    p <- p + theme_bw(12) #
-    p <- p + facet_wrap(~parameter,ncol = 2,labeller = label_parsed)#
-    p <- p + theme(axis.text = element_text(face="bold", size=12),#
-  axis.title = element_text(face="bold", size=12),#
-  strip.text = element_text(face="bold", size=16))#
-    print(p)
-df2<-melt(mdf,variable.name = "parameter",id=c("scenario","scnnumber"))#
-#
-    levels(df2$parameter)<-c("Ro","kappa","Depletion",expression("Yield"["target"]), expression("U"["target"]),"q")#
-    df2$converge<-conv_n[df2$scnnumber]#
-    df2$scenario<-factor(df2$scenario,levels = rev(levels(df2$scenario)),ordered = TRUE)#
-    p <- ggplot(df2) #
-    p <- p + geom_boxplot(aes(x=scenario,y=value))+ coord_flip(ylim=c(-1., 1.0))#
-    p <- p + geom_hline(yintercept=0, color="black", size=1.2, alpha=0.3)#
-    p <- p + labs(x="Scenario",y="Relative Proportional Error")#
-    p <- p + theme_bw(12) #
-    p <- p + facet_wrap(~parameter,ncol = 2,labeller = label_parsed)#
-    p <- p + theme(axis.text = element_text(face="bold", size=12),#
-  axis.title = element_text(face="bold", size=12),#
-  strip.text = element_text(face="bold", size=16))#
-    print(p)
-for(i in 1:n){#
-        if(M[[i]]$SApar$maxgrad<1.0e-03){#
-            conv_n[M[[i]]$OM$scnNumber] <-  conv_n[M[[i]]$OM$scnNumber] + 1#
-#
-            #if(Rinit==TRUE){#
-            #   est<-c(M[[i]]$SArep$Ro,#
-            #       M[[i]]$SArep$Rinit,#
-            #       M[[i]]$SArep$reck)#
-            #   true<-c(M[[i]]$OM$Ro,#
-            #       M[[i]]$OM$Rinit,#
-            #       M[[i]]$OM$reck)#
-            #   bias<- (est- true) / true#
-                #tv <- data.frame(Ro=est[1], Rinit=est[2], kappa=est[3], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-#
-            #l  df <- data.frame(Ro=bias[1],  Rinit=bias[2], kappa=bias[3], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                #df <- data.frame(Ro=bias[1],  kappa=bias[2], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-#
-            #   mdf <- rbind(mdf,df)#
-#
-            #   af <- data.frame(true = true, est = est, param=c("Ro", "Rinit" , "kappa"), scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                #af <- data.frame(true = true, est = est, param=c("Ro",  "kappa"), scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-            #   adf <- rbind(adf,af)#
-            #}else{#
-                est<-c(M[[i]]$SArep$Ro,#
-                    M[[i]]$SArep$reck,#
-                    M[[i]]$SArep$depletion[length(M[[i]]$SArep$depletion)],#
-                    M[[i]]$SArep$ytarget[length(M[[i]]$SArep$ytarget)],#
-                    M[[i]]$SArep$utarget[length(M[[i]]$SArep$utarget)],#
-                    M[[i]]$SArep$q)#
-                true<-c(M[[i]]$OM$Ro,#
-                    M[[i]]$OM$reck,#
-                    M[[i]]$OM$depl[length(M[[i]]$OM$depl)],#
-                    M[[i]]$OM$ytarget[length(M[[i]]$OM$ytarget)],#
-                    M[[i]]$OM$utarget[length(M[[i]]$OM$utarget)],#
-                    M[[i]]$OM$q)#
-                    bias<- (est- true) / true#
-                #tv <- data.frame(Ro=est[1], Rinit=est[2], kappa=est[3], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-#
-                #df <- data.frame(Ro=bias[1],  Rinit=bias[2], kappa=bias[3], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                df <- data.frame(Ro=bias[1],  kappa=bias[2],depletion=bias[3], ytarget=bias[4], utarget=bias[5], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-#
-                mdf <- rbind(mdf,df)#
-#
-                #af <- data.frame(true = true, est = est, param=c("Ro", "Rinit" , "kappa"), scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                af <- data.frame(true = true, est = est, param=c("Ro",  "kappa", "Depletion", "Yield_target", "U_target"), scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                adf <- rbind(adf,af)#
-            #}#
-        }#
-    }#
-    #adf[adf$param=="kappa",]#
-    #adf[adf$param=="Ro",]#
-    #adf[adf$param=="Rinit",]##
-#
-    #adf[adf$param=="kappa"&adf$scnnumber==1,]#
-    df2<-melt(mdf,variable.name = "parameter",id=c("scenario","scnnumber"))#
-#
-    levels(df2$parameter)<-c("Ro","kappa","Depletion",expression("Yield"["target"]), expression("U"["target"]),"q")#
-    df2$converge<-conv_n[df2$scnnumber]#
-    df2$scenario<-factor(df2$scenario,levels = rev(levels(df2$scenario)),ordered = TRUE)#
-    p <- ggplot(df2) #
-    p <- p + geom_boxplot(aes(x=scenario,y=value))+ coord_flip(ylim=c(-1., 1.0))#
-    p <- p + geom_hline(yintercept=0, color="black", size=1.2, alpha=0.3)#
-    p <- p + labs(x="Scenario",y="Relative Proportional Error")#
-    p <- p + theme_bw(12) #
-    p <- p + facet_wrap(~parameter,ncol = 2,labeller = label_parsed)#
-    p <- p + theme(axis.text = element_text(face="bold", size=12),#
-  axis.title = element_text(face="bold", size=12),#
-  strip.text = element_text(face="bold", size=16))#
-    print(p)
-conv_n<-numeric(length=length(scn))#
-        for(i in 1:n){#
-        if(M[[i]]$SApar$maxgrad<1.0e-03){#
-            conv_n[M[[i]]$OM$scnNumber] <-  conv_n[M[[i]]$OM$scnNumber] + 1#
-#
-            #if(Rinit==TRUE){#
-            #   est<-c(M[[i]]$SArep$Ro,#
-            #       M[[i]]$SArep$Rinit,#
-            #       M[[i]]$SArep$reck)#
-            #   true<-c(M[[i]]$OM$Ro,#
-            #       M[[i]]$OM$Rinit,#
-            #       M[[i]]$OM$reck)#
-            #   bias<- (est- true) / true#
-                #tv <- data.frame(Ro=est[1], Rinit=est[2], kappa=est[3], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-#
-            #l  df <- data.frame(Ro=bias[1],  Rinit=bias[2], kappa=bias[3], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                #df <- data.frame(Ro=bias[1],  kappa=bias[2], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-#
-            #   mdf <- rbind(mdf,df)#
-#
-            #   af <- data.frame(true = true, est = est, param=c("Ro", "Rinit" , "kappa"), scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                #af <- data.frame(true = true, est = est, param=c("Ro",  "kappa"), scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-            #   adf <- rbind(adf,af)#
-            #}else{#
-                est<-c(M[[i]]$SArep$Ro,#
-                    M[[i]]$SArep$reck,#
-                    M[[i]]$SArep$depletion[length(M[[i]]$SArep$depletion)],#
-                    M[[i]]$SArep$ytarget[length(M[[i]]$SArep$ytarget)],#
-                    M[[i]]$SArep$utarget[length(M[[i]]$SArep$utarget)],#
-                    M[[i]]$SArep$q)#
-                true<-c(M[[i]]$OM$Ro,#
-                    M[[i]]$OM$reck,#
-                    M[[i]]$OM$depl[length(M[[i]]$OM$depl)],#
-                    M[[i]]$OM$ytarget[length(M[[i]]$OM$ytarget)],#
-                    M[[i]]$OM$utarget[length(M[[i]]$OM$utarget)],#
-                    M[[i]]$OM$q)#
-                    bias<- (est- true) / true#
-                #tv <- data.frame(Ro=est[1], Rinit=est[2], kappa=est[3], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-#
-                #df <- data.frame(Ro=bias[1],  Rinit=bias[2], kappa=bias[3], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                df <- data.frame(Ro=bias[1],  kappa=bias[2],depletion=bias[3], ytarget=bias[4], utarget=bias[5], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-#
-                mdf <- rbind(mdf,df)#
-#
-                #af <- data.frame(true = true, est = est, param=c("Ro", "Rinit" , "kappa"), scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                af <- data.frame(true = true, est = est, param=c("Ro",  "kappa", "Depletion", "Yield_target", "U_target","q"), scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                adf <- rbind(adf,af)#
-            #}#
-        }#
-    }#
-    #adf[adf$param=="kappa",]#
-    #adf[adf$param=="Ro",]#
-    #adf[adf$param=="Rinit",]##
-#
-    #adf[adf$param=="kappa"&adf$scnnumber==1,]#
-    df2<-melt(mdf,variable.name = "parameter",id=c("scenario","scnnumber"))#
-#
-    levels(df2$parameter)<-c("Ro","kappa","Depletion",expression("Yield"["target"]), expression("U"["target"]),"q")#
-    df2$converge<-conv_n[df2$scnnumber]#
-    df2$scenario<-factor(df2$scenario,levels = rev(levels(df2$scenario)),ordered = TRUE)#
-    p <- ggplot(df2) #
-    p <- p + geom_boxplot(aes(x=scenario,y=value))+ coord_flip(ylim=c(-1., 1.0))#
-    p <- p + geom_hline(yintercept=0, color="black", size=1.2, alpha=0.3)#
-    p <- p + labs(x="Scenario",y="Relative Proportional Error")#
-    p <- p + theme_bw(12) #
-    p <- p + facet_wrap(~parameter,ncol = 2,labeller = label_parsed)#
-    p <- p + theme(axis.text = element_text(face="bold", size=12),#
-  axis.title = element_text(face="bold", size=12),#
-  strip.text = element_text(face="bold", size=16))#
-    print(p)
-n <- length( M )#
-    mdf <- NULL#
-    adf <- NULL#
-    conv_n<-numeric(length=length(scn))#
-        for(i in 1:n){#
-        if(M[[i]]$SApar$maxgrad<1.0e-03){#
-            conv_n[M[[i]]$OM$scnNumber] <-  conv_n[M[[i]]$OM$scnNumber] + 1#
-#
-            #if(Rinit==TRUE){#
-            #   est<-c(M[[i]]$SArep$Ro,#
-            #       M[[i]]$SArep$Rinit,#
-            #       M[[i]]$SArep$reck)#
-            #   true<-c(M[[i]]$OM$Ro,#
-            #       M[[i]]$OM$Rinit,#
-            #       M[[i]]$OM$reck)#
-            #   bias<- (est- true) / true#
-                #tv <- data.frame(Ro=est[1], Rinit=est[2], kappa=est[3], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-#
-            #l  df <- data.frame(Ro=bias[1],  Rinit=bias[2], kappa=bias[3], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                #df <- data.frame(Ro=bias[1],  kappa=bias[2], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-#
-            #   mdf <- rbind(mdf,df)#
-#
-            #   af <- data.frame(true = true, est = est, param=c("Ro", "Rinit" , "kappa"), scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                #af <- data.frame(true = true, est = est, param=c("Ro",  "kappa"), scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-            #   adf <- rbind(adf,af)#
-            #}else{#
-                est<-c(M[[i]]$SArep$Ro,#
-                    M[[i]]$SArep$reck,#
-                    M[[i]]$SArep$depletion[length(M[[i]]$SArep$depletion)],#
-                    M[[i]]$SArep$ytarget[length(M[[i]]$SArep$ytarget)],#
-                    M[[i]]$SArep$utarget[length(M[[i]]$SArep$utarget)],#
-                    M[[i]]$SArep$q)#
-                true<-c(M[[i]]$OM$Ro,#
-                    M[[i]]$OM$reck,#
-                    M[[i]]$OM$depl[length(M[[i]]$OM$depl)],#
-                    M[[i]]$OM$ytarget[length(M[[i]]$OM$ytarget)],#
-                    M[[i]]$OM$utarget[length(M[[i]]$OM$utarget)],#
-                    M[[i]]$OM$q)#
-                    bias<- (est- true) / true#
-                #tv <- data.frame(Ro=est[1], Rinit=est[2], kappa=est[3], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-#
-                #df <- data.frame(Ro=bias[1],  Rinit=bias[2], kappa=bias[3], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                df <- data.frame(Ro=bias[1],  kappa=bias[2],depletion=bias[3], ytarget=bias[4], utarget=bias[5], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-#
-                mdf <- rbind(mdf,df)#
-#
-                #af <- data.frame(true = true, est = est, param=c("Ro", "Rinit" , "kappa"), scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                af <- data.frame(true = true, est = est, param=c("Ro",  "kappa", "Depletion", "Yield_target", "U_target","q"), scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                adf <- rbind(adf,af)#
-            #}#
-        }#
-    }
-df2<-melt(mdf,variable.name = "parameter",id=c("scenario","scnnumber"))#
-#
-    levels(df2$parameter)<-c("Ro","kappa","Depletion",expression("Yield"["target"]), expression("U"["target"]),"q")#
-    df2$converge<-conv_n[df2$scnnumber]#
-    df2$scenario<-factor(df2$scenario,levels = rev(levels(df2$scenario)),ordered = TRUE)#
-    p <- ggplot(df2) #
-    p <- p + geom_boxplot(aes(x=scenario,y=value))+ coord_flip(ylim=c(-1., 1.0))#
-    p <- p + geom_hline(yintercept=0, color="black", size=1.2, alpha=0.3)#
-    p <- p + labs(x="Scenario",y="Relative Proportional Error")#
-    p <- p + theme_bw(12) #
-    p <- p + facet_wrap(~parameter,ncol = 2,labeller = label_parsed)#
-    p <- p + theme(axis.text = element_text(face="bold", size=12),#
-  axis.title = element_text(face="bold", size=12),#
-  strip.text = element_text(face="bold", size=16))#
-    print(p)
-conv_n<-numeric(length=length(scn))#
-        for(i in 1:n){#
-        if(M[[i]]$SApar$maxgrad<1.0e-03){#
-            conv_n[M[[i]]$OM$scnNumber] <-  conv_n[M[[i]]$OM$scnNumber] + 1#
-#
-            #if(Rinit==TRUE){#
-            #   est<-c(M[[i]]$SArep$Ro,#
-            #       M[[i]]$SArep$Rinit,#
-            #       M[[i]]$SArep$reck)#
-            #   true<-c(M[[i]]$OM$Ro,#
-            #       M[[i]]$OM$Rinit,#
-            #       M[[i]]$OM$reck)#
-            #   bias<- (est- true) / true#
-                #tv <- data.frame(Ro=est[1], Rinit=est[2], kappa=est[3], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-#
-            #l  df <- data.frame(Ro=bias[1],  Rinit=bias[2], kappa=bias[3], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                #df <- data.frame(Ro=bias[1],  kappa=bias[2], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-#
-            #   mdf <- rbind(mdf,df)#
-#
-            #   af <- data.frame(true = true, est = est, param=c("Ro", "Rinit" , "kappa"), scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                #af <- data.frame(true = true, est = est, param=c("Ro",  "kappa"), scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-            #   adf <- rbind(adf,af)#
-            #}else{#
-                est<-c(M[[i]]$SArep$Ro,#
-                    M[[i]]$SArep$reck,#
-                    M[[i]]$SArep$depletion[length(M[[i]]$SArep$depletion)],#
-                    M[[i]]$SArep$ytarget[length(M[[i]]$SArep$ytarget)],#
-                    M[[i]]$SArep$utarget[length(M[[i]]$SArep$utarget)],#
-                    M[[i]]$SArep$q)#
-                true<-c(M[[i]]$OM$Ro,#
-                    M[[i]]$OM$reck,#
-                    M[[i]]$OM$depl[length(M[[i]]$OM$depl)],#
-                    M[[i]]$OM$ytarget[length(M[[i]]$OM$ytarget)],#
-                    M[[i]]$OM$utarget[length(M[[i]]$OM$utarget)],#
-                    M[[i]]$OM$q)#
-                    bias<- (est- true) / true#
-                #tv <- data.frame(Ro=est[1], Rinit=est[2], kappa=est[3], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-#
-                #df <- data.frame(Ro=bias[1],  Rinit=bias[2], kappa=bias[3], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                df <- data.frame(Ro=bias[1],  kappa=bias[2],depletion=bias[3], ytarget=bias[4], utarget=bias[5],q=bias[6],  scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-#
-                mdf <- rbind(mdf,df)#
-#
-                #af <- data.frame(true = true, est = est, param=c("Ro", "Rinit" , "kappa"), scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                af <- data.frame(true = true, est = est, param=c("Ro",  "kappa", "Depletion", "Yield_target", "U_target","q"), scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                adf <- rbind(adf,af)#
-            #}#
-        }#
-    }#
-    #adf[adf$param=="kappa",]#
-    #adf[adf$param=="Ro",]#
-    #adf[adf$param=="Rinit",]##
-#
-    #adf[adf$param=="kappa"&adf$scnnumber==1,]#
-    df2<-melt(mdf,variable.name = "parameter",id=c("scenario","scnnumber"))#
-#
-    levels(df2$parameter)<-c("Ro","kappa","Depletion",expression("Yield"["target"]), expression("U"["target"]),"q")#
-    df2$converge<-conv_n[df2$scnnumber]#
-    df2$scenario<-factor(df2$scenario,levels = rev(levels(df2$scenario)),ordered = TRUE)#
-    p <- ggplot(df2) #
-    p <- p + geom_boxplot(aes(x=scenario,y=value))+ coord_flip(ylim=c(-1., 1.0))#
-    p <- p + geom_hline(yintercept=0, color="black", size=1.2, alpha=0.3)#
-    p <- p + labs(x="Scenario",y="Relative Proportional Error")#
-    p <- p + theme_bw(12) #
-    p <- p + facet_wrap(~parameter,ncol = 2,labeller = label_parsed)#
-    p <- p + theme(axis.text = element_text(face="bold", size=12),#
-  axis.title = element_text(face="bold", size=12),#
-  strip.text = element_text(face="bold", size=16))#
-    print(p)
-conv_n<-numeric(length=length(scn))#
-        for(i in 1:n){#
-        if(M[[i]]$SApar$maxgrad<1.0e-03){#
-            conv_n[M[[i]]$OM$scnNumber] <-  conv_n[M[[i]]$OM$scnNumber] + 1#
-#
-            #if(Rinit==TRUE){#
-            #   est<-c(M[[i]]$SArep$Ro,#
-            #       M[[i]]$SArep$Rinit,#
-            #       M[[i]]$SArep$reck)#
-            #   true<-c(M[[i]]$OM$Ro,#
-            #       M[[i]]$OM$Rinit,#
-            #       M[[i]]$OM$reck)#
-            #   bias<- (est- true) / true#
-                #tv <- data.frame(Ro=est[1], Rinit=est[2], kappa=est[3], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-#
-            #l  df <- data.frame(Ro=bias[1],  Rinit=bias[2], kappa=bias[3], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                #df <- data.frame(Ro=bias[1],  kappa=bias[2], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-#
-            #   mdf <- rbind(mdf,df)#
-#
-            #   af <- data.frame(true = true, est = est, param=c("Ro", "Rinit" , "kappa"), scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                #af <- data.frame(true = true, est = est, param=c("Ro",  "kappa"), scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-            #   adf <- rbind(adf,af)#
-            #}else{#
-                est<-c(M[[i]]$SArep$Ro,#
-                    M[[i]]$SArep$reck,#
-                    M[[i]]$SArep$depletion[length(M[[i]]$SArep$depletion)],#
-                    M[[i]]$SArep$ytarget[length(M[[i]]$SArep$ytarget)],#
-                    M[[i]]$SArep$utarget[length(M[[i]]$SArep$utarget)],#
-                    M[[i]]$SArep$q)#
-                true<-c(M[[i]]$OM$Ro,#
-                    M[[i]]$OM$reck,#
-                    M[[i]]$OM$depl[length(M[[i]]$OM$depl)],#
-                    M[[i]]$OM$ytarget[length(M[[i]]$OM$ytarget)],#
-                    M[[i]]$OM$utarget[length(M[[i]]$OM$utarget)],#
-                    M[[i]]$OM$q)#
-                    bias<- (est- true) / true#
-                #tv <- data.frame(Ro=est[1], Rinit=est[2], kappa=est[3], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-#
-                #df <- data.frame(Ro=bias[1],  Rinit=bias[2], kappa=bias[3], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                df <- data.frame(Ro=bias[1],  kappa=bias[2],depletion=bias[3], ytarget=bias[4], utarget=bias[5],q=bias[6],  scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-#
-                mdf <- rbind(mdf,df)#
-#
-                #af <- data.frame(true = true, est = est, param=c("Ro", "Rinit" , "kappa"), scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                af <- data.frame(true = true, est = est, param=c("Ro",  "kappa", "Depletion", "Yield_target", "U_target","q"), scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                adf <- rbind(adf,af)#
-            #}#
-        }#
-    }
-scn<-read_scnnames()#
-#
-    n <- length( M )#
-    mdf <- NULL#
-    adf <- NULL#
-    conv_n<-numeric(length=length(scn))#
-        for(i in 1:n){#
-        if(M[[i]]$SApar$maxgrad<1.0e-03){#
-            conv_n[M[[i]]$OM$scnNumber] <-  conv_n[M[[i]]$OM$scnNumber] + 1#
-#
-            #if(Rinit==TRUE){#
-            #   est<-c(M[[i]]$SArep$Ro,#
-            #       M[[i]]$SArep$Rinit,#
-            #       M[[i]]$SArep$reck)#
-            #   true<-c(M[[i]]$OM$Ro,#
-            #       M[[i]]$OM$Rinit,#
-            #       M[[i]]$OM$reck)#
-            #   bias<- (est- true) / true#
-                #tv <- data.frame(Ro=est[1], Rinit=est[2], kappa=est[3], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-#
-            #l  df <- data.frame(Ro=bias[1],  Rinit=bias[2], kappa=bias[3], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                #df <- data.frame(Ro=bias[1],  kappa=bias[2], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-#
-            #   mdf <- rbind(mdf,df)#
-#
-            #   af <- data.frame(true = true, est = est, param=c("Ro", "Rinit" , "kappa"), scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                #af <- data.frame(true = true, est = est, param=c("Ro",  "kappa"), scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-            #   adf <- rbind(adf,af)#
-            #}else{#
-                est<-c(M[[i]]$SArep$Ro,#
-                    M[[i]]$SArep$reck,#
-                    M[[i]]$SArep$depletion[length(M[[i]]$SArep$depletion)],#
-                    M[[i]]$SArep$ytarget[length(M[[i]]$SArep$ytarget)],#
-                    M[[i]]$SArep$utarget[length(M[[i]]$SArep$utarget)],#
-                    M[[i]]$SArep$q)#
-                true<-c(M[[i]]$OM$Ro,#
-                    M[[i]]$OM$reck,#
-                    M[[i]]$OM$depl[length(M[[i]]$OM$depl)],#
-                    M[[i]]$OM$ytarget[length(M[[i]]$OM$ytarget)],#
-                    M[[i]]$OM$utarget[length(M[[i]]$OM$utarget)],#
-                    M[[i]]$OM$q)#
-                    bias<- (est- true) / true#
-                #tv <- data.frame(Ro=est[1], Rinit=est[2], kappa=est[3], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-#
-                #df <- data.frame(Ro=bias[1],  Rinit=bias[2], kappa=bias[3], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                df <- data.frame(Ro=bias[1],  kappa=bias[2],depletion=bias[3], ytarget=bias[4], utarget=bias[5],q=bias[6],  scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-#
-                mdf <- rbind(mdf,df)#
-#
-                #af <- data.frame(true = true, est = est, param=c("Ro", "Rinit" , "kappa"), scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                af <- data.frame(true = true, est = est, param=c("Ro",  "kappa", "Depletion", "Yield_target", "U_target","q"), scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                adf <- rbind(adf,af)#
-            #}#
-        }#
-    }
-df2<-melt(mdf,variable.name = "parameter",id=c("scenario","scnnumber"))#
-#
-    levels(df2$parameter)<-c("Ro","kappa","Depletion",expression("Yield"["target"]), expression("U"["target"]),"q")#
-    df2$converge<-conv_n[df2$scnnumber]#
-    df2$scenario<-factor(df2$scenario,levels = rev(levels(df2$scenario)),ordered = TRUE)#
-    p <- ggplot(df2) #
-    p <- p + geom_boxplot(aes(x=scenario,y=value))+ coord_flip(ylim=c(-1., 1.0))#
-    p <- p + geom_hline(yintercept=0, color="black", size=1.2, alpha=0.3)#
-    p <- p + labs(x="Scenario",y="Relative Proportional Error")#
-    p <- p + theme_bw(12) #
-    p <- p + facet_wrap(~parameter,ncol = 2,labeller = label_parsed)#
-    p <- p + theme(axis.text = element_text(face="bold", size=12),#
-  axis.title = element_text(face="bold", size=12),#
-  strip.text = element_text(face="bold", size=16))#
-    print(p)
-sqrt(2)
-sqrt(1/2)
-1/sqrt(1/2)
-sqrt(1/2)^1
-sqrt(1/2)^-1
-(1/2)^-2
-(1/2)^(-1)
-(1/2)^(-1/2)
-2^(-2)
-2^(-1)
-2^(-1/2)
-1/2^(-1/2)
-#===================================================#
-#post revision directories#
-DIR<-"/Users/catarinawor/Documents/Length_SRA/R/simResult/noRinit"#
-plotlib<-"/Users/catarinawor/Documents/Length_SRA/R/plots"#
-#.RFILES     <- list.files(.LIB,pattern="\\.[Rr]$")#
-#
-SIMSdat<-list()#
-#
-Rfiles <- list.files(DIR,pattern="\\.Rdata",full.name=TRUE)#
-#
-plotfiles <- list.files(plotlib,pattern="plot",full.name=TRUE)#
-for(i in 1:length(Rfiles)){#
-    load(Rfiles[i])#
-    SIMSdat[[i]]<-sims#
-}#
-#load graphing routinesfor#
-for(p in 1:length(plotfiles)){#
-    source(plotfiles[p])#
-}
-M<-SIMSdat
-require(reshape2)#
-require(tidyr)#
-require(ggplot2)
-cat("plot_params")#
-#
-    scn<-read_scnnames()#
-#
-    n <- length( M )#
-    mdf <- NULL#
-    adf <- NULL#
-    conv_n<-numeric(length=length(scn))#
-        for(i in 1:n){#
-        if(M[[i]]$SApar$maxgrad<1.0e-03){#
-            conv_n[M[[i]]$OM$scnNumber] <-  conv_n[M[[i]]$OM$scnNumber] + 1#
-#
-            #if(Rinit==TRUE){#
-            #   est<-c(M[[i]]$SArep$Ro,#
-            #       M[[i]]$SArep$Rinit,#
-            #       M[[i]]$SArep$reck)#
-            #   true<-c(M[[i]]$OM$Ro,#
-            #       M[[i]]$OM$Rinit,#
-            #       M[[i]]$OM$reck)#
-            #   bias<- (est- true) / true#
-                #tv <- data.frame(Ro=est[1], Rinit=est[2], kappa=est[3], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-#
-            #l  df <- data.frame(Ro=bias[1],  Rinit=bias[2], kappa=bias[3], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                #df <- data.frame(Ro=bias[1],  kappa=bias[2], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-#
-            #   mdf <- rbind(mdf,df)#
-#
-            #   af <- data.frame(true = true, est = est, param=c("Ro", "Rinit" , "kappa"), scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                #af <- data.frame(true = true, est = est, param=c("Ro",  "kappa"), scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-            #   adf <- rbind(adf,af)#
-            #}else{#
-                est<-c(M[[i]]$SArep$Ro,#
-                    M[[i]]$SArep$reck,#
-                    M[[i]]$SArep$depletion[length(M[[i]]$SArep$depletion)],#
-                    M[[i]]$SArep$ytarget[length(M[[i]]$SArep$ytarget)],#
-                    M[[i]]$SArep$utarget[length(M[[i]]$SArep$utarget)],#
-                    M[[i]]$SArep$q)#
-                true<-c(M[[i]]$OM$Ro,#
-                    M[[i]]$OM$reck,#
-                    M[[i]]$OM$depl[length(M[[i]]$OM$depl)],#
-                    M[[i]]$OM$ytarget[length(M[[i]]$OM$ytarget)],#
-                    M[[i]]$OM$utarget[length(M[[i]]$OM$utarget)],#
-                    M[[i]]$OM$q)#
-                    bias<- (est- true) / true#
-                #tv <- data.frame(Ro=est[1], Rinit=est[2], kappa=est[3], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-#
-                #df <- data.frame(Ro=bias[1],  Rinit=bias[2], kappa=bias[3], scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                df <- data.frame(Ro=bias[1],  kappa=bias[2],depletion=bias[3], ytarget=bias[4], utarget=bias[5],q=bias[6],  scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-#
-                mdf <- rbind(mdf,df)#
-#
-                #af <- data.frame(true = true, est = est, param=c("Ro", "Rinit" , "kappa"), scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                af <- data.frame(true = true, est = est, param=c("Ro",  "kappa", "Depletion", "Yield_target", "U_target","q"), scenario=scn[M[[i]]$OM$scnNumber],scnnumber=M[[i]]$OM$scnNumber)#
-                adf <- rbind(adf,af)#
-            #}#
-        }#
-    }#
-    #adf[adf$param=="kappa",]#
-    #adf[adf$param=="Ro",]#
-    #adf[adf$param=="Rinit",]##
-#
-    #adf[adf$param=="kappa"&adf$scnnumber==1,]#
-    df2<-melt(mdf,variable.name = "parameter",id=c("scenario","scnnumber"))#
-#
-    levels(df2$parameter)<-c("Ro","kappa","Depletion",expression("Yield"["target"]), expression("U"["target"]),"q")#
-    df2$converge<-conv_n[df2$scnnumber]#
-    df2$scenario<-factor(df2$scenario,levels = rev(levels(df2$scenario)),ordered = TRUE)#
-    p <- ggplot(df2) #
-    p <- p + geom_boxplot(aes(x=scenario,y=value))+ coord_flip(ylim=c(-1., 1.0))#
-    p <- p + geom_hline(yintercept=0, color="black", size=1.2, alpha=0.3)#
-    p <- p + labs(x="Scenario",y="Relative Proportional Error")#
-    p <- p + theme_bw(12) #
-    p <- p + facet_wrap(~parameter,ncol = 2,labeller = label_parsed)#
-    p <- p + theme(axis.text = element_text(face="bold", size=12),#
-  axis.title = element_text(face="bold", size=12),#
-  strip.text = element_text(face="bold", size=16))#
-    print(p)
 library(plyr)#
 library(data.table)#
 library(ggplot2)#
@@ -1358,511 +7,50 @@ library(ggmap)#
 #if (Sys.info()["nodename"] =="sager")  setwd("~/Dropbox/LSRA/length_SRA/sim_est_lsra")#
 setwd("/Users/catarinawor/Documents/Lagrangian")#
 source("R/read.admb.R")
-basemap<-get_map(location = c(lon = -130, lat = 45.5),#
-    zoom = 5, source = "stamen",maptype="toner-lite",color="bw") #)maptype="terrain", color="bw"#
+sim <- read.rep("admb/OM/simple/lagrangian_OM.rep")
+summary(sim$"CatchNatAge")#
+dim(sim$"CatchNatAge")#
+head(sim$"CatchNatAge")
+ages <- sim$nage:sim$sage#
 #
-invert <- function(x) rgb(t(255-col2rgb(x))/255)    #
-m_inv <- as.raster(apply(basemap, 2, invert))#
+maxPos50<-sim$maxPos50#
+maxPossd<-sim$maxPossd#
 #
-# copy attributes from original object#
-class(m_inv) <- class(basemap)#
-attr(m_inv, "bb") <- attr(basemap, "bb")#
-m_inv#
+ys<-round(approx(ages,(1/(1+exp(-(ages-maxPos50)/maxPossd)))*(sim$narea-sim$sarea)+sim$sarea, n=1000)$y,1)#
+xs<-approx(ages,(1/(1+exp(-(ages-maxPos50)/maxPossd)))*(sim$narea-sim$sarea)+sim$sarea, n=1000)$x
+par(mfrow=c(1,1),xpd=FALSE)#
+plot(ages,(1/(1+exp(-(ages-maxPos50)/maxPossd)))*(sim$narea-sim$sarea)+sim$sarea, ylab="AREA",xlab="AGE",#
+  lwd=4, type="l", col="black", font=2, font.lab=2,cex=1.5,cex.axis=1.5,cex.lab=1.5)#
+segments(xs[which(ys==42)], 42, x1 =xs[which(ys==42)] , y1 = 33, col="darkred", lwd=2)#
+segments(xs[which(ys==42)], 42, x1 =0 , y1 = 42, col="darkred", lwd=2)#
+segments(xs[which(ys==49)], 49, x1 =xs[which(ys==49)] , y1 = 33, col="blue", lwd=2)#
+segments(xs[which(ys==49)], 49, x1 =0 , y1 = 49, col="blue", lwd=2)#
+text(2, 41.5,"CA",col="darkred", font=2)#
+text(2, 42.5,"OR",col="darkred", font=2)#
+text(2, 48.5,"U.S.A.", col="blue", font=2)#
+text(2, 49.5,"Canada", col="blue", font=2)
+names(sim)#
+VBplot<-sim$VBarea[(nrow(sim$PosX)-11):nrow(sim$PosX),]#
 #
-basemap<-get_stamenmap(bbox = c(left = -138, bottom = 30, right = -115,#
-  top = 55), zoom = 5, maptype = "toner-lite", crop = TRUE, messaging = FALSE,#
-  color = "bw")#
-p2<-ggmap(basemap,extent = "panel", maprange=FALSE, crop=T) #
-p2<- p2 + labs(x = 'Longitude', y = 'Latitude') #
-#p2 <- p2 + geom_hline(yintercept=42, linetype=2, colour="grey60")#
-p2 <- p2 + geom_segment(aes(x=-138,xend=-124,y=42,yend=42),linetype=2, colour="black")#
-p2 <- p2 + geom_text(x=-134.5,y=41.5,label="fishing ground 1", colour="black")#
+PosXplot<-sim$PosX[(nrow(sim$PosX)-11):nrow(sim$PosX),5]#
 #
-#p2 <- p2 + geom_hline(yintercept=46, linetype=2, colour="grey60")#
-p2 <- p2 + geom_segment(aes(x=-138,xend=-124.5,y=46,yend=46),linetype=2, colour="black")#
-p2 <- p2 + geom_text(x=-134.5,y=45.5,label="fishing ground 2", colour="black")#
-#
-#p2 <- p2 + geom_hline(yintercept=48.5, linetype=2, colour="grey60")#
-p2 <- p2 + geom_segment(aes(x=-138,xend=-124.8,y=48.5,yend=48.5),linetype=2, colour="black")#
-#
-p2 <- p2 + geom_text(x=-134.5,y=48,label="fishing ground 3", colour="black")#
-p2 <- p2 + geom_segment(aes(x=-138,xend=-127.6,y=51,yend=51),linetype=2, colour="black")#
-#
-#p2 <- p2 + geom_hline(yintercept=51, linetype=2, colour="grey60")#
-p2 <- p2 + geom_text(x=-134.5,y=50.5,label="fishing ground 4", colour="black")#
-p2 <- p2 + geom_text(x=-134.5,y=53.5,label="fishing ground 5", colour="black")#
-p2 <- p2 + theme_bw(16)#
-p2 <- p2 + geom_text(x=-120,y=51,label="Canada", colour="black", size=6)#
-p2 <- p2 + geom_text(x=-120,y=43,label="U.S.A", colour="black",f size=6)#
-#
-#-127.620#
-p2
-basemap<-get_map(location = c(lon = -130, lat = 45.5),#
-    zoom = 5, source = "stamen",maptype="toner-lite",color="bw") #)maptype="terrain", color="bw"#
-#
-invert <- function(x) rgb(t(255-col2rgb(x))/255)    #
-m_inv <- as.raster(apply(basemap, 2, invert))#
-#
-# copy attributes from original object#
-class(m_inv) <- class(basemap)#
-attr(m_inv, "bb") <- attr(basemap, "bb")#
-m_inv#
-#
-basemap<-get_stamenmap(bbox = c(left = -138, bottom = 30, right = -115,#
-  top = 55), zoom = 5, maptype = "toner-lite", crop = TRUE, messaging = FALSE,#
-  color = "bw")
-p2<-ggmap(basemap,extent = "panel", maprange=FALSE, crop=T) #
-p2<- p2 + labs(x = 'Longitude', y = 'Latitude') #
-#p2 <- p2 + geom_hline(yintercept=42, linetype=2, colour="grey60")#
-p2 <- p2 + geom_segment(aes(x=-138,xend=-124,y=42,yend=42),linetype=2, colour="black")#
-p2 <- p2 + geom_text(x=-134.5,y=41.5,label="fishing ground 1", colour="black")#
-#
-#p2 <- p2 + geom_hline(yintercept=46, linetype=2, colour="grey60")#
-p2 <- p2 + geom_segment(aes(x=-138,xend=-124.5,y=46,yend=46),linetype=2, colour="black")#
-p2 <- p2 + geom_text(x=-134.5,y=45.5,label="fishing ground 2", colour="black")#
-#
-#p2 <- p2 + geom_hline(yintercept=48.5, linetype=2, colour="grey60")#
-p2 <- p2 + geom_segment(aes(x=-138,xend=-124.8,y=48.5,yend=48.5),linetype=2, colour="black")#
-#
-p2 <- p2 + geom_text(x=-134.5,y=48,label="fishing ground 3", colour="black")#
-p2 <- p2 + geom_segment(aes(x=-138,xend=-127.6,y=51,yend=51),linetype=2, colour="black")#
-#
-#p2 <- p2 + geom_hline(yintercept=51, linetype=2, colour="grey60")#
-p2
-p2 <- p2 + geom_text(x=-134.5,y=50.5,label="fishing ground 4", colour="black")#
-p2 <- p2 + geom_text(x=-134.5,y=53.5,label="fishing ground 5", colour="black")#
-p2 <- p2 + theme_bw(16)#
-p2 <- p2 + geom_text(x=-120,y=51,label="Canada", colour="black", size=6)#
-p2 <- p2 + geom_text(x=-120,y=43,label="U.S.A", colour="black",f size=6)#
-#
-#-127.620#
-p2
-setwd("/Users/catarinawor/Documents/Lagrangian/R")#
+x<-sim$sarea:sim$narea#
+propXplot<-matrix(NA, nrow=12,ncol=length(x))#
+for(mth in 1:12){#
+  propXplot[mth,]<-dnorm(x,PosXplot[mth],sim$varPos[mth])#
+}#
+Fish<-c(propXplot)
+sim <- read.rep("lagrangian_OM.rep")
+setwd("/Users/catarinawor/Documents/Lagrangian/")
 source("read.admb.R")
+sim <- read.rep("lagrangian_OM.rep")
+setwd("/Users/catarinawor/Documents/Lagrangian/")
+source("read.admb.R")
+setwd("/Users/catarinawor/Documents/Lagrangian/admb/OM/simple")
+source("/Users/catarinawor/Documents/Lagrangian/R/read.admb.R")#
+setwd("/Users/catarinawor/Documents/Lagrangian/admb/OM/simple/")#
 OM<-read.rep("lagrangian_OM.rep")
-setwd("/Users/catarinawor/Documents/Lagrangian/R")#
-source("read.admb.R")#
-OM<-read.rep("../admb/OMlagrangian_OM.rep")
-OM<-read.rep("../admb/OM/lagrangian_OM.rep")
-source("/Users/catarinawor/Documents/Lagrangian/R/read.admb.R")
-setwd("/Users/catarinawor/Documents/Lagrangian/admb/OM/")
-OM<-read.rep("../admb/OM/lagrangian_OM.rep")
-setwd("/Users/catarinawor/Documents/Lagrangian/admb/OM/simple/")
-OM<-read.rep("../admb/OM/lagrangian_OM.rep")
-OM<-read.rep("lagrangian_OM.rep")
-library(ggplot2)#
-library(reshape2)#
-library(animation)#
-library(ggmap)
-PosXplot<-baseF$PosX[(nrow(baseF$PosX)-11):nrow(baseF$PosX),c(1,3,5,7,9,11,13,15,17,19)]
-OM$PosX
-OM$nyr
-OM$syr
-1:((OM$nyr-OM$syr+1)*(OM$nmon-OM$smon+1))
 names(OM)
-1:((OM$nyr-OM$syr+1)*(OM$nmon-OM$smon+1))
-length(OM$indyr)
-ntsp <- 1:length(OM$indyr)
-names(OM)
-OM$nage-OM$sage+1
-ages <- OM$sage:OM$nage
-nage <- OM$nage
-OM$indyr
-indmonth <- OM$indyr
-names(OM)#
-ntsp <- 1:length(OM$indyr)#
-ages <- OM$sage:OM$nage#
-nage <- OM$nage#
-indmonth <- OM$indyr#
-indyr <-  OM$indyr#
-meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
-VBplot<-melt(VBarea)#
-Effplot<-melt(Effarea)
-14400+3122
-59730+16552
-names(VBplot)<- c("time","area", "value")#
-names(Effplot)<- c("time","area", "value")
-names(VBplot)<- c("time","area", "value")#
-names(Effplot)<- c("time","area", "value")#
-#
-VBEffareaplot<-rbind(VBplot,Effplot)
-lat<-VBEffareaplot$area#
-lon<-rep(-131,length(lat))#
-nation<-rep(1,nrow(VBEffareaplot))#
-nation[VBEffareaplot$lat>48.1]<-2#
-variable<-c(rep("Biomass",length(lat)/2),rep("Effort",length(lat)/2))
-VBarea<-matrix(OM$VBarea, ncol=(OM$narea-OM$sarea+1),dimnames=list(ntsp,OM$sarea:OM$narea))
-Effarea<-matrix(baseF$Effarea, ncol=(OM$narea-OM$sarea+1),dimnames=list(ntsp,OM$sarea:OM$narea))
-Effarea<-matrix(OM$Effarea, ncol=(OM$narea-OM$sarea+1),dimnames=list(ntsp,OM$sarea:OM$narea))
-VBplot<-melt(VBarea)
-Effplot<-melt(Effarea)
-names(VBplot)<- c("time","area", "value")
-names(Effplot)<- c("time","area", "value")
-VBEffareaplot<-rbind(VBplot,Effplot)
-lat<-VBEffareaplot$area
-lon<-rep(-131,length(lat))
-nation<-rep(1,nrow(VBEffareaplot))
-nation[VBEffareaplot$lat>48.1]<-2
-variable<-c(rep("Biomass",length(lat)/2),rep("Effort",length(lat)/2))
-VBEffareaplotbase<-cbind(VBEffareaplotbase,lat,lon,month=indmonth,yr=indyr,variable)
-VBEffareaplotbase<-cbind(VBEffareaplot,lat,lon,month=indmonth,yr=indyr,variable)
-sdvalue<-c(#
-      VBEffareaplot$value[VBEffareaplot$variable=="Biomass"],#
-      (VBEffareaplot$value[VBEffareaplot$variable=="Effort"]/mean(VBEffareaplot$value[VBEffareaplot$variable=="Effort"]))#
-      *mean(VBEffareaplot$value[VBEffareaplot$variable=="Biomass"]))
-VBEffareaplot<-cbind(VBEffareaplot,sdvalue)
-VBEffareaplot<-cbind(VBEffareaplot,sdvalue)
-sdvalue<-c(#
-      VBEffareaplot$value[VBEffareaplot$variable=="Biomass"],#
-      (VBEffareaplot$value[VBEffareaplot$variable=="Effort"]/mean(VBEffareaplot$value[VBEffareaplot$variable=="Effort"]))#
-      *mean(VBEffareaplot$value[VBEffareaplot$variable=="Biomass"]))
-VBEffareaplot<-cbind(VBEffareaplot,lat,lon,month=indmonth,yr=indyr,variable)
-VBEffareaplot<-cbind(VBEffareaplot,sdvalue)
-VBEffareaplot<-cbind(VBEffareaplot,lat,lon,month=indmonth,yr=indyr,variable)
-sdvalue<-c(#
-      VBEffareaplot$value[VBEffareaplot$variable=="Biomass"],#
-      (VBEffareaplot$value[VBEffareaplot$variable=="Effort"]/mean(VBEffareaplot$value[VBEffareaplot$variable=="Effort"]))#
-      *mean(VBEffareaplot$value[VBEffareaplot$variable=="Biomass"]))
-VBEffareaplot<-cbind(VBEffareaplot,sdvalue)
-yr<- VBEffareaplot$yr
-basemap<-get_map(location = c(lon = -125, lat = 45),#
-    zoom = 5, maptype = "terrain")
-basemap<-get_map(location = c(lon = -125, lat = 45),#
-    zoom = 5, maptype = "terrain")
-i=601
-ex1<-VBEffareaplot[VBEffareaplot$time==i ,]
-graphics.off()
-p2<-  ggmap(basemap,#
-          extent = "panel",#
-          ylab = "Latitude",#
-          xlab = "Longitude")#
-      p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
-      p2 <- p2 + geom_point(alpha=0.8,aes(size=sdvalue*10, shape=variable, color=variable),data=ex1) #
-      p2 <- p2 + scale_shape_manual(values=c(16,21)) + scale_fill_discrete(na.value=NA, guide="none")#
-      p2 <- p2 + scale_color_manual(values=c("red", "black")) + scale_size_area(guide = "none") #
-      #p2 <- p2 + continuous_scale(,scale_name="size")#
-      p2 <- p2 + labs(title=meses[indmonth[i]],x="Longitude",y="Latitude") #
-      print(p2)
-p2<-  ggmap(basemap,#
-          extent = "panel",#
-          ylab = "Latitude",#
-          xlab = "Longitude")#
-      p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
-      p2 <- p2 + geom_point(alpha=0.8,aes(size=sdvalue*20, shape=variable, color=variable),data=ex1) #
-      p2 <- p2 + scale_shape_manual(values=c(16,21)) + scale_fill_discrete(na.value=NA, guide="none")#
-      p2 <- p2 + scale_color_manual(values=c("red", "black")) + scale_size_area(guide = "none") #
-      #p2 <- p2 + continuous_scale(,scale_name="size")#
-      p2 <- p2 + labs(title=meses[indmonth[i]],x="Longitude",y="Latitude") #
-      print(p2)
-i=i+2
-ex1<-VBEffareaplot[VBEffareaplot$time==i ,]#
-      graphics.off()#
-      p2<-  ggmap(basemap,#
-          extent = "panel",#
-          ylab = "Latitude",#
-          xlab = "Longitude")#
-      p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
-      p2 <- p2 + geom_point(alpha=0.8,aes(size=sdvalue*20, shape=variable, color=variable),data=ex1) #
-      p2 <- p2 + scale_shape_manual(values=c(16,21)) + scale_fill_discrete(na.value=NA, guide="none")#
-      p2 <- p2 + scale_color_manual(values=c("red", "black")) + scale_size_area(guide = "none") #
-      #p2 <- p2 + continuous_scale(,scale_name="size")#
-      p2 <- p2 + labs(title=meses[indmonth[i]],x="Longitude",y="Latitude") #
-      print(p2)
-i=20
-p2<-  ggmap(basemap,#
-          extent = "panel",#
-          ylab = "Latitude",#
-          xlab = "Longitude")#
-      p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
-      p2 <- p2 + geom_point(alpha=0.8,aes(size=sdvalue*20, shape=variable, color=variable),data=ex1) #
-      p2 <- p2 + scale_shape_manual(values=c(16,21)) + scale_fill_discrete(na.value=NA, guide="none")#
-      p2 <- p2 + scale_color_manual(values=c("red", "black")) + scale_size_area(guide = "none") #
-      #p2 <- p2 + continuous_scale(,scale_name="size")#
-      p2 <- p2 + labs(title=meses[indmonth[i]],x="Longitude",y="Latitude") #
-      print(p2)
--VBEffareaplot
-VBEffareaplot
-summary(VBEffareaplot)
-VBEffareaplot$value[VBEffareaplot$variable=="Effort"]
-lat<-VBEffareaplot$area#
-lon<-rep(-131,length(lat))#
-nation<-rep(1,nrow(VBEffareaplot))#
-nation[VBEffareaplot$lat>48.1]<-2#
-variable<-c(rep("Biomass",length(lat)/2),rep("Effort",length(lat)/2))#
-#
-VBEffareaplot<-cbind(VBEffareaplot,lat,lon,month=indmonth,yr=indyr,variable)#
-#
-#rescale variables to be plotted in the same graph#
-sdvalue<-c(#
-      VBEffareaplot$value[VBEffareaplot$variable=="Biomass"],#
-      (VBEffareaplot$value[VBEffareaplot$variable=="Effort"]/mean(VBEffareaplot$value[VBEffareaplot$variable=="Effort"]))*mean(VBEffareaplot$value[VBEffareaplot$variable=="Biomass"]))#
-#dataframe to use in plotting#
-VBEffareaplot<-cbind(VBEffareaplot,sdvalue)#
-yr<- VBEffareaplot$yr#
-basemap<-get_map(location = c(lon = -125, lat = 45),#
-    zoom = 5, maptype = "terrain")#
-#setwd("/Users/catarinawor/Documents/hake/PICES_conference/presentation/Fbase_anime")#
-summary(VBEffareaplot)
-i=607
-ex1<-VBEffareaplot[VBEffareaplot$time==i ,]#
-      graphics.off()#
-      p2<-  ggmap(basemap,#
-          extent = "panel",#
-          ylab = "Latitude",#
-          xlab = "Longitude")#
-      p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
-      p2 <- p2 + geom_point(alpha=0.8,aes(size=sdvalue*20, shape=variable, color=variable),data=ex1) #
-      p2 <- p2 + scale_shape_manual(values=c(16,21)) + scale_fill_discrete(na.value=NA, guide="none")#
-      p2 <- p2 + scale_color_manual(values=c("red", "black")) + scale_size_area(guide = "none") #
-      #p2 <- p2 + continuous_scale(,scale_name="size")#
-      p2 <- p2 + labs(title=meses[indmonth[i]],x="Longitude",y="Latitude") #
-      print(p2)
-for(i in 601:624){#
-      ex1<-VBEffareaplot[VBEffareaplot$time==i ,]#
-      graphics.off()#
-      p2<-  ggmap(basemap,#
-          extent = "panel",#
-          ylab = "Latitude",#
-          xlab = "Longitude")#
-      p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
-      p2 <- p2 + geom_point(alpha=0.8,aes(size=sdvalue*20, shape=variable, color=variable),data=ex1) #
-      p2 <- p2 + scale_shape_manual(values=c(16,21)) + scale_fill_discrete(na.value=NA, guide="none")#
-      p2 <- p2 + scale_color_manual(values=c("red", "black")) + scale_size_area(guide = "none") #
-      #p2 <- p2 + continuous_scale(,scale_name="size")#
-      p2 <- p2 + labs(title=meses[indmonth[i]],x="Longitude",y="Latitude") #
-      print(p2) #
-#
-      #ggsave(filename =paste0("Rplot",i-600,".png"))#
-#
-      #png(filename = paste0("maracuja",i,".png"),width = 960, height = 960, units = "px", pointsize = 12)#
-#
-  }
-========================================================================#
-#
-rm(list=ls()); #
-source("/Users/catarinawor/Documents/Lagrangian/R/read.admb.R")#
-setwd("/Users/catarinawor/Documents/Lagrangian/admb/OM/simple/")#
-OM<-read.rep("lagrangian_OM.rep")#
-#========================================================================#
-library(ggplot2)#
-library(reshape2)#
-library(animation)#
-library(ggmap)#
-#
-#======================================================================== #
-# Graphs for base case scenario#
-#======================================================================== #
-#
-#======================================================#
-#remodel data base for plotting maps#
-names(OM)
-rm(list=ls()); #
-source("/Users/catarinawor/Documents/Lagrangian/R/read.admb.R")#
-setwd("/Users/catarinawor/Documents/Lagrangian/admb/OM/simple/")#
-OM<-read.rep("lagrangian_OM.rep")#
-#========================================================================#
-library(ggplot2)#
-library(reshape2)#
-library(animation)#
-library(ggmap)#
-#
-#======================================================================== #
-# Graphs for base case scenario#
-#======================================================================== #
-#
-#======================================================#
-#remodel data base for plotting maps#
-names(OM)#
-ntsp <- 1:length(OM$indyr)#
-ages <- OM$sage:OM$nage#
-nage <- OM$nage#
-indmonth <- OM$indyr#
-indyr <-  OM$indyr#
-meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
-VBarea<-matrix(OM$VBarea, ncol=(OM$narea-OM$sarea+1),dimnames=list(ntsp,OM$sarea:OM$narea))#
-Effarea<-matrix(OM$Effarea, ncol=(OM$narea-OM$sarea+1),dimnames=list(ntsp,OM$sarea:OM$narea))#
-#
-VBplot<-melt(VBarea)#
-Effplot<-melt(Effarea)#
-#
-names(VBplot)<- c("time","area", "value")#
-names(Effplot)<- c("time","area", "value")#
-#
-VBEffareaplot<-rbind(VBplot,Effplot)#
-#
-lat<-VBEffareaplot$area#
-lon<-rep(-131,length(lat))#
-nation<-rep(1,nrow(VBEffareaplot))#
-nation[VBEffareaplot$lat>48.1]<-2#
-variable<-c(rep("Biomass",length(lat)/2),rep("Effort",length(lat)/2))#
-#
-VBEffareaplot<-cbind(VBEffareaplot,lat,lon,month=indmonth,yr=indyr,variable)#
-#
-#rescale variables to be plotted in the same graph#
-sdvalue<-c(#
-      VBEffareaplot$value[VBEffareaplot$variable=="Biomass"],#
-      (VBEffareaplot$value[VBEffareaplot$variable=="Effort"]/mean(VBEffareaplot$value[VBEffareaplot$variable=="Effort"]))*mean(VBEffareaplot$value[VBEffareaplot$variable=="Biomass"]))#
-#dataframe to use in plotting#
-VBEffareaplot<-cbind(VBEffareaplot,sdvalue)#
-yr<- VBEffareaplot$yr#
-basemap<-get_map(location = c(lon = -125, lat = 45),#
-    zoom = 5, maptype = "terrain")#
-#setwd("/Users/catarinawor/Documents/hake/PICES_conference/presentation/Fbase_anime")#
-summary(VBEffareaplot)#
-#saveLatex( #not using savelatex anymore due to poor resolution#
-#if you don't have latex installed you need to install it or use other function such as saveGIF#
-  for(i in 601:624){#
-      ex1<-VBEffareaplot[VBEffareaplot$time==i ,]#
-      graphics.off()#
-      p2<-  ggmap(basemap,#
-          extent = "panel",#
-          ylab = "Latitude",#
-          xlab = "Longitude")#
-      p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
-      p2 <- p2 + geom_point(alpha=0.8,aes(size=sdvalue*20, shape=variable, color=variable),data=ex1) #
-      p2 <- p2 + scale_shape_manual(values=c(16,21)) + scale_fill_discrete(na.value=NA, guide="none")#
-      p2 <- p2 + scale_color_manual(values=c("red", "black")) + scale_size_area(guide = "none") #
-      #p2 <- p2 + continuous_scale(,scale_name="size")#
-      p2 <- p2 + labs(title=meses[indmonth[i]],x="Longitude",y="Latitude") #
-      print(p2) #
-#
-      #ggsave(filename =paste0("Rplot",i-600,".png"))#
-#
-      #png(filename = paste0("maracuja",i,".png"),width = 960, height = 960, units = "px", pointsize = 12)#
-#
-  }
-sdvalue<-c(#
-      VBEffareaplot$value[VBEffareaplot$variable=="Biomass"],#
-      (VBEffareaplot$value[VBEffareaplot$variable=="Effort"]/mean(VBEffareaplot$value[VBEffareaplot$variable=="Effort"&VBEffareaplot$value>0]))*mean(VBEffareaplot$value[VBEffareaplot$variable=="Biomass"]))#
-#dataframe to use in plotting#
-VBEffareaplot<-cbind(VBEffareaplot,sdvalue)#
-yr<- VBEffareaplot$yr#
-basemap<-get_map(location = c(lon = -125, lat = 45),#
-    zoom = 5, maptype = "terrain")#
-#setwd("/Users/catarinawor/Documents/hake/PICES_conference/presentation/Fbase_anime")#
-summary(VBEffareaplot)#
-#saveLatex( #not using savelatex anymore due to poor resolution#
-#if you don't have latex installed you need to install it or use other function such as saveGIF#
-  for(i in 601:624){#
-      ex1<-VBEffareaplot[VBEffareaplot$time==i ,]#
-      graphics.off()#
-      p2<-  ggmap(basemap,#
-          extent = "panel",#
-          ylab = "Latitude",#
-          xlab = "Longitude")#
-      p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
-      p2 <- p2 + geom_point(alpha=0.8,aes(size=sdvalue*20, shape=variable, color=variable),data=ex1) #
-      p2 <- p2 + scale_shape_manual(values=c(16,21)) + scale_fill_discrete(na.value=NA, guide="none")#
-      p2 <- p2 + scale_color_manual(values=c("red", "black")) + scale_size_area(guide = "none") #
-      #p2 <- p2 + continuous_scale(,scale_name="size")#
-      p2 <- p2 + labs(title=meses[indmonth[i]],x="Longitude",y="Latitude") #
-      print(p2) #
-#
-      #ggsave(filename =paste0("Rplot",i-600,".png"))#
-#
-      #png(filename = paste0("maracuja",i,".png"),width = 960, height = 960, units = "px", pointsize = 12)#
-#
-  }
-VBEffareaplot<-rbind(VBplot,Effplot)#
-#
-lat<-VBEffareaplot$area#
-lon<-rep(-131,length(lat))#
-nation<-rep(1,nrow(VBEffareaplot))#
-nation[VBEffareaplot$lat>48.1]<-2#
-variable<-c(rep("Biomass",length(lat)/2),rep("Effort",length(lat)/2))#
-#
-VBEffareaplot<-cbind(VBEffareaplot,lat,lon,month=indmonth,yr=indyr,variable)#
-#
-#rescale variables to be plotted in the same graph#
-sdvalue<-c(#
-      VBEffareaplot$value[VBEffareaplot$variable=="Biomass"],#
-      (VBEffareaplot$value[VBEffareaplot$variable=="Effort"]/mean(VBEffareaplot$value[VBEffareaplot$variable=="Effort"&VBEffareaplot$value>0]))*mean(VBEffareaplot$value[VBEffareaplot$variable=="Biomass"]))#
-#dataframe to use in plotting#
-VBEffareaplot<-cbind(VBEffareaplot,sdvalue)#
-yr<- VBEffareaplot$yr#
-basemap<-get_map(location = c(lon = -125, lat = 45),#
-    zoom = 5, maptype = "terrain")#
-#setwd("/Users/catarinawor/Documents/hake/PICES_conference/presentation/Fbase_anime")#
-summary(VBEffareaplot)#
-#saveLatex( #not using savelatex anymore due to poor resolution#
-#if you don't have latex installed you need to install it or use other function such as saveGIF#
-  for(i in 601:624){#
-      ex1<-VBEffareaplot[VBEffareaplot$time==i ,]#
-      graphics.off()#
-      p2<-  ggmap(basemap,#
-          extent = "panel",#
-          ylab = "Latitude",#
-          xlab = "Longitude")#
-      p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
-      p2 <- p2 + geom_point(alpha=0.8,aes(size=sdvalue*20, shape=variable, color=variable),data=ex1) #
-      p2 <- p2 + scale_shape_manual(values=c(16,21)) + scale_fill_discrete(na.value=NA, guide="none")#
-      p2 <- p2 + scale_color_manual(values=c("red", "black")) + scale_size_area(guide = "none") #
-      #p2 <- p2 + continuous_scale(,scale_name="size")#
-      p2 <- p2 + labs(title=meses[indmonth[i]],x="Longitude",y="Latitude") #
-      print(p2) #
-#
-      #ggsave(filename =paste0("Rplot",i-600,".png"))#
-#
-      #png(filename = paste0("maracuja",i,".png"),width = 960, height = 960, units = "px", pointsize = 12)#
-#
-  }
-for(i in 601:624){#
-      ex1<-VBEffareaplot[VBEffareaplot$time==i ,]#
-      graphics.off()#
-      p2<-  ggmap(basemap,#
-          extent = "panel",#
-          ylab = "Latitude",#
-          xlab = "Longitude")#
-      p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
-      p2 <- p2 + geom_point(alpha=0.8,aes(size=sdvalue, shape=variable, color=variable),data=ex1) #
-      p2 <- p2 + scale_shape_manual(values=c(16,21)) + scale_fill_discrete(na.value=NA, guide="none")#
-      p2 <- p2 + scale_color_manual(values=c("red", "black")) + scale_size_area(guide = "none") #
-      #p2 <- p2 + continuous_scale(,scale_name="size")#
-      p2 <- p2 + labs(title=meses[indmonth[i]],x="Longitude",y="Latitude") #
-      print(p2) #
-#
-      #ggsave(filename =paste0("Rplot",i-600,".png"))#
-#
-      #png(filename = paste0("maracuja",i,".png"),width = 960, height = 960, units = "px", pointsize = 12)#
-#
-  }
-for(i in 601:624){#
-      ex1<-VBEffareaplot[VBEffareaplot$time==i ,]#
-      graphics.off()#
-      p2<-  ggmap(basemap,#
-          extent = "panel",#
-          ylab = "Latitude",#
-          xlab = "Longitude")#
-      p2 <- p2 + geom_line(y=48.5, linetype=2, colour="grey60")#
-      p2 <- p2 + geom_point(alpha=0.8,aes(size=sdvalue, shape=variable, color=variable),data=ex1) #
-      p2 <- p2 + scale_shape_manual(values=c(16,21)) + scale_fill_discrete(na.value=NA, guide="none")#
-      p2 <- p2 + scale_color_manual(values=c("red", "black")) + scale_size_area(guide = "none") #
-      #p2 <- p2 + continuous_scale(,scale_name="size")#
-      p2 <- p2 + labs(title=meses[indmonth[i]],x="Longitude",y="Latitude") #
-      print(p2) #
-#
-      #ggsave(filename =paste0("Rplot",i-600,".png"))#
-#
-      #png(filename = paste0("maracuja",i,".png"),width = 960, height = 960, units = "px", pointsize = 12)#
-#
-  }
-rm(list=ls()); #
-source("/Users/catarinawor/Documents/Lagrangian/R/read.admb.R")#
-setwd("/Users/catarinawor/Documents/Lagrangian/admb/OM/simple/")#
-OM<-read.rep("lagrangian_OM.rep")#
-#========================================================================#
-library(ggplot2)#
-library(reshape2)#
-library(animation)#
-library(ggmap)#
-#
-#======================================================================== #
-# Graphs for base case scenario#
-#======================================================================== #
-#
-#======================================================#
-#remodel data base for plotting maps#
-names(OM)#
 ntsp <- 1:length(OM$indyr)#
 ages <- OM$sage:OM$nage#
 nage <- OM$nage#
@@ -1893,16 +81,14 @@ sdvalue<-c(#
       VBEffareaplot$value[VBEffareaplot$variable=="Biomass"],#
       (VBEffareaplot$value[VBEffareaplot$variable=="Effort"]/mean(VBEffareaplot$value[VBEffareaplot$variable=="Effort"&VBEffareaplot$value>0]))*mean(VBEffareaplot$value[VBEffareaplot$variable=="Biomass"]))#
 #dataframe to use in plotting#
-VBEffareaplot<-cbind(VBEffareaplot,sdvalue)#
+VBEffareaplot<-cbind(VBEffareaplot,sdvalue)
 yr<- VBEffareaplot$yr#
 basemap<-get_map(location = c(lon = -125, lat = 45),#
     zoom = 5, maptype = "terrain")#
 #setwd("/Users/catarinawor/Documents/hake/PICES_conference/presentation/Fbase_anime")#
-summary(VBEffareaplot)#
-#saveLatex( #not using savelatex anymore due to poor resolution#
-#if you don't have latex installed you need to install it or use other function such as saveGIF#
-  for(i in 601:624){#
-      ex1<-VBEffareaplot[VBEffareaplot$time==i ,]#
+summary(VBEffareaplot)
+i=601
+ex1<-VBEffareaplot[VBEffareaplot$time==i ,]#
       graphics.off()#
       p2<-  ggmap(basemap,#
           extent = "panel",#
@@ -1914,10 +100,398 @@ summary(VBEffareaplot)#
       p2 <- p2 + scale_color_manual(values=c("red", "black")) + scale_size_area(guide = "none") #
       #p2 <- p2 + continuous_scale(,scale_name="size")#
       p2 <- p2 + labs(title=meses[indmonth[i]],x="Longitude",y="Latitude") #
-      print(p2) #
+      print(p2)
+ex1<-VBEffareaplot[VBEffareaplot$time==i ,]
+graphics.off()
+p2<-  ggmap(basemap,#
+          extent = "panel",#
+          ylab = "Latitude",#
+          xlab = "Longitude")
+basemap<-get_map(location = c(lon = -125, lat = 45),#
+    zoom = 5, maptype = "terrain")
+basemap<-get_stamenmap(location = c(lon = -125, lat = 45),#
+    zoom = 5, maptype = "terrain")
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")#
 #
-      #ggsave(filename =paste0("Rplot",i-600,".png"))#
+head(tmpXplot)#
+tmpXplot<-data.frame(sim$propVBarea[sim$propVBarea[,1]>(max(sim$propVBarea[,1])-12),])#
+tmpXplot[,1]<-meses[tmpXplot[,1]-(max(sim$propVBarea[,1])-12)]#
+tmpXplot<-rename(tmpXplot, c("V1"="month", "V2"= "Latitude","V3"="1", "V4"="2", "V5"= "3",#
+  "V6"="4", "V7"="5", "V8"= "6","V9"="7", "V10"="8", "V11"= "9","V12"="10", "V13"="11", "V14"= "12",#
+  "V15"="13", "V16"="14", "V17"= "15","V18"="16", "V19"="17", "V20"= "18","V21"="19", "V22"="20"))#
+Xplot<-melt(tmpXplot, id=c("month", "Latitude"),variable.name="age")#
+Xplot$group<-as.factor(rep(0,length(Xplot$month)))#
+Xplot<-arrange(transform(Xplot,month=factor(month,levels=meses)),month)#
+head(Xplot)
+dim(Xplot)
+dim(tmpXplot)
+372/12
+head(tmpXplot)
+sim$propVBarea[,1]
+372/12
+head(Xplot)
+p2 <- ggplot(Xplot) #
+p2 <- p2 + geom_line(aes(x=Latitude, y=value, lty=group, colour=age),size=1.2)#
+p2 <- p2 + geom_vline(xintercept=48.5, linetype=3)#
+#p2 <- p2 + facet_wrap(~month,ncol=4)#
+p2
+p2 <- ggplot(Xplot) #
+p2 <- p2 + geom_line(aes(x=Latitude, y=value, lty=group, colour=age),size=1.2)#
+p2 <- p2 + geom_vline(xintercept=48.5, linetype=3)#
+p2 <- p2 + facet_wrap(~month,ncol=4)#
+p2 <- p2 + theme_bw()+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks.y = element_blank(),#
+        axis.text=element_text(size=12),axis.title=element_text(size=12,face="bold")) #
+p2
+head(Xplot)
+Xplot10<-Xplot[Xplot$age<11,]
+Xplot10<-Xplot[Xplot$age<11,]
+as.numeric(Xplot$age)
+Xplot10<-Xplot[as.numeric(Xplot$age)<11,]
+p2 <- ggplot(Xplot10) #
+p2 <- p2 + geom_line(aes(x=Latitude, y=value, lty=group, colour=age),size=1.2)#
+p2 <- p2 + geom_vline(xintercept=48.5, linetype=3)#
+p2 <- p2 + facet_wrap(~month,ncol=4)#
+p2 <- p2 + theme_bw()+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks.y = element_blank(),#
+        axis.text=element_text(size=12),axis.title=element_text(size=12,face="bold")) #
+p2 <- p2 + ylab("Biomass")#
+p2 <- p2 + scale_linetype_manual(breaks=c(as.factor(1:20),"0","-1"), values=c(5,1,rep(1,20)))#
+p2 <- p2 + guides(lty=FALSE) + scale_color_brewer(palette="Dark2")#
+p2
+p2 <- ggplot(Xplot10) #
+p2 <- p2 + geom_line(aes(x=Latitude, y=value, lty=group, colour=age),size=1.2)#
+p2 <- p2 + geom_vline(xintercept=48.5, linetype=3)#
+p2 <- p2 + facet_wrap(~month,ncol=4)#
+p2 <- p2 + theme_bw()+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks.y = element_blank(),#
+        axis.text=element_text(size=12),axis.title=element_text(size=12,face="bold")) #
+p2 <- p2 + ylab("Biomass")#
+p2 <- p2 + scale_color_brewer(palette="Dark2")#
+p2
+p2 <- ggplot(Xplot10) #
+p2 <- p2 + geom_line(aes(x=Latitude, y=value, lty=group, colour=age),size=1.2)#
+p2 <- p2 + geom_vline(xintercept=48.5, linetype=3)#
+p2 <- p2 + facet_wrap(~month,ncol=4)#
+p2 <- p2 + theme_bw()+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks.y = element_blank(),#
+        axis.text=element_text(size=12),axis.title=element_text(size=12,face="bold")) #
+p2 <- p2 + ylab("Biomass")#
+p2
+source("/Users/catarinawor/Documents/Lagrangian/R/read.admb.R")#
+setwd("/Users/catarinawor/Documents/Lagrangian/admb/OM/simple/")#
+OM<-read.rep("lagrangian_OM.rep")#
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")#
 #
-      #png(filename = paste0("maracuja",i,".png"),width = 960, height = 960, units = "px", pointsize = 12)#
+head(tmpXplot)#
+tmpXplot<-data.frame(sim$propVBarea[sim$propVBarea[,1]>(max(sim$propVBarea[,1])-12),])#
+tmpXplot[,1]<-meses[tmpXplot[,1]-(max(sim$propVBarea[,1])-12)]#
+tmpXplot<-rename(tmpXplot, c("V1"="month", "V2"= "Latitude","V3"="1", "V4"="2", "V5"= "3",#
+  "V6"="4", "V7"="5", "V8"= "6","V9"="7", "V10"="8", "V11"= "9","V12"="10", "V13"="11", "V14"= "12",#
+  "V15"="13", "V16"="14", "V17"= "15","V18"="16", "V19"="17", "V20"= "18","V21"="19", "V22"="20"))#
+dim(tmpXplot)#
+Xplot<-melt(tmpXplot, id=c("month", "Latitude"),variable.name="age")#
+Xplot$group<-as.factor(rep(0,length(Xplot$month)))#
+Xplot<-arrange(transform(Xplot,month=factor(month,levels=meses)),month)#
 #
-  }
+head(Xplot)#
+dim(Xplot)#
+Xplot10<-Xplot[as.numeric(Xplot$age)<11,]
+p2 <- ggplot(Xplot10) #
+p2 <- p2 + geom_line(aes(x=Latitude, y=value, lty=group, colour=age),size=1.2)#
+p2 <- p2 + geom_vline(xintercept=48.5, linetype=3)#
+p2 <- p2 + facet_wrap(~month,ncol=4)#
+p2 <- p2 + theme_bw()+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks.y = element_blank(),#
+        axis.text=element_text(size=12),axis.title=element_text(size=12,face="bold")) #
+p2 <- p2 + ylab("Biomass")#
+p2 <- p2 + scale_color_brewer(palette="Dark2")#
+p2
+source("/Users/catarinawor/Documents/Lagrangian/R/read.admb.R")#
+setwd("/Users/catarinawor/Documents/Lagrangian/admb/OM/simple/")#
+OM<-read.rep("lagrangian_OM.rep")#
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")#
+#
+head(tmpXplot)#
+tmpXplot<-data.frame(sim$propVBarea[sim$propVBarea[,1]>(max(sim$propVBarea[,1])-12),])#
+tmpXplot[,1]<-meses[tmpXplot[,1]-(max(sim$propVBarea[,1])-12)]#
+tmpXplot<-rename(tmpXplot, c("V1"="month", "V2"= "Latitude","V3"="1", "V4"="2", "V5"= "3",#
+  "V6"="4", "V7"="5", "V8"= "6","V9"="7", "V10"="8", "V11"= "9","V12"="10", "V13"="11", "V14"= "12",#
+  "V15"="13", "V16"="14", "V17"= "15","V18"="16", "V19"="17", "V20"= "18","V21"="19", "V22"="20"))#
+dim(tmpXplot)#
+Xplot<-melt(tmpXplot, id=c("month", "Latitude"),variable.name="age")#
+Xplot$group<-as.factor(rep(0,length(Xplot$month)))#
+Xplot<-arrange(transform(Xplot,month=factor(month,levels=meses)),month)#
+#
+head(Xplot)#
+dim(Xplot)#
+Xplot10<-Xplot[as.numeric(Xplot$age)<11,]
+p2 <- ggplot(Xplot10) #
+p2 <- p2 + geom_line(aes(x=Latitude, y=value, lty=group, colour=age),size=1.2)#
+p2 <- p2 + geom_vline(xintercept=48.5, linetype=3)#
+p2 <- p2 + facet_wrap(~month,ncol=4)#
+p2 <- p2 + theme_bw()+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks.y = element_blank(),#
+        axis.text=element_text(size=12),axis.title=element_text(size=12,face="bold")) #
+p2 <- p2 + ylab("Biomass")#
+p2 <- p2 + scale_color_brewer(palette="Dark2")#
+p2
+p2 <- ggplot(Xplot10) #
+p2 <- p2 + geom_line(aes(x=Latitude, y=value, lty=group, colour=age),size=1.2)#
+p2 <- p2 + geom_vline(xintercept=48.5, linetype=3)#
+p2 <- p2 + facet_wrap(~month,ncol=4)#
+p2 <- p2 + theme_bw()+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks.y = element_blank(),#
+        axis.text=element_text(size=12),axis.title=element_text(size=12,face="bold")) #
+p2 <- p2 + ylab("Biomass")#
+p2
+source("/Users/catarinawor/Documents/Lagrangian/R/read.admb.R")#
+setwd("/Users/catarinawor/Documents/Lagrangian/admb/OM/simple/")#
+OM<-read.rep("lagrangian_OM.rep")#
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")#
+#
+head(tmpXplot)#
+tmpXplot<-data.frame(sim$propVBarea[sim$propVBarea[,1]>(max(sim$propVBarea[,1])-12),])#
+tmpXplot[,1]<-meses[tmpXplot[,1]-(max(sim$propVBarea[,1])-12)]#
+tmpXplot<-rename(tmpXplot, c("V1"="month", "V2"= "Latitude","V3"="1", "V4"="2", "V5"= "3",#
+  "V6"="4", "V7"="5", "V8"= "6","V9"="7", "V10"="8", "V11"= "9","V12"="10", "V13"="11", "V14"= "12",#
+  "V15"="13", "V16"="14", "V17"= "15","V18"="16", "V19"="17", "V20"= "18","V21"="19", "V22"="20"))#
+dim(tmpXplot)#
+Xplot<-melt(tmpXplot, id=c("month", "Latitude"),variable.name="age")#
+Xplot$group<-as.factor(rep(0,length(Xplot$month)))#
+Xplot<-arrange(transform(Xplot,month=factor(month,levels=meses)),month)#
+#
+head(Xplot)#
+dim(Xplot)#
+Xplot10<-Xplot[as.numeric(Xplot$age)<11&as.numeric(Xplot$age)>1,] #
+p2 <- ggplot(Xplot10) #
+p2 <- p2 + geom_line(aes(x=Latitude, y=value, colour=age),size=1.2)#
+p2 <- p2 + geom_vline(xintercept=48.5, linetype=3)#
+p2 <- p2 + facet_wrap(~month,ncol=4)#
+p2 <- p2 + theme_bw()+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks.y = element_blank(),#
+        axis.text=element_text(size=12),axis.title=element_text(size=12,face="bold")) #
+p2 <- p2 + ylab("Biomass")#
+p2
+source("/Users/catarinawor/Documents/Lagrangian/R/read.admb.R")#
+setwd("/Users/catarinawor/Documents/Lagrangian/admb/OM/simple/")#
+OM<-read.rep("lagrangian_OM.rep")#
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")#
+#
+head(tmpXplot)#
+tmpXplot<-data.frame(sim$propVBarea[sim$propVBarea[,1]>(max(sim$propVBarea[,1])-12),])#
+tmpXplot[,1]<-meses[tmpXplot[,1]-(max(sim$propVBarea[,1])-12)]#
+tmpXplot<-rename(tmpXplot, c("V1"="month", "V2"= "Latitude","V3"="1", "V4"="2", "V5"= "3",#
+  "V6"="4", "V7"="5", "V8"= "6","V9"="7", "V10"="8", "V11"= "9","V12"="10", "V13"="11", "V14"= "12",#
+  "V15"="13", "V16"="14", "V17"= "15","V18"="16", "V19"="17", "V20"= "18","V21"="19", "V22"="20"))#
+dim(tmpXplot)#
+Xplot<-melt(tmpXplot, id=c("month", "Latitude"),variable.name="age")#
+Xplot$group<-as.factor(rep(0,length(Xplot$month)))#
+Xplot<-arrange(transform(Xplot,month=factor(month,levels=meses)),month)#
+#
+head(Xplot)#
+dim(Xplot)#
+Xplot10<-Xplot[as.numeric(Xplot$age)<11&as.numeric(Xplot$age)>1,] #
+p2 <- ggplot(Xplot10) #
+p2 <- p2 + geom_line(aes(x=Latitude, y=value, colour=age),size=1.2)#
+p2 <- p2 + geom_vline(xintercept=48.5, linetype=3)#
+p2 <- p2 + facet_wrap(~month,ncol=4)#
+p2 <- p2 + theme_bw()+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks.y = element_blank(),#
+        axis.text=element_text(size=12),axis.title=element_text(size=12,face="bold")) #
+p2 <- p2 + ylab("Biomass")#
+p2
+source("/Users/catarinawor/Documents/Lagrangian/R/read.admb.R")#
+setwd("/Users/catarinawor/Documents/Lagrangian/admb/OM/simple/")#
+OM<-read.rep("lagrangian_OM.rep")#
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")#
+#
+head(tmpXplot)#
+tmpXplot<-data.frame(sim$propVBarea[sim$propVBarea[,1]>(max(sim$propVBarea[,1])-12),])#
+tmpXplot[,1]<-meses[tmpXplot[,1]-(max(sim$propVBarea[,1])-12)]#
+tmpXplot<-rename(tmpXplot, c("V1"="month", "V2"= "Latitude","V3"="1", "V4"="2", "V5"= "3",#
+  "V6"="4", "V7"="5", "V8"= "6","V9"="7", "V10"="8", "V11"= "9","V12"="10", "V13"="11", "V14"= "12",#
+  "V15"="13", "V16"="14", "V17"= "15","V18"="16", "V19"="17", "V20"= "18","V21"="19", "V22"="20"))#
+dim(tmpXplot)#
+Xplot<-melt(tmpXplot, id=c("month", "Latitude"),variable.name="age")#
+Xplot$group<-as.factor(rep(0,length(Xplot$month)))#
+Xplot<-arrange(transform(Xplot,month=factor(month,levels=meses)),month)#
+#
+head(Xplot)#
+dim(Xplot)#
+Xplot10<-Xplot[as.numeric(Xplot$age)<11&as.numeric(Xplot$age)>1,] #
+p2 <- ggplot(Xplot10) #
+p2 <- p2 + geom_line(aes(x=Latitude, y=value, colour=age),size=1.2)#
+p2 <- p2 + geom_vline(xintercept=48.5, linetype=3)#
+p2 <- p2 + facet_wrap(~month,ncol=4)#
+p2 <- p2 + theme_bw()+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks.y = element_blank(),#
+        axis.text=element_text(size=12),axis.title=element_text(size=12,face="bold")) #
+p2 <- p2 + ylab("Biomass")#
+p2
+source("/Users/catarinawor/Documents/Lagrangian/R/read.admb.R")#
+setwd("/Users/catarinawor/Documents/Lagrangian/admb/OM/simple/")#
+OM<-read.rep("lagrangian_OM.rep")#
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")#
+#
+head(tmpXplot)#
+tmpXplot<-data.frame(sim$propVBarea[sim$propVBarea[,1]>(max(sim$propVBarea[,1])-12),])#
+tmpXplot[,1]<-meses[tmpXplot[,1]-(max(sim$propVBarea[,1])-12)]#
+tmpXplot<-rename(tmpXplot, c("V1"="month", "V2"= "Latitude","V3"="1", "V4"="2", "V5"= "3",#
+  "V6"="4", "V7"="5", "V8"= "6","V9"="7", "V10"="8", "V11"= "9","V12"="10", "V13"="11", "V14"= "12",#
+  "V15"="13", "V16"="14", "V17"= "15","V18"="16", "V19"="17", "V20"= "18","V21"="19", "V22"="20"))#
+dim(tmpXplot)#
+Xplot<-melt(tmpXplot, id=c("month", "Latitude"),variable.name="age")#
+Xplot$group<-as.factor(rep(0,length(Xplot$month)))#
+Xplot<-arrange(transform(Xplot,month=factor(month,levels=meses)),month)#
+#
+head(Xplot)#
+dim(Xplot)#
+Xplot10<-Xplot[is.odd(as.numeric(Xplot$age)),] #
+p2 <- ggplot(Xplot10) #
+p2 <- p2 + geom_line(aes(x=Latitude, y=value, colour=age),size=1.4)#
+p2 <- p2 + geom_vline(xintercept=48.5, linetype=3)#
+p2 <- p2 + facet_wrap(~month,ncol=4)#
+p2 <- p2 + theme_bw()+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks.y = element_blank(),#
+        axis.text=element_text(size=12),axis.title=element_text(size=12,face="bold")) #
+p2 <- p2 + ylab("Biomass")#
+p2
+ages <- sim$nage:sim$sage#
+#
+maxPos50<-sim$maxPos50#
+maxPossd<-sim$maxPossd#
+#
+ys<-round(approx(ages,(1/(1+exp(-(ages-maxPos50)/maxPossd)))*(sim$narea-sim$sarea)+sim$sarea, n=1000)$y,1)#
+xs<-approx(ages,(1/(1+exp(-(ages-maxPos50)/maxPossd)))*(sim$narea-sim$sarea)+sim$sarea, n=1000)$x#
+#
+xs[which(ys==42)]#
+#
+xs[which(ys==49)]
+plot(ages,(1/(1+exp(-(ages-maxPos50)/maxPossd)))*(sim$narea-sim$sarea)+sim$sarea, ylab="AREA",xlab="AGE",#
+  lwd=4, type="l", col="black", font=2, font.lab=2,cex=1.5,cex.axis=1.5,cex.lab=1.5)#
+segments(xs[which(ys==42)], 42, x1 =xs[which(ys==42)] , y1 = 33, col="darkred", lwd=2)#
+segments(xs[which(ys==42)], 42, x1 =0 , y1 = 42, col="darkred", lwd=2)#
+segments(xs[which(ys==49)], 49, x1 =xs[which(ys==49)] , y1 = 33, col="blue", lwd=2)#
+segments(xs[which(ys==49)], 49, x1 =0 , y1 = 49, col="blue", lwd=2)#
+text(2, 41.5,"CA",col="darkred", font=2)#
+text(2, 42.5,"OR",col="darkred", font=2)#
+text(2, 48.5,"U.S.A.", col="blue", font=2)#
+text(2, 49.5,"Canada", col="blue", font=2)
+source("/Users/catarinawor/Documents/Lagrangian/R/read.admb.R")#
+setwd("/Users/catarinawor/Documents/Lagrangian/admb/OM/simple/")#
+OM<-read.rep("lagrangian_OM.rep")#
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")#
+#
+head(tmpXplot)#
+tmpXplot<-data.frame(sim$propVBarea[sim$propVBarea[,1]>(max(sim$propVBarea[,1])-12),])#
+tmpXplot[,1]<-meses[tmpXplot[,1]-(max(sim$propVBarea[,1])-12)]#
+tmpXplot<-rename(tmpXplot, c("V1"="month", "V2"= "Latitude","V3"="1", "V4"="2", "V5"= "3",#
+  "V6"="4", "V7"="5", "V8"= "6","V9"="7", "V10"="8", "V11"= "9","V12"="10", "V13"="11", "V14"= "12",#
+  "V15"="13", "V16"="14", "V17"= "15","V18"="16", "V19"="17", "V20"= "18","V21"="19", "V22"="20"))#
+dim(tmpXplot)#
+Xplot<-melt(tmpXplot, id=c("month", "Latitude"),variable.name="age")#
+Xplot$group<-as.factor(rep(0,length(Xplot$month)))#
+Xplot<-arrange(transform(Xplot,month=factor(month,levels=meses)),month)#
+#
+head(Xplot)#
+dim(Xplot)#
+Xplot10<-Xplot[!is.odd(as.numeric(Xplot$age)),] #
+p2 <- ggplot(Xplot10) #
+p2 <- p2 + geom_line(aes(x=Latitude, y=value, colour=age),size=1.4)#
+p2 <- p2 + geom_vline(xintercept=48.5, linetype=3,size=1.4)#
+p2 <- p2 + facet_wrap(~month,ncol=4)#
+p2 <- p2 + theme_bw()+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks.y = element_blank(),#
+        axis.text=element_text(size=12),axis.title=element_text(size=12,face="bold")) #
+p2 <- p2 + ylab("Biomass")#
+p2
+head(Xplot)
+Xplot10<-Xplot[!is.odd(as.numeric(Xplot$age)),]
+Xplot10<-Xplot[as.numeric(Xplot$age)%%2==0,]
+p2 <- ggplot(Xplot10) #
+p2 <- p2 + geom_line(aes(x=Latitude, y=value, colour=age),size=1.4)#
+p2 <- p2 + geom_vline(xintercept=48.5, linetype=3,size=1.4)#
+p2 <- p2 + facet_wrap(~month,ncol=4)#
+p2 <- p2 + theme_bw()+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks.y = element_blank(),#
+        axis.text=element_text(size=12),axis.title=element_text(size=12,face="bold")) #
+p2 <- p2 + ylab("Biomass")#
+p2
+Xplot10<-Xplot[as.numeric(Xplot$age)%%2!=0,] #
+p2 <- ggplot(Xplot10) #
+p2 <- p2 + geom_line(aes(x=Latitude, y=value, colour=age),size=1.4)#
+p2 <- p2 + geom_vline(xintercept=48.5, linetype=3,size=1.4)#
+p2 <- p2 + facet_wrap(~month,ncol=4)#
+p2 <- p2 + theme_bw()+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks.y = element_blank(),#
+        axis.text=element_text(size=12),axis.title=element_text(size=12,face="bold")) #
+p2 <- p2 + ylab("Biomass")#
+p2
+Xplot10<-Xplot[as.numeric(Xplot$age)%%2==0&as.numeric(Xplot$age)<20,] #
+p2 <- ggplot(Xplot10) #
+p2 <- p2 + geom_line(aes(x=Latitude, y=value, colour=age),size=1.4)#
+p2 <- p2 + geom_vline(xintercept=48.5, linetype=3,size=1.4)#
+p2 <- p2 + facet_wrap(~month,ncol=4)#
+p2 <- p2 + theme_bw()+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks.y = element_blank(),#
+        axis.text=element_text(size=12),axis.title=element_text(size=12,face="bold")) #
+p2 <- p2 + ylab("Biomass")#
+p2
+exp(0)
+source("/Users/catarinawor/Documents/Lagrangian/R/read.admb.R")#
+setwd("/Users/catarinawor/Documents/Lagrangian/admb/OM/simple/")#
+OM<-read.rep("lagrangian_OM.rep")#
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")#
+#
+head(tmpXplot)#
+tmpXplot<-data.frame(sim$propVBarea[sim$propVBarea[,1]>(max(sim$propVBarea[,1])-12),])#
+tmpXplot[,1]<-meses[tmpXplot[,1]-(max(sim$propVBarea[,1])-12)]#
+tmpXplot<-rename(tmpXplot, c("V1"="month", "V2"= "Latitude","V3"="1", "V4"="2", "V5"= "3",#
+  "V6"="4", "V7"="5", "V8"= "6","V9"="7", "V10"="8", "V11"= "9","V12"="10", "V13"="11", "V14"= "12",#
+  "V15"="13", "V16"="14", "V17"= "15","V18"="16", "V19"="17", "V20"= "18","V21"="19", "V22"="20"))#
+dim(tmpXplot)#
+Xplot<-melt(tmpXplot, id=c("month", "Latitude"),variable.name="age")#
+Xplot$group<-as.factor(rep(0,length(Xplot$month)))#
+Xplot<-arrange(transform(Xplot,month=factor(month,levels=meses)),month)#
+#
+head(Xplot)#
+dim(Xplot)#
+Xplot10<-Xplot[as.numeric(Xplot$age)%%2==0&as.numeric(Xplot$age)<20,] #
+p2 <- ggplot(Xplot10) #
+p2 <- p2 + geom_line(aes(x=Latitude, y=value, colour=age),size=1.4)#
+p2 <- p2 + geom_vline(xintercept=48.5, linetype=3,size=1.4)#
+p2 <- p2 + facet_wrap(~month,ncol=4)#
+p2 <- p2 + theme_bw()+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks.y = element_blank(),#
+        axis.text=element_text(size=12),axis.title=element_text(size=12,face="bold")) #
+p2 <- p2 + ylab("Biomass")#
+p2
+source("/Users/catarinawor/Documents/Lagrangian/R/read.admb.R")#
+setwd("/Users/catarinawor/Documents/Lagrangian/admb/OM/simple/")#
+OM<-read.rep("lagrangian_OM.rep")#
+meses<-c("Jan", "Feb", "Mar","Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec")#
+#
+head(tmpXplot)#
+tmpXplot<-data.frame(sim$propVBarea[sim$propVBarea[,1]>(max(sim$propVBarea[,1])-12),])#
+tmpXplot[,1]<-meses[tmpXplot[,1]-(max(sim$propVBarea[,1])-12)]#
+tmpXplot<-rename(tmpXplot, c("V1"="month", "V2"= "Latitude","V3"="1", "V4"="2", "V5"= "3",#
+  "V6"="4", "V7"="5", "V8"= "6","V9"="7", "V10"="8", "V11"= "9","V12"="10", "V13"="11", "V14"= "12",#
+  "V15"="13", "V16"="14", "V17"= "15","V18"="16", "V19"="17", "V20"= "18","V21"="19", "V22"="20"))#
+dim(tmpXplot)#
+Xplot<-melt(tmpXplot, id=c("month", "Latitude"),variable.name="age")#
+Xplot$group<-as.factor(rep(0,length(Xplot$month)))#
+Xplot<-arrange(transform(Xplot,month=factor(month,levels=meses)),month)#
+#
+head(Xplot)#
+dim(Xplot)#
+Xplot10<-Xplot[as.numeric(Xplot$age)%%2==0&as.numeric(Xplot$age)<20,] #
+p2 <- ggplot(Xplot10) #
+p2 <- p2 + geom_line(aes(x=Latitude, y=value, colour=age),size=1.4)#
+p2 <- p2 + geom_vline(xintercept=48.5, linetype=3,size=1.4)#
+p2 <- p2 + facet_wrap(~month,ncol=4)#
+p2 <- p2 + theme_bw(16)+theme(panel.grid.major = element_blank(),#
+        panel.grid.minor = element_blank(),axis.ticks.y = element_blank(),#
+        axis.text=element_blank()),axis.title=element_text(size=12,face="bold")) #
+p2 <- p2 + ylab("Biomass")#
+p2

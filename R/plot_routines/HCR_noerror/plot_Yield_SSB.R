@@ -156,13 +156,13 @@ plot_DynCatch <- function( M,  Msq, sv=F, nome="",nations=F, limite=.4)
 	nat2$high[nat2$year<2016]=NA
 	nat2$low[nat2$year<2016]=NA
 
-	nat2_o<-nat2[(nat2$intercept==0|nat2$intercept==4010)&(nat2$slope==.1|nat2$slope==.3|nat2$slope==4010),]
+	nat2_o<-nat2[(nat2$intercept==0|nat2$intercept==4010)&(nat2$slope==.1|nat2$slope==.5|nat2$slope==4010),]
 	
 	p<- ggplot(nat2_o)
 	p<- p+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)
 	p<- p+geom_line(aes(x=year,y=mean, color=as.factor(slope)))	
-	p<- p +scale_color_manual(values = c(gg_color_hue(2),"black") ,name="exploitation rate",labels=c("0.1", "0.3", "40:10 rule"))
-	p<- p +scale_fill_manual(values = c(gg_color_hue(2),"black"),name="exploitation rate",labels=c("0.1", "0.3", "40:10 rule"))
+	p<- p +scale_color_manual(values = c(gg_color_hue(2),"black") ,name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))
+	p<- p +scale_fill_manual(values = c(gg_color_hue(2),"black"),name="exploitation rate",labels=c("0.1", "0.5", "40:10 rule"))
 	p <- p + labs(x= "", y= " Yield (1000t) ")
 	p <- p + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 	p
@@ -180,12 +180,13 @@ plot_DynCatch <- function( M,  Msq, sv=F, nome="",nations=F, limite=.4)
 	nat1$high[nat1$year<2016]=NA
 	nat1$low[nat1$year<2016]=NA
 
-	nat1_o<-nat1[(nat1$intercept==.1|nat1$intercept==4010)&(nat1$slope==.1|nat1$slope==.3|nat1$intercept==4010),]
+	nat1_o<-nat1[(nat1$intercept==.1|nat1$intercept==4010)&(nat1$slope==.1|nat1$slope==.5|nat1$intercept==4010),]
 	
 	p1<- ggplot(nat1_o)
 	p1<- p1+geom_ribbon(aes(x=year,ymin=low, ymax=high, fill=as.factor(slope)),alpha=.3)
 	p1<- p1+geom_line(aes(x=year,y=mean, color=as.factor(slope)))	
-	p1<- p1 +scale_color_manual(values = c(gg_color_hue(2),"black") ,name="exploitation rate",labels=c("0.1", "0.3", "40:10 rule"))
+	sp1<- p1 +scale_color_manual(values = c(gg_color_hue(2),"black") ,name="exploitation rate",labels=c("0.1", "0.3", "40:10 rule"))
+	#p1<- p1 +scale_colour_viridis_d(name="exploitation rate",labels=c("0.1", "0.3", "40:10 rule"))
 	p1<- p1 +scale_fill_manual(values = c(gg_color_hue(2),"black"),name="exploitation rate",labels=c("0.1", "0.3", "40:10 rule"))
 	p1 <- p1 + labs(x= "Year", y= " Yield (1000t) ")
 	p1 <- p1 + theme_bw(16) +theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())

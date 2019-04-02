@@ -10,12 +10,13 @@ library(cowplot)
 
 
 
-DIRS<-c("/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_nostRec_100",
-"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_nostRec_100_m2",
-"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_linear_nostRec_100_m3",
-"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_nostRec_100",
-"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_nostRec_100_m2",
-"/Users/catarinawor/Documents/Lagrangian/HCRresult/HCR_stquo_nostRec_100_m3"
+DIRS<-c(
+	"/Volumes/3T_dom_media/Catarina/HCRresult/HCR_linear_nostRec_100",
+"/Volumes/3T_dom_media/Catarina/HCRresult/HCR_linear_nostRec_100_m2",
+"/Volumes/3T_dom_media/Catarina/HCRresult/HCR_linear_nostRec_100_m3",
+"/Volumes/3T_dom_media/Catarina/HCRresult/HCR_stquo_nostRec_100",
+"/Volumes/3T_dom_media/Catarina/HCRresult/HCR_stquo_nostRec_100_m2",
+"/Volumes/3T_dom_media/Catarina/HCRresult/HCR_stquo_nostRec_100_m3"
 )
 
 

@@ -441,7 +441,7 @@ DATA_SECTION
 			//cout<<"Xini is "<<Xini<<endl;	
 
 			ofstream nfs("catlim.txt");
-			nfs<<"#catlim" << endl << "0000000 0000000" <<endl;
+			nfs<<"#catlim" << endl << "0 0" <<endl;
 			
        			
 	END_CALCS
@@ -864,8 +864,21 @@ FUNCTION void calc_effarea(const int& ii,const int& ia, const dvar_vector& ctlim
 	{
 		if(yYieldNat(indyr(ii))(indnatarea(r))<ctlim(indnatarea(r))){
 
-		//	double lmc;
-		//	lmc = value(yYieldNat(indyr(ii-1))(indnatarea(r))+YieldNat(ii-1)(indnatarea(r)))/value(ctlim(indnatarea(r)));			
+			double lmc;
+
+			if(indmonth(ii)>1){
+
+				lmc = value(yYieldNat(indyr(ii-1))(indnatarea(r))/ctlim(indnatarea(r)));			
+			}else{
+				lmc = 0.;
+			}
+
+			if(lmc>.85){
+
+				tmp1(r)= (pow(tVBarea(ii)(r)+1e-30,fbeta)/(totVBnation(ii)(indnatarea(r)))) * effPwr(r);
+				tmp2(r) = tmp1(r)*TotEffyear(indfisharea(r))(indyr(ia));
+				Effarea(ii)(r) = tmp2(r)*TotEffmonth(indfisharea(r))(indmonth(ii))* (1.-lmc);
+			}else{
 
 		//	if(lmc>1.){
 		//		tmp1(r)= (pow(tVBarea(ii)(r)+1e-30,fbeta)/(totVBnation(ii)(indnatarea(r)))) * effPwr(r);
@@ -883,7 +896,7 @@ FUNCTION void calc_effarea(const int& ii,const int& ia, const dvar_vector& ctlim
 				tmp2(r) = tmp1(r)*TotEffyear(indfisharea(r))(indyr(ia));
 				Effarea(ii)(r) = tmp2(r)*TotEffmonth(indfisharea(r))(indmonth(ii));
 			//	cout<<"veio pra ca? "<<endl;
-		//	}
+			}
 
 
 			//cout<<"yYieldNat(indyr(ii))(indnatarea(r)) "<<yYieldNat(indyr(ii))(indnatarea(r)) <<endl;

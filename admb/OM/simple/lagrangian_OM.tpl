@@ -547,7 +547,7 @@ FUNCTION void calc_effarea(const int& ii,const int& ia)
 
 		
 		for(int n=1; n<=nations;n++){
-       		totVBnation(ii,n) = sum(pow(VBarea(ii)(ntmp1(n),ntmp1(n+1)-1.0) +1e-30,fbeta));
+       		totVBnation(ii,n) = sum(pow(VBarea(ii)(ntmp1(n),ntmp1(n+1)-1.0) ,fbeta));
        	}
 
 
@@ -555,7 +555,7 @@ FUNCTION void calc_effarea(const int& ii,const int& ia)
 		{
        		//if(sum(yCatchNatAge(indyr(ii))(indnatarea(rr))(sage,nage))<ctlim(indnatarea(rr))){
 
-				tmp1(rr)= (pow(VBarea(ii)(rr)+1e-30,fbeta)/(totVBnation(ii,indnatarea(rr)))) * effPwr(rr);
+				tmp1(rr)= (pow(VBarea(ii)(rr),fbeta)/(totVBnation(ii,indnatarea(rr)))) * effPwr(rr);
 				tmp2(rr) = tmp1(rr)*TotEffyear(indfisharea(rr))(indyr(ia));
 				Effarea(ii)(rr) = tmp2(rr)*TotEffmonth(indfisharea(rr))(indmonth(ii));
 			//}else{
@@ -582,6 +582,8 @@ FUNCTION void calc_position(const int& ii)
 		for(int r = sarea;r <= narea;r++)
 		{
 			VBarea(ii)(r) = VulB(ii)* (cnorm(areas(r)+0.5,PosX(ii),varPos)-cnorm(areas(r)-0.5,PosX(ii),varPos));
+
+
 			NAreaAge(ii)(r) = elem_prod(Nage(ii)(sage,nage),(cnorm(areas(r)+0.5,PosX(ii),varPos)-cnorm(areas(r)-0.5,PosX(ii),varPos)));
 			
 		
@@ -589,6 +591,7 @@ FUNCTION void calc_position(const int& ii)
 			propVBarea(ii)(r)(sage-1) = r;
 			propVBarea(ii)(r)(sage,nage) =  elem_prod(VulB(ii)(sage,nage),(cnorm(areas(r)+0.5,PosX(ii),varPos)-cnorm(areas(r)-0.5,PosX(ii),varPos)));
 			
+		
 
 		}	
 
